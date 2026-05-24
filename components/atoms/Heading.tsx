@@ -15,6 +15,11 @@ type HeadingProps = {
   visualLevel?: HeadingLevel;
   className?: string;
   id?: string;
+  /**
+   * When true, render an action-orange accent bar before the heading text
+   * to reinforce visual rhythm. Defaults to false (backwards compatible).
+   */
+  accent?: boolean;
 };
 
 const VISUAL_CLASS: Record<HeadingLevel, string> = {
@@ -32,11 +37,18 @@ export function Heading({
   visualLevel,
   className,
   id,
+  accent = false,
 }: HeadingProps) {
   const Tag = `h${level}` as `h${HeadingLevel}`;
   const visual = visualLevel ?? level;
   return (
     <Tag id={id} className={cn(VISUAL_CLASS[visual], className)}>
+      {accent ? (
+        <span
+          aria-hidden="true"
+          className="mr-3 inline-block h-3 w-1.5 rounded-[var(--radius-sm)] bg-[var(--color-action)] align-middle"
+        />
+      ) : null}
       {children}
     </Tag>
   );

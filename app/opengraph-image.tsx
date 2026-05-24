@@ -4,7 +4,16 @@
 // Edge runtime + `next/og` ImageResponse renders this at build time as a
 // static asset. No external dependencies; works the same on AWS Amplify,
 // Vercel, or any Next.js-compatible host.
+//
+// Note on color literals: Satori (the engine that renders this image) does
+// not resolve CSS custom properties because the output is a PNG, not an HTML
+// document. The palette tokens declared in `app/globals.css` are unreachable
+// at this layer. The hex values below are intentionally synchronized with the
+// palette: #0B1626 == --color-surface-inverse, #FF9900 == --color-action,
+// #001022 == --color-text-on-action, #FFFFFF == --color-text-on-hero. If the
+// palette changes, update both this file and `app/globals.css`.
 
+/* eslint-disable local/no-color-literals */
 import { ImageResponse } from "next/og";
 import { currentEdition, getEdition } from "@/lib/content/editions";
 import { formatDate } from "@/lib/utils/datetime";

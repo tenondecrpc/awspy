@@ -13,6 +13,7 @@ export function FAQList({ items }: FAQListProps) {
   if (items.length === 0) {
     return (
       <EmptyState
+        variant="faq"
         title="Estamos preparando las preguntas frecuentes"
         description="Pronto vamos a publicar las dudas más comunes con sus respuestas."
       />

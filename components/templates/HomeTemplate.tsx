@@ -9,6 +9,7 @@ import { Heading } from "@/components/atoms/Heading";
 import { Hero } from "@/components/organisms/Hero";
 import { Countdown } from "@/components/organisms/Countdown";
 import { EmptyState } from "@/components/organisms/EmptyState";
+import { SpeakerCard } from "@/components/molecules/SpeakerCard";
 import { SponsorsBoard } from "@/components/organisms/SponsorsBoard";
 import type { EventInfo } from "@/lib/content/event-info";
 import type { Sponsor } from "@/lib/content/sponsors";
@@ -40,10 +41,10 @@ export function HomeTemplate({
         cfpHref={cfpHref}
       />
 
-      <Section spacing="md" tone="muted">
+      <Section spacing="md" tone="default">
         <Container>
           <div className="flex flex-col items-center gap-6">
-            <Heading level={2} visualLevel={3}>
+            <Heading level={2} visualLevel={3} accent>
               Cuenta regresiva
             </Heading>
             <Countdown targetDate={eventInfo.dates.start} />
@@ -51,10 +52,10 @@ export function HomeTemplate({
         </Container>
       </Section>
 
-      <Section spacing="md" tone="default" aria-labelledby="about-title">
+      <Section spacing="md" tone="muted" aria-labelledby="about-title" eyebrow="Sobre el evento">
         <Container>
-          <div className="mx-auto max-w-3xl space-y-4">
-            <Heading id="about-title" level={2}>
+          <div className="mx-auto max-w-3xl space-y-4 text-center">
+            <Heading id="about-title" level={2} className="text-balance">
               ¿Qué es el Community Day?
             </Heading>
             <p className="text-[var(--color-text-secondary)]">
@@ -79,15 +80,20 @@ export function HomeTemplate({
         </Container>
       </Section>
 
-      <Section spacing="md" tone="muted" aria-labelledby="speakers-preview-title">
+      <Section
+        spacing="md"
+        tone="default"
+        aria-labelledby="speakers-preview-title"
+        eyebrow="Speakers"
+      >
         <Container>
-          <div className="mb-6 flex items-baseline justify-between gap-4">
-            <Heading id="speakers-preview-title" level={2}>
-              Speakers
+          <div className="mb-8 flex items-baseline justify-between gap-4">
+            <Heading id="speakers-preview-title" level={2} accent>
+              Conocé a los speakers
             </Heading>
             <NextLink
               href="/speakers"
-              className="text-sm text-[var(--color-accent)] hover:underline"
+              className="text-sm font-semibold text-[var(--color-accent)] hover:underline"
             >
               Ver todos
             </NextLink>
@@ -97,6 +103,7 @@ export function HomeTemplate({
               title="Pronto anunciamos a los speakers"
               description="Estamos definiendo la grilla de oradores. Volvé pronto para conocer al elenco."
               headingLevel={3}
+              variant="speakers"
             />
           ) : (
             <ul
@@ -104,16 +111,8 @@ export function HomeTemplate({
               aria-label="Vista previa de speakers"
             >
               {speakersPreview.slice(0, 6).map((s) => (
-                <li
-                  key={s.id}
-                  className="rounded-[var(--radius-lg)] bg-[var(--color-surface)] p-4 shadow-sm"
-                >
-                  <p className="font-semibold">{s.fullName}</p>
-                  {s.tagLine ? (
-                    <p className="text-sm text-[var(--color-text-secondary)]">
-                      {s.tagLine}
-                    </p>
-                  ) : null}
+                <li key={s.id}>
+                  <SpeakerCard speaker={s} />
                 </li>
               ))}
             </ul>
@@ -123,17 +122,18 @@ export function HomeTemplate({
 
       <Section
         spacing="md"
-        tone="default"
+        tone="muted"
         aria-labelledby="sponsors-preview-title"
+        eyebrow="Sponsors"
       >
         <Container>
-          <div className="mb-6 flex items-baseline justify-between gap-4">
-            <Heading id="sponsors-preview-title" level={2}>
-              Sponsors
+          <div className="mb-8 flex items-baseline justify-between gap-4">
+            <Heading id="sponsors-preview-title" level={2} accent>
+              Quienes hacen posible el evento
             </Heading>
             <NextLink
               href="/sponsors"
-              className="text-sm text-[var(--color-accent)] hover:underline"
+              className="text-sm font-semibold text-[var(--color-accent)] hover:underline"
             >
               Ver todos
             </NextLink>
@@ -145,6 +145,7 @@ export function HomeTemplate({
               actionHref={`mailto:${eventInfo.contactEmail}?subject=Sponsor%20AWS%20Community%20Day%20Paraguay`}
               actionLabel="Quiero ser sponsor"
               headingLevel={3}
+              variant="sponsors"
             />
           ) : (
             <SponsorsBoard

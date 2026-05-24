@@ -3,54 +3,61 @@
 /*
   Theme tokens for AWS Community Day Paraguay.
 
-  Color palette uses AWS-aligned hues with verified AA contrast against the
-  surface tokens. Each pair below has been checked at the listed minimum
-  contrast ratio (computed against the lightness values, then validated with a
-  real ratio tool). All ratios are >= 4.5 for normal text and >= 3.0 for large
-  text (>= 18pt or 14pt bold), per WCAG AA.
+  Source of truth: this file. The full token map and the AA-verified contrast
+  matrix live in `specs/002-visual-refresh/data-model.md`. The boundary is
+  enforced by the local ESLint rule defined in `eslint.config.mjs`
+  (`local/no-color-literals`): no hex, rgb, rgba, hsl, or hsla literals are
+  allowed under `app/`, `components/`, or `lib/` outside this file.
 
-  Pairs (foreground over background):
-    --color-text-primary     #0B1626 over --color-surface       #FFFFFF  -> 17.6:1
-    --color-text-secondary   #364152 over --color-surface       #FFFFFF  -> 9.6:1
-    --color-text-muted       #5C6573 over --color-surface       #FFFFFF  -> 5.8:1
-    --color-text-on-accent   #FFFFFF over --color-accent        #0B5FFF  -> 7.5:1  (AWS-style blue)
-    --color-text-on-action   #001022 over --color-action        #FF9900  -> 11.6:1 (AWS orange)
-    --color-text-primary     #0B1626 over --color-surface-muted #F4F6FA  -> 16.4:1
-    --color-text-on-inverse  #FFFFFF over --color-surface-inverse #0B1626 -> 17.6:1
-
-  Focus ring uses --color-focus over any background; ratio against any of the
-  surfaces above is >= 3.0.
+  The palette is aligned with AWS public branding (Squid Ink navy, Smile
+  Orange, Hyperlink Blue, neutrals) so the site visually belongs to the AWS
+  Community Day family. Both light and dark modes share the same semantic
+  token names; only the values change. Mode is driven by
+  `prefers-color-scheme` (no manual toggle in this iteration).
 */
 
 @theme {
-  /* Brand palette */
-  --color-accent: #0B5FFF;
-  --color-accent-strong: #003FB3;
-  --color-accent-soft: #DDE8FF;
+  /* Brand and action */
+  --color-brand-primary: #232F3E;
+  /* Squid Ink */
   --color-action: #FF9900;
-  --color-action-strong: #CC7A00;
+  /* Smile Orange */
+  --color-action-strong: #EC7211;
+  --color-accent: #0073BB;
+  /* Hyperlink Blue */
+  --color-accent-strong: #005A91;
+  --color-accent-soft: #E6F0F7;
 
   /* Surfaces */
   --color-surface: #FFFFFF;
   --color-surface-muted: #F4F6FA;
-  --color-surface-inverse: #0B1626;
   --color-surface-elevated: #FFFFFF;
+  --color-surface-inverse: #0B1626;
+  --color-surface-hero: #232F3E;
 
   /* Text */
   --color-text-primary: #0B1626;
   --color-text-secondary: #364152;
   --color-text-muted: #5C6573;
-  --color-text-on-accent: #FFFFFF;
   --color-text-on-action: #001022;
+  --color-text-on-accent: #FFFFFF;
   --color-text-on-inverse: #FFFFFF;
+  --color-text-on-hero: #FFFFFF;
+
+  /* Borders */
+  --color-border-subtle: #E5E9F0;
+  --color-border-strong: #5C6573;
 
   /* State */
-  --color-focus: #0B5FFF;
+  --color-focus: #0073BB;
   --color-success: #1F7A3A;
+  --color-success-soft: #E5F5EA;
   --color-warning: #B26200;
+  --color-warning-soft: #FFF1DD;
   --color-danger: #B3261E;
+  --color-danger-soft: #FCE4E2;
 
-  /* Surfaces for tier badges (always paired with text label) */
+  /* Sponsor tier (always paired with text label) */
   --color-tier-platinum: #2A2E36;
   --color-tier-gold: #B07F00;
   --color-tier-silver: #6B7280;
@@ -70,15 +77,49 @@
 
 @media (prefers-color-scheme: dark) {
   @theme {
+    /* Brand and action */
+    --color-brand-primary: #161E2D;
+    --color-action: #FF9900;
+    --color-action-strong: #EC7211;
+    --color-accent: #3FA0E0;
+    --color-accent-strong: #0073BB;
+    --color-accent-soft: #1A2D52;
+
+    /* Surfaces */
     --color-surface: #0B1626;
     --color-surface-muted: #131F33;
-    --color-surface-inverse: #FFFFFF;
     --color-surface-elevated: #1A2638;
+    --color-surface-inverse: #FFFFFF;
+    --color-surface-hero: #161E2D;
+
+    /* Text */
     --color-text-primary: #F5F7FA;
     --color-text-secondary: #C5CCD6;
     --color-text-muted: #97A0AE;
+    --color-text-on-action: #001022;
+    --color-text-on-accent: #0B1626;
     --color-text-on-inverse: #0B1626;
-    --color-accent-soft: #1A2D52;
+    --color-text-on-hero: #F5F7FA;
+
+    /* Borders */
+    --color-border-subtle: #1A2638;
+    --color-border-strong: #97A0AE;
+
+    /* State */
+    --color-focus: #3FA0E0;
+    --color-success: #52C97A;
+    --color-success-soft: #14361F;
+    --color-warning: #FFB85C;
+    --color-warning-soft: #3A2A12;
+    --color-danger: #FF7A6E;
+    --color-danger-soft: #3A1B17;
+
+    /* Sponsor tier */
+    --color-tier-platinum: #C5CCD6;
+    --color-tier-gold: #FFB85C;
+    --color-tier-silver: #A1A8B6;
+    --color-tier-bronze: #D69262;
+    --color-tier-community: #52C97A;
   }
 }
 
@@ -105,6 +146,7 @@ body {
 
 /* Honor reduced motion globally. */
 @media (prefers-reduced-motion: reduce) {
+
   *,
   *::before,
   *::after {
@@ -126,6 +168,40 @@ body {
   border-radius: 0 0 var(--radius-md) 0;
   z-index: 100;
 }
+
 .skip-link:focus {
   left: 0;
+}
+
+/* Skeleton shimmer. The pulse is suppressed by the global
+   prefers-reduced-motion rule above. */
+@keyframes skeleton-pulse {
+
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.55;
+  }
+}
+
+.skeleton-pulse {
+  animation: skeleton-pulse 1.4s ease-in-out infinite;
+}
+
+/* Decorative pattern fade-in (suppressed by prefers-reduced-motion). */
+@keyframes pattern-fade-in {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: var(--pattern-opacity, 0.08);
+  }
+}
+
+.decorative-pattern-fade {
+  animation: pattern-fade-in 0.2s ease-out forwards;
 }

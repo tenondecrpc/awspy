@@ -1,8 +1,12 @@
-// Organizer card molecule. Photo (or initials fallback), name, role, and
-// links.
+// Organizer card molecule. Photo (or initials placeholder), name, role, and
+// links. The photo is sourced from the organizer record (Sessionize-like
+// URL) when set; otherwise the consumer can drop a file under
+// `public/assets/team/<slug>.jpg` and the card will pick it up. When no
+// asset resolves, the Placeholder atom reserves space and shows initials.
 
 import Image from "next/image";
 import { Link } from "@/components/atoms/Link";
+import { Placeholder } from "@/components/atoms/Placeholder";
 import type { Organizer } from "@/lib/content/organizers";
 
 type OrganizerCardProps = {
@@ -31,24 +35,25 @@ export function OrganizerCard({ organizer }: OrganizerCardProps) {
   ).filter(([, url]) => Boolean(url));
 
   return (
-    <article className="flex flex-col items-center gap-3 rounded-[var(--radius-lg)] bg-[var(--color-surface)] p-4 text-center shadow-sm">
-      {organizer.photo ? (
-        <Image
-          src={organizer.photo}
-          alt=""
-          width={120}
-          height={120}
-          sizes="120px"
-          className="h-[120px] w-[120px] rounded-full object-cover"
-        />
-      ) : (
-        <div
-          aria-hidden="true"
-          className="flex h-[120px] w-[120px] items-center justify-center rounded-full bg-[var(--color-accent-soft)] text-3xl font-bold text-[var(--color-accent-strong)]"
-        >
-          {initials(organizer.name)}
-        </div>
-      )}
+    <article className="flex flex-col items-center gap-3 rounded-[var(--radius-lg)] bg-[var(--color-surface-elevated)] p-4 text-center shadow-sm">
+      <div className="h-[120px] w-[120px]">
+        {organizer.photo ? (
+          <Image
+            src={organizer.photo}
+            alt=""
+            width={120}
+            height={120}
+            sizes="120px"
+            className="h-[120px] w-[120px] rounded-full object-cover"
+          />
+        ) : (
+          <Placeholder
+            kind="avatar"
+            label={initials(organizer.name)}
+            className="h-[120px] w-[120px]"
+          />
+        )}
+      </div>
       <div className="flex flex-col items-center gap-1">
         <p className="font-semibold">{organizer.name}</p>
         <p className="text-sm text-[var(--color-text-secondary)]">

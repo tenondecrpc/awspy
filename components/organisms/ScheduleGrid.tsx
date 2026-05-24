@@ -5,6 +5,7 @@
 import { ScheduleSlot, type ScheduleSlotData } from "@/components/molecules/ScheduleSlot";
 import { Heading } from "@/components/atoms/Heading";
 import { EmptyState } from "@/components/organisms/EmptyState";
+import { LoadingGrid } from "@/components/atoms/LoadingGrid";
 import { formatDate, startOfDayKey } from "@/lib/utils/datetime";
 import { slugify } from "@/lib/utils/slug";
 import type { ScheduleGrid } from "@/lib/api/sessionize";
@@ -15,6 +16,8 @@ type ScheduleGridOrganismProps = {
   /** Used to resolve speaker slugs for the in-slot links. */
   speakers: Speaker[];
   speakerBasePath?: string;
+  /** When true and the grid is empty, render a skeleton instead. */
+  isLoading?: boolean;
 };
 
 type DayGroup = {
@@ -75,12 +78,25 @@ export function ScheduleGridOrganism({
   grid,
   speakers,
   speakerBasePath,
+  isLoading = false,
 }: ScheduleGridOrganismProps) {
   const days = groupByStartDay(grid, speakers);
+
+  if (isLoading && days.length === 0) {
+    return (
+      <LoadingGrid
+        columns={1}
+        rows={6}
+        itemAspectRatio={6}
+        loadingLabel="Cargando la agenda"
+      />
+    );
+  }
 
   if (days.length === 0) {
     return (
       <EmptyState
+        variant="schedule"
         title="Agenda próximamente"
         description="Estamos cerrando la agenda con horarios y salas. Volvé en unos días para verla completa."
       />

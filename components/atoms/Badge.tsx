@@ -28,9 +28,12 @@ const VARIANT_CLASS: Record<Variant, string> = {
   neutral:
     "bg-[var(--color-surface-muted)] text-[var(--color-text-secondary)]",
   info: "bg-[var(--color-accent-soft)] text-[var(--color-accent-strong)]",
-  success: "bg-[#E5F5EA] text-[var(--color-success)]",
-  warning: "bg-[#FFF1DD] text-[var(--color-warning)]",
-  danger: "bg-[#FCE4E2] text-[var(--color-danger)]",
+  success:
+    "bg-[var(--color-success-soft)] text-[var(--color-success)]",
+  warning:
+    "bg-[var(--color-warning-soft)] text-[var(--color-warning)]",
+  danger:
+    "bg-[var(--color-danger-soft)] text-[var(--color-danger)]",
   "tier-platinum":
     "bg-[var(--color-tier-platinum)] text-[var(--color-text-on-inverse)]",
   "tier-gold":

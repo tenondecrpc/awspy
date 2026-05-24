@@ -9,7 +9,7 @@ import type {
 } from "react";
 import { cn } from "@/lib/utils/cn";
 
-type Variant = "primary" | "secondary" | "ghost";
+type Variant = "primary" | "secondary" | "ghost" | "outline-on-dark";
 type Size = "sm" | "md" | "lg";
 
 const VARIANT_CLASS: Record<Variant, string> = {
@@ -19,6 +19,8 @@ const VARIANT_CLASS: Record<Variant, string> = {
     "bg-[var(--color-accent)] text-[var(--color-text-on-accent)] hover:bg-[var(--color-accent-strong)] disabled:bg-[var(--color-surface-muted)] disabled:text-[var(--color-text-muted)]",
   ghost:
     "bg-transparent text-[var(--color-text-primary)] hover:bg-[var(--color-surface-muted)] disabled:text-[var(--color-text-muted)]",
+  "outline-on-dark":
+    "bg-transparent text-[var(--color-text-on-hero)] border-2 border-[var(--color-text-on-hero)] hover:bg-[var(--color-accent-soft)] hover:text-[var(--color-text-on-accent)] hover:border-transparent disabled:text-[var(--color-text-muted)] disabled:border-[var(--color-text-muted)]",
 };
 
 const SIZE_CLASS: Record<Size, string> = {
