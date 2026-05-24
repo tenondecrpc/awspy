@@ -1,0 +1,25 @@
+{
+  "year": "2026",
+  "name": "AWS Community Day Paraguay 2026",
+  "tagline": "La primera edición del AWS Community Day en Paraguay",
+  "heroTitle": "AWS Community Day Paraguay 2026",
+  "heroSubtitle": "Una jornada gratuita para la comunidad AWS en Paraguay: charlas, talleres y networking organizados por la comunidad, para la comunidad.",
+  "dates": {
+    "start": "2026-10-17T13:00:00-03:00",
+    "end": "2026-10-17T22:00:00-03:00"
+  },
+  "location": {
+    "city": "Asunción",
+    "country": "Paraguay",
+    "summary": "Asunción, Paraguay - sede por confirmar"
+  },
+  "sessionizeEventId": "ybfh8gwn",
+  "eventbriteEventUrl": null,
+  "cfpSubmissionUrl": "https://sessionize.com/aws-community-day-paraguay-2026/",
+  "cfpStatus": "upcoming",
+  "cfpDeadline": "2026-09-15T23:59:00-03:00",
+  "registrationStatus": "upcoming",
+  "contactEmail": "hola@awspy.com",
+  "social": {},
+  "previousEditions": []
+}

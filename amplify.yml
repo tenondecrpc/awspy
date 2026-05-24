@@ -1,0 +1,42 @@
+# AWS Amplify Hosting build configuration.
+#
+# Amplify auto-detects Next.js 14+ App Router projects and applies sensible
+# defaults. This file makes the build commands explicit so the same config
+# can be reproduced locally or on another CI provider with a few tweaks.
+#
+# Required environment variables (set in the Amplify console for the branch):
+#   - CURRENT_EDITION       (e.g. 2026)
+#   - NEXT_PUBLIC_SITE_URL  (e.g. https://awspy.com)
+# Optional:
+#   - NEXT_PUBLIC_SESSIONIZE_BASE_URL (overrides https://sessionize.com/api/v2)
+#
+# The site is cloud-agnostic. To deploy somewhere else (Vercel, OpenNext on
+# raw AWS, Netlify, self-hosted Node), follow the platform's Next.js guide.
+# See `docs/deployment.md` for the portable build/start contract.
+
+version: 1
+applications:
+  - frontend:
+      phases:
+        preBuild:
+          commands:
+            - nvm use 20 || nvm install 20
+            - corepack enable || true
+            - npm ci
+        build:
+          commands:
+            - npm run lint
+            - npm run typecheck
+            - npm test
+            - npm run build
+      artifacts:
+        # Amplify reads `.next/` for App Router output. The compute split
+        # between static and SSR/ISR routes is detected automatically from
+        # `.next/required-server-files.json`.
+        baseDirectory: .next
+        files:
+          - '**/*'
+      cache:
+        paths:
+          - node_modules/**/*
+          - .next/cache/**/*

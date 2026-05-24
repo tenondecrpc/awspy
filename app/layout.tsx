@@ -2,6 +2,10 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Providers } from "./providers";
+import { SiteHeader } from "@/components/organisms/SiteHeader";
+import { SiteFooter } from "@/components/organisms/SiteFooter";
+import { currentEdition } from "@/lib/content/editions";
+import { getEventInfo } from "@/lib/content/event-info";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -16,7 +20,7 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "AWS Community Day Paraguay",
   description:
-    "Encuentro anual de la comunidad AWS en Paraguay: charlas, talleres y networking.",
+    "La primera edición del AWS Community Day en Paraguay: charlas, talleres y networking organizados por la comunidad AWS local.",
 };
 
 export default function RootLayout({
@@ -24,13 +28,20 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  // The header and footer are rendered server-side using the current
+  // edition's event info, so every page has consistent chrome regardless
+  // of which route inside the app loads.
+  const editionYear = currentEdition();
+  const eventInfo = getEventInfo(editionYear);
+
   return (
-    <html
-      lang="es"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
-    >
-      <body className="min-h-full flex flex-col">
-        <Providers>{children}</Providers>
+    <html lang="es-PY">
+      <body className={`${geistSans.variable} ${geistMono.variable}`}>
+        <Providers>
+          <SiteHeader editionYear={editionYear} />
+          <main>{children}</main>
+          <SiteFooter eventInfo={eventInfo} />
+        </Providers>
       </body>
     </html>
   );

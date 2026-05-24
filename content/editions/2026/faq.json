@@ -1,0 +1,17 @@
+[
+  {
+    "id": "que-es-community-day",
+    "question": "¿Qué es el AWS Community Day Paraguay?",
+    "answer": "Es una jornada gratuita organizada por la comunidad AWS local. Reúne charlas técnicas, talleres y espacios de networking enfocados en servicios y prácticas de Amazon Web Services. No es un evento oficial de AWS: lo organizamos voluntarios y comunidad."
+  },
+  {
+    "id": "cuanto-cuesta",
+    "question": "¿Cuánto cuesta participar?",
+    "answer": "El acceso es gratuito para asistentes. La capacidad es limitada, así que es necesario registrarse a través del enlace oficial cuando esté disponible."
+  },
+  {
+    "id": "como-presentar-charla",
+    "question": "¿Puedo presentar una charla o taller?",
+    "answer": "Sí. Cuando el call for papers esté abierto vas a poder enviar tu propuesta desde la página de CFP. Aceptamos charlas técnicas, casos reales, talleres y lightning talks. La presentación es en español."
+  }
+]

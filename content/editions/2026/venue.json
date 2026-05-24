@@ -1,0 +1,12 @@
+{
+  "name": "Sede por confirmar",
+  "address": "Asunción, Paraguay",
+  "mapUrl": "https://www.google.com/maps/place/Asunción,+Paraguay",
+  "transport": [
+    "Acceso en transporte público desde el centro de Asunción",
+    "Estacionamiento limitado en las inmediaciones"
+  ],
+  "accessibility": [
+    "Sede accesible para personas con movilidad reducida (a confirmar con la sede final)"
+  ]
+}
