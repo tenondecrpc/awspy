@@ -24,7 +24,7 @@ const FAKE_INFO: EventInfo = {
   cfpStatus: "upcoming",
   cfpDeadline: null,
   registrationStatus: "upcoming",
-  contactEmail: "hola@awspy.com",
+  contactEmail: "hola@awscommunitydayparaguay.com",
   social: {
     twitter: "https://twitter.com/awspy",
   },

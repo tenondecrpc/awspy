@@ -26,7 +26,7 @@ const VALID_EVENT = {
   cfpStatus: "upcoming",
   cfpDeadline: null,
   registrationStatus: "upcoming",
-  contactEmail: "hola@awspy.com",
+  contactEmail: "hola@awscommunitydayparaguay.com",
 };
 
 describe("EventInfoSchema", () => {

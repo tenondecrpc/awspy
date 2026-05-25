@@ -31,12 +31,12 @@ describe("EmptyState", () => {
       <EmptyState
         title="Registro próximamente"
         description="Pronto abriremos el registro."
-        actionHref="mailto:hola@awspy.com"
+        actionHref="mailto:hola@awscommunitydayparaguay.com"
         actionLabel="Avisame por mail"
       />
     );
     const link = screen.getByRole("link", { name: "Avisame por mail" });
-    expect(link).toHaveAttribute("href", "mailto:hola@awspy.com");
+    expect(link).toHaveAttribute("href", "mailto:hola@awscommunitydayparaguay.com");
   });
 
   it("does not render an action when only one of href/label is provided", () => {

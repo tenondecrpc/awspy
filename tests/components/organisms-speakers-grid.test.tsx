@@ -24,7 +24,7 @@ const EVENT_INFO: EventInfo = {
   cfpStatus: "open",
   cfpDeadline: null,
   registrationStatus: "upcoming",
-  contactEmail: "hola@awspy.com",
+  contactEmail: "hola@awscommunitydayparaguay.com",
   social: {},
   previousEditions: [],
 };

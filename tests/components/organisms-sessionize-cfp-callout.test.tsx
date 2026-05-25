@@ -17,7 +17,7 @@ const BASE: EventInfo = {
   cfpStatus: "open",
   cfpDeadline: null,
   registrationStatus: "upcoming",
-  contactEmail: "hola@awspy.com",
+  contactEmail: "hola@awscommunitydayparaguay.com",
   social: {},
   previousEditions: [],
 };
@@ -51,7 +51,7 @@ describe("SessionizeCFPCallout", () => {
     const link = screen.getByRole("link", { name: /avisame del cfp/i });
     expect(link).toHaveAttribute(
       "href",
-      "mailto:hola@awspy.com?subject=Avisame%20cuando%20abra%20el%20CFP"
+      "mailto:hola@awscommunitydayparaguay.com?subject=Avisame%20cuando%20abra%20el%20CFP"
     );
   });
 
