@@ -25,15 +25,11 @@ type BadgeProps = {
 };
 
 const VARIANT_CLASS: Record<Variant, string> = {
-  neutral:
-    "bg-[var(--color-surface-muted)] text-[var(--color-text-secondary)]",
+  neutral: "bg-[var(--color-surface-muted)] text-[var(--color-text-secondary)]",
   info: "bg-[var(--color-accent-soft)] text-[var(--color-accent-strong)]",
-  success:
-    "bg-[var(--color-success-soft)] text-[var(--color-success)]",
-  warning:
-    "bg-[var(--color-warning-soft)] text-[var(--color-warning)]",
-  danger:
-    "bg-[var(--color-danger-soft)] text-[var(--color-danger)]",
+  success: "bg-[var(--color-success-soft)] text-[var(--color-success)]",
+  warning: "bg-[var(--color-warning-soft)] text-[var(--color-warning)]",
+  danger: "bg-[var(--color-danger-soft)] text-[var(--color-danger)]",
   "tier-platinum":
     "bg-[var(--color-tier-platinum)] text-[var(--color-text-on-inverse)]",
   "tier-gold":
@@ -46,7 +42,11 @@ const VARIANT_CLASS: Record<Variant, string> = {
     "bg-[var(--color-tier-community)] text-[var(--color-text-on-inverse)]",
 };
 
-export function Badge({ children, variant = "neutral", className }: BadgeProps) {
+export function Badge({
+  children,
+  variant = "neutral",
+  className,
+}: BadgeProps) {
   return (
     <span
       className={cn(

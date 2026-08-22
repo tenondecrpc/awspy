@@ -19,8 +19,12 @@ describe("FAQList", () => {
         ]}
       />
     );
-    expect(screen.getByRole("button", { name: "Pregunta 1" })).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "Pregunta 2" })).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: "Pregunta 1" })
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: "Pregunta 2" })
+    ).toBeInTheDocument();
   });
 
   it("opens the first item by default for visual context", () => {

@@ -129,7 +129,7 @@ This document records the research and decisions that informed the Technical Con
 **Decision**:
 - **Unit tests** (Vitest, jsdom): every Zod schema, every loader, every utility (`slug`, `datetime`, `seo`). Sessionize fixtures are captured from the public demo event id `jl4ktls0` and stored under `tests/fixtures/sessionize/` so tests are deterministic and offline.
 - **Component tests** (Vitest + React Testing Library): atoms with non-trivial states (Button), key molecules (SpeakerCard, FAQItem), and key organisms (EmptyState, SpeakersGrid populated and empty, ScheduleGrid, SponsorsBoard, FAQList accordion behavior, Countdown reduced-motion behavior, EventbriteRegisterButton with and without URL).
-- **End-to-end** (Playwright): home rendering with empty data, navigation across routes (mobile and desktop viewports), `/speakers` populated and empty, `/schedule` populated, `/register` opening the Eventbrite overlay, `/cfp` external link attributes, `/editions/{year}` round-trip.
+- **End-to-end** (Playwright): home rendering with empty data, navigation across routes (mobile and desktop viewports), `/speakers` populated and empty, `/schedule` populated, `/register` external-link and upcoming-state behavior, `/cfp` external link attributes, `/editions/{year}` round-trip.
 
 **Rationale**:
 - Pyramid: more unit tests than component, more component than E2E. Each layer catches the failures the layer below cannot reach.

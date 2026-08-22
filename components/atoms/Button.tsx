@@ -53,18 +53,24 @@ type ButtonAsAnchor = CommonProps &
 export type ButtonProps = ButtonAsButton | ButtonAsAnchor;
 
 export function Button(props: ButtonProps) {
-  const {
-    children,
-    variant = "primary",
-    size = "md",
-    className,
-  } = props;
+  const { children, variant = "primary", size = "md", className } = props;
 
-  const cls = cn(BASE_CLASS, VARIANT_CLASS[variant], SIZE_CLASS[size], className);
+  const cls = cn(
+    BASE_CLASS,
+    VARIANT_CLASS[variant],
+    SIZE_CLASS[size],
+    className
+  );
 
   if (props.as === "a") {
-    const { as: _as, variant: _v, size: _s, className: _c, children: _ch, ...rest } =
-      props;
+    const {
+      as: _as,
+      variant: _v,
+      size: _s,
+      className: _c,
+      children: _ch,
+      ...rest
+    } = props;
     void _as;
     void _v;
     void _s;

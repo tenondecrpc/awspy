@@ -1,12 +1,13 @@
 <!--
 SYNC IMPACT REPORT
 ==================
-Version change: TEMPLATE (unversioned placeholder) -> 1.0.0
-Bump rationale: Initial ratification. Replaces the unfilled template with concrete
-principles, constraints, and governance for the AWS Community Day Paraguay frontend
-repository. No prior versioned constitution existed, so this is a MAJOR baseline.
+Version change: 1.0.0 -> 1.1.0
+Bump rationale: Align the constitution with the implemented frontend-only
+architecture, add the repository-owned verification contract, and formalize
+ADRs plus documented exceptions. This materially expands governance without
+removing a principle, so it is a MINOR amendment.
 
-Principles defined (initial set; no prior versions to rename):
+Principles retained and clarified:
 - I. Frontend-Only Boundary (NON-NEGOTIABLE)
 - II. Atomic Design Layering
 - III. Typed API Boundary with Zod Validation (NON-NEGOTIABLE)
@@ -15,11 +16,12 @@ Principles defined (initial set; no prior versions to rename):
 - VI. Accessibility Non-Negotiables (NON-NEGOTIABLE)
 - VII. Language and Formatting Discipline
 
-Sections defined:
-- Core Principles (7 principles, exceeds template's default 5)
-- Stack and Tooling Constraints
-- Verification Workflow
-- Governance
+Material changes:
+- Removed references to a separate application backend that does not exist.
+- Named local content and Sessionize as the implemented data sources.
+- Added `npm run verify` and `npm run verify:e2e` as portable gates.
+- Added GitHub CI, ADR, and documented-exception governance.
+- Frozen CLAUDE.md as a thin AGENTS.md bootstrap.
 
 Templates and dependent artifacts reviewed:
 - .specify/templates/plan-template.md - aligned (no edits needed); the existing
@@ -33,8 +35,10 @@ Templates and dependent artifacts reviewed:
 - .specify/templates/agent-file-template.md - aligned (no edits needed); the
   authoritative agent guidance lives in AGENTS.md, which this constitution
   codifies but does not duplicate.
-- AGENTS.md / CLAUDE.md - aligned by construction; this constitution is derived
-  directly from AGENTS.md and remains compatible with CLAUDE.md's deferral rule.
+- AGENTS.md / CLAUDE.md - updated to align repository instructions and preserve
+  the frozen bootstrap boundary.
+- docs/README.md, docs/architecture.md, docs/ci.md, docs/decisions/, and
+  docs/documented-exceptions.md - added as the project-context layer.
 
 Status legend: [updated] / [pending]
 - [updated] .specify/memory/constitution.md (this file)
@@ -42,42 +46,45 @@ Status legend: [updated] / [pending]
 - [updated] .specify/templates/spec-template.md (no change required, verified compatible)
 - [updated] .specify/templates/tasks-template.md (no change required, verified compatible)
 - [updated] .specify/templates/checklist-template.md (no change required, verified compatible)
-- [updated] AGENTS.md (source of truth, no change required)
-- [updated] CLAUDE.md (defers to AGENTS.md, no change required)
+- [updated] AGENTS.md (source of truth and verification rules)
+- [updated] CLAUDE.md (frozen bootstrap importing AGENTS.md)
+- [updated] package.json and provider CI configuration
 
 Deferred items / TODOs:
-- None. RATIFICATION_DATE set to 2026-05-06 (project initialization date).
+- Dependency audit findings are recorded as GAP-001 in
+  docs/documented-exceptions.md and require a reviewed framework upgrade.
 -->
 
 # AWS Community Day Paraguay Frontend Constitution
 
-The frontend for the AWS Community Day Paraguay landing site is a content-driven,
-SEO-sensitive marketing application that consumes an external HTTP backend. This
-constitution captures the non-negotiable rules that govern how code is structured,
-how data flows, and how changes are verified. It is derived from `AGENTS.md` and
-takes precedence over any conflicting convention introduced elsewhere.
+The frontend for the AWS Community Day Paraguay landing site is a
+content-driven, SEO-sensitive marketing application. Local JSON and MDX own
+static editorial content, while the public Sessionize API owns speakers and
+schedule data. This constitution captures the non-negotiable rules that govern
+how code is structured, how data flows, and how changes are verified. It is
+derived from `AGENTS.md` and takes precedence over any conflicting convention
+introduced elsewhere.
 
 ## Core Principles
 
 ### I. Frontend-Only Boundary (NON-NEGOTIABLE)
 
-This repository ships only the frontend. Persistence, business rules, and
-integrations with third-party services live in the separate backend repository
-and MUST NOT be reimplemented here.
+This repository ships only the frontend and has no application backend or
+database. Persistence and private third-party integrations MUST NOT be added
+without a separately approved backend architecture.
 
-- Next.js Route Handlers and Server Actions are restricted to: proxying or
-  shaping requests to the backend, handling Next-specific concerns
+- Next.js Route Handlers and Server Actions are restricted to proxying or
+  shaping requests, handling Next-specific concerns
   (revalidation, cookies, redirects), and serving static or computed content
   with no persistent side effects.
-- A missing backend endpoint MUST be filed against the backend repository; it
-  MUST NOT be papered over with a Route Handler that owns persistent state.
-- Sensitive credentials (admin tokens, third-party API secrets) MUST live on
-  the backend. The frontend carries only public configuration plus, when
-  required, short-lived user-scoped tokens.
+- A feature that needs persistence or private credentials MUST be designed as a
+  separate service. It MUST NOT be papered over with a Route Handler that owns
+  persistent state.
+- The frontend carries public configuration only. Third-party secrets MUST NOT
+  be introduced without an approved server-side boundary.
 
-**Rationale**: A clean frontend/backend boundary keeps the deployment surface
-small, prevents secret leakage through `NEXT_PUBLIC_*` exposure, and keeps the
-two repositories independently versionable.
+**Rationale**: A strict frontend-only boundary keeps the deployment surface
+small and prevents secret leakage through browser-visible configuration.
 
 ### II. Atomic Design Layering
 
@@ -99,28 +106,26 @@ being polluted by page-specific concerns.
 
 ### III. Typed API Boundary with Zod Validation (NON-NEGOTIABLE)
 
-All traffic between this app and the backend flows through the typed `fetch`
-client in `lib/api/client.ts`. Components MUST NOT call `fetch` directly and
-MUST NOT import resource functions from outside their declared role.
+All external API traffic flows through the typed `fetch` client in
+`lib/api/client.ts`. Components MUST NOT call `fetch` directly and MUST NOT
+import resource functions from outside their declared role.
 
-- Inbound payloads from the backend MUST be parsed with a Zod schema at the
+- Inbound payloads from Sessionize or any future external service MUST be parsed with a Zod schema at the
   client boundary. Type assertions (`as Foo`) without parsing are forbidden;
   contract drift MUST surface as a runtime error, not silent corruption.
-- Outbound payloads MUST be parsed with a Zod schema before the request leaves.
-  Forms MUST reuse the same Zod schema for client-side validation so a single
-  source of truth governs both directions.
+- There are no outbound application API payloads today. Any future outbound
+  payload MUST be parsed with Zod before the request leaves.
 - API types MUST be derived from Zod schemas via `z.infer<typeof Schema>`, not
   declared separately.
 - The HTTP layer is native `fetch` wrapped by the typed client. Introducing
   `axios`, `ky`, `got`, or any other HTTP library is forbidden.
 - The data layer has three roles and they MUST stay separated:
-  1. Typed `fetch` client (`lib/api/client.ts`) - the only place that talks to
-     the backend.
-  2. Resource modules (`lib/api/<resource>.ts`) - pure async functions, no React.
-  3. TanStack Query hooks (`hooks/queries/`, `hooks/mutations/`) - own query
-     keys, cache invalidation, and Suspense/error boundary integration.
-- Components in client contexts consume hooks; server components and route
-  handlers MAY call resource functions directly. Neither calls `fetch` itself.
+  1. Typed `fetch` client (`lib/api/client.ts`) - validates external responses.
+  2. Sessionize resource module (`lib/api/sessionize.ts`) - pure async functions,
+     Zod schemas, and inferred types, with no React.
+  3. Local content modules (`lib/content/`) - validated JSON and MDX loaders.
+- TanStack Query is installed for a future client-side fetch path but is not
+  part of the current server-rendered data flow.
 
 **Rationale**: A single validated boundary catches contract drift early, keeps
 type definitions colocated with runtime guarantees, and prevents the data layer
@@ -131,15 +136,14 @@ from leaking into UI tiers.
 Server state and ephemeral client state are owned by different libraries and
 MUST NOT be conflated.
 
-- TanStack Query owns server state (anything originating from the backend, its
+- TanStack Query owns client-cached server state if introduced (anything originating from an external service, its
   cache, invalidation, retries, and Suspense integration).
 - Zustand is reserved for purely client-side, ephemeral UI state (modal open
   state, multi-step form progress, theme).
-- Server state MUST NOT be duplicated into Zustand. If a value comes from the
-  backend, it lives in the Query cache.
-- Mutations MUST use Server Actions when the form is server-rendered and a
-  single round trip suffices. They MUST use TanStack Query mutations when the
-  UI needs optimistic updates, retries, or cross-page cache invalidation.
+- External server state MUST NOT be duplicated into Zustand. If a future value
+  is loaded through TanStack Query, it stays in the Query cache.
+- Registration, CFP, and sponsor inquiry flows remain external links or
+  `mailto:` actions. Adding a mutation flow requires an architecture decision.
 
 **Rationale**: Mixing the two state layers produces stale-cache bugs that are
 hard to localize. Keeping the boundary explicit makes data flow auditable.
@@ -157,8 +161,8 @@ server-side and static.
   Next.js native cache primitives (`fetch(..., { next: { revalidate, tags } })`,
   `cache: "force-cache"`) and invalidate via `revalidateTag` or
   `revalidatePath`. Parallel custom caching layers MUST NOT be introduced.
-- The static event content MUST still render when the backend is unreachable.
-  Resilience to backend outage is a functional requirement, not a stretch goal.
+- The static event content MUST still render when Sessionize is unreachable.
+  Resilience to external outage is a functional requirement, not a stretch goal.
 - Every route MUST export `metadata` (title, description, OG, Twitter card).
   `robots.txt`, `sitemap.xml`, and OG images MUST follow Next.js conventions.
   Structured data (`Event`, `Person`) SHOULD be included where it improves
@@ -240,8 +244,9 @@ Environment and secrets:
 - Public, browser-safe values use `NEXT_PUBLIC_*` (e.g., `NEXT_PUBLIC_API_BASE_URL`).
 - Server-only values MUST NOT be prefixed with `NEXT_PUBLIC_` and MUST be read
   only from server components, route handlers, or server actions.
-- Backend URL and authentication contract are read from environment variables;
-  they MUST NOT be hard-coded.
+- External service URLs are read from documented environment variables or
+  stable public-provider defaults; private credentials are not part of the
+  current application contract.
 - `.env*` files MUST NOT be committed. `.env.example` MUST list every variable
   the app reads with placeholder values.
 - Secrets, tokens, and personally identifying request bodies MUST NOT be
@@ -253,25 +258,23 @@ Environment and secrets:
 
 Before any change is reported complete:
 
-- `npm run lint` and `npm run typecheck` MUST pass.
+- `npm run verify` MUST pass. It is the repository-owned contract for format,
+  lint, type checking, unit and component tests, secret scanning, and build.
 - For component or page changes, the relevant Vitest invocation MUST be run
   and the affected page exercised in the dev server in a real browser. If
   browser verification is not possible in the current environment, that MUST
   be stated explicitly; success MUST NOT be claimed otherwise.
-- For data layer changes (TanStack Query hooks, API client, request/response
-  types), the PR description MUST describe the verification steps used
-  (request observed in network panel, error states exercised, types aligned
-  with the backend contract version).
-- For changes that depend on a backend update, the PR description MUST link
-  the corresponding backend PR or issue, and the change MUST NOT merge until
-  the backend change is available in the relevant environment.
+- For data layer changes, the PR description MUST describe the verification
+  steps used, error states exercised, and alignment with the external contract.
+- For changes that depend on an external provider update, the PR description
+  MUST link the corresponding issue or configuration change.
 - For accessibility-relevant changes, the non-negotiable subset (keyboard
   reachability, no color-only state, reduced motion, AA contrast) MUST be
   manually verified.
 - For visual changes, a screenshot or short note describing the manual
   verification MUST be included.
-- Tests MUST NOT depend on the live backend. They use the typed client mocked,
-  fixtures, or a documented local backend instance.
+- Tests MUST NOT depend on live Sessionize data. They use the typed client
+  mocked or committed fixtures.
 
 The repository commands assumed to exist (and to be added to `package.json` as
 part of any task that needs them):
@@ -284,6 +287,10 @@ part of any task that needs them):
 - Type-check: `npm run typecheck`
 - Unit and integration: `npm test` (watch: `npm run test:watch`)
 - End-to-end: `npm run e2e`
+- Format: `npm run format` (check: `npm run format:check`)
+- Secret scan: `npm run secretlint`
+- Portable gate: `npm run verify`
+- Full release gate: `npm run verify:e2e`
 
 ## Governance
 
@@ -296,7 +303,9 @@ Amendment procedure:
 
 1. A proposed amendment MUST be raised in a pull request that edits this file
    and any dependent templates (`.specify/templates/*.md`) and runtime guidance
-   (`AGENTS.md`, `CLAUDE.md`, `README.md`) in the same change set.
+   (`AGENTS.md`, `README.md`, and project context under `docs/`) in the same
+   change set. `CLAUDE.md` remains a frozen bootstrap unless restoration is
+   required.
 2. The PR description MUST state the version bump (MAJOR / MINOR / PATCH) and
    the rationale.
 3. The PR MUST update the Sync Impact Report comment at the top of this file
@@ -322,4 +331,4 @@ Compliance review:
   `CLAUDE.md` deferring to it. This constitution defines the rules; `AGENTS.md`
   describes how to apply them day to day.
 
-**Version**: 1.0.0 | **Ratified**: 2026-05-06 | **Last Amended**: 2026-05-06
+**Version**: 1.1.0 | **Ratified**: 2026-05-06 | **Last Amended**: 2026-08-21

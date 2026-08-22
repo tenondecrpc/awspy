@@ -2,7 +2,10 @@
 // sorts by start time, regardless of the room. Sessions that cross midnight
 // appear under their start day only (per data-model and FR-021).
 
-import { ScheduleSlot, type ScheduleSlotData } from "@/components/molecules/ScheduleSlot";
+import {
+  ScheduleSlot,
+  type ScheduleSlotData,
+} from "@/components/molecules/ScheduleSlot";
 import { Heading } from "@/components/atoms/Heading";
 import { EmptyState } from "@/components/organisms/EmptyState";
 import { LoadingGrid } from "@/components/atoms/LoadingGrid";
@@ -27,10 +30,7 @@ type DayGroup = {
   slots: ScheduleSlotData[];
 };
 
-function groupByStartDay(
-  grid: ScheduleGrid,
-  speakers: Speaker[]
-): DayGroup[] {
+function groupByStartDay(grid: ScheduleGrid, speakers: Speaker[]): DayGroup[] {
   const speakerSlugById = new Map<string, string>();
   for (const sp of speakers) speakerSlugById.set(sp.id, sp.slug);
 
@@ -55,8 +55,7 @@ function groupByStartDay(
           speakers: session.speakers.map((sp) => ({
             id: sp.id,
             name: sp.name,
-            slug:
-              speakerSlugById.get(sp.id) ?? (slugify(sp.name) || undefined),
+            slug: speakerSlugById.get(sp.id) ?? (slugify(sp.name) || undefined),
           })),
         });
       }
@@ -121,10 +120,7 @@ export function ScheduleGridOrganism({
           <ul className="space-y-3">
             {day.slots.map((slot) => (
               <li key={slot.id}>
-                <ScheduleSlot
-                  slot={slot}
-                  speakerBasePath={speakerBasePath}
-                />
+                <ScheduleSlot slot={slot} speakerBasePath={speakerBasePath} />
               </li>
             ))}
           </ul>

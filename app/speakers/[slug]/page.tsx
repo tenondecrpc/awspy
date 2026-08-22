@@ -40,7 +40,8 @@ export async function generateMetadata({
   }
   return buildPageMetadata({
     title: speaker.fullName,
-    description: speaker.tagLine ?? `${speaker.fullName} en AWS Community Day Paraguay`,
+    description:
+      speaker.tagLine ?? `${speaker.fullName} en AWS Community Day Paraguay`,
     path: `/speakers/${slug}`,
     type: "profile",
   });

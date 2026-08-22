@@ -18,51 +18,51 @@
 
 @theme {
   /* Brand and action */
-  --color-brand-primary: #232F3E;
+  --color-brand-primary: #232f3e;
   /* Squid Ink */
-  --color-action: #FF9900;
+  --color-action: #ff9900;
   /* Smile Orange */
-  --color-action-strong: #EC7211;
-  --color-accent: #0073BB;
+  --color-action-strong: #ec7211;
+  --color-accent: #0073bb;
   /* Hyperlink Blue */
-  --color-accent-strong: #005A91;
-  --color-accent-soft: #E6F0F7;
+  --color-accent-strong: #005a91;
+  --color-accent-soft: #e6f0f7;
 
   /* Surfaces */
-  --color-surface: #FFFFFF;
-  --color-surface-muted: #F4F6FA;
-  --color-surface-elevated: #FFFFFF;
-  --color-surface-inverse: #0B1626;
-  --color-surface-hero: #232F3E;
+  --color-surface: #ffffff;
+  --color-surface-muted: #f4f6fa;
+  --color-surface-elevated: #ffffff;
+  --color-surface-inverse: #0b1626;
+  --color-surface-hero: #232f3e;
 
   /* Text */
-  --color-text-primary: #0B1626;
+  --color-text-primary: #0b1626;
   --color-text-secondary: #364152;
-  --color-text-muted: #5C6573;
+  --color-text-muted: #5c6573;
   --color-text-on-action: #001022;
-  --color-text-on-accent: #FFFFFF;
-  --color-text-on-inverse: #FFFFFF;
-  --color-text-on-hero: #FFFFFF;
+  --color-text-on-accent: #ffffff;
+  --color-text-on-inverse: #ffffff;
+  --color-text-on-hero: #ffffff;
 
   /* Borders */
-  --color-border-subtle: #E5E9F0;
-  --color-border-strong: #5C6573;
+  --color-border-subtle: #e5e9f0;
+  --color-border-strong: #5c6573;
 
   /* State */
-  --color-focus: #0073BB;
-  --color-success: #1F7A3A;
-  --color-success-soft: #E5F5EA;
-  --color-warning: #B26200;
-  --color-warning-soft: #FFF1DD;
-  --color-danger: #B3261E;
-  --color-danger-soft: #FCE4E2;
+  --color-focus: #0073bb;
+  --color-success: #1f7a3a;
+  --color-success-soft: #e5f5ea;
+  --color-warning: #b26200;
+  --color-warning-soft: #fff1dd;
+  --color-danger: #b3261e;
+  --color-danger-soft: #fce4e2;
 
   /* Sponsor tier (always paired with text label) */
-  --color-tier-platinum: #2A2E36;
-  --color-tier-gold: #B07F00;
-  --color-tier-silver: #6B7280;
-  --color-tier-bronze: #8A4B1A;
-  --color-tier-community: #1F7A3A;
+  --color-tier-platinum: #2a2e36;
+  --color-tier-gold: #b07f00;
+  --color-tier-silver: #6b7280;
+  --color-tier-bronze: #8a4b1a;
+  --color-tier-community: #1f7a3a;
 
   /* Layout */
   --container-max: 1200px;
@@ -78,48 +78,48 @@
 @media (prefers-color-scheme: dark) {
   @theme {
     /* Brand and action */
-    --color-brand-primary: #161E2D;
-    --color-action: #FF9900;
-    --color-action-strong: #EC7211;
-    --color-accent: #3FA0E0;
-    --color-accent-strong: #0073BB;
-    --color-accent-soft: #1A2D52;
+    --color-brand-primary: #161e2d;
+    --color-action: #ff9900;
+    --color-action-strong: #ec7211;
+    --color-accent: #3fa0e0;
+    --color-accent-strong: #0073bb;
+    --color-accent-soft: #1a2d52;
 
     /* Surfaces */
-    --color-surface: #0B1626;
-    --color-surface-muted: #131F33;
-    --color-surface-elevated: #1A2638;
-    --color-surface-inverse: #FFFFFF;
-    --color-surface-hero: #161E2D;
+    --color-surface: #0b1626;
+    --color-surface-muted: #131f33;
+    --color-surface-elevated: #1a2638;
+    --color-surface-inverse: #ffffff;
+    --color-surface-hero: #161e2d;
 
     /* Text */
-    --color-text-primary: #F5F7FA;
-    --color-text-secondary: #C5CCD6;
-    --color-text-muted: #97A0AE;
+    --color-text-primary: #f5f7fa;
+    --color-text-secondary: #c5ccd6;
+    --color-text-muted: #97a0ae;
     --color-text-on-action: #001022;
-    --color-text-on-accent: #0B1626;
-    --color-text-on-inverse: #0B1626;
-    --color-text-on-hero: #F5F7FA;
+    --color-text-on-accent: #0b1626;
+    --color-text-on-inverse: #0b1626;
+    --color-text-on-hero: #f5f7fa;
 
     /* Borders */
-    --color-border-subtle: #1A2638;
-    --color-border-strong: #97A0AE;
+    --color-border-subtle: #1a2638;
+    --color-border-strong: #97a0ae;
 
     /* State */
-    --color-focus: #3FA0E0;
-    --color-success: #52C97A;
-    --color-success-soft: #14361F;
-    --color-warning: #FFB85C;
-    --color-warning-soft: #3A2A12;
-    --color-danger: #FF7A6E;
-    --color-danger-soft: #3A1B17;
+    --color-focus: #3fa0e0;
+    --color-success: #52c97a;
+    --color-success-soft: #14361f;
+    --color-warning: #ffb85c;
+    --color-warning-soft: #3a2a12;
+    --color-danger: #ff7a6e;
+    --color-danger-soft: #3a1b17;
 
     /* Sponsor tier */
-    --color-tier-platinum: #C5CCD6;
-    --color-tier-gold: #FFB85C;
-    --color-tier-silver: #A1A8B6;
-    --color-tier-bronze: #D69262;
-    --color-tier-community: #52C97A;
+    --color-tier-platinum: #c5ccd6;
+    --color-tier-gold: #ffb85c;
+    --color-tier-silver: #a1a8b6;
+    --color-tier-bronze: #d69262;
+    --color-tier-community: #52c97a;
   }
 }
 
@@ -132,13 +132,28 @@ html {
 body {
   background: var(--color-surface);
   color: var(--color-text-primary);
-  font-family: var(--font-geist-sans), system-ui, -apple-system, "Segoe UI",
-    Roboto, Helvetica, Arial, sans-serif;
+  font-family:
+    var(--font-geist-sans),
+    system-ui,
+    -apple-system,
+    "Segoe UI",
+    Roboto,
+    Helvetica,
+    Arial,
+    sans-serif;
   line-height: 1.55;
 }
 
 /* Visible focus ring for every interactive element. */
-:where(a, button, [role="button"], input, textarea, select, summary):focus-visible {
+:where(
+  a,
+  button,
+  [role="button"],
+  input,
+  textarea,
+  select,
+  summary
+):focus-visible {
   outline: 2px solid var(--color-focus);
   outline-offset: 2px;
   border-radius: var(--radius-sm);
@@ -146,7 +161,6 @@ body {
 
 /* Honor reduced motion globally. */
 @media (prefers-reduced-motion: reduce) {
-
   *,
   *::before,
   *::after {
@@ -176,7 +190,6 @@ body {
 /* Skeleton shimmer. The pulse is suppressed by the global
    prefers-reduced-motion rule above. */
 @keyframes skeleton-pulse {
-
   0%,
   100% {
     opacity: 1;

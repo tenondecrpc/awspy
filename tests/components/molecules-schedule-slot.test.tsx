@@ -42,13 +42,11 @@ describe("ScheduleSlot", () => {
 
   it("respects a custom speakerBasePath for archived editions", () => {
     render(
-      <ScheduleSlot
-        slot={SLOT}
-        speakerBasePath="/editions/2025/speakers"
-      />
+      <ScheduleSlot slot={SLOT} speakerBasePath="/editions/2025/speakers" />
     );
-    expect(
-      screen.getByRole("link", { name: "Ana Perez" })
-    ).toHaveAttribute("href", "/editions/2025/speakers/ana-perez");
+    expect(screen.getByRole("link", { name: "Ana Perez" })).toHaveAttribute(
+      "href",
+      "/editions/2025/speakers/ana-perez"
+    );
   });
 });

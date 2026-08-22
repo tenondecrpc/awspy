@@ -5,9 +5,10 @@ import type { Speaker } from "@/lib/api/sessionize";
 import type { EventInfo } from "@/lib/content/event-info";
 
 vi.mock("next/image", () => ({
-  default: ({ src, alt }: { src: string; alt: string }) =>
+  default: ({ src, alt }: { src: string; alt: string }) => (
     // eslint-disable-next-line @next/next/no-img-element
-    <img src={src} alt={alt} />,
+    <img src={src} alt={alt} />
+  ),
 }));
 
 const EVENT_INFO: EventInfo = {
@@ -16,7 +17,10 @@ const EVENT_INFO: EventInfo = {
   tagline: "First edition",
   heroTitle: "x",
   heroSubtitle: "y",
-  dates: { start: "2026-09-12T13:00:00-03:00", end: "2026-09-12T22:00:00-03:00" },
+  dates: {
+    start: "2026-09-12T13:00:00-03:00",
+    end: "2026-09-12T22:00:00-03:00",
+  },
   location: { city: "Asuncion", country: "Paraguay", summary: "Asuncion" },
   sessionizeEventId: "jl4ktls0",
   eventbriteEventUrl: null,
@@ -54,7 +58,9 @@ describe("SpeakersGrid", () => {
   it("renders one card per speaker", () => {
     render(<SpeakersGrid speakers={speakers} eventInfo={EVENT_INFO} />);
     expect(screen.getByRole("link", { name: "Ana Perez" })).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: "Beto Lopez" })).toBeInTheDocument();
+    expect(
+      screen.getByRole("link", { name: "Beto Lopez" })
+    ).toBeInTheDocument();
   });
 
   it("renders the empty state when there are no speakers", () => {
@@ -78,8 +84,9 @@ describe("SpeakersGrid", () => {
         eventInfo={{ ...EVENT_INFO, cfpStatus: "upcoming" }}
       />
     );
-    expect(
-      screen.getByRole("link", { name: /escribirnos/i })
-    ).toHaveAttribute("href", `mailto:${EVENT_INFO.contactEmail}`);
+    expect(screen.getByRole("link", { name: /escribirnos/i })).toHaveAttribute(
+      "href",
+      `mailto:${EVENT_INFO.contactEmail}`
+    );
   });
 });

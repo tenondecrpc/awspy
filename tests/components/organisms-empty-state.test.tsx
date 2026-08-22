@@ -22,7 +22,9 @@ describe("EmptyState", () => {
       screen.getByRole("heading", { name: "Aún no hay charlas confirmadas" })
     ).toBeInTheDocument();
     expect(
-      screen.getByText("Estamos seleccionando las propuestas. Pronto las publicaremos.")
+      screen.getByText(
+        "Estamos seleccionando las propuestas. Pronto las publicaremos."
+      )
     ).toBeInTheDocument();
   });
 
@@ -36,7 +38,10 @@ describe("EmptyState", () => {
       />
     );
     const link = screen.getByRole("link", { name: "Avisame por mail" });
-    expect(link).toHaveAttribute("href", "mailto:hola@awscommunitydayparaguay.com");
+    expect(link).toHaveAttribute(
+      "href",
+      "mailto:hola@awscommunitydayparaguay.com"
+    );
   });
 
   it("does not render an action when only one of href/label is provided", () => {
@@ -52,11 +57,7 @@ describe("EmptyState", () => {
 
   it("renders the heading at the requested semantic level", () => {
     render(
-      <EmptyState
-        title="Detalle"
-        description="Sub bloque"
-        headingLevel={3}
-      />
+      <EmptyState title="Detalle" description="Sub bloque" headingLevel={3} />
     );
     expect(
       screen.getByRole("heading", { level: 3, name: "Detalle" })

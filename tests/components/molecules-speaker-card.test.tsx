@@ -4,9 +4,20 @@ import { SpeakerCard } from "@/components/molecules/SpeakerCard";
 import type { Speaker } from "@/lib/api/sessionize";
 
 vi.mock("next/image", () => ({
-  default: ({ src, alt, width, height }: { src: string; alt: string; width: number; height: number }) =>
+  default: ({
+    src,
+    alt,
+    width,
+    height,
+  }: {
+    src: string;
+    alt: string;
+    width: number;
+    height: number;
+  }) => (
     // eslint-disable-next-line @next/next/no-img-element
-    <img src={src} alt={alt} width={width} height={height} />,
+    <img src={src} alt={alt} width={width} height={height} />
+  ),
 }));
 
 const SPEAKER: Speaker = {
@@ -35,7 +46,9 @@ describe("SpeakerCard", () => {
   });
 
   it("respects a custom basePath (e.g. archived editions)", () => {
-    render(<SpeakerCard speaker={SPEAKER} basePath="/editions/2025/speakers" />);
+    render(
+      <SpeakerCard speaker={SPEAKER} basePath="/editions/2025/speakers" />
+    );
     expect(screen.getByRole("link", { name: "Ada Lovelace" })).toHaveAttribute(
       "href",
       "/editions/2025/speakers/ada-lovelace"
@@ -43,11 +56,7 @@ describe("SpeakerCard", () => {
   });
 
   it("falls back to initials when the speaker has no profile picture", () => {
-    render(
-      <SpeakerCard
-        speaker={{ ...SPEAKER, profilePicture: null }}
-      />
-    );
+    render(<SpeakerCard speaker={{ ...SPEAKER, profilePicture: null }} />);
     expect(screen.getByText("AL")).toBeInTheDocument();
   });
 });

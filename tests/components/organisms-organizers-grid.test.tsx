@@ -17,7 +17,10 @@ const EVENT_INFO: EventInfo = {
   tagline: "x",
   heroTitle: "x",
   heroSubtitle: "x",
-  dates: { start: "2026-09-12T13:00:00-03:00", end: "2026-09-12T22:00:00-03:00" },
+  dates: {
+    start: "2026-09-12T13:00:00-03:00",
+    end: "2026-09-12T22:00:00-03:00",
+  },
   location: { city: "Asuncion", country: "Paraguay", summary: "Asuncion" },
   sessionizeEventId: null,
   eventbriteEventUrl: null,

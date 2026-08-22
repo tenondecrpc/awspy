@@ -14,53 +14,53 @@ const REPO_ROOT = resolve(__dirname, "../..");
 const SCAN_DIRS = ["app", "components", "lib"].map((d) => join(REPO_ROOT, d));
 const ALLOWED_EXTENSIONS = new Set([".ts", ".tsx"]);
 const SKIP_FILES = new Set([
-    // The OG image renders via Satori, which does not resolve CSS custom
-    // properties; the file documents this limitation and disables the rule
-    // explicitly. The literals there are intentionally synced with the palette.
-    join(REPO_ROOT, "app", "opengraph-image.tsx"),
+  // The OG image renders via Satori, which does not resolve CSS custom
+  // properties; the file documents this limitation and disables the rule
+  // explicitly. The literals there are intentionally synced with the palette.
+  join(REPO_ROOT, "app", "opengraph-image.tsx"),
 ]);
 
 const COLOR_PATTERN =
-    /(#[0-9a-fA-F]{3,8}\b|\brgba?\s*\(|\bhsla?\s*\(|\boklch\s*\(|\boklab\s*\(|\bcolor\s*\()/;
+  /(#[0-9a-fA-F]{3,8}\b|\brgba?\s*\(|\bhsla?\s*\(|\boklch\s*\(|\boklab\s*\(|\bcolor\s*\()/;
 
 const STYLING_CONTEXT_HINT_PATTERN =
-    /(className\s*[:=]|style\s*[:=]|`[^`]*\$\{[^}]*\}[^`]*`)/;
+  /(className\s*[:=]|style\s*[:=]|`[^`]*\$\{[^}]*\}[^`]*`)/;
 
 function* walk(dir: string): Generator<string> {
-    for (const entry of readdirSync(dir)) {
-        const full = join(dir, entry);
-        const stat = statSync(full);
-        if (stat.isDirectory()) {
-            yield* walk(full);
-        } else {
-            const ext = full.slice(full.lastIndexOf("."));
-            if (ALLOWED_EXTENSIONS.has(ext)) yield full;
-        }
+  for (const entry of readdirSync(dir)) {
+    const full = join(dir, entry);
+    const stat = statSync(full);
+    if (stat.isDirectory()) {
+      yield* walk(full);
+    } else {
+      const ext = full.slice(full.lastIndexOf("."));
+      if (ALLOWED_EXTENSIONS.has(ext)) yield full;
     }
+  }
 }
 
 describe("palette boundary in app/, components/, lib/", () => {
-    it("no source file under app/, components/, lib/ contains a color literal in a styling context", () => {
-        const offenders: { file: string; line: number; text: string }[] = [];
+  it("no source file under app/, components/, lib/ contains a color literal in a styling context", () => {
+    const offenders: { file: string; line: number; text: string }[] = [];
 
-        for (const dir of SCAN_DIRS) {
-            for (const file of walk(dir)) {
-                if (SKIP_FILES.has(file)) continue;
-                const source = readFileSync(file, "utf8");
-                const lines = source.split(/\r?\n/);
-                for (let i = 0; i < lines.length; i++) {
-                    const line = lines[i];
-                    if (!COLOR_PATTERN.test(line)) continue;
-                    // Skip lines that are clearly comments-only.
-                    const trimmed = line.trim();
-                    if (trimmed.startsWith("//") || trimmed.startsWith("*")) continue;
-                    // Heuristic: only flag when the line also looks like styling.
-                    if (!STYLING_CONTEXT_HINT_PATTERN.test(line)) continue;
-                    offenders.push({ file, line: i + 1, text: line.trim() });
-                }
-            }
+    for (const dir of SCAN_DIRS) {
+      for (const file of walk(dir)) {
+        if (SKIP_FILES.has(file)) continue;
+        const source = readFileSync(file, "utf8");
+        const lines = source.split(/\r?\n/);
+        for (let i = 0; i < lines.length; i++) {
+          const line = lines[i];
+          if (!COLOR_PATTERN.test(line)) continue;
+          // Skip lines that are clearly comments-only.
+          const trimmed = line.trim();
+          if (trimmed.startsWith("//") || trimmed.startsWith("*")) continue;
+          // Heuristic: only flag when the line also looks like styling.
+          if (!STYLING_CONTEXT_HINT_PATTERN.test(line)) continue;
+          offenders.push({ file, line: i + 1, text: line.trim() });
         }
+      }
+    }
 
-        expect(offenders, JSON.stringify(offenders, null, 2)).toEqual([]);
-    });
+    expect(offenders, JSON.stringify(offenders, null, 2)).toEqual([]);
+  });
 });

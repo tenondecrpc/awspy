@@ -17,6 +17,14 @@
 - Q: Does the site need a privacy notice or cookie banner for the first edition? → A: A short privacy footer is included noting that the site itself does not collect personal data and that registration is delegated to Eventbrite (linking to Eventbrite's privacy policy). No cookie banner is shown because no first-party tracking is installed.
 - Q: Should analytics tooling be installed for the first edition? → A: No analytics on the first edition. Decision deferred to a follow-up feature if traffic insights are needed.
 - Q: What observability is required for the static site? → A: The hosting platform's built-in deployment and runtime logs are sufficient for the first edition. On AWS Amplify Hosting (primary target) build logs surface in the Amplify Console and runtime logs surface in CloudWatch. No custom logging, metrics, or tracing infrastructure is added.
+
+**2026 operational note**: Sessionize is the primary platform for speakers,
+schedule, and CFP management. The attendee registration provider is not yet
+finalized. Until that decision is made, `eventbriteEventUrl` remains `null`
+and `registrationStatus` remains `"upcoming"`. The Eventbrite requirements in
+this specification describe the currently implemented optional adapter, not a
+confirmed production provider. A different provider requires an explicit spec
+and schema update before registration opens.
 - Q: How is Sessionize rate limiting handled? → A: Sessionize already caches responses for five minutes server-side, and the site adds its own ten-minute revalidation; rate limiting is not a practical concern at expected traffic. If a Sessionize request fails, the empty-state fallback already covers the user-visible behavior (see FR-013).
 
 ## User Scenarios & Testing *(mandatory)*

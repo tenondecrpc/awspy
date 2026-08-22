@@ -4,6 +4,8 @@ import {
   buildEventJsonLd,
   buildPageMetadata,
   buildPersonJsonLd,
+  getSiteHostname,
+  getSiteUrl,
 } from "@/lib/utils/seo";
 
 const ORIGINAL_SITE_URL = process.env.NEXT_PUBLIC_SITE_URL;
@@ -57,6 +59,20 @@ describe("buildPageMetadata", () => {
   });
 });
 
+describe("site URL helpers", () => {
+  it("normalizes the configured value to its origin", () => {
+    process.env.NEXT_PUBLIC_SITE_URL = "https://example.test/some/path/";
+
+    expect(getSiteUrl()).toBe("https://example.test");
+  });
+
+  it("returns the configured hostname for generated share assets", () => {
+    process.env.NEXT_PUBLIC_SITE_URL = "https://awscommunitydayparaguay.com";
+
+    expect(getSiteHostname()).toBe("awscommunitydayparaguay.com");
+  });
+});
+
 describe("buildEventJsonLd", () => {
   it("includes the required schema.org Event keys", () => {
     const ld = buildEventJsonLd({
@@ -65,7 +81,11 @@ describe("buildEventJsonLd", () => {
       startDate: "2026-09-12T13:00:00Z",
       endDate: "2026-09-12T22:00:00Z",
       path: "/",
-      location: { name: "Asunción Convention Center", city: "Asunción", country: "PY" },
+      location: {
+        name: "Asunción Convention Center",
+        city: "Asunción",
+        country: "PY",
+      },
     });
     expect(ld["@context"]).toBe("https://schema.org");
     expect(ld["@type"]).toBe("Event");

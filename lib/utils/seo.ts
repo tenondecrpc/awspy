@@ -6,17 +6,22 @@
 
 import type { Metadata } from "next";
 
-function siteUrl(): string {
-  return (process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000").replace(
-    /\/$/,
-    ""
-  );
+const DEFAULT_SITE_URL = "http://localhost:3000";
+
+/** Return the configured public origin without a trailing slash or path. */
+export function getSiteUrl(): string {
+  return new URL(process.env.NEXT_PUBLIC_SITE_URL ?? DEFAULT_SITE_URL).origin;
+}
+
+/** Return the hostname used in generated, user-visible share assets. */
+export function getSiteHostname(): string {
+  return new URL(getSiteUrl()).hostname;
 }
 
 function absolute(path: string): string {
   if (/^https?:\/\//i.test(path)) return path;
   if (!path.startsWith("/")) path = `/${path}`;
-  return `${siteUrl()}${path}`;
+  return `${getSiteUrl()}${path}`;
 }
 
 export type PageMetadataInput = {
@@ -45,7 +50,7 @@ export function buildPageMetadata(input: PageMetadataInput): Metadata {
   return {
     title: fullTitle,
     description: input.description,
-    metadataBase: new URL(siteUrl()),
+    metadataBase: new URL(getSiteUrl()),
     alternates: { canonical: url },
     openGraph: {
       type: input.type ?? "website",
@@ -83,7 +88,9 @@ export type EventJsonLdInput = {
   organizerUrl?: string;
 };
 
-export function buildEventJsonLd(input: EventJsonLdInput): Record<string, unknown> {
+export function buildEventJsonLd(
+  input: EventJsonLdInput
+): Record<string, unknown> {
   return {
     "@context": "https://schema.org",
     "@type": "Event",
@@ -127,7 +134,9 @@ export type PersonJsonLdInput = {
   sameAs?: string[];
 };
 
-export function buildPersonJsonLd(input: PersonJsonLdInput): Record<string, unknown> {
+export function buildPersonJsonLd(
+  input: PersonJsonLdInput
+): Record<string, unknown> {
   return {
     "@context": "https://schema.org",
     "@type": "Person",
@@ -136,14 +145,15 @@ export function buildPersonJsonLd(input: PersonJsonLdInput): Record<string, unkn
     jobTitle: input.jobTitle,
     description: input.description,
     image: input.image ? absolute(input.image) : undefined,
-    sameAs:
-      input.sameAs && input.sameAs.length > 0 ? input.sameAs : undefined,
+    sameAs: input.sameAs && input.sameAs.length > 0 ? input.sameAs : undefined,
   };
 }
 
 export type BreadcrumbItem = { name: string; path: string };
 
-export function buildBreadcrumbJsonLd(items: BreadcrumbItem[]): Record<string, unknown> {
+export function buildBreadcrumbJsonLd(
+  items: BreadcrumbItem[]
+): Record<string, unknown> {
   return {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",

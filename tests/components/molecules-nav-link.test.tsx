@@ -9,9 +9,7 @@ vi.mock("next/navigation", () => ({
 describe("NavLink", () => {
   it("renders the label as a link", () => {
     render(<NavLink href="/sponsors">Sponsors</NavLink>);
-    expect(
-      screen.getByRole("link", { name: "Sponsors" })
-    ).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "Sponsors" })).toBeInTheDocument();
   });
 
   it("marks the current page with aria-current", () => {

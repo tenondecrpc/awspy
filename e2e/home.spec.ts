@@ -1,12 +1,17 @@
 import { test, expect } from "@playwright/test";
 
 test.describe("Home page", () => {
-  test("renders the hero, countdown, and primary navigation", async ({ page }) => {
+  test("renders the hero, countdown, and primary navigation", async ({
+    page,
+  }) => {
     await page.goto("/");
 
     // Hero
     await expect(
-      page.getByRole("heading", { level: 1, name: /AWS Community Day Paraguay/i })
+      page.getByRole("heading", {
+        level: 1,
+        name: /AWS Community Day Paraguay/i,
+      })
     ).toBeVisible();
 
     // Countdown
@@ -18,7 +23,9 @@ test.describe("Home page", () => {
     await expect(page.getByText(/no recopila datos personales/i)).toBeVisible();
   });
 
-  test("offers a primary register CTA pointing to /register", async ({ page }) => {
+  test("offers a primary register CTA pointing to /register", async ({
+    page,
+  }) => {
     await page.goto("/");
     // The hero renders "Avisame del registro" while registrationStatus is
     // "upcoming"; once the seeded status flips to "open" the copy becomes
@@ -26,7 +33,9 @@ test.describe("Home page", () => {
     // CTA points at /register. We scope to the main content area to avoid
     // matching the header/footer nav entries.
     const main = page.locator("main");
-    const cta = main.getByRole("link", { name: /^(Registrarme|Avisame del registro)$/i }).first();
+    const cta = main
+      .getByRole("link", { name: /^(Registrarme|Avisame del registro)$/i })
+      .first();
     await expect(cta).toBeVisible();
     await expect(cta).toHaveAttribute("href", "/register");
   });

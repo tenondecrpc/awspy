@@ -22,7 +22,11 @@ type FAQItemProps = {
   defaultOpen?: boolean;
 };
 
-export function FAQItem({ item, className, defaultOpen = false }: FAQItemProps) {
+export function FAQItem({
+  item,
+  className,
+  defaultOpen = false,
+}: FAQItemProps) {
   const [open, setOpen] = useState(defaultOpen);
   const reactId = useId();
   const triggerId = `faq-trigger-${item.id}-${reactId}`;

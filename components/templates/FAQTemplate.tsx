@@ -15,8 +15,8 @@ export function FAQTemplate({ items }: FAQTemplateProps) {
         <div className="mb-10 max-w-3xl space-y-3">
           <Heading level={1}>Preguntas frecuentes</Heading>
           <p className="text-[var(--color-text-secondary)]">
-            Lo más consultado sobre el AWS Community Day Paraguay. ¿No
-            encontrás tu pregunta? Escribinos.
+            Lo más consultado sobre el AWS Community Day Paraguay. ¿No encontrás
+            tu pregunta? Escribinos.
           </p>
         </div>
         <div className="max-w-3xl">

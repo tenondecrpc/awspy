@@ -24,8 +24,8 @@ export function SpeakersTemplate({
         <div className="mb-10 max-w-3xl space-y-3">
           <Heading level={1}>Speakers</Heading>
           <p className="text-[var(--color-text-secondary)]">
-            Conocé a los oradores que estarán compartiendo charlas y talleres
-            en {eventInfo.name}.
+            Conocé a los oradores que estarán compartiendo charlas y talleres en{" "}
+            {eventInfo.name}.
           </p>
         </div>
         <SpeakersGrid

@@ -26,8 +26,8 @@ export function ScheduleTemplate({
         <div className="mb-10 max-w-3xl space-y-3">
           <Heading level={1}>Agenda</Heading>
           <p className="text-[var(--color-text-secondary)]">
-            Charlas, talleres y actividades de {eventInfo.name}. Los horarios
-            se muestran en hora local de Asunción (UTC-3).
+            Charlas, talleres y actividades de {eventInfo.name}. Los horarios se
+            muestran en hora local de Asunción (UTC-3).
           </p>
         </div>
         <ScheduleGridOrganism

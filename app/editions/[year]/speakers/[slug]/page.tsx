@@ -1,6 +1,10 @@
 import { notFound } from "next/navigation";
 import { SpeakerDetailTemplate } from "@/components/templates/SpeakerDetailTemplate";
-import { editionExists, getEdition, listEditions } from "@/lib/content/editions";
+import {
+  editionExists,
+  getEdition,
+  listEditions,
+} from "@/lib/content/editions";
 import {
   getSpeakerBySlug,
   listSessions,

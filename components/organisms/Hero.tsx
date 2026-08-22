@@ -36,7 +36,11 @@ export function Hero({
 
   return (
     <Section spacing="lg" tone="hero" id="contenido-principal">
-      <DecorativePattern density="medium" opacity={0.08} seed={`hero-${eventInfo.year}`} />
+      <DecorativePattern
+        density="medium"
+        opacity={0.08}
+        seed={`hero-${eventInfo.year}`}
+      />
       <Container className="relative">
         <div className="mx-auto flex max-w-3xl flex-col items-center gap-6 text-center">
           <Badge
@@ -71,7 +75,12 @@ export function Hero({
               </Button>
             ) : null}
             {!showRegistrationCta && !showCfpCta ? (
-              <Button as="a" href={`mailto:${eventInfo.contactEmail}`} variant="outline-on-dark" size="lg">
+              <Button
+                as="a"
+                href={`mailto:${eventInfo.contactEmail}`}
+                variant="outline-on-dark"
+                size="lg"
+              >
                 Escribirnos
               </Button>
             ) : null}

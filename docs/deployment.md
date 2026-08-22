@@ -4,6 +4,21 @@ The site is cloud-agnostic. The runtime contract is the standard Next.js 16 App 
 
 Primary target for the first edition is **AWS Amplify Hosting**. Vercel, OpenNext on raw AWS (Lambda + CloudFront), Netlify, and self-hosted Node.js are all viable alternatives.
 
+## Production coordinates
+
+| Setting | Value |
+|---|---|
+| AWS region | `us-east-1` |
+| Amplify app ID | `d2dgeqbarexvjr` |
+| Production branch | `main` |
+| Framework mode | Next.js SSR (`WEB_COMPUTE`) |
+| Public domain | `https://awscommunitydayparaguay.com` |
+| Amplify fallback domain | `https://main.d2dgeqbarexvjr.amplifyapp.com` |
+
+The fallback domain isolates application failures from custom domain or DNS
+failures. If it responds but the public domain does not resolve, investigate
+Route 53 and domain registration status before changing application code.
+
 ## Portable build/start contract
 
 Every deploy target must run the same three steps:
@@ -21,10 +36,14 @@ For static-only hosts (S3 + CloudFront without a Lambda layer), this site cannot
 | Name | Required | Default | Notes |
 |---|---|---|---|
 | `CURRENT_EDITION` | yes | `2026` | Year served at the bare URL (e.g. `/`, `/speakers`). Past editions are always available under `/editions/{year}`. |
-| `NEXT_PUBLIC_SITE_URL` | yes (prod) | `http://localhost:3000` | Public origin used for canonical URLs, sitemap, OG image, JSON-LD. |
+| `NEXT_PUBLIC_SITE_URL` | yes (prod) | `http://localhost:3000` | Public origin used for canonical URLs, sitemap, OG image, and JSON-LD. Production value: `https://awscommunitydayparaguay.com`. |
 | `NEXT_PUBLIC_SESSIONIZE_BASE_URL` | no | `https://sessionize.com/api/v2` | Override for offline tests or staging. |
 
-No secrets are read by this app. Eventbrite registration is handled by the public widget script (no API key); Sessionize is consumed via its public API (no auth).
+No secrets are read by this app. Sessionize is consumed through its public API
+without authentication. The attendee registration provider is not finalized.
+The current implementation can render a plain external Eventbrite link, but
+the 2026 edition leaves that URL unset and does not load an Eventbrite widget
+or call its API.
 
 ## AWS Amplify Hosting (primary target)
 
@@ -32,8 +51,67 @@ No secrets are read by this app. Eventbrite registration is handled by the publi
 2. **Framework detection**: Amplify auto-detects Next.js 16 App Router. The committed `amplify.yml` overrides defaults to also run lint, typecheck, and unit tests as build gates.
 3. **Environment variables**: in App settings -> Environment variables, add `CURRENT_EDITION` and `NEXT_PUBLIC_SITE_URL` for each branch. Amplify exposes these to both the build and the runtime.
 4. **Build**: Amplify builds with the values from `amplify.yml`. The compute split (static vs SSR/ISR) is read from `.next/required-server-files.json`.
-5. **Custom domain**: App settings -> Domain management -> add `awspy.com`. Amplify provisions an ACM certificate via DNS validation. Update DNS once Amplify shows the validation records, then verify HTTPS and `https://www.` redirects.
+5. **Custom domain**: App settings -> Domain management -> add `awscommunitydayparaguay.com`. Amplify provisions an ACM certificate via DNS validation. Verify both the apex domain and `www`, then confirm the configured redirect.
 6. **Preview branches**: enable preview deploys for non-main branches. The deploy URL is what `BASE_URL` should point at when running `e2e/deploy-smoke.spec.ts` against a preview.
+
+Environment variables prefixed with `NEXT_PUBLIC_` are embedded during the
+Next.js build. Trigger a new deployment after changing
+`NEXT_PUBLIC_SITE_URL`.
+
+### Route 53 registrant email verification
+
+Domain registration contact verification is separate from the hosted zone,
+the Amplify domain association, and the ACM certificate. Route 53 can report
+the Amplify domain as `AVAILABLE` while the registry has suspended public DNS
+with `clientHold`.
+
+Verify the registrant email within 15 days of registering the domain or
+changing its contact email. The verification message is sent by
+`noreply@domainnameverification.net` or `noreply@registrar.amazon`.
+
+Check the verification state:
+
+```sh
+aws route53domains get-contact-reachability-status \
+  --domain-name awscommunitydayparaguay.com \
+  --region us-east-1 \
+  --profile <profile>
+```
+
+The healthy value is `DONE`. `PENDING` or `EXPIRED`, combined with
+`clientHold`, means the email link still needs to be opened. Resend it with:
+
+```sh
+aws route53domains resend-contact-reachability-email \
+  --domain-name awscommunitydayparaguay.com \
+  --region us-east-1 \
+  --profile <profile>
+```
+
+Inspect registry status without printing contact information:
+
+```sh
+aws route53domains get-domain-detail \
+  --domain-name awscommunitydayparaguay.com \
+  --region us-east-1 \
+  --profile <profile> \
+  --query '{StatusList:StatusList,Nameservers:Nameservers,ExpirationDate:ExpirationDate,AutoRenew:AutoRenew}'
+```
+
+`clientTransferProhibited` is the normal transfer lock. `clientHold` is the
+blocking status that removes the domain from public DNS. Do not recreate the
+hosted zone or change otherwise-correct Amplify records to work around a
+registrant verification hold.
+
+After verification, confirm public DNS and HTTPS:
+
+```sh
+dig +short NS awscommunitydayparaguay.com
+dig +short A awscommunitydayparaguay.com
+dig +short CNAME www.awscommunitydayparaguay.com
+curl -sSIL https://awscommunitydayparaguay.com
+curl -sSIL https://www.awscommunitydayparaguay.com
+```
 
 ### Lighthouse on the preview
 
@@ -55,7 +133,7 @@ Per FR-038, observability is delegated to the hosting platform. On AWS Amplify H
 1. Vercel Dashboard -> Add New -> Project -> import GitHub repo.
 2. Framework: Next.js (auto-detected). No build overrides needed; Vercel does not read `amplify.yml`.
 3. Environment variables: `CURRENT_EDITION`, `NEXT_PUBLIC_SITE_URL`.
-4. Custom domain: Domain Settings -> add `awspy.com`.
+4. Custom domain: Domain Settings -> add the intended public domain.
 
 ## OpenNext on raw AWS (alternative)
 

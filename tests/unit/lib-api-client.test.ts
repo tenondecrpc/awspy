@@ -5,7 +5,9 @@ import { ApiError, ApiValidationError } from "@/lib/api/errors";
 
 const SAMPLE_BASE = "https://example.test";
 
-function mockFetch(impl: (...args: Parameters<typeof fetch>) => Promise<Response>): void {
+function mockFetch(
+  impl: (...args: Parameters<typeof fetch>) => Promise<Response>
+): void {
   vi.stubGlobal("fetch", vi.fn(impl));
 }
 
@@ -15,11 +17,12 @@ afterEach(() => {
 
 describe("apiFetch", () => {
   it("parses and returns a successful JSON body", async () => {
-    mockFetch(async () =>
-      new Response(JSON.stringify({ id: "abc", name: "Test" }), {
-        status: 200,
-        headers: { "content-type": "application/json" },
-      })
+    mockFetch(
+      async () =>
+        new Response(JSON.stringify({ id: "abc", name: "Test" }), {
+          status: 200,
+          headers: { "content-type": "application/json" },
+        })
     );
 
     const schema = z.object({ id: z.string(), name: z.string() });
@@ -31,11 +34,12 @@ describe("apiFetch", () => {
   });
 
   it("throws ApiValidationError on schema drift", async () => {
-    mockFetch(async () =>
-      new Response(JSON.stringify({ id: 123 }), {
-        status: 200,
-        headers: { "content-type": "application/json" },
-      })
+    mockFetch(
+      async () =>
+        new Response(JSON.stringify({ id: 123 }), {
+          status: 200,
+          headers: { "content-type": "application/json" },
+        })
     );
 
     const schema = z.object({ id: z.string() });
@@ -71,11 +75,12 @@ describe("apiFetch", () => {
   });
 
   it("returns the fallback when the response is not valid JSON and tolerateMissing is true", async () => {
-    mockFetch(async () =>
-      new Response("<html>oops</html>", {
-        status: 200,
-        headers: { "content-type": "text/html" },
-      })
+    mockFetch(
+      async () =>
+        new Response("<html>oops</html>", {
+          status: 200,
+          headers: { "content-type": "text/html" },
+        })
     );
 
     const schema = z.array(z.unknown());

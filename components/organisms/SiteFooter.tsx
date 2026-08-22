@@ -61,10 +61,7 @@ export function SiteFooter({ eventInfo }: SiteFooterProps) {
 
           <div>
             <p className="mb-2 text-sm font-semibold">Contacto</p>
-            <Link
-              href={`mailto:${eventInfo.contactEmail}`}
-              className="text-sm"
-            >
+            <Link href={`mailto:${eventInfo.contactEmail}`} className="text-sm">
               {eventInfo.contactEmail}
             </Link>
           </div>
@@ -79,11 +76,7 @@ export function SiteFooter({ eventInfo }: SiteFooterProps) {
               <ul className="flex flex-col gap-1">
                 {socialEntries.map(([key, url]) => (
                   <li key={key}>
-                    <Link
-                      href={url as string}
-                      external
-                      className="text-sm"
-                    >
+                    <Link href={url as string} external className="text-sm">
                       {SOCIAL_LABELS[key]}
                     </Link>
                   </li>

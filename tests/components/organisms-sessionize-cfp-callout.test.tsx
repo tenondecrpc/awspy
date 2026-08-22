@@ -9,7 +9,10 @@ const BASE: EventInfo = {
   tagline: "x",
   heroTitle: "x",
   heroSubtitle: "x",
-  dates: { start: "2026-09-12T13:00:00-03:00", end: "2026-09-12T22:00:00-03:00" },
+  dates: {
+    start: "2026-09-12T13:00:00-03:00",
+    end: "2026-09-12T22:00:00-03:00",
+  },
   location: { city: "Asuncion", country: "Paraguay", summary: "Asuncion" },
   sessionizeEventId: null,
   eventbriteEventUrl: null,
@@ -35,7 +38,9 @@ describe("SessionizeCFPCallout", () => {
       />
     );
     expect(screen.getByText(/CFP abierto/i)).toBeInTheDocument();
-    const cta = screen.getByRole("link", { name: /enviar propuesta en sessionize/i });
+    const cta = screen.getByRole("link", {
+      name: /enviar propuesta en sessionize/i,
+    });
     expect(cta).toHaveAttribute("href", "https://sessionize.com/awspy");
     expect(cta).toHaveAttribute("target", "_blank");
     expect(cta).toHaveAttribute("rel", "noopener noreferrer");
@@ -43,9 +48,7 @@ describe("SessionizeCFPCallout", () => {
 
   it("renders the upcoming state with a mailto fallback when CFP is upcoming", () => {
     render(
-      <SessionizeCFPCallout
-        eventInfo={{ ...BASE, cfpStatus: "upcoming" }}
-      />
+      <SessionizeCFPCallout eventInfo={{ ...BASE, cfpStatus: "upcoming" }} />
     );
     expect(screen.getByText(/CFP próximamente/i)).toBeInTheDocument();
     const link = screen.getByRole("link", { name: /avisame del cfp/i });

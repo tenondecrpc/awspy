@@ -11,7 +11,10 @@ type RegisterTemplateProps = {
   archived?: boolean;
 };
 
-export function RegisterTemplate({ eventInfo, archived = false }: RegisterTemplateProps) {
+export function RegisterTemplate({
+  eventInfo,
+  archived = false,
+}: RegisterTemplateProps) {
   const closed = archived || eventInfo.registrationStatus === "closed";
 
   return (
@@ -39,8 +42,8 @@ export function RegisterTemplate({ eventInfo, archived = false }: RegisterTempla
           ) : eventInfo.registrationStatus === "upcoming" ? (
             <>
               <p className="text-[var(--color-text-secondary)]">
-                Aún no abrimos el registro. Vas a poder reservar tu lugar
-                cuando esté disponible.
+                Aún no abrimos el registro. Vas a poder reservar tu lugar cuando
+                esté disponible.
               </p>
               <EventbriteRegisterButton
                 eventbriteEventUrl={eventInfo.eventbriteEventUrl}

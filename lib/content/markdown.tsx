@@ -21,7 +21,10 @@ type InlineToken =
   | { type: "italic"; children: InlineToken[] }
   | { type: "link"; href: string; children: InlineToken[] };
 
-function renderInlineTokens(tokens: InlineToken[], keyPrefix: string): ReactNode[] {
+function renderInlineTokens(
+  tokens: InlineToken[],
+  keyPrefix: string
+): ReactNode[] {
   return tokens.map((token, index) => {
     const key = `${keyPrefix}-${index}`;
     switch (token.type) {
@@ -37,7 +40,9 @@ function renderInlineTokens(tokens: InlineToken[], keyPrefix: string): ReactNode
           </code>
         );
       case "bold":
-        return <strong key={key}>{renderInlineTokens(token.children, key)}</strong>;
+        return (
+          <strong key={key}>{renderInlineTokens(token.children, key)}</strong>
+        );
       case "italic":
         return <em key={key}>{renderInlineTokens(token.children, key)}</em>;
       case "link":
@@ -166,7 +171,12 @@ function parseBlocks(markdown: string): Block[] {
     }
     // Otherwise: collect lines until blank into a paragraph.
     const paragraphLines: string[] = [];
-    while (i < lines.length && !/^\s*$/.test(lines[i]) && !/^#{1,3} /.test(lines[i]) && !/^- /.test(lines[i])) {
+    while (
+      i < lines.length &&
+      !/^\s*$/.test(lines[i]) &&
+      !/^#{1,3} /.test(lines[i]) &&
+      !/^- /.test(lines[i])
+    ) {
       paragraphLines.push(lines[i].trim());
       i += 1;
     }
@@ -229,10 +239,7 @@ export function RenderMarkdown({
               <ul key={key} className="list-disc space-y-1 pl-6">
                 {block.items.map((item, i) => (
                   <li key={`${key}-${i}`}>
-                    {renderInlineTokens(
-                      tokenizeInline(item),
-                      `${key}-${i}`
-                    )}
+                    {renderInlineTokens(tokenizeInline(item), `${key}-${i}`)}
                   </li>
                 ))}
               </ul>

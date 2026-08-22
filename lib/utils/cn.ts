@@ -6,12 +6,7 @@
 // small and avoid a transitive dependency for a 10-line utility.
 
 export type ClassValue =
-  | string
-  | number
-  | null
-  | undefined
-  | false
-  | ClassValue[];
+  string | number | null | undefined | false | ClassValue[];
 
 export function cn(...inputs: ClassValue[]): string {
   const out: string[] = [];

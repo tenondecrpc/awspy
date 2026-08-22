@@ -22,10 +22,6 @@ export default async function SchedulePage() {
     listSpeakers(eventInfo.sessionizeEventId),
   ]);
   return (
-    <ScheduleTemplate
-      grid={grid}
-      speakers={speakers}
-      eventInfo={eventInfo}
-    />
+    <ScheduleTemplate grid={grid} speakers={speakers} eventInfo={eventInfo} />
   );
 }

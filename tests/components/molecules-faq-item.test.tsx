@@ -30,7 +30,9 @@ describe("FAQItem", () => {
     expect(
       screen.getByRole("button", { name: "¿Qué es el evento?" })
     ).toHaveAttribute("aria-expanded", "true");
-    expect(screen.getByRole("region", { name: "¿Qué es el evento?" })).toBeInTheDocument();
+    expect(
+      screen.getByRole("region", { name: "¿Qué es el evento?" })
+    ).toBeInTheDocument();
     expect(screen.getByText(/jornada gratuita/i)).toBeInTheDocument();
   });
 

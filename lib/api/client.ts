@@ -85,7 +85,9 @@ export async function apiFetch<T>(
     method,
     headers: {
       accept: "application/json",
-      ...(validatedBody !== undefined ? { "content-type": "application/json" } : {}),
+      ...(validatedBody !== undefined
+        ? { "content-type": "application/json" }
+        : {}),
       ...headers,
     },
     signal,

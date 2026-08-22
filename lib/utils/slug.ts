@@ -8,14 +8,16 @@
 
 export function slugify(input: string): string {
   if (typeof input !== "string") return "";
-  return input
-    .normalize("NFD")
-    // strip combining diacritical marks (U+0300..U+036F)
-    .replace(/[\u0300-\u036f]/g, "")
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/-+/g, "-")
-    .replace(/^-|-$/g, "");
+  return (
+    input
+      .normalize("NFD")
+      // strip combining diacritical marks (U+0300..U+036F)
+      .replace(/[\u0300-\u036f]/g, "")
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/-+/g, "-")
+      .replace(/^-|-$/g, "")
+  );
 }
 
 export type Sluggable = { id: string; slug: string };

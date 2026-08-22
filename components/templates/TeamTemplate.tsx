@@ -17,8 +17,8 @@ export function TeamTemplate({ organizers, eventInfo }: TeamTemplateProps) {
         <div className="mb-10 max-w-3xl space-y-3">
           <Heading level={1}>Equipo organizador</Heading>
           <p className="text-[var(--color-text-secondary)]">
-            Voluntarios y voluntarias que arman cada edición del Community
-            Day en Paraguay.
+            Voluntarios y voluntarias que arman cada edición del Community Day
+            en Paraguay.
           </p>
         </div>
         <OrganizersGrid organizers={organizers} eventInfo={eventInfo} />

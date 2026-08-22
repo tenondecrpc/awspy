@@ -13,13 +13,7 @@ import { EmptyStateIllustration } from "@/components/atoms/EmptyStateIllustratio
 import { cn } from "@/lib/utils/cn";
 
 type EmptyStateVariant =
-  | "default"
-  | "speakers"
-  | "schedule"
-  | "sponsors"
-  | "team"
-  | "venue"
-  | "faq";
+  "default" | "speakers" | "schedule" | "sponsors" | "team" | "venue" | "faq";
 
 type EmptyStateProps = {
   /** Visible heading. Defaults to a neutral Spanish "Próximamente". */

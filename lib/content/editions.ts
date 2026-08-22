@@ -88,9 +88,7 @@ export function editionExists(year: string): boolean {
  */
 export function getEdition(year: string): Edition {
   if (!editionExists(year)) {
-    throw new Error(
-      `Edition ${year} does not exist under content/editions/`
-    );
+    throw new Error(`Edition ${year} does not exist under content/editions/`);
   }
   return {
     year,

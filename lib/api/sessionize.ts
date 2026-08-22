@@ -12,7 +12,8 @@ import { apiFetch } from "@/lib/api/client";
 import { disambiguateSlugs, slugify } from "@/lib/utils/slug";
 
 const SESSIONIZE_BASE_URL =
-  process.env.NEXT_PUBLIC_SESSIONIZE_BASE_URL ?? "https://sessionize.com/api/v2";
+  process.env.NEXT_PUBLIC_SESSIONIZE_BASE_URL ??
+  "https://sessionize.com/api/v2";
 
 // ---------- Speakers view ----------
 
@@ -148,12 +149,12 @@ export type SpeakerWallItem = z.infer<typeof SpeakerWallSchema>[number];
 // ---------- URL builder ----------
 
 export type SessionizeView =
-  | "Speakers"
-  | "Sessions"
-  | "GridSmart"
-  | "SpeakerWall";
+  "Speakers" | "Sessions" | "GridSmart" | "SpeakerWall";
 
-export function buildSessionizeUrl(eventId: string, view: SessionizeView): string {
+export function buildSessionizeUrl(
+  eventId: string,
+  view: SessionizeView
+): string {
   return `${SESSIONIZE_BASE_URL.replace(/\/$/, "")}/${encodeURIComponent(
     eventId
   )}/view/${view}`;

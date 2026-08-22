@@ -6,7 +6,7 @@
 #
 # Required environment variables (set in the Amplify console for the branch):
 #   - CURRENT_EDITION       (e.g. 2026)
-#   - NEXT_PUBLIC_SITE_URL  (e.g. https://awspy.com)
+#   - NEXT_PUBLIC_SITE_URL  (https://awscommunitydayparaguay.com in production)
 # Optional:
 #   - NEXT_PUBLIC_SESSIONIZE_BASE_URL (overrides https://sessionize.com/api/v2)
 #
@@ -25,17 +25,14 @@ applications:
             - npm ci
         build:
           commands:
-            - npm run lint
-            - npm run typecheck
-            - npm test
-            - npm run build
+            - npm run verify
       artifacts:
         # Amplify reads `.next/` for App Router output. The compute split
         # between static and SSR/ISR routes is detected automatically from
         # `.next/required-server-files.json`.
         baseDirectory: .next
         files:
-          - '**/*'
+          - "**/*"
       cache:
         paths:
           - node_modules/**/*

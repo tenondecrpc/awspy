@@ -16,14 +16,16 @@ type SponsorCardProps = {
   className?: string;
 };
 
-const TIER_VARIANT: Record<SponsorTier, Parameters<typeof Badge>[0]["variant"]> =
-  {
-    Platinum: "tier-platinum",
-    Gold: "tier-gold",
-    Silver: "tier-silver",
-    Bronze: "tier-bronze",
-    Community: "tier-community",
-  };
+const TIER_VARIANT: Record<
+  SponsorTier,
+  Parameters<typeof Badge>[0]["variant"]
+> = {
+  Platinum: "tier-platinum",
+  Gold: "tier-gold",
+  Silver: "tier-silver",
+  Bronze: "tier-bronze",
+  Community: "tier-community",
+};
 
 export function SponsorCard({
   sponsor,

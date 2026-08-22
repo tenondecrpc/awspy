@@ -21,9 +21,7 @@ export function CodeOfConductTemplate({
           {frontmatter.lastUpdated ? (
             <p className="text-sm text-[var(--color-text-muted)]">
               Última actualización: {formatDate(frontmatter.lastUpdated)}
-              {frontmatter.version
-                ? ` (versión ${frontmatter.version})`
-                : null}
+              {frontmatter.version ? ` (versión ${frontmatter.version})` : null}
             </p>
           ) : frontmatter.version ? (
             <p className="text-sm text-[var(--color-text-muted)]">

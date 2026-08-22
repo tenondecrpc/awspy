@@ -193,7 +193,7 @@ description: "Task list for the AWS Community Day Paraguay visual refresh"
 
 ### Implementation for User Story 5
 
-- [ ] T074 Deferred: AGENTS.md note. The contract files under `specs/002-visual-refresh/contracts/` already serve as the canonical reference; a short pointer can be added in the PR description.
+- [X] T074 Add the palette boundary and canonical contract reference to `AGENTS.md`.
 - [X] T075 `app/globals.css` header points at `specs/002-visual-refresh/data-model.md` and `eslint.config.mjs`.
 - [X] T076 `tests/unit/palette-boundary.test.ts` scans `app/`, `components/`, `lib/` and asserts no forbidden literal in styling contexts.
 

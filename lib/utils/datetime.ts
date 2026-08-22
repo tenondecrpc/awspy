@@ -79,7 +79,10 @@ export function formatDateTime(input: DateInput): string {
  * Per data-model and research R7, schedule rendering groups sessions by their
  * start day; this helper exists for slot-level labeling.
  */
-export function formatTimeRange(startInput: DateInput, endInput: DateInput): string {
+export function formatTimeRange(
+  startInput: DateInput,
+  endInput: DateInput
+): string {
   const start = toDate(startInput);
   const end = toDate(endInput);
   if (!isValid(start) || !isValid(end)) return "";

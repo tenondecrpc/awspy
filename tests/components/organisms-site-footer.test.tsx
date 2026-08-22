@@ -35,10 +35,7 @@ describe("SiteFooter", () => {
   it("renders contact email as a mailto link", () => {
     render(<SiteFooter eventInfo={FAKE_INFO} />);
     const link = screen.getByRole("link", { name: FAKE_INFO.contactEmail });
-    expect(link).toHaveAttribute(
-      "href",
-      `mailto:${FAKE_INFO.contactEmail}`
-    );
+    expect(link).toHaveAttribute("href", `mailto:${FAKE_INFO.contactEmail}`);
   });
 
   it("renders the privacy footer note pointing to Eventbrite's policy", () => {
@@ -61,9 +58,7 @@ describe("SiteFooter", () => {
   });
 
   it("falls back to a 'pronto en redes' message when no social links exist", () => {
-    render(
-      <SiteFooter eventInfo={{ ...FAKE_INFO, social: {} }} />
-    );
+    render(<SiteFooter eventInfo={{ ...FAKE_INFO, social: {} }} />);
     expect(screen.getByText(/próximamente en redes/i)).toBeInTheDocument();
   });
 

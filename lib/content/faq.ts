@@ -10,21 +10,19 @@ export const FAQItemSchema = z.object({
   answer: z.string().min(1),
 });
 
-export const FAQListSchema = z
-  .array(FAQItemSchema)
-  .superRefine((arr, ctx) => {
-    const seen = new Set<string>();
-    arr.forEach((f, i) => {
-      if (seen.has(f.id)) {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          path: [i, "id"],
-          message: `FAQ id "${f.id}" is duplicated`,
-        });
-      }
-      seen.add(f.id);
-    });
+export const FAQListSchema = z.array(FAQItemSchema).superRefine((arr, ctx) => {
+  const seen = new Set<string>();
+  arr.forEach((f, i) => {
+    if (seen.has(f.id)) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: [i, "id"],
+        message: `FAQ id "${f.id}" is duplicated`,
+      });
+    }
+    seen.add(f.id);
   });
+});
 
 export type FAQItem = z.infer<typeof FAQItemSchema>;
 

@@ -26,7 +26,9 @@ function mockFetch(view: string, payload: unknown, status = 200): void {
       const url = typeof input === "string" ? input : input.toString();
       // Sanity check: we are calling the right URL.
       if (!url.includes(`/view/${view}`)) {
-        throw new Error(`unexpected URL ${url}, expected to contain /view/${view}`);
+        throw new Error(
+          `unexpected URL ${url}, expected to contain /view/${view}`
+        );
       }
       return new Response(JSON.stringify(payload), {
         status,
@@ -131,11 +133,12 @@ describe("listSpeakers", () => {
   it("returns [] when Sessionize returns malformed JSON", async () => {
     vi.stubGlobal(
       "fetch",
-      vi.fn(async () =>
-        new Response("<html>boom</html>", {
-          status: 200,
-          headers: { "content-type": "text/html" },
-        })
+      vi.fn(
+        async () =>
+          new Response("<html>boom</html>", {
+            status: 200,
+            headers: { "content-type": "text/html" },
+          })
       )
     );
     expect(await listSpeakers("jl4ktls0")).toEqual([]);

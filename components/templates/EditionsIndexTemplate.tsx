@@ -24,8 +24,8 @@ export function EditionsIndexTemplate({
         <div className="mb-10 max-w-3xl space-y-3">
           <Heading level={1}>Ediciones anteriores</Heading>
           <p className="text-[var(--color-text-secondary)]">
-            Archivo de las ediciones pasadas del AWS Community Day Paraguay.
-            La edición vigente vive en el sitio principal.
+            Archivo de las ediciones pasadas del AWS Community Day Paraguay. La
+            edición vigente vive en el sitio principal.
           </p>
         </div>
 
@@ -38,9 +38,7 @@ export function EditionsIndexTemplate({
           />
         ) : (
           <ul
-            className={cn(
-              "grid gap-4 sm:grid-cols-2 lg:grid-cols-3"
-            )}
+            className={cn("grid gap-4 sm:grid-cols-2 lg:grid-cols-3")}
             aria-label="Lista de ediciones anteriores"
           >
             {pastEditions.map((year) => (

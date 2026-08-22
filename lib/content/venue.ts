@@ -36,7 +36,11 @@ export const VenueSchema = z
       });
       return;
     }
-    if (!TRUSTED_MAP_HOSTS.includes(url.hostname as (typeof TRUSTED_MAP_HOSTS)[number])) {
+    if (
+      !TRUSTED_MAP_HOSTS.includes(
+        url.hostname as (typeof TRUSTED_MAP_HOSTS)[number]
+      )
+    ) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
         path: ["embedMapUrl"],

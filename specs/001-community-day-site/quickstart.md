@@ -35,7 +35,7 @@ This is the from-zero guide for a new contributor or organizer working on the AW
    Required keys for local development:
 
    - `CURRENT_EDITION`: 4-digit year of the active edition (e.g., `2026`).
-   - `NEXT_PUBLIC_SITE_URL`: full URL the site will be served from in production (e.g., `https://awspy.com`). Used for canonical URLs, sitemap, and OG images.
+   - `NEXT_PUBLIC_SITE_URL`: full URL the site will be served from in production (for this project, `https://awscommunitydayparaguay.com`). Use `http://localhost:3000` in `.env.local`. The value controls canonical URLs, sitemap, robots, OG images, and JSON-LD.
 
    Optional keys:
 
@@ -87,6 +87,14 @@ Same pattern as sponsors: edit the corresponding file under `content/editions/{y
 ### Update the event date, hero copy, status flags
 
 Edit `content/editions/{year}/event.json`. The `cfpStatus` and `registrationStatus` fields drive the UX on `/cfp` and `/register`. Allowed values: `"open"`, `"upcoming"`, `"closed"`.
+
+Sessionize is the primary platform for speakers, schedule, and CFP management.
+The attendee registration provider is not finalized for the 2026 edition. The
+current implementation supports an optional external Eventbrite URL, but keep
+`eventbriteEventUrl` set to `null` and `registrationStatus` set to `"upcoming"`
+until the provider is selected. Choosing a non-Eventbrite provider requires a
+small code and schema rename because the current boundary is
+Eventbrite-specific.
 
 ### Add or update speakers, sessions, schedule
 
@@ -148,7 +156,7 @@ The old edition continues to live at `/editions/{old-year}/...` because its cont
 
 After deploy:
 
-1. Open the production URL and verify the home renders the expected edition.
+1. Open `https://awscommunitydayparaguay.com` and verify the home renders the expected edition. If it does not resolve while the Amplify fallback domain works, follow the Route 53 registrant email verification runbook in `docs/deployment.md`.
 2. Click through every nav item; each route must return 200.
 3. Open `/sitemap.xml` and confirm all expected URLs are present.
 4. Open `/robots.txt` and confirm it allows crawling and references the sitemap.

@@ -21,7 +21,9 @@ const ROUTES: Array<{ path: string; heading: RegExp }> = [
 ];
 
 for (const route of ROUTES) {
-  test(`${route.path} renders 200 with its primary heading`, async ({ page }) => {
+  test(`${route.path} renders 200 with its primary heading`, async ({
+    page,
+  }) => {
     const response = await page.goto(route.path);
     expect(response?.ok()).toBe(true);
     await expect(

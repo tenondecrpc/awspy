@@ -2,16 +2,25 @@
   "name": "awspy",
   "version": "0.1.0",
   "private": true,
+  "engines": {
+    "node": ">=20.0.0",
+    "npm": ">=10.0.0"
+  },
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
     "lint:fix": "eslint --fix",
+    "format": "prettier . --write",
+    "format:check": "prettier . --check",
+    "secretlint": "secretlint \"**/*\"",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "test:watch": "vitest",
     "e2e": "playwright test",
+    "verify": "npm run format:check && npm run lint && npm run typecheck && npm test && npm run secretlint && npm run build",
+    "verify:e2e": "npm run verify && npm run e2e",
     "fixtures:sessionize": "for v in Speakers Sessions GridSmart SpeakerWall; do curl -sSf \"https://sessionize.com/api/v2/${SESSIONIZE_FIXTURE_EVENT_ID:-jl4ktls0}/view/$v\" -o \"tests/fixtures/sessionize/$v.json\" && echo \"refreshed $v\"; done"
   },
   "dependencies": {
@@ -28,6 +37,7 @@
   },
   "devDependencies": {
     "@playwright/test": "^1.59.1",
+    "@secretlint/secretlint-rule-preset-recommend": "12.0.0",
     "@tailwindcss/postcss": "^4",
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.2",
@@ -39,6 +49,8 @@
     "eslint": "^9",
     "eslint-config-next": "16.2.5",
     "jsdom": "^29.1.1",
+    "prettier": "3.9.6",
+    "secretlint": "12.0.0",
     "tailwindcss": "^4",
     "typescript": "^5",
     "vitest": "^4.1.5"

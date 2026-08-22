@@ -28,7 +28,7 @@ Single Next.js application at the repo root. All paths in tasks below are relati
 
 - [X] T001 Add `@next/mdx`, `@types/mdx`, `@mdx-js/react`, `@mdx-js/loader` to `package.json` dev/dependencies and run `npm install`.
 - [X] T002 [P] Configure MDX support in `next.config.ts` (register `pageExtensions` to include `mdx` and add `withMDX`); add `images.remotePatterns` allow-listing `sessionize.com`, `img.evbuc.com`, and any sponsor logo CDN; keep TypeScript strict.
-- [X] T003 [P] Update `.env.example` with `CURRENT_EDITION=2026`, `NEXT_PUBLIC_SITE_URL=https://awspy.com`, and an optional commented `NEXT_PUBLIC_SESSIONIZE_BASE_URL` override; document each variable.
+- [X] T003 [P] Update `.env.example` with `CURRENT_EDITION=2026`, the local `NEXT_PUBLIC_SITE_URL=http://localhost:3000` value plus the documented production value `https://awscommunitydayparaguay.com`, and an optional commented `NEXT_PUBLIC_SESSIONIZE_BASE_URL` override; document each variable.
 - [X] T004 [P] Create the directory scaffolding under the repo root: `components/atoms/`, `components/molecules/`, `components/organisms/`, `components/templates/`, `lib/api/` (already exists), `lib/content/`, `lib/utils/`, `content/editions/2026/`, `public/og/`, `public/logos/`, `public/team/`, `tests/unit/`, `tests/components/`, `tests/fixtures/sessionize/`, `e2e/`. Add a `.gitkeep` to any directory that would otherwise be empty.
 - [X] T005 [P] Define Tailwind v4 theme tokens in `app/globals.css` using `@theme`: brand colors (AWS-aligned palette with verified AA contrast), spacing scale, typography scale, container widths, focus-ring color, and a semantic mapping for `text`, `surface`, `accent`, `muted`. Document the AA contrast pairs in a comment block.
 - [X] T006 Create a small class-name helper at `lib/utils/cn.ts` (a thin `clsx`-like join with `undefined`/`false` filtering) and corresponding test at `tests/unit/utils-cn.test.ts`.
@@ -310,8 +310,8 @@ Single Next.js application at the repo root. All paths in tasks below are relati
 
 ### Implementation for User Story 9
 
-- [ ] T116 [US9] Configure the AWS Amplify Hosting app: connect the GitHub repo, select the `main` branch, set production env vars (`CURRENT_EDITION=2026`, `NEXT_PUBLIC_SITE_URL=https://awspy.com`), confirm the committed `amplify.yml` is honored, and verify the build passes on a preview branch deploy. Lint, typecheck, and unit tests are gated by the build per `amplify.yml`.
-- [ ] T117 [US9] Configure the custom domain `awspy.com` in the Amplify Console (Domain management). Wait for ACM DNS validation, point the domain at Amplify, and verify HTTPS plus the `www` redirect.
+- [ ] T116 [US9] Configure the AWS Amplify Hosting app: connect the GitHub repo, select the `main` branch, set production env vars (`CURRENT_EDITION=2026`, `NEXT_PUBLIC_SITE_URL=https://awscommunitydayparaguay.com`), confirm the committed `amplify.yml` is honored, and verify the build passes on a preview branch deploy. Production app `d2dgeqbarexvjr`, `main`, and the environment variables were verified on 2026-08-21; the preview branch validation remains open. Lint, typecheck, and unit tests are gated by the build per `amplify.yml`.
+- [ ] T117 [US9] Configure the custom domain `awscommunitydayparaguay.com` in the Amplify Console (Domain management). The Amplify association, ACM certificate, Route 53 hosted zone, and records were verified on 2026-08-21. Public reachability remains open until the registrant email is verified and Route 53 removes `clientHold`; then verify HTTPS plus the `www` redirect.
 - [ ] T118 [US9] Run a desktop Lighthouse pass on the Amplify preview URL (`npx lighthouse <url> --view`); record results; fix any regression that drops below FR-032 thresholds.
 
 **Checkpoint US9 complete**: site live, all post-deploy quickstart checks pass.

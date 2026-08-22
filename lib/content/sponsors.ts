@@ -18,10 +18,7 @@ const ImageRefSchema = z.union([
   z.string().url(),
   z
     .string()
-    .regex(
-      /^\/(logos|public\/logos)\//,
-      "Repo paths must live under /logos/"
-    ),
+    .regex(/^\/(logos|public\/logos)\//, "Repo paths must live under /logos/"),
 ]);
 
 export const SponsorSchema = z.object({

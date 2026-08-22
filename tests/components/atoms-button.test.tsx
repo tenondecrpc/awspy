@@ -23,7 +23,7 @@ describe("Button", () => {
     expect(onClick).toHaveBeenCalled();
   });
 
-  it("renders as an anchor when as=\"a\" and href is provided", () => {
+  it('renders as an anchor when as="a" and href is provided', () => {
     render(
       <Button as="a" href="/register">
         Ir al registro

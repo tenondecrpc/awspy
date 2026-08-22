@@ -82,12 +82,7 @@ export function SessionizeCFPCallout({ eventInfo }: SessionizeCFPCalloutProps) {
             Avisame del CFP
           </Button>
         ) : (
-          <Button
-            as="a"
-            href="/speakers"
-            variant="secondary"
-            size="md"
-          >
+          <Button as="a" href="/speakers" variant="secondary" size="md">
             Ver speakers confirmados
           </Button>
         )}

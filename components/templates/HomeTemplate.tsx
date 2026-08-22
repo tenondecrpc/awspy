@@ -52,7 +52,12 @@ export function HomeTemplate({
         </Container>
       </Section>
 
-      <Section spacing="md" tone="muted" aria-labelledby="about-title" eyebrow="Sobre el evento">
+      <Section
+        spacing="md"
+        tone="muted"
+        aria-labelledby="about-title"
+        eyebrow="Sobre el evento"
+      >
         <Container>
           <div className="mx-auto max-w-3xl space-y-4 text-center">
             <Heading id="about-title" level={2} className="text-balance">

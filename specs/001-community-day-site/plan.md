@@ -19,7 +19,7 @@ The technical approach honors all seven constitution principles. Routes, identif
 ## Technical Context
 
 **Language/Version**: TypeScript 5.x (strict mode), Node.js 20.x runtime  
-**Primary Dependencies**: Next.js 16.2.5 (App Router, Server Components), React 19.2.4, Tailwind CSS 4.x, Zod 4.x, TanStack Query 5.x (provider already installed; only used if/when client-side fetching becomes necessary), Zustand 5.x (only used for ephemeral UI state if/when needed), `@next/mdx` (to be added) for code-of-conduct rendering  
+**Primary Dependencies**: Next.js 16.2.5 (App Router, Server Components), React 19.2.4, Tailwind CSS 4.x, Zod 4.x, TanStack Query 5.x (provider already installed; only used if/when client-side fetching becomes necessary), Zustand 5.x (only used for ephemeral UI state if/when needed), `@next/mdx` for code-of-conduct rendering
 **Storage**: None. Content lives in version-controlled JSON/MDX under `content/editions/{year}/`. No database or external persistence in this repository  
 **Testing**: Vitest 4.x with jsdom environment for unit and integration; React Testing Library 16.x with `@testing-library/jest-dom` for component tests; Playwright 1.59 for end-to-end  
 **Target Platform**: AWS Amplify Hosting as the primary deployment target for v1. The site is cloud-agnostic and remains deployable on Vercel, OpenNext on raw AWS, Netlify, or self-hosted Node.js without code changes; see `docs/deployment.md` and `amplify.yml`. Modern evergreen browsers (last 2 versions of Chrome/Firefox/Safari/Edge); mobile and desktop.  
@@ -34,7 +34,7 @@ The constitution at `.specify/memory/constitution.md` is version 1.0.0. This pla
 
 ### Principle I - Frontend-Only Boundary (NON-NEGOTIABLE)
 
-- **PASS**. No backend service, database, or admin panel is built in this repository. Persistence and editorial workflows are delegated entirely to external systems (Sessionize for speakers/sessions/schedule, Eventbrite for registration). Sponsor inquiries are handled with a `mailto:` link. Edition metadata, sponsors, organizers, venue, FAQ, and code of conduct are version-controlled content edited through pull requests.
+- **PASS**. No backend service, database, or admin panel is built in this repository. Sessionize owns speakers, sessions, schedule, and CFP management. The attendee registration provider remains undecided; the existing Eventbrite link adapter is optional and unconfigured. Sponsor inquiries are handled with a `mailto:` link. Edition metadata, sponsors, organizers, venue, FAQ, and code of conduct are version-controlled content edited through pull requests.
 - Route Handlers and Server Actions in this plan are limited to: serving the dynamic OG image, generating the sitemap and robots, and reading Sessionize via the typed `fetch` client during server rendering and revalidation. None of these own persistent state.
 
 ### Principle II - Atomic Design Layering
@@ -56,7 +56,7 @@ The constitution at `.specify/memory/constitution.md` is version 1.0.0. This pla
 
 ### Principle VI - Accessibility Non-Negotiables (NON-NEGOTIABLE)
 
-- **PASS**. Theme tokens are defined to meet AA contrast on every pair (Tailwind v4 `@theme`). All interactive elements are real `<a>` or `<button>` and reachable by keyboard with visible focus rings. The countdown and any transitions respect `prefers-reduced-motion`. The FAQ accordion exposes `aria-expanded`, `aria-controls`, and supports Enter, Space, and arrow keys. No information is conveyed by color alone (sponsor tier, status flags, etc. always pair color with text or icon). Forms (only the indirect Eventbrite overlay; no internal forms) are not in scope to be built; mailto links and external CTAs use `rel="noopener noreferrer"` and explicit `target="_blank"`.
+- **PASS**. Theme tokens are defined to meet AA contrast on every pair (Tailwind v4 `@theme`). All interactive elements are real `<a>` or `<button>` and reachable by keyboard with visible focus rings. The countdown and any transitions respect `prefers-reduced-motion`. The FAQ accordion exposes `aria-expanded`, `aria-controls`, and supports Enter, Space, and arrow keys. No information is conveyed by color alone (sponsor tier, status flags, etc. always pair color with text or icon). No internal registration form is in scope; mailto links and external CTAs use `rel="noopener noreferrer"` and explicit `target="_blank"`.
 
 ### Principle VII - Language and Formatting Discipline
 
@@ -300,7 +300,7 @@ A short "from zero to running" guide for a new contributor: clone the repo, set 
 
 Re-evaluating each principle after the Phase 1 artifacts are produced:
 
-- **Frontend-Only Boundary**: research.md and contracts confirm no backend is introduced; data sources are external (Sessionize, Eventbrite) and version-controlled content. PASS.
+- **Frontend-Only Boundary**: research.md and contracts confirm no backend is introduced; data sources are Sessionize, the optional external registration link, and version-controlled content. PASS.
 - **Atomic Design Layering**: the project structure section enforces the tier discipline; the component list above respects it. PASS.
 - **Typed API Boundary with Zod Validation**: `contracts/sessionize-api.md` and `contracts/content-schemas.md` make the Zod boundary explicit on every payload (inbound from Sessionize, inbound from the local files). PASS.
 - **State Layering**: the design has zero server state in Zustand. TanStack Query provider stays in place but is unused for v1. PASS.

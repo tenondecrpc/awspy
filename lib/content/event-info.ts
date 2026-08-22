@@ -35,7 +35,10 @@ export const EventInfoSchema = z
       country: z.string().min(1),
       summary: z.string().min(1),
     }),
-    sessionizeEventId: z.string().regex(/^[a-z0-9]+$/i).nullable(),
+    sessionizeEventId: z
+      .string()
+      .regex(/^[a-z0-9]+$/i)
+      .nullable(),
     eventbriteEventUrl: z.string().url().nullable(),
     cfpSubmissionUrl: z.string().url().nullable(),
     cfpStatus: StatusEnum,

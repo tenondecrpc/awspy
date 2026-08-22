@@ -1,7 +1,9 @@
 import { test, expect } from "@playwright/test";
 
 test.describe("/register and /cfp", () => {
-  test("/register shows the 'registro próximamente' alternative for the seeded null URL", async ({ page }) => {
+  test("/register shows the 'registro próximamente' alternative for the seeded null URL", async ({
+    page,
+  }) => {
     await page.goto("/register");
     await expect(
       page.getByRole("heading", { level: 1, name: "Registro" })
@@ -15,17 +17,21 @@ test.describe("/register and /cfp", () => {
     await expect(mailto).toHaveAttribute("href", /^mailto:/);
   });
 
-  test("/register does not load the Eventbrite widget script (C1: link-only)", async ({ page }) => {
+  test("/register does not load the Eventbrite widget script (C1: link-only)", async ({
+    page,
+  }) => {
     await page.goto("/register");
     // No <script> tag should reference eb_widgets.js. The site delegates
     // registration to Eventbrite via an external link only.
-    const widgetScripts = await page.locator(
-      'script[src*="eb_widgets.js"]'
-    ).count();
+    const widgetScripts = await page
+      .locator('script[src*="eb_widgets.js"]')
+      .count();
     expect(widgetScripts).toBe(0);
   });
 
-  test("/cfp shows the upcoming callout for the seeded null URL", async ({ page }) => {
+  test("/cfp shows the upcoming callout for the seeded null URL", async ({
+    page,
+  }) => {
     await page.goto("/cfp");
     await expect(
       page.getByRole("heading", { level: 1, name: "Call for papers" })

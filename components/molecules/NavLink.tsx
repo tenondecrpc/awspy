@@ -17,12 +17,19 @@ type NavLinkProps = {
   onNavigate?: () => void;
 };
 
-export function NavLink({ href, children, className, onNavigate }: NavLinkProps) {
+export function NavLink({
+  href,
+  children,
+  className,
+  onNavigate,
+}: NavLinkProps) {
   const pathname = usePathname() ?? "/";
   // The home link only matches the exact root; everything else matches its
   // own segment plus deeper paths under it.
   const isActive =
-    href === "/" ? pathname === "/" : pathname === href || pathname.startsWith(`${href}/`);
+    href === "/"
+      ? pathname === "/"
+      : pathname === href || pathname.startsWith(`${href}/`);
 
   return (
     <NextLink

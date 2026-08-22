@@ -27,8 +27,7 @@ const TONE_CLASS: Record<NonNullable<SectionProps["tone"]>, string> = {
   muted: "bg-[var(--color-surface-muted)] text-[var(--color-text-primary)]",
   inverse:
     "bg-[var(--color-surface-inverse)] text-[var(--color-text-on-inverse)]",
-  hero:
-    "relative overflow-hidden bg-[var(--color-surface-hero)] text-[var(--color-text-on-hero)]",
+  hero: "relative overflow-hidden bg-[var(--color-surface-hero)] text-[var(--color-text-on-hero)]",
 };
 
 const SPACING_CLASS: Record<NonNullable<SectionProps["spacing"]>, string> = {
@@ -55,9 +54,15 @@ export function Section({
     >
       {eyebrow ? (
         <div className="mb-3 flex items-center justify-center gap-2 text-xs font-bold uppercase tracking-[0.18em] text-[var(--color-action)]">
-          <span className="inline-block h-px w-8 bg-[var(--color-action)]" aria-hidden="true" />
+          <span
+            className="inline-block h-px w-8 bg-[var(--color-action)]"
+            aria-hidden="true"
+          />
           <span>{eyebrow}</span>
-          <span className="inline-block h-px w-8 bg-[var(--color-action)]" aria-hidden="true" />
+          <span
+            className="inline-block h-px w-8 bg-[var(--color-action)]"
+            aria-hidden="true"
+          />
         </div>
       ) : null}
       {children}
