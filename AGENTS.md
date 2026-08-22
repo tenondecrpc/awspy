@@ -224,11 +224,11 @@ its individual commands. Playwright remains the separate release-level gate in
 - Documentation index: `docs/README.md`
 
 ## Active Technologies
-- TypeScript 5.x (strict mode), Node.js 24.x runtime + Next.js 16.3.2 (App Router, Server Components), React 19.2.4, Tailwind CSS 4.x, Zod 4.x, TanStack Query 5.x (provider already installed; only used if/when client-side fetching becomes necessary), Zustand 5.x (only used for ephemeral UI state if/when needed), and `@next/mdx` for code-of-conduct rendering (001-community-day-site)
+- TypeScript 5.x (strict mode), Node.js 24.15.0 runtime + Next.js 16.3.2 (App Router, Server Components), React 19.2.4, Tailwind CSS 4.x, Zod 4.x, TanStack Query 5.x (provider already installed; only used if/when client-side fetching becomes necessary), Zustand 5.x (only used for ephemeral UI state if/when needed), and `@next/mdx` for code-of-conduct rendering (001-community-day-site)
 - None. Content lives in version-controlled JSON/MDX under `content/editions/{year}/`. No database or external persistence in this repository (001-community-day-site)
 
 ## Recent Changes
-- 001-community-day-site: Added TypeScript 5.x (strict mode), Node.js 24.x runtime + Next.js 16.3.2 (App Router, Server Components), React 19.2.4, Tailwind CSS 4.x, Zod 4.x, TanStack Query 5.x (provider already installed; only used if/when client-side fetching becomes necessary), Zustand 5.x (only used for ephemeral UI state if/when needed), and `@next/mdx` for code-of-conduct rendering
+- 001-community-day-site: Added TypeScript 5.x (strict mode), Node.js 24.15.0 runtime + Next.js 16.3.2 (App Router, Server Components), React 19.2.4, Tailwind CSS 4.x, Zod 4.x, TanStack Query 5.x (provider already installed; only used if/when client-side fetching becomes necessary), Zustand 5.x (only used for ephemeral UI state if/when needed), and `@next/mdx` for code-of-conduct rendering
 
 <!-- BEGIN:nextjs-agent-rules -->
 

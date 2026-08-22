@@ -41,7 +41,7 @@ component names before opening registration.
 
 Requirements:
 
-- Node.js 24.x
+- Node.js 24.15.0 (pinned in `.nvmrc`)
 - npm 10.x or newer
 
 ```sh

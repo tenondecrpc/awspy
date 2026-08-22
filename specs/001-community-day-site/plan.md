@@ -18,7 +18,7 @@ The technical approach honors all seven constitution principles. Routes, identif
 
 ## Technical Context
 
-**Language/Version**: TypeScript 5.x (strict mode), Node.js 24.x runtime
+**Language/Version**: TypeScript 5.x (strict mode), Node.js 24.15.0 runtime
 **Primary Dependencies**: Next.js 16.3.2 (App Router, Server Components), React 19.2.4, Tailwind CSS 4.x, Zod 4.x, TanStack Query 5.x (provider already installed; only used if/when client-side fetching becomes necessary), Zustand 5.x (only used for ephemeral UI state if/when needed), `@next/mdx` for code-of-conduct rendering
 **Storage**: None. Content lives in version-controlled JSON/MDX under `content/editions/{year}/`. No database or external persistence in this repository  
 **Testing**: Vitest 4.x with jsdom environment for unit and integration; React Testing Library 16.x with `@testing-library/jest-dom` for component tests; Playwright 1.59 for end-to-end  

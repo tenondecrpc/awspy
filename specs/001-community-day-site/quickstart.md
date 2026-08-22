@@ -6,7 +6,7 @@ This is the from-zero guide for a new contributor or organizer working on the AW
 
 ## Prerequisites
 
-- Node.js 24.x
+- Node.js 24.15.0
 - npm 10.x or newer
 - Git
 

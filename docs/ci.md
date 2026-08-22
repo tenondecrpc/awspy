@@ -8,8 +8,9 @@ npm ci
 npm run verify
 ```
 
-Node.js 24 is the repository runtime. `.nvmrc`, `package.json`, GitHub Actions,
-and `amplify.yml` must remain aligned on that major version.
+Node.js 24.15.0 is the repository runtime. `.nvmrc`, `package.json`, GitHub
+Actions, and `amplify.yml` must remain aligned on that minimum patch because
+current test tooling rejects earlier Node.js 24 releases.
 
 `npm run verify` executes, in order:
 

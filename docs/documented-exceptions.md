@@ -41,8 +41,8 @@ exception or describe an open deployment gap.
 - **Former scope**: `secretlint` and
   `@secretlint/secretlint-rule-preset-recommend` were pinned to `12.0.0` while
   the project targeted Node.js 20.
-- **Resolution**: The project and Amplify build moved to Node.js 24, allowing
-  both packages to upgrade to `13.0.4`.
+- **Resolution**: The project and Amplify build moved to Node.js 24.15.0,
+  allowing both packages to upgrade to `13.0.4`.
 
 ### GAP-001 - Dependency audit reports high-severity findings
 

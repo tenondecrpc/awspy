@@ -20,7 +20,7 @@ A short guide for anyone (human or agent) picking up the visual refresh.
 
 ## Prerequisites
 
-- Node.js 24.x and npm.
+- Node.js 24.15.0 and npm.
 - The repository scaffolded by feature 001 (already in place).
 
 ## Getting started

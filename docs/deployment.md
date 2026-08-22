@@ -21,7 +21,8 @@ Route 53 and domain registration status before changing application code.
 
 ## Portable build/start contract
 
-Every deploy target must provide Node.js 24 and run the same three steps:
+Every deploy target must provide Node.js 24.15.0 or a newer 24.x patch and run
+the same three steps:
 
 ```sh
 npm ci            # install with locked versions
@@ -48,7 +49,7 @@ or call its API.
 ## AWS Amplify Hosting (primary target)
 
 1. **Create the app**: AWS Amplify Console -> Host web app -> Connect GitHub repo -> select branch (e.g. `main`).
-2. **Framework detection**: Amplify auto-detects Next.js 16 App Router. The committed `amplify.yml` selects Node.js 24 and overrides defaults to run the repository verification gate.
+2. **Framework detection**: Amplify auto-detects Next.js 16 App Router. The committed `amplify.yml` installs Node.js 24.15.0 explicitly instead of accepting Amplify's older bundled 24.x patch, then runs the repository verification gate.
 3. **Environment variables**: in App settings -> Environment variables, add `CURRENT_EDITION` and `NEXT_PUBLIC_SITE_URL` for each branch. Amplify exposes these to both the build and the runtime.
 4. **Build**: Amplify builds with the values from `amplify.yml`. The compute split (static vs SSR/ISR) is read from `.next/required-server-files.json`.
 5. **Custom domain**: App settings -> Domain management -> add `awscommunitydayparaguay.com`. Amplify provisions an ACM certificate via DNS validation. Verify both the apex domain and `www`, then confirm the configured redirect.
