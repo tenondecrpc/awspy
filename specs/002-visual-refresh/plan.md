@@ -18,8 +18,8 @@ The refresh is visual-only. It does not touch `lib/api/`, `lib/content/`, route 
 
 ## Technical Context
 
-**Language/Version**: TypeScript 5.x (strict mode), Node.js 20.x runtime
-**Primary Dependencies**: Next.js 16.2.5 (App Router, Server Components), React 19.2.4, Tailwind CSS 4.x (`@theme` tokens), already installed
+**Language/Version**: TypeScript 5.x (strict mode), Node.js 24.x runtime
+**Primary Dependencies**: Next.js 16.3.2 (App Router, Server Components), React 19.2.4, Tailwind CSS 4.x (`@theme` tokens), already installed
 **Storage**: None. Static visual assets under `public/assets/`. No persistence touched
 **Testing**: Vitest 4.x with jsdom for unit and component tests, React Testing Library 16.x with `@testing-library/jest-dom`, Playwright 1.59 for end-to-end (empty states and skeletons under `e2e/empty-states.spec.ts`)
 **Target Platform**: Same as v1 (AWS Amplify Hosting primary, cloud-agnostic build). Modern evergreen browsers, mobile and desktop

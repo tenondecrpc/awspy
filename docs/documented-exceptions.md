@@ -30,34 +30,28 @@ recorded. A gap documents a problem but does not approve it for indefinite use.
 - **Revisit**: When the Open Graph renderer can consume the shared token source
   without duplicating literal values.
 
-## EX-002 - Secretlint pinned to the Node 20 compatible release
+## Resolved records
 
-- **Rule**: Security tooling should stay on a supported current release.
-- **Scope**: `secretlint` and
-  `@secretlint/secretlint-rule-preset-recommend`, pinned to `12.0.0`.
-- **Reason**: Secretlint releases after `12.0.0` require Node.js 22, while this
-  project and the Amplify build currently target Node.js 20.
-- **Mitigation**: The scanner is a development-only dependency, runs during
-  every `npm run verify`, and remains enabled in CI and Amplify.
-- **Approved by**: Repository owner through the template-practices adoption,
-  2026-08-21.
-- **Revisit**: Upgrade Secretlint when the project and Amplify move to Node.js
-  22 or newer.
+Resolved records remain here for traceability but no longer authorize an
+exception or describe an open deployment gap.
 
-## GAP-001 - Dependency audit reports high-severity findings
+### EX-002 - Secretlint pinned to the Node 20 compatible release
 
-- **Status**: Open.
-- **Scope**: The dependency graph reported by `npm audit` on 2026-08-21,
-  including the direct Next.js `16.2.5` dependency and transitive development
+- **Status**: Resolved on 2026-08-21.
+- **Former scope**: `secretlint` and
+  `@secretlint/secretlint-rule-preset-recommend` were pinned to `12.0.0` while
+  the project targeted Node.js 20.
+- **Resolution**: The project and Amplify build moved to Node.js 24, allowing
+  both packages to upgrade to `13.0.4`.
+
+### GAP-001 - Dependency audit reports high-severity findings
+
+- **Status**: Resolved on 2026-08-21.
+- **Former scope**: The dependency graph contained one low and seven
+  high-severity findings, including Next.js `16.2.5` and transitive development
   dependencies.
-- **Impact**: The audit reports one low and seven high-severity findings. The
-  recommended Next.js remediation is a framework upgrade, which requires its
-  own migration and regression verification rather than an unreviewed
-  `npm audit fix --force`.
-- **Mitigation**: Dependabot is enabled, the application has no authentication
-  or persistent backend, and framework-specific privileged middleware is not
-  used. These constraints reduce exposure but do not close the findings.
-- **Resolution**: Run the repository's Next.js upgrade workflow, update affected
-  transitive tooling, execute `npm run verify:e2e`, and remove this gap only
-  after `npm audit` is reviewed again.
-- **Revisit**: Before announcing the production domain publicly.
+- **Resolution**: Upgraded Node.js to 24, Next.js and its aligned packages to
+  `16.3.2`, Secretlint to `13.0.4`, Vitest to `4.1.11`, jsdom to `30.0.1`, and
+  refreshed safe transitive versions with `npm audit fix` without `--force`.
+- **Verification**: `npm audit` reports zero vulnerabilities. The repository
+  verification and Playwright results are recorded with the completing change.

@@ -59,6 +59,7 @@ dynamic Open Graph image. Canonical URLs and generated share assets derive from
 
 ## Runtime and deployment
 
+- Node.js 24 is the shared local, CI, and hosting runtime.
 - Next.js App Router runs in AWS Amplify Hosting as `WEB_COMPUTE`.
 - `main` is the production branch.
 - GitHub Actions verifies pull requests and pushes to `main`.

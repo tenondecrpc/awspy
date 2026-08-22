@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "engines": {
-    "node": ">=20.0.0",
+    "node": ">=24.0.0 <25",
     "npm": ">=10.0.0"
   },
   "scripts": {
@@ -26,10 +26,10 @@
   "dependencies": {
     "@mdx-js/loader": "^3.1.1",
     "@mdx-js/react": "^3.1.1",
-    "@next/mdx": "^16.2.6",
+    "@next/mdx": "16.3.2",
     "@tanstack/react-query": "^5.100.9",
     "@types/mdx": "^2.0.13",
-    "next": "16.2.5",
+    "next": "16.3.2",
     "react": "19.2.4",
     "react-dom": "19.2.4",
     "zod": "^4.4.3",
@@ -37,25 +37,25 @@
   },
   "devDependencies": {
     "@playwright/test": "^1.59.1",
-    "@secretlint/secretlint-rule-preset-recommend": "12.0.0",
+    "@secretlint/secretlint-rule-preset-recommend": "13.0.4",
     "@tailwindcss/postcss": "^4",
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.2",
     "@testing-library/user-event": "^14.6.1",
-    "@types/node": "^20",
+    "@types/node": "24.13.3",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "@vitejs/plugin-react": "^6.0.1",
     "eslint": "^9",
-    "eslint-config-next": "16.2.5",
-    "jsdom": "^29.1.1",
+    "eslint-config-next": "16.3.2",
+    "jsdom": "30.0.1",
     "prettier": "3.9.6",
-    "secretlint": "12.0.0",
+    "secretlint": "13.0.4",
     "tailwindcss": "^4",
     "typescript": "^5",
-    "vitest": "^4.1.5"
+    "vitest": "4.1.11"
   },
   "overrides": {
-    "postcss": "^8.5.10"
+    "postcss": "^8.5.26"
   }
 }

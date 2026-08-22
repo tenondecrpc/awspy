@@ -41,7 +41,7 @@ component names before opening registration.
 
 Requirements:
 
-- Node.js 20.x or newer
+- Node.js 24.x
 - npm 10.x or newer
 
 ```sh

@@ -18,8 +18,8 @@ The technical approach honors all seven constitution principles. Routes, identif
 
 ## Technical Context
 
-**Language/Version**: TypeScript 5.x (strict mode), Node.js 20.x runtime  
-**Primary Dependencies**: Next.js 16.2.5 (App Router, Server Components), React 19.2.4, Tailwind CSS 4.x, Zod 4.x, TanStack Query 5.x (provider already installed; only used if/when client-side fetching becomes necessary), Zustand 5.x (only used for ephemeral UI state if/when needed), `@next/mdx` for code-of-conduct rendering
+**Language/Version**: TypeScript 5.x (strict mode), Node.js 24.x runtime
+**Primary Dependencies**: Next.js 16.3.2 (App Router, Server Components), React 19.2.4, Tailwind CSS 4.x, Zod 4.x, TanStack Query 5.x (provider already installed; only used if/when client-side fetching becomes necessary), Zustand 5.x (only used for ephemeral UI state if/when needed), `@next/mdx` for code-of-conduct rendering
 **Storage**: None. Content lives in version-controlled JSON/MDX under `content/editions/{year}/`. No database or external persistence in this repository  
 **Testing**: Vitest 4.x with jsdom environment for unit and integration; React Testing Library 16.x with `@testing-library/jest-dom` for component tests; Playwright 1.59 for end-to-end  
 **Target Platform**: AWS Amplify Hosting as the primary deployment target for v1. The site is cloud-agnostic and remains deployable on Vercel, OpenNext on raw AWS, Netlify, or self-hosted Node.js without code changes; see `docs/deployment.md` and `amplify.yml`. Modern evergreen browsers (last 2 versions of Chrome/Firefox/Safari/Edge); mobile and desktop.  
@@ -96,7 +96,7 @@ specs/001-community-day-site/
 
 ### Source Code (repository root)
 
-The project is a single Next.js application. Existing scaffold (`app/layout.tsx`, `app/providers.tsx`, `app/page.tsx`, `lib/api/client.ts`, `lib/api/speakers.ts`, `tests/setup.ts`, `vitest.config.ts`, `playwright.config.ts`, Tailwind v4, Vitest, Playwright, ESLint, TypeScript) is reused. Net additions are listed below; existing files are noted with `(exists)`.
+The project is a single Next.js application. Existing scaffold (`app/layout.tsx`, `app/providers.tsx`, `app/page.tsx`, `lib/api/client.ts`, `lib/api/speakers.ts`, `tests/setup.ts`, `vitest.config.mts`, `playwright.config.ts`, Tailwind v4, Vitest, Playwright, ESLint, TypeScript) is reused. Net additions are listed below; existing files are noted with `(exists)`.
 
 ```text
 app/

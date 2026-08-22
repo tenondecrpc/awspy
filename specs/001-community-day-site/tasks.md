@@ -32,7 +32,7 @@ Single Next.js application at the repo root. All paths in tasks below are relati
 - [X] T004 [P] Create the directory scaffolding under the repo root: `components/atoms/`, `components/molecules/`, `components/organisms/`, `components/templates/`, `lib/api/` (already exists), `lib/content/`, `lib/utils/`, `content/editions/2026/`, `public/og/`, `public/logos/`, `public/team/`, `tests/unit/`, `tests/components/`, `tests/fixtures/sessionize/`, `e2e/`. Add a `.gitkeep` to any directory that would otherwise be empty.
 - [X] T005 [P] Define Tailwind v4 theme tokens in `app/globals.css` using `@theme`: brand colors (AWS-aligned palette with verified AA contrast), spacing scale, typography scale, container widths, focus-ring color, and a semantic mapping for `text`, `surface`, `accent`, `muted`. Document the AA contrast pairs in a comment block.
 - [X] T006 Create a small class-name helper at `lib/utils/cn.ts` (a thin `clsx`-like join with `undefined`/`false` filtering) and corresponding test at `tests/unit/utils-cn.test.ts`.
-- [X] T007 Confirm `vitest.config.ts` resolves `tests/setup.ts`, runs jsdom by default, and includes both `tests/unit/**` and `tests/components/**` patterns; add the `@testing-library/jest-dom` import to `tests/setup.ts` if missing.
+- [X] T007 Confirm `vitest.config.mts` resolves `tests/setup.ts`, runs jsdom by default, and includes both `tests/unit/**` and `tests/components/**` patterns; add the `@testing-library/jest-dom` import to `tests/setup.ts` if missing.
 - [X] T008 Confirm `playwright.config.ts` starts `npm run dev` automatically with `webServer` config; configure two projects (mobile and desktop viewports) and a base URL of `http://localhost:3000`.
 
 ---

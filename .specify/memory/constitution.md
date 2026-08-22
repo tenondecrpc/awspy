@@ -1,11 +1,9 @@
 <!--
 SYNC IMPACT REPORT
 ==================
-Version change: 1.0.0 -> 1.1.0
-Bump rationale: Align the constitution with the implemented frontend-only
-architecture, add the repository-owned verification contract, and formalize
-ADRs plus documented exceptions. This materially expands governance without
-removing a principle, so it is a MINOR amendment.
+Version change: 1.1.0 -> 1.1.1
+Bump rationale: Record the completed Node.js 24 and secure dependency baseline
+without changing any governing principle. This is a PATCH amendment.
 
 Principles retained and clarified:
 - I. Frontend-Only Boundary (NON-NEGOTIABLE)
@@ -22,6 +20,8 @@ Material changes:
 - Added `npm run verify` and `npm run verify:e2e` as portable gates.
 - Added GitHub CI, ADR, and documented-exception governance.
 - Frozen CLAUDE.md as a thin AGENTS.md bootstrap.
+- Closed GAP-001 after upgrading the runtime and dependencies and obtaining a
+  zero-finding `npm audit` result.
 
 Templates and dependent artifacts reviewed:
 - .specify/templates/plan-template.md - aligned (no edits needed); the existing
@@ -51,8 +51,8 @@ Status legend: [updated] / [pending]
 - [updated] package.json and provider CI configuration
 
 Deferred items / TODOs:
-- Dependency audit findings are recorded as GAP-001 in
-  docs/documented-exceptions.md and require a reviewed framework upgrade.
+- None. Resolved exceptions and gaps remain recorded in
+  docs/documented-exceptions.md for traceability.
 -->
 
 # AWS Community Day Paraguay Frontend Constitution
@@ -331,4 +331,4 @@ Compliance review:
   `CLAUDE.md` deferring to it. This constitution defines the rules; `AGENTS.md`
   describes how to apply them day to day.
 
-**Version**: 1.1.0 | **Ratified**: 2026-05-06 | **Last Amended**: 2026-08-21
+**Version**: 1.1.1 | **Ratified**: 2026-05-06 | **Last Amended**: 2026-08-21

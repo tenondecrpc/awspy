@@ -20,7 +20,7 @@ applications:
       phases:
         preBuild:
           commands:
-            - nvm use 20 || nvm install 20
+            - nvm use 24 || nvm install 24
             - corepack enable || true
             - npm ci
         build:

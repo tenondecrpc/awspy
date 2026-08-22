@@ -8,6 +8,9 @@ npm ci
 npm run verify
 ```
 
+Node.js 24 is the repository runtime. `.nvmrc`, `package.json`, GitHub Actions,
+and `amplify.yml` must remain aligned on that major version.
+
 `npm run verify` executes, in order:
 
 1. `npm run format:check`
@@ -57,6 +60,10 @@ include framework upgrades or breaking dependency changes.
 
 Known findings and temporary pins belong in
 `docs/documented-exceptions.md`.
+
+The security remediation completed on 2026-08-21 established a clean baseline
+of zero findings from `npm audit`. New findings must be fixed or recorded as an
+explicit gap before deployment.
 
 ## Secret scan scope
 
