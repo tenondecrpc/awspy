@@ -21,3 +21,13 @@ export class ApiValidationError extends Error {
     this.issues = issues;
   }
 }
+
+export class ApiResponseSizeError extends Error {
+  readonly maximumBytes: number;
+
+  constructor(maximumBytes: number) {
+    super(`API response exceeded the ${maximumBytes}-byte maximum size`);
+    this.name = "ApiResponseSizeError";
+    this.maximumBytes = maximumBytes;
+  }
+}

@@ -33,7 +33,8 @@ The public Sessionize demo event id `jl4ktls0` is used in tests as a fixture sou
 - **Expected status codes**:
   - `200 OK`: successful response, JSON body
   - `404 Not Found`: event id is unknown or not yet public; the site treats this as an empty result via `tolerateMissing: true`
-  - `5xx`: treated as transient failure; the site treats this as an empty result via `tolerateMissing: true` for v1 to keep pages rendering. Errors are logged via the hosting platform's runtime logs (CloudWatch on AWS Amplify Hosting; per FR-038 we delegate observability to the platform).
+  - `5xx`: treated as a transient failure; tolerant reads return an empty result so local content keeps rendering. Sanitized server-side failure telemetry is tracked as future work because the current client does not log tolerated failures.
+- **Timeout**: 8 seconds by default; tolerant reads return their configured fallback after timeout.
 
 ## Response shapes
 
@@ -46,7 +47,7 @@ Returns an array of speakers.
 ```ts
 const SpeakerLinkSchema = z.object({
   title: z.string(),
-  url: z.string().url(),
+  url: HttpUrlSchema,
   linkType: z.string()
 });
 
@@ -57,9 +58,12 @@ const SessionizeSpeakerSchema = z.object({
   fullName: z.string().min(1).optional(),
   tagLine: z.string().optional().nullable(),
   bio: z.string().optional().nullable(),
-  profilePicture: z.string().url().optional().nullable(),
+  profilePicture: HttpsUrlSchema.optional().nullable(),
   links: z.array(SpeakerLinkSchema).optional().default([]),
-  sessions: z.array(z.union([z.string(), z.number()])).optional().default([]),
+  sessions: z.array(z.object({
+    id: z.union([z.string(), z.number()]).transform(String),
+    name: z.string().optional()
+  })).optional().default([]),
   isTopSpeaker: z.boolean().optional()
 }).passthrough();
 
@@ -68,7 +72,8 @@ const SpeakersListSchema = z.array(SessionizeSpeakerSchema);
 
 ### `Sessions` view
 
-Returns an array of sessions with embedded references.
+Returns an array of groups. Each group contains a `sessions` array; the adapter
+flattens the groups after validation.
 
 ```ts
 const SessionizeSessionSchema = z.object({
@@ -82,11 +87,19 @@ const SessionizeSessionSchema = z.object({
     id: z.string().min(1),
     name: z.string().min(1)
   })).optional().default([]),
-  categoryItems: z.array(z.union([z.string(), z.number()])).optional().default([]),
-  isPlenumSession: z.boolean().optional().default(false)
+  isPlenumSession: z.boolean().optional().default(false),
+  isServiceSession: z.boolean().optional().default(false)
+}).passthrough().superRefine((value, ctx) => {
+  // Reject a reversed pair when both optional timestamps are present.
+});
+
+const SessionGroupSchema = z.object({
+  groupId: z.union([z.string(), z.number()]).optional(),
+  groupName: z.string().optional().nullable(),
+  sessions: z.array(SessionizeSessionSchema)
 }).passthrough();
 
-const SessionsListSchema = z.array(SessionizeSessionSchema);
+const SessionsListSchema = z.array(SessionGroupSchema);
 ```
 
 ### `GridSmart` view
@@ -101,7 +114,7 @@ const GridSessionSchema = z.object({
   endsAt: z.string().datetime({ offset: true }),
   isPlenumSession: z.boolean().optional().default(false),
   speakers: z.array(z.object({ id: z.string(), name: z.string() })).default([]),
-  categoryItems: z.array(z.union([z.string(), z.number()])).optional().default([])
+  isServiceSession: z.boolean().optional().default(false)
 }).passthrough();
 
 const GridRoomSchema = z.object({
@@ -127,7 +140,7 @@ const SpeakerWallSchema = z.array(z.object({
   id: z.string(),
   fullName: z.string(),
   tagLine: z.string().optional().nullable(),
-  profilePicture: z.string().url().optional().nullable()
+  profilePicture: HttpsUrlSchema.optional().nullable()
 }).passthrough());
 ```
 
@@ -136,7 +149,7 @@ const SpeakerWallSchema = z.array(z.object({
 - Empty event (no accepted speakers): the response is `[]`. Pages must render the appropriate Spanish empty state.
 - Unknown event id: 404. The typed client (with `tolerateMissing: true`) returns `[]` (for list endpoints) or `null` (for single-resource endpoints). Pages render empty states.
 - Network or 5xx error: the typed client (with `tolerateMissing: true`) returns the same fallback as above.
-- Schema drift (Sessionize returns an unexpected shape): the typed client throws unless `tolerateMissing: true` is configured. With `tolerateMissing: true`, the failure is logged via `console.error` and the call returns the empty fallback. With `tolerateMissing: false`, the request fails and `app/error.tsx` takes over.
+- Schema drift (Sessionize returns an unexpected shape): the typed client throws unless `tolerateMissing: true` is configured. With `tolerateMissing: true`, the call returns the empty fallback. With `tolerateMissing: false`, the request fails and the route error boundary takes over.
 
 ## Privacy and security notes
 

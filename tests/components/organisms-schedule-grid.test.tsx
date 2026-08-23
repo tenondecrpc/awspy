@@ -132,4 +132,36 @@ describe("ScheduleGridOrganism", () => {
       "/speakers/ana-perez"
     );
   });
+
+  it("renders an unmatched provider speaker without a fabricated link", () => {
+    const grid: ScheduleGrid = [
+      {
+        date: "2026-09-12T00:00:00Z",
+        rooms: [
+          {
+            id: "r1",
+            name: "Sala A",
+            sessions: [
+              {
+                id: "s1",
+                title: "Partial provider response",
+                startsAt: "2026-09-12T13:00:00-03:00",
+                endsAt: "2026-09-12T13:45:00-03:00",
+                isPlenumSession: false,
+                isServiceSession: false,
+                speakers: [{ id: "missing", name: "Unknown Speaker" }],
+              },
+            ],
+          },
+        ],
+      },
+    ];
+
+    render(<ScheduleGridOrganism grid={grid} speakers={SPEAKERS} />);
+
+    expect(screen.getByText("Unknown Speaker")).toBeInTheDocument();
+    expect(
+      screen.queryByRole("link", { name: "Unknown Speaker" })
+    ).not.toBeInTheDocument();
+  });
 });

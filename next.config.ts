@@ -1,23 +1,32 @@
 import type { NextConfig } from "next";
-import createMDX from "@next/mdx";
-
-const withMDX = createMDX({
-  extension: /\.mdx?$/,
-});
+import { REMOTE_IMAGE_HOSTS } from "./lib/config/image-hosts";
 
 const nextConfig: NextConfig = {
-  // Allow MDX pages so we can co-locate the code-of-conduct content.
-  pageExtensions: ["ts", "tsx", "js", "jsx", "md", "mdx"],
+  // Project AI guidance is maintained under .ai/ with a minimal root loader.
+  agentRules: false,
+  poweredByHeader: false,
+  async headers() {
+    return [
+      {
+        source: "/(.*)",
+        headers: [
+          { key: "X-Content-Type-Options", value: "nosniff" },
+          { key: "X-Frame-Options", value: "DENY" },
+          { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
+          {
+            key: "Permissions-Policy",
+            value: "camera=(), microphone=(), geolocation=()",
+          },
+        ],
+      },
+    ];
+  },
   images: {
-    remotePatterns: [
-      // Sessionize hosts speaker headshots under sessionize.com.
-      { protocol: "https", hostname: "sessionize.com" },
-      // Eventbrite-hosted images (event banners, organizer logos) come from
-      // these two CDNs.
-      { protocol: "https", hostname: "img.evbuc.com" },
-      { protocol: "https", hostname: "cdn.evbuc.com" },
-    ],
+    remotePatterns: REMOTE_IMAGE_HOSTS.map((hostname) => ({
+      protocol: "https" as const,
+      hostname,
+    })),
   },
 };
 
-export default withMDX(nextConfig);
+export default nextConfig;

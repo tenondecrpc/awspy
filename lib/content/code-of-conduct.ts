@@ -1,7 +1,7 @@
 // Loader for `content/editions/{year}/code-of-conduct.mdx`. We split the
 // file's frontmatter (between two `---` lines at the top) from the body so
-// the page can render the body via @next/mdx while we still validate the
-// frontmatter schema at load time.
+// the page can render the body with the restricted local Markdown renderer
+// while we still validate the frontmatter schema at load time.
 
 import { z } from "zod";
 import { join } from "node:path";
@@ -61,10 +61,18 @@ function parseFrontmatter(raw: string): Record<string, unknown> {
 export function getCodeOfConduct(year: string): CodeOfConduct {
   const path = join(editionDir(year), "code-of-conduct.mdx");
   const raw = readTextOrThrow(path);
-  const match = FRONTMATTER_RE.exec(raw);
+  return parseCodeOfConduct(raw, `edition ${year} at ${path}`);
+}
+
+export function parseCodeOfConduct(
+  raw: string,
+  source = "code-of-conduct.mdx"
+): CodeOfConduct {
+  const normalized = raw.replace(/\r\n/g, "\n");
+  const match = FRONTMATTER_RE.exec(normalized);
 
   let frontmatterRaw: Record<string, unknown> = {};
-  let body = raw;
+  let body = normalized;
   if (match) {
     frontmatterRaw = parseFrontmatter(match[1]);
     body = match[2];
@@ -73,7 +81,7 @@ export function getCodeOfConduct(year: string): CodeOfConduct {
   const result = CodeOfConductFrontmatterSchema.safeParse(frontmatterRaw);
   if (!result.success) {
     throw new Error(
-      `Invalid code-of-conduct.mdx frontmatter for edition ${year} at ${path}: ${result.error.issues
+      `Invalid code-of-conduct.mdx frontmatter for ${source}: ${result.error.issues
         .map((i) => `${i.path.join(".")}: ${i.message}`)
         .join("; ")}`
     );

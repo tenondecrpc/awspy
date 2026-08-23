@@ -1,8 +1,12 @@
 # Deployment
 
-The site is cloud-agnostic. The runtime contract is the standard Next.js 16 App Router runtime: any host that supports Next.js as documented at <https://nextjs.org/docs/app/getting-started/deploying> can serve it without code changes.
+The application follows the standard Next.js 16 App Router runtime contract,
+but hosting support must be verified per provider. A generic claim of Next.js
+support is not sufficient for ISR, image optimization, and route behavior.
 
-Primary target for the first edition is **AWS Amplify Hosting**. Vercel, OpenNext on raw AWS (Lambda + CloudFront), Netlify, and self-hosted Node.js are all viable alternatives.
+The conditional target is **AWS Amplify Hosting**. Current AWS documentation
+lists Next.js support through version 15, so Next.js 16.3.2 requires the preview
+qualification tracked by AWS-002 before production release.
 
 ## Production coordinates
 
@@ -30,7 +34,9 @@ npm run build     # produces .next/ (static + server output)
 npm run start     # starts the Next.js server, defaults to port 3000
 ```
 
-For static-only hosts (S3 + CloudFront without a Lambda layer), this site cannot be deployed as fully static because some routes use `generateStaticParams` and dynamic JSON-LD. Use Amplify, Vercel, OpenNext, or self-hosted Node to keep all features available.
+For static-only hosts such as S3 and CloudFront without a compute adapter, this
+site cannot preserve scheduled ISR and Next.js image behavior. Use a qualified
+Next.js compute platform to retain current behavior.
 
 ## Required environment variables
 
@@ -49,8 +55,8 @@ or call its API.
 ## AWS Amplify Hosting (primary target)
 
 1. **Create the app**: AWS Amplify Console -> Host web app -> Connect GitHub repo -> select branch (e.g. `main`).
-2. **Framework detection**: Amplify auto-detects Next.js 16 App Router. The committed `amplify.yml` installs Node.js 24.15.0 explicitly instead of accepting Amplify's older bundled 24.x patch, then runs the repository verification gate.
-3. **Environment variables**: in App settings -> Environment variables, add `CURRENT_EDITION` and `NEXT_PUBLIC_SITE_URL` for each branch. Amplify exposes these to both the build and the runtime.
+2. **Framework qualification**: use a non-production preview branch. The committed `amplify.yml` installs Node.js 24.15.0 and runs the repository verification gate, but repository configuration does not prove service support.
+3. **Environment variables**: in App settings -> Environment variables, add `CURRENT_EDITION` and `NEXT_PUBLIC_SITE_URL` for each branch. `scripts/write-amplify-env.ts` writes only these allowlisted public values and the optional Sessionize base URL to `.env.production`; it never copies the full environment.
 4. **Build**: Amplify builds with the values from `amplify.yml`. The compute split (static vs SSR/ISR) is read from `.next/required-server-files.json`.
 5. **Custom domain**: App settings -> Domain management -> add `awscommunitydayparaguay.com`. Amplify provisions an ACM certificate via DNS validation. Verify both the apex domain and `www`, then confirm the configured redirect.
 6. **Preview branches**: enable preview deploys for non-main branches. The deploy URL is what `BASE_URL` should point at when running `e2e/deploy-smoke.spec.ts` against a preview.
@@ -116,6 +122,9 @@ curl -sSIL https://www.awscommunitydayparaguay.com
 
 ### Lighthouse on the preview
 
+The following is a planned external validation command and was not executed in
+the local audit environment:
+
 ```sh
 npx lighthouse https://<branch>.<app>.amplifyapp.com --view
 ```
@@ -124,10 +133,13 @@ Target thresholds (per FR-032): Performance >= 90, Accessibility >= 95, Best Pra
 
 ### Logs and observability
 
-Per FR-038, observability is delegated to the hosting platform. On AWS Amplify Hosting:
+On AWS Amplify Hosting:
 - Build logs: Amplify Console -> branch -> Deployments.
-- Runtime logs (SSR functions): AWS CloudWatch under `/aws/lambda/amplify-<app-id>-...`.
-- Custom monitoring: not added in v1.
+- Runtime logs and metrics: use the Amplify monitoring integration and
+  CloudWatch resources visible to the authorized AWS owner; exact external
+  names and retention are `NOT VERIFIED`.
+- External DNS, TLS, and route monitoring: required by
+  `docs/aws/AWS_OPERATIONS.md` and not yet configured.
 
 ## Vercel (alternative)
 
@@ -136,14 +148,12 @@ Per FR-038, observability is delegated to the hosting platform. On AWS Amplify H
 3. Environment variables: `CURRENT_EDITION`, `NEXT_PUBLIC_SITE_URL`.
 4. Custom domain: Domain Settings -> add the intended public domain.
 
-## OpenNext on raw AWS (alternative)
+## OpenNext on raw AWS (contingency)
 
-If a future iteration wants tighter control over AWS resources (e.g. CloudFront cache rules, KMS for env vars):
-
-1. `npm install --save-dev open-next`
-2. `npx open-next build`
-3. Deploy `out/` artifacts to S3 (static) + Lambda@Edge / CloudFront Functions (SSR) using SST, AWS CDK, or the OpenNext CDK construct.
-4. The `next.config.ts` `images.remotePatterns` allowlist already covers `sessionize.com`, `img.evbuc.com`, `cdn.evbuc.com`.
+OpenNext is considered only if Amplify qualification fails. It would add a
+runtime adapter, one IaC framework, CloudFront, object storage, compute, IAM,
+logging, and rollback ownership. Select and validate that stack in a separate
+ADR and proof of concept before adding dependencies.
 
 Reference: <https://open-next.js.org/>.
 
@@ -160,7 +170,9 @@ Behind any reverse proxy (nginx, Caddy, ALB) that terminates TLS and forwards `H
 ## Smoke testing a deployed preview
 
 ```sh
-BASE_URL=https://<preview-url> npx playwright test --project=chromium e2e/deploy-smoke.spec.ts
+BASE_URL=https://<preview-url> npm run e2e -- --project=chromium e2e/deploy-smoke.spec.ts
 ```
 
-This validates that every public route returns 200 and renders its primary heading on the deployed origin.
+This planned POSIX-shell command validates that every public route returns 200
+and renders its primary heading on the deployed origin. It was not executed
+against an authorized preview during this local audit.

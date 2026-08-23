@@ -54,6 +54,8 @@ export default async function EditionHomePage({
       sponsorsPreview={edition.sponsors}
       registerHref={`/editions/${year}/register`}
       cfpHref={`/editions/${year}/cfp`}
+      speakersHref={`/editions/${year}/speakers`}
+      sponsorsHref={`/editions/${year}/sponsors`}
     />
   );
 }

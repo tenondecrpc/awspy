@@ -24,6 +24,8 @@ type HomeTemplateProps = {
   /** When true (past editions), CTAs point at the archived register/cfp. */
   registerHref?: string;
   cfpHref?: string;
+  speakersHref?: string;
+  sponsorsHref?: string;
 };
 
 export function HomeTemplate({
@@ -32,6 +34,8 @@ export function HomeTemplate({
   sponsorsPreview,
   registerHref,
   cfpHref,
+  speakersHref = "/speakers",
+  sponsorsHref = "/sponsors",
 }: HomeTemplateProps) {
   return (
     <>
@@ -97,7 +101,7 @@ export function HomeTemplate({
               Conocé a los speakers
             </Heading>
             <NextLink
-              href="/speakers"
+              href={speakersHref}
               className="text-sm font-semibold text-[var(--color-accent)] hover:underline"
             >
               Ver todos
@@ -117,7 +121,7 @@ export function HomeTemplate({
             >
               {speakersPreview.slice(0, 6).map((s) => (
                 <li key={s.id}>
-                  <SpeakerCard speaker={s} />
+                  <SpeakerCard speaker={s} basePath={speakersHref} />
                 </li>
               ))}
             </ul>
@@ -137,7 +141,7 @@ export function HomeTemplate({
               Quienes hacen posible el evento
             </Heading>
             <NextLink
-              href="/sponsors"
+              href={sponsorsHref}
               className="text-sm font-semibold text-[var(--color-accent)] hover:underline"
             >
               Ver todos

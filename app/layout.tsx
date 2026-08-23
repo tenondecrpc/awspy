@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import { Providers } from "./providers";
 import { SiteHeader } from "@/components/organisms/SiteHeader";
 import { SiteFooter } from "@/components/organisms/SiteFooter";
 import { currentEdition } from "@/lib/content/editions";
@@ -39,11 +38,9 @@ export default function RootLayout({
   return (
     <html lang="es-PY">
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
-        <Providers>
-          <SiteHeader editionYear={editionYear} />
-          <main>{children}</main>
-          <SiteFooter eventInfo={eventInfo} />
-        </Providers>
+        <SiteHeader editionYear={editionYear} />
+        <main>{children}</main>
+        <SiteFooter eventInfo={eventInfo} />
       </body>
     </html>
   );

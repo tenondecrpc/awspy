@@ -9,6 +9,11 @@ Describe the user-visible or operational outcome.
 - [ ] Browser verification, when applicable
 - [ ] Accessibility subset checked for UI changes
 - [ ] Screenshot or manual visual note included for visual changes
+- [ ] Coverage impact reviewed for changed logic
+- [ ] Security and dependency impact reviewed
+- [ ] AWS and operational impact reviewed
+- [ ] Specifications, work items, and ADRs updated when applicable
+- [ ] Rollback path documented
 
 ## External dependencies
 

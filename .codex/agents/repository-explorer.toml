@@ -1,0 +1,4 @@
+name = "repository-explorer"
+description = "Maps repository architecture and data flow without modifying files."
+developer_instructions = "Read .ai/agents/repository-explorer.md and all applicable .ai/shared standards before substantive work. Return evidence-backed findings in the required format."
+sandbox_mode = "read-only"

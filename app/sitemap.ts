@@ -4,13 +4,9 @@
 
 import type { MetadataRoute } from "next";
 import { currentEdition, listEditions } from "@/lib/content/editions";
-
-function siteUrl(): string {
-  return (process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000").replace(
-    /\/$/,
-    ""
-  );
-}
+import { getEventInfo } from "@/lib/content/event-info";
+import { listSpeakers, type Speaker } from "@/lib/api/sessionize";
+import { getSiteUrl } from "@/lib/utils/seo";
 
 const TOP_LEVEL_ROUTES = [
   "/",
@@ -39,9 +35,21 @@ const EDITION_SUBROUTES = [
   "/register",
 ] as const;
 
-export default function sitemap(): MetadataRoute.Sitemap {
-  const base = siteUrl();
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  const base = getSiteUrl();
   const lastModified = new Date();
+  const editions = listEditions();
+  const speakersByEdition = new Map<string, Speaker[]>(
+    await Promise.all(
+      editions.map(
+        async (year) =>
+          [
+            year,
+            await listSpeakers(getEventInfo(year).sessionizeEventId),
+          ] as const
+      )
+    )
+  );
 
   const currentRoutes: MetadataRoute.Sitemap = TOP_LEVEL_ROUTES.map((path) => ({
     url: `${base}${path}`,
@@ -51,7 +59,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   }));
 
   const editionRoutes: MetadataRoute.Sitemap = [];
-  for (const year of listEditions()) {
+  for (const year of editions) {
     for (const sub of EDITION_SUBROUTES) {
       editionRoutes.push({
         url: `${base}/editions/${year}${sub}`,
@@ -60,7 +68,24 @@ export default function sitemap(): MetadataRoute.Sitemap {
         priority: year === currentEdition() ? 0.6 : 0.3,
       });
     }
+    for (const speaker of speakersByEdition.get(year) ?? []) {
+      editionRoutes.push({
+        url: `${base}/editions/${year}/speakers/${speaker.slug}`,
+        lastModified,
+        changeFrequency: "monthly",
+        priority: year === currentEdition() ? 0.6 : 0.3,
+      });
+    }
   }
 
-  return [...currentRoutes, ...editionRoutes];
+  const currentSpeakerRoutes: MetadataRoute.Sitemap = (
+    speakersByEdition.get(currentEdition()) ?? []
+  ).map((speaker) => ({
+    url: `${base}/speakers/${speaker.slug}`,
+    lastModified,
+    changeFrequency: "monthly",
+    priority: 0.7,
+  }));
+
+  return [...currentRoutes, ...currentSpeakerRoutes, ...editionRoutes];
 }

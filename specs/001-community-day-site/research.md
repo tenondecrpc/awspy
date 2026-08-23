@@ -56,7 +56,7 @@ This document records the research and decisions that informed the Technical Con
 **Rationale**:
 - This is the pattern the AWS Community Day ecosystem (Taiwan, India, Brasil, Mumbai) uses for editorial content. It eliminates a backend, lets organizers iterate via PR, and gives Git history for editorial changes.
 - TypeScript strict + Zod gives the same type-level guarantees a database with schemas would, with zero runtime infrastructure.
-- MDX keeps the code of conduct human-readable in the repo and lets us render it through a single `MDXRemote`-style component without a separate parser.
+- The `.mdx` source keeps the code of conduct human-readable. The implemented renderer intentionally supports only the required Markdown subset and does not execute embedded JSX or components.
 
 **Alternatives considered**:
 - **YAML for content**: similar shape but more error-prone (indentation, type ambiguity) and adds a parser dep. Rejected.
@@ -77,7 +77,7 @@ This document records the research and decisions that informed the Technical Con
 
 ## R6. Image strategy
 
-**Decision**: Use `next/image` with `next.config.ts` `images.remotePatterns` configured for `sessionize.com` (speaker headshots) and `img.evbuc.com` (Eventbrite assets if shown). Same-origin assets (sponsor logos and organizer photos) live under `public/logos/` and `public/team/` respectively when self-hosted, or use external HTTPS URLs already configured per content. Every `<Image>` instance receives explicit `width`, `height`, and `sizes` per Principle V.
+**Decision**: Use `next/image` with a shared remote-host allowlist consumed by both `next.config.ts` and content schemas. Same-origin sponsor logos and organizer photos live under `public/logos/` and `public/team/` and are referenced without the `/public` prefix. Every `<Image>` instance receives explicit `width`, `height`, and `sizes` per Principle V.
 
 **Rationale**:
 - `next/image` provides automatic responsive variants and lazy loading, which keeps Lighthouse Performance >= 90 (FR-032).

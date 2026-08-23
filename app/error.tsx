@@ -4,26 +4,17 @@
 // not handled by a more specific boundary. The UI gives the visitor a way
 // out (back to home or retry) without exposing internal details.
 
-import { useEffect } from "react";
 import { Container } from "@/components/atoms/Container";
 import { Section } from "@/components/atoms/Section";
 import { Heading } from "@/components/atoms/Heading";
 import { Button } from "@/components/atoms/Button";
 
-export default function GlobalError({
-  error,
-  reset,
+export default function ErrorPage({
+  retry,
 }: {
   error: Error & { digest?: string };
-  reset: () => void;
+  retry: () => void;
 }) {
-  useEffect(() => {
-    // The hosting platform's runtime logs are the only observability surface
-    // for v1 (FR-038). On AWS Amplify these surface in CloudWatch; on other
-    // platforms they surface in the platform's runtime/log console.
-    console.error("[home/error]", error);
-  }, [error]);
-
   return (
     <Section spacing="lg">
       <Container>
@@ -34,7 +25,7 @@ export default function GlobalError({
             problema persiste, escribinos para que lo revisemos.
           </p>
           <div className="flex flex-wrap items-center justify-center gap-3">
-            <Button onClick={() => reset()} variant="primary" size="md">
+            <Button onClick={() => retry()} variant="primary" size="md">
               Reintentar
             </Button>
             <Button as="a" href="/" variant="secondary" size="md">

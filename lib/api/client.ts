@@ -1,5 +1,5 @@
 import { type ZodType } from "zod";
-import { ApiError, ApiValidationError } from "./errors";
+import { ApiError, ApiResponseSizeError, ApiValidationError } from "./errors";
 
 type NextFetchOptions = {
   revalidate?: number | false;
@@ -34,7 +34,46 @@ type ApiFetchOptions<T> = {
    * Sessionize client which targets a fixed external host.
    */
   baseUrl?: string;
+  /** Request deadline in milliseconds. Defaults to 8 seconds. */
+  timeoutMs?: number;
+  /** Maximum decoded response size in bytes. Defaults to 2 MiB. */
+  maxResponseBytes?: number;
 };
+
+const DEFAULT_TIMEOUT_MS = 8_000;
+const DEFAULT_MAX_RESPONSE_BYTES = 2 * 1024 * 1024;
+
+async function readBoundedText(
+  response: Response,
+  maximumBytes: number
+): Promise<string> {
+  const declaredLength = Number(response.headers.get("content-length"));
+  if (Number.isFinite(declaredLength) && declaredLength > maximumBytes) {
+    throw new ApiResponseSizeError(maximumBytes);
+  }
+  if (!response.body) return "";
+
+  const reader = response.body.getReader();
+  const decoder = new TextDecoder();
+  const chunks: string[] = [];
+  let totalBytes = 0;
+  try {
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      totalBytes += value.byteLength;
+      if (totalBytes > maximumBytes) {
+        await reader.cancel();
+        throw new ApiResponseSizeError(maximumBytes);
+      }
+      chunks.push(decoder.decode(value, { stream: true }));
+    }
+    chunks.push(decoder.decode());
+    return chunks.join("");
+  } finally {
+    reader.releaseLock();
+  }
+}
 
 function getDefaultBaseUrl(): string {
   const url = process.env.NEXT_PUBLIC_API_BASE_URL;
@@ -70,6 +109,8 @@ export async function apiFetch<T>(
     tolerateMissing = false,
     fallback,
     baseUrl,
+    timeoutMs = DEFAULT_TIMEOUT_MS,
+    maxResponseBytes = DEFAULT_MAX_RESPONSE_BYTES,
   } = options;
 
   if (tolerateMissing && fallback === undefined) {
@@ -77,9 +118,21 @@ export async function apiFetch<T>(
       "apiFetch: `fallback` must be provided when `tolerateMissing` is true."
     );
   }
+  if (!Number.isFinite(timeoutMs) || timeoutMs <= 0) {
+    throw new Error("apiFetch: `timeoutMs` must be a positive number.");
+  }
+  if (!Number.isFinite(maxResponseBytes) || maxResponseBytes <= 0) {
+    throw new Error("apiFetch: `maxResponseBytes` must be a positive number.");
+  }
 
   const validatedBody =
     body !== undefined && bodySchema ? bodySchema.parse(body) : body;
+
+  const timeoutController = new AbortController();
+  const timeout = setTimeout(() => timeoutController.abort(), timeoutMs);
+  const requestSignal = signal
+    ? AbortSignal.any([signal, timeoutController.signal])
+    : timeoutController.signal;
 
   const init: RequestInit & { next?: NextFetchOptions } = {
     method,
@@ -90,7 +143,7 @@ export async function apiFetch<T>(
         : {}),
       ...headers,
     },
-    signal,
+    signal: requestSignal,
   };
 
   if (validatedBody !== undefined) {
@@ -105,6 +158,7 @@ export async function apiFetch<T>(
   try {
     res = await fetch(url, init);
   } catch (err) {
+    clearTimeout(timeout);
     // Network-level failures (DNS, connection refused, etc.). Treat as
     // missing under tolerateMissing.
     if (tolerateMissing) return fallback as T;
@@ -112,10 +166,19 @@ export async function apiFetch<T>(
   }
 
   if (res.status === 404 && tolerateMissing) {
+    clearTimeout(timeout);
     return fallback as T;
   }
 
-  const text = await res.text();
+  let text: string;
+  try {
+    text = await readBoundedText(res, maxResponseBytes);
+  } catch (err) {
+    if (tolerateMissing) return fallback as T;
+    throw err;
+  } finally {
+    clearTimeout(timeout);
+  }
   let payload: unknown = null;
   if (text.length > 0) {
     try {

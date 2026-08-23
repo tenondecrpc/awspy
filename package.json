@@ -2,6 +2,7 @@
   "name": "awspy",
   "version": "0.1.0",
   "private": true,
+  "packageManager": "npm@11.12.1",
   "engines": {
     "node": ">=24.15.0 <25",
     "npm": ">=10.0.0"
@@ -17,23 +18,23 @@
     "secretlint": "secretlint \"**/*\"",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
+    "test:coverage": "vitest run --coverage",
     "test:watch": "vitest",
+    "playwright:install": "playwright install --with-deps chromium",
     "e2e": "playwright test",
+    "e2e:production": "playwright test --config=playwright.production.config.ts",
     "verify": "npm run format:check && npm run lint && npm run typecheck && npm test && npm run secretlint && npm run build",
-    "verify:e2e": "npm run verify && npm run e2e",
+    "verify:e2e": "npm run verify && npm run e2e:production",
+    "security:audit": "npm audit --audit-level=high",
+    "security:signatures": "npm audit signatures",
+    "sbom": "npm sbom --package-lock-only --sbom-format cyclonedx",
     "fixtures:sessionize": "for v in Speakers Sessions GridSmart SpeakerWall; do curl -sSf \"https://sessionize.com/api/v2/${SESSIONIZE_FIXTURE_EVENT_ID:-jl4ktls0}/view/$v\" -o \"tests/fixtures/sessionize/$v.json\" && echo \"refreshed $v\"; done"
   },
   "dependencies": {
-    "@mdx-js/loader": "^3.1.1",
-    "@mdx-js/react": "^3.1.1",
-    "@next/mdx": "16.3.2",
-    "@tanstack/react-query": "^5.100.9",
-    "@types/mdx": "^2.0.13",
     "next": "16.3.2",
     "react": "19.2.4",
     "react-dom": "19.2.4",
-    "zod": "^4.4.3",
-    "zustand": "^5.0.13"
+    "zod": "^4.4.3"
   },
   "devDependencies": {
     "@playwright/test": "^1.59.1",
@@ -46,6 +47,7 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "@vitejs/plugin-react": "^6.0.1",
+    "@vitest/coverage-v8": "4.1.11",
     "eslint": "^9",
     "eslint-config-next": "16.3.2",
     "jsdom": "30.0.1",

@@ -5,6 +5,7 @@
 import { z } from "zod";
 import { join } from "node:path";
 import { editionDir, readJsonOrThrow } from "@/lib/content/_fs";
+import { HttpUrlSchema, HttpsUrlSchema } from "@/lib/validation/urls";
 
 const TRUSTED_MAP_HOSTS = [
   "google.com",
@@ -18,8 +19,8 @@ export const VenueSchema = z
   .object({
     name: z.string().min(1),
     address: z.string().min(1),
-    mapUrl: z.string().url(),
-    embedMapUrl: z.string().url().optional(),
+    mapUrl: HttpUrlSchema,
+    embedMapUrl: HttpsUrlSchema.optional(),
     transport: z.array(z.string().min(1)).default([]),
     accessibility: z.array(z.string().min(1)).optional().default([]),
   })

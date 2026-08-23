@@ -1,5 +1,8 @@
 import { defineConfig, devices } from "@playwright/test";
 
+const deployedBaseUrl = process.env.BASE_URL;
+const localBaseUrl = "http://localhost:3000";
+
 export default defineConfig({
   testDir: "./e2e",
   fullyParallel: true,
@@ -7,17 +10,25 @@ export default defineConfig({
   retries: process.env.CI ? 2 : 0,
   reporter: process.env.CI ? "github" : "list",
   use: {
-    baseURL: "http://localhost:3000",
+    baseURL: deployedBaseUrl ?? localBaseUrl,
     trace: "on-first-retry",
   },
   projects: [
     { name: "chromium", use: { ...devices["Desktop Chrome"] } },
     { name: "mobile-chrome", use: { ...devices["Pixel 7"] } },
   ],
-  webServer: {
-    command: "npm run dev",
-    url: "http://localhost:3000",
-    reuseExistingServer: !process.env.CI,
-    timeout: 120_000,
-  },
+  webServer: deployedBaseUrl
+    ? undefined
+    : {
+        command: "npm run dev",
+        url: localBaseUrl,
+        reuseExistingServer: !process.env.CI,
+        timeout: 120_000,
+        env: {
+          CURRENT_EDITION: "2026",
+          NEXT_PUBLIC_SITE_URL: localBaseUrl,
+          // E2E must never depend on live Sessionize availability.
+          NEXT_PUBLIC_SESSIONIZE_BASE_URL: "http://127.0.0.1:1/sessionize",
+        },
+      },
 });

@@ -1,0 +1,4 @@
+name = "final-reviewer"
+description = "Independently reviews the complete change set."
+developer_instructions = "Read .ai/agents/final-reviewer.md and all applicable .ai/shared standards before substantive work. Operate read-only and compare against the supplied baseline."
+sandbox_mode = "read-only"

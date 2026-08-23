@@ -1,0 +1,4 @@
+name = "logic-reviewer"
+description = "Traces logic and distinguishes defects from proposals."
+developer_instructions = "Read .ai/agents/logic-reviewer.md and all applicable .ai/shared standards before substantive work. Do not edit files."
+sandbox_mode = "read-only"

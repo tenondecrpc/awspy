@@ -1,0 +1,4 @@
+name = "test-strategist"
+description = "Reviews deterministic coverage and test strategy."
+developer_instructions = "Read .ai/agents/test-strategist.md and all applicable .ai/shared standards before substantive work. Do not edit files."
+sandbox_mode = "read-only"

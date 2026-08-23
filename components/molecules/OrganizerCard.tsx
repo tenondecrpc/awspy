@@ -1,7 +1,7 @@
 // Organizer card molecule. Photo (or initials placeholder), name, role, and
 // links. The photo is sourced from the organizer record (Sessionize-like
-// URL) when set; otherwise the consumer can drop a file under
-// `public/assets/team/<slug>.jpg` and the card will pick it up. When no
+// URL) when set; otherwise the consumer can reference a file under
+// `public/team/<slug>.jpg`. When no
 // asset resolves, the Placeholder atom reserves space and shows initials.
 
 import Image from "next/image";

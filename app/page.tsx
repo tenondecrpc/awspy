@@ -4,7 +4,11 @@
 import { HomeTemplate } from "@/components/templates/HomeTemplate";
 import { currentEdition, getEdition } from "@/lib/content/editions";
 import { listSpeakers } from "@/lib/api/sessionize";
-import { buildEventJsonLd, buildPageMetadata } from "@/lib/utils/seo";
+import {
+  buildEventJsonLd,
+  buildPageMetadata,
+  serializeJsonLd,
+} from "@/lib/utils/seo";
 
 export async function generateMetadata() {
   const year = currentEdition();
@@ -41,9 +45,7 @@ export default async function HomePage() {
     <>
       <script
         type="application/ld+json"
-        // Next.js sanitizes innerHTML for JSON-LD scripts; the payload comes
-        // from validated content + Sessionize, never from arbitrary user input.
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(eventLd) }}
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(eventLd) }}
       />
       <HomeTemplate
         eventInfo={edition.eventInfo}

@@ -2,16 +2,10 @@
 // sitemap so search engines can discover all pages efficiently (FR-027).
 
 import type { MetadataRoute } from "next";
-
-function siteUrl(): string {
-  return (process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000").replace(
-    /\/$/,
-    ""
-  );
-}
+import { getSiteUrl } from "@/lib/utils/seo";
 
 export default function robots(): MetadataRoute.Robots {
-  const base = siteUrl();
+  const base = getSiteUrl();
   return {
     rules: [
       {

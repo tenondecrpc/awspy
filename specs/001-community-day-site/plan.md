@@ -19,11 +19,11 @@ The technical approach honors all seven constitution principles. Routes, identif
 ## Technical Context
 
 **Language/Version**: TypeScript 5.x (strict mode), Node.js 24.15.0 runtime
-**Primary Dependencies**: Next.js 16.3.2 (App Router, Server Components), React 19.2.4, Tailwind CSS 4.x, Zod 4.x, TanStack Query 5.x (provider already installed; only used if/when client-side fetching becomes necessary), Zustand 5.x (only used for ephemeral UI state if/when needed), `@next/mdx` for code-of-conduct rendering
-**Storage**: None. Content lives in version-controlled JSON/MDX under `content/editions/{year}/`. No database or external persistence in this repository  
+**Primary Dependencies**: Next.js 16.3.2 (App Router, Server Components), React 19.2.4, Tailwind CSS 4.x, and Zod 4.x. The code of conduct uses the repository's restricted Markdown renderer; no client state library is required by the implemented site.
+**Storage**: None. Content lives in version-controlled JSON/MDX under `content/editions/{year}/`. No database or external persistence in this repository.
 **Testing**: Vitest 4.x with jsdom environment for unit and integration; React Testing Library 16.x with `@testing-library/jest-dom` for component tests; Playwright 1.59 for end-to-end  
 **Target Platform**: AWS Amplify Hosting as the primary deployment target for v1. The site is cloud-agnostic and remains deployable on Vercel, OpenNext on raw AWS, Netlify, or self-hosted Node.js without code changes; see `docs/deployment.md` and `amplify.yml`. Modern evergreen browsers (last 2 versions of Chrome/Firefox/Safari/Edge); mobile and desktop.  
-**Project Type**: Single Next.js application (frontend only, no backend in this repo)  
+**Project Type**: Single Next.js application (frontend only, no backend in this repo)
 **Performance Goals**: Home Lighthouse on desktop: Performance >= 90, Accessibility >= 95, Best Practices >= 95, SEO >= 95. LCP < 2.5s on desktop reference connection. Sessionize revalidation window: 600s (10 min)  
 **Constraints**: AA contrast on every text/background pair; `prefers-reduced-motion` honored; keyboard reachable on every interactive element; build MUST fail on malformed `content/editions/{year}/*` files; site MUST keep rendering when Sessionize is empty or unreachable; no axios or other HTTP libraries (native `fetch` only); no backend logic, no admin, no persistence in this repo; no analytics tooling for v1  
 **Scale/Scope**: ~30-50 speakers and ~40-60 sessions per edition (typical for a regional Community Day); single concurrent edition; up to a few thousand attendees over the event week; first edition has no historical data, so empty-state coverage is mandatory
@@ -48,7 +48,7 @@ The constitution at `.specify/memory/constitution.md` is version 1.0.0. This pla
 
 ### Principle IV - State Layering (Server vs Client)
 
-- **PASS**. The site is overwhelmingly read-only and server-rendered. TanStack Query is already installed and wired in `app/providers.tsx`; it stays as the owner of any future server state on the client (no current candidate; the registration link does not need client-side state). Zustand is reserved for ephemeral UI state (mobile menu open/closed, accordion expansion) only; it MUST NOT hold server-derived data.
+- **PASS**. The site is overwhelmingly read-only and server-rendered. No current route needs client-side server-state or global-state infrastructure. If future requirements introduce either need, dependency ownership must be reconsidered through an ADR and server state must not be duplicated into an ephemeral client store.
 
 ### Principle V - Server-First, Statically Rendered Content
 
@@ -64,7 +64,7 @@ The constitution at `.specify/memory/constitution.md` is version 1.0.0. This pla
 
 ### Stack and Tooling Constraints
 
-- **PASS**. The plan uses the locked stack only: Next.js, React, TypeScript strict, Tailwind v4, Zod, TanStack Query (provider in place), Zustand (UI state only), Vitest + RTL, Playwright, ESLint, Prettier, npm. No `axios`/`ky`/`got`. The new dependency is `@next/mdx` for code-of-conduct rendering, which is a first-party Next.js package and aligns with the framework choice; if any concrete need to switch becomes apparent during implementation, the constitution amendment process will be followed.
+- **PASS**. The implemented stack uses Next.js, React, strict TypeScript, Tailwind v4, Zod, Vitest with React Testing Library, Playwright, ESLint, Prettier, and npm. No alternate HTTP client or inactive state/MDX compiler dependency remains. The restricted Markdown renderer is intentionally small because the version-controlled code of conduct does not require executable MDX components.
 
 ### Verification Workflow
 
@@ -250,7 +250,7 @@ public/
 
 .env.example                               (CURRENT_EDITION, NEXT_PUBLIC_SITE_URL, NEXT_PUBLIC_SESSIONIZE_BASE_URL optional override)
 next.config.ts                             (exists; configure remotePatterns for sessionize.com and img.evbuc.com)
-package.json                               (exists; add @next/mdx and a few peer deps)
+package.json                               (exists; locked runtime and validation dependencies)
 ```
 
 **Structure Decision**: A single Next.js application at the repository root. The `app/` directory contains route handlers; `components/` follows the atomic design hierarchy mandated by the constitution; `lib/api/` holds the typed Sessionize client; `lib/content/` holds the typed local content loaders; `content/editions/{year}/` holds version-controlled per-edition data; `tests/` contains Vitest unit and component tests; `e2e/` contains Playwright tests. The current edition is selected by the `CURRENT_EDITION` environment variable at build/render time so the bare URL always serves the active year and the same templates render past editions under `/editions/{year}/...`.
@@ -264,9 +264,9 @@ Topics resolved in research:
 1. **Sessionize public API surface**: which views to consume (`Speakers`, `Sessions`, `GridSmart`, `SpeakerWall`, `All`), authentication model (none for public events), caching behavior (5-minute server cache), custom field opt-in policy.
 2. **Eventbrite integration via external link**: render a plain external link to the public Eventbrite event page; no widget embed, no REST API, no script load. Status flag (`upcoming` / `open` / `closed` / `archived`) drives the surrounding copy.
 3. **Multi-edition routing in Next.js App Router**: trade-off between rewrites and dual-tree routes; chosen pattern is dual tree with shared templates because it keeps routing predictable, sitemap generation trivial, and the bare URL semantically meaningful.
-4. **Content-as-code pattern in TypeScript**: `import` of JSON files plus `z.parse` at load time; build fails loudly on validation drift. MDX rendering for the code of conduct via `@next/mdx`.
+4. **Content-as-code pattern in TypeScript**: file reads plus `z.parse` at load time; build fails loudly on validation drift. The code-of-conduct source uses a restricted Markdown subset that never executes embedded components.
 5. **Empty-state strategy**: a first-class `EmptyState` organism wired into the lists/grids, plus a `tolerateMissing` option in the typed `fetch` client that turns 404 (or thrown errors at the data boundary) into `[]` or `null` so server components render placeholders without crashing.
-6. **Image strategy**: `next/image` with `remotePatterns` allowing `sessionize.com` (speaker headshots), `img.evbuc.com` (Eventbrite assets), and same-origin (logos and photos under `public/`). Explicit `width`, `height`, and `sizes` per the constitution.
+6. **Image strategy**: `next/image` uses the shared host allowlist in `lib/config/image-hosts.ts` for Sessionize and Eventbrite assets. Same-origin logos and photos live under `public/`. Schemas and `remotePatterns` consume the same host list, and every image has explicit `width`, `height`, and `sizes`.
 7. **Time zone handling**: `Intl.DateTimeFormat` with `timeZone: 'America/Asuncion'` in `lib/utils/datetime.ts`. Schedule renders day-by-day to avoid midnight ambiguity.
 8. **Slug derivation for speakers**: lowercase + diacritic strip + non-alphanumerics replaced with `-` + collapse + trim, plus a `[2]`, `[3]`, ... suffix when collisions occur in a single edition. Speakers carry a stable `id` from Sessionize that drives the suffix decision.
 9. **SEO/structured data approach**: `metadata` exports per route, `JSON-LD` script tags injected by server components for `Event`, `Person`, and `BreadcrumbList`. Dynamic OG image via `app/opengraph-image.tsx` reading `event.json`.
@@ -303,7 +303,7 @@ Re-evaluating each principle after the Phase 1 artifacts are produced:
 - **Frontend-Only Boundary**: research.md and contracts confirm no backend is introduced; data sources are Sessionize, the optional external registration link, and version-controlled content. PASS.
 - **Atomic Design Layering**: the project structure section enforces the tier discipline; the component list above respects it. PASS.
 - **Typed API Boundary with Zod Validation**: `contracts/sessionize-api.md` and `contracts/content-schemas.md` make the Zod boundary explicit on every payload (inbound from Sessionize, inbound from the local files). PASS.
-- **State Layering**: the design has zero server state in Zustand. TanStack Query provider stays in place but is unused for v1. PASS.
+- **State Layering**: the design has no global client state or client-side server-state provider because the implemented routes do not require either. PASS.
 - **Server-First, Statically Rendered Content**: every page in the routing tree is a server component by default; client islands are scoped to interactive bits (mobile menu, FAQ accordion, countdown). PASS.
 - **Accessibility Non-Negotiables**: organism list includes the patterns required by FR-019 to FR-024 (focus-visible Button, aria-expanded FAQItem, prefers-reduced-motion-aware Countdown, etc.). PASS.
 - **Language and Formatting Discipline**: every route name, file name, and identifier in the project structure is English; visible copy in Spanish is enforced by the templates. PASS.

@@ -3,13 +3,18 @@
 import { z } from "zod";
 import { join } from "node:path";
 import { editionDir, readJsonOrThrow } from "@/lib/content/_fs";
+import {
+  HttpUrlSchema,
+  HttpsUrlSchema,
+  RemoteImageUrlSchema,
+} from "@/lib/validation/urls";
 
 const OrganizerLinksSchema = z
   .object({
-    linkedin: z.string().url().optional(),
-    twitter: z.string().url().optional(),
-    github: z.string().url().optional(),
-    website: z.string().url().optional(),
+    linkedin: HttpsUrlSchema.optional(),
+    twitter: HttpsUrlSchema.optional(),
+    github: HttpsUrlSchema.optional(),
+    website: HttpUrlSchema.optional(),
   })
   .strict();
 
@@ -19,7 +24,7 @@ export const OrganizerSchema = z.object({
   role: z.string().min(1),
   photo: z
     .union([
-      z.string().url(),
+      RemoteImageUrlSchema,
       z.string().regex(/^\/(team)\//, "Repo paths must live under /team/"),
     ])
     .optional(),

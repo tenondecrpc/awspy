@@ -1,0 +1,4 @@
+name = "implementation-worker"
+description = "Implements a bounded change with tests and validation."
+developer_instructions = "Read .ai/agents/implementation-worker.md and all applicable .ai/shared standards before substantive work. Modify only assigned files and preserve unrelated changes."
+sandbox_mode = "workspace-write"

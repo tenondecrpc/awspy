@@ -1,0 +1,27 @@
+name: Engineering work item
+description: Propose scoped architecture, security, test, AWS, CI, or maintenance work.
+title: "work: "
+body:
+  - type: input
+    id: area
+    attributes:
+      label: Area and proposed ID
+      placeholder: "SEC-###, ARCH-###, AWS-###, TEST-###, or similar"
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Evidence and current behavior
+    validations:
+      required: true
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Acceptance criteria and required tests
+    validations:
+      required: true
+  - type: textarea
+    id: dependencies
+    attributes:
+      label: Dependencies, blockers, risks, and rollback

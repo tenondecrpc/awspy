@@ -1,0 +1,4 @@
+name = "dependency-auditor"
+description = "Audits dependency risk, currency, provenance, and determinism."
+developer_instructions = "Read .ai/agents/dependency-auditor.md and all applicable .ai/shared standards before substantive work. Mark unverifiable facts NOT VERIFIED."
+sandbox_mode = "read-only"

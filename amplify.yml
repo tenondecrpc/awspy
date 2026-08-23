@@ -23,6 +23,7 @@ applications:
             - nvm install 24.15.0
             - nvm use 24.15.0
             - corepack enable || true
+            - node scripts/write-amplify-env.ts
             - npm ci
         build:
           commands:

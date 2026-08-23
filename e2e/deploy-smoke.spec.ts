@@ -1,6 +1,6 @@
 import { test, expect } from "@playwright/test";
 
-// Deploy smoke run. Set `BASE_URL=https://<deployed-preview-url>` (e.g. an
+// Deploy smoke run. Set `BASE_URL=https://<deployed-preview-url>` (for example, an
 // AWS Amplify preview branch URL) when running this against a deployed
 // preview to verify every public route is reachable and renders its primary
 // heading. The site is cloud-agnostic; the only assumption here is that
@@ -43,4 +43,16 @@ test("deploy smoke /opengraph-image is reachable", async ({ page }) => {
   const url = BASE ? `${BASE}/opengraph-image` : "/opengraph-image";
   const response = await page.goto(url);
   expect(response?.ok()).toBe(true);
+});
+
+test("deploy smoke sends baseline browser security headers", async ({
+  page,
+}) => {
+  const url = BASE ? `${BASE}/` : "/";
+  const response = await page.goto(url);
+  const headers = response?.headers();
+  expect(headers?.["x-content-type-options"]).toBe("nosniff");
+  expect(headers?.["x-frame-options"]).toBe("DENY");
+  expect(headers?.["referrer-policy"]).toBe("strict-origin-when-cross-origin");
+  expect(headers?.["permissions-policy"]).toContain("camera=()");
 });
