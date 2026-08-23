@@ -61,31 +61,32 @@ NEW_PLAN="$IMPL_PLAN"  # Alias for compatibility with existing code
 AGENT_TYPE="${1:-}"
 
 # Agent-specific file paths  
-CLAUDE_FILE="$REPO_ROOT/CLAUDE.md"
-GEMINI_FILE="$REPO_ROOT/GEMINI.md"
-COPILOT_FILE="$REPO_ROOT/.github/agents/copilot-instructions.md"
-CURSOR_FILE="$REPO_ROOT/.cursor/rules/specify-rules.mdc"
-QWEN_FILE="$REPO_ROOT/QWEN.md"
-AGENTS_FILE="$REPO_ROOT/AGENTS.md"
-WINDSURF_FILE="$REPO_ROOT/.windsurf/rules/specify-rules.md"
-JUNIE_FILE="$REPO_ROOT/.junie/AGENTS.md"
-KILOCODE_FILE="$REPO_ROOT/.kilocode/rules/specify-rules.md"
-AUGGIE_FILE="$REPO_ROOT/.augment/rules/specify-rules.md"
-ROO_FILE="$REPO_ROOT/.roo/rules/specify-rules.md"
-CODEBUDDY_FILE="$REPO_ROOT/CODEBUDDY.md"
-QODER_FILE="$REPO_ROOT/QODER.md"
+PROJECT_CONTEXT_FILE="$REPO_ROOT/.ai/generated/project-context.md"
+CLAUDE_FILE="$PROJECT_CONTEXT_FILE"
+GEMINI_FILE="$PROJECT_CONTEXT_FILE"
+COPILOT_FILE="$PROJECT_CONTEXT_FILE"
+CURSOR_FILE="$PROJECT_CONTEXT_FILE"
+QWEN_FILE="$PROJECT_CONTEXT_FILE"
+AGENTS_FILE="$PROJECT_CONTEXT_FILE"
+WINDSURF_FILE="$PROJECT_CONTEXT_FILE"
+JUNIE_FILE="$PROJECT_CONTEXT_FILE"
+KILOCODE_FILE="$PROJECT_CONTEXT_FILE"
+AUGGIE_FILE="$PROJECT_CONTEXT_FILE"
+ROO_FILE="$PROJECT_CONTEXT_FILE"
+CODEBUDDY_FILE="$PROJECT_CONTEXT_FILE"
+QODER_FILE="$PROJECT_CONTEXT_FILE"
 # Amp, Kiro CLI, IBM Bob, and Pi all share AGENTS.md — use AGENTS_FILE to avoid
 # updating the same file multiple times.
 AMP_FILE="$AGENTS_FILE"
-SHAI_FILE="$REPO_ROOT/SHAI.md"
-TABNINE_FILE="$REPO_ROOT/TABNINE.md"
+SHAI_FILE="$PROJECT_CONTEXT_FILE"
+TABNINE_FILE="$PROJECT_CONTEXT_FILE"
 KIRO_FILE="$AGENTS_FILE"
-AGY_FILE="$REPO_ROOT/.agent/rules/specify-rules.md"
+AGY_FILE="$PROJECT_CONTEXT_FILE"
 BOB_FILE="$AGENTS_FILE"
-VIBE_FILE="$REPO_ROOT/.vibe/agents/specify-agents.md"
-KIMI_FILE="$REPO_ROOT/KIMI.md"
-TRAE_FILE="$REPO_ROOT/.trae/rules/AGENTS.md"
-IFLOW_FILE="$REPO_ROOT/IFLOW.md"
+VIBE_FILE="$PROJECT_CONTEXT_FILE"
+KIMI_FILE="$PROJECT_CONTEXT_FILE"
+TRAE_FILE="$PROJECT_CONTEXT_FILE"
+IFLOW_FILE="$PROJECT_CONTEXT_FILE"
 
 # Template file
 TEMPLATE_FILE="$REPO_ROOT/.specify/templates/agent-file-template.md"
@@ -758,10 +759,10 @@ update_all_existing_agents() {
     _update_if_new "$TRAE_FILE" "Trae"                     || _all_ok=false
     _update_if_new "$IFLOW_FILE" "iFlow CLI"               || _all_ok=false
 
-    # If no agent files exist, create a default Claude file
+    # If no generated context exists, create the canonical project context.
     if [[ "$_found_agent" == false ]]; then
-        log_info "No existing agent files found, creating default Claude file..."
-        update_agent_file "$CLAUDE_FILE" "Claude Code" || return 1
+        log_info "No generated context found, creating canonical project context..."
+        update_agent_file "$PROJECT_CONTEXT_FILE" "project" || return 1
     fi
 
     [[ "$_all_ok" == true ]]

@@ -1,0 +1,4 @@
+name = "security-reviewer"
+description = "Reviews application, supply-chain, and AWS security boundaries."
+developer_instructions = "Read .ai/agents/security-reviewer.md and all applicable .ai/shared standards before substantive work. Never expose possible secret values."
+sandbox_mode = "read-only"
