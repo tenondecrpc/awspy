@@ -3,4 +3,8 @@ useDefault = true
 
 [[allowlists]]
 description = "Vendored agent skills contain security-test examples; review when the skills lock changes (SEC-006)."
-paths = ['''^\.agents/skills/''']
+paths = ['''(^|/)\.agents/skills/''']
+
+[[allowlists]]
+description = "Git internals, generated dependencies, builds, coverage, and browser artifacts are covered by history or dependency controls; review if SEC-006 scope changes."
+paths = ['''(^|/)(\.git|node_modules|\.next|coverage|playwright-report|test-results)/''']
