@@ -90,7 +90,10 @@ describe("site URL helpers", () => {
   });
 
   it("preserves scheme validation precedence when userinfo is also present", () => {
-    process.env.NEXT_PUBLIC_SITE_URL = "ftp://user:pass@example.test";
+    const invalidSchemeUrl = new URL("ftp://example.test");
+    invalidSchemeUrl.username = "user";
+    invalidSchemeUrl.password = "pass";
+    process.env.NEXT_PUBLIC_SITE_URL = invalidSchemeUrl.toString();
 
     expect(() => getSiteUrl()).toThrow(
       "NEXT_PUBLIC_SITE_URL must be an absolute HTTP(S) URL"

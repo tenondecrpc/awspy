@@ -68,11 +68,15 @@ describe("buildSessionizeUrl", () => {
   credentialUrl.username = "user";
   credentialUrl.password = "pass";
 
+  const invalidSchemeCredentialUrl = new URL("ftp://example.test/api");
+  invalidSchemeCredentialUrl.username = "user";
+  invalidSchemeCredentialUrl.password = "pass";
+
   it("rejects malformed and non-web provider URLs with the HTTP(S) error", () => {
     for (const url of [
       "not a URL",
       "ftp://example.test/api",
-      "ftp://user:pass@example.test/api",
+      invalidSchemeCredentialUrl.toString(),
     ]) {
       expect(() => normalizeSessionizeBaseUrl(url)).toThrow(
         "Sessionize base URL must be an absolute HTTP(S) URL"
