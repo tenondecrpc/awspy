@@ -15,13 +15,18 @@ import { HttpUrlSchema, RemoteImageUrlSchema } from "@/lib/validation/urls";
 const DEFAULT_SESSIONIZE_BASE_URL = "https://sessionize.com/api/v2";
 
 export function normalizeSessionizeBaseUrl(value: string): string {
+  let url: URL;
+  try {
+    url = new URL(value);
+  } catch {
+    throw new Error("Sessionize base URL must be an absolute HTTP(S) URL");
+  }
+  if (url.username || url.password) {
+    throw new Error("Sessionize base URL must not contain credentials");
+  }
   const parsed = HttpUrlSchema.safeParse(value);
   if (!parsed.success) {
     throw new Error("Sessionize base URL must be an absolute HTTP(S) URL");
-  }
-  const url = new URL(parsed.data);
-  if (url.username || url.password) {
-    throw new Error("Sessionize base URL must not contain credentials");
   }
   const isLoopback = ["localhost", "127.0.0.1", "[::1]"].includes(url.hostname);
   if (url.protocol !== "https:" && !isLoopback) {

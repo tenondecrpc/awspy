@@ -12,13 +12,18 @@ const DEFAULT_SITE_URL = "http://localhost:3000";
 /** Return the configured public origin without a trailing slash or path. */
 export function getSiteUrl(): string {
   const configured = process.env.NEXT_PUBLIC_SITE_URL ?? DEFAULT_SITE_URL;
+  let url: URL;
+  try {
+    url = new URL(configured);
+  } catch {
+    throw new Error("NEXT_PUBLIC_SITE_URL must be an absolute HTTP(S) URL");
+  }
+  if (url.username || url.password) {
+    throw new Error("NEXT_PUBLIC_SITE_URL must not contain credentials");
+  }
   const parsed = HttpUrlSchema.safeParse(configured);
   if (!parsed.success) {
     throw new Error("NEXT_PUBLIC_SITE_URL must be an absolute HTTP(S) URL");
-  }
-  const url = new URL(parsed.data);
-  if (url.username || url.password) {
-    throw new Error("NEXT_PUBLIC_SITE_URL must not contain credentials");
   }
   return url.origin;
 }
