@@ -20,6 +20,7 @@
     "test": "vitest run",
     "test:coverage": "vitest run --coverage",
     "test:watch": "vitest",
+    "playwright:install": "playwright install --with-deps chromium",
     "e2e": "playwright test",
     "e2e:production": "playwright test --config=playwright.production.config.ts",
     "verify": "npm run format:check && npm run lint && npm run typecheck && npm test && npm run secretlint && npm run build",

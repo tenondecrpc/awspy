@@ -76,7 +76,7 @@ All editorial changes flow through a pull request to this repository. There is n
    }
    ```
 
-2. If the logo lives in the repo, place it under `public/logos/` and reference it as `/logos/<filename>`. External HTTPS URLs are also accepted.
+2. If the logo lives in the repo, place it under `public/logos/` and reference it as `/logos/<filename>`. External images must use a host declared in `lib/config/image-hosts.ts`; adding a host requires schema, Next Image, and security review.
 3. Run `npm test` to validate the new entry against the schema.
 4. Open a PR. After merge, the configured hosting platform deploys automatically. AWS Amplify Hosting is the primary target for v1; see `docs/deployment.md` for the platform-specific notes.
 
@@ -103,7 +103,7 @@ Speakers, sessions, and the schedule are sourced from Sessionize. Editing them h
 - The site picks it up within `next.revalidate` (10 minutes by default).
 - A manual purge can be triggered by re-deploying through the hosting platform (Amplify Console -> branch -> Redeploy this version) or by hitting `revalidateTag` from a server action that the editorial team can call manually.
 
-If Sessionize ever changes its public response shape, the typed client throws a parse failure. Pages with `tolerateMissing: true` (the default for list endpoints) fall back to empty states, and the failure is logged in the hosting platform's runtime logs (CloudWatch on AWS Amplify Hosting).
+If Sessionize changes its public response shape, tolerant list reads fall back to empty states. The current client does not emit custom failure telemetry; sanitized provider observability is tracked as future operational work.
 
 ## Adding a new edition
 

@@ -15,6 +15,7 @@ vi.mock("@/lib/api/sessionize", () => ({
 }));
 
 import sitemap from "@/app/sitemap";
+import { listSpeakers } from "@/lib/api/sessionize";
 
 const ORIGINAL_SITE_URL = process.env.NEXT_PUBLIC_SITE_URL;
 const ORIGINAL_CURRENT = process.env.CURRENT_EDITION;
@@ -72,6 +73,17 @@ describe("sitemap()", () => {
     expect(urls).toContain(
       "https://example.test/editions/2026/speakers/ada-lovelace"
     );
+  });
+
+  it("keeps static routes when the tolerant speaker source is empty", async () => {
+    vi.mocked(listSpeakers).mockResolvedValueOnce([]);
+
+    const entries = await sitemap();
+    const urls = entries.map((entry) => entry.url);
+
+    expect(urls).toContain("https://example.test/speakers");
+    expect(urls).toContain("https://example.test/editions/2026/speakers");
+    expect(urls).not.toContain("https://example.test/speakers/ada-lovelace");
   });
 
   it("gives the home the highest priority", async () => {

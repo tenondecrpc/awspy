@@ -3,7 +3,11 @@
 import { z } from "zod";
 import { join } from "node:path";
 import { editionDir, readJsonOrThrow } from "@/lib/content/_fs";
-import { HttpUrlSchema, HttpsUrlSchema } from "@/lib/validation/urls";
+import {
+  HttpUrlSchema,
+  HttpsUrlSchema,
+  RemoteImageUrlSchema,
+} from "@/lib/validation/urls";
 
 const OrganizerLinksSchema = z
   .object({
@@ -20,7 +24,7 @@ export const OrganizerSchema = z.object({
   role: z.string().min(1),
   photo: z
     .union([
-      HttpsUrlSchema,
+      RemoteImageUrlSchema,
       z.string().regex(/^\/(team)\//, "Repo paths must live under /team/"),
     ])
     .optional(),

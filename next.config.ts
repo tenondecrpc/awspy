@@ -1,4 +1,5 @@
 import type { NextConfig } from "next";
+import { REMOTE_IMAGE_HOSTS } from "./lib/config/image-hosts";
 
 const nextConfig: NextConfig = {
   // Project AI guidance is maintained under .ai/ with a minimal root loader.
@@ -21,14 +22,10 @@ const nextConfig: NextConfig = {
     ];
   },
   images: {
-    remotePatterns: [
-      // Sessionize hosts speaker headshots under sessionize.com.
-      { protocol: "https", hostname: "sessionize.com" },
-      // Eventbrite-hosted images (event banners, organizer logos) come from
-      // these two CDNs.
-      { protocol: "https", hostname: "img.evbuc.com" },
-      { protocol: "https", hostname: "cdn.evbuc.com" },
-    ],
+    remotePatterns: REMOTE_IMAGE_HOSTS.map((hostname) => ({
+      protocol: "https" as const,
+      hostname,
+    })),
   },
 };
 

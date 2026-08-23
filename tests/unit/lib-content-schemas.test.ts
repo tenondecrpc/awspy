@@ -119,6 +119,23 @@ describe("SponsorsListSchema", () => {
       ])
     ).toThrow();
   });
+
+  it.each(["/public/logos/acme.svg", "https://images.example.test/acme.svg"])(
+    "rejects a sponsor logo Next Image cannot serve: %s",
+    (logo) => {
+      expect(() =>
+        SponsorsListSchema.parse([
+          {
+            id: "acme",
+            name: "Acme",
+            tier: "Gold",
+            logo: { light: logo },
+            url: "https://acme.example",
+          },
+        ])
+      ).toThrow();
+    }
+  );
 });
 
 describe("groupSponsorsByTier", () => {
@@ -154,6 +171,19 @@ describe("OrganizersListSchema", () => {
       { id: "x", name: "Y", role: "Lead" },
     ]);
     expect(result.success).toBe(false);
+  });
+
+  it("rejects an organizer photo from an unconfigured image host", () => {
+    expect(
+      OrganizersListSchema.safeParse([
+        {
+          id: "x",
+          name: "X",
+          role: "Lead",
+          photo: "https://images.example.test/x.jpg",
+        },
+      ]).success
+    ).toBe(false);
   });
 });
 

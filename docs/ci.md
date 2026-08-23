@@ -40,6 +40,11 @@ generation for pull requests and pushes to `main`. It uses read-only repository
 permissions, immutable Action SHAs, npm caching, artifact retention, and
 concurrency cancellation.
 
+A dependent browser job installs the matching Playwright Chromium runtime and
+runs `npm run verify:e2e` against a production server with deterministic
+Sessionize failure configuration. Playwright reports and traces are retained
+for seven days when that job fails.
+
 The workflow does not receive AWS credentials and cannot deploy. Pull request
 code is executed with the normal `pull_request` event, not
 `pull_request_target`.

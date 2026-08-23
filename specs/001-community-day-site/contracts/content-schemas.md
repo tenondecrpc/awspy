@@ -22,13 +22,18 @@ content/editions/{year}/
 
 ## event.json
 
+The snippets below use `HttpUrlSchema`, `HttpsUrlSchema`, and
+`RemoteImageUrlSchema` from `lib/validation/urls.ts`. These policies reject
+embedded credentials; the image policy also shares the exact host allowlist
+used by `next/image`.
+
 ```ts
 const SocialSchema = z.object({
-  twitter: z.string().url().optional(),
-  linkedin: z.string().url().optional(),
-  instagram: z.string().url().optional(),
-  youtube: z.string().url().optional(),
-  meetup: z.string().url().optional()
+  twitter: HttpsUrlSchema.optional(),
+  linkedin: HttpsUrlSchema.optional(),
+  instagram: HttpsUrlSchema.optional(),
+  youtube: HttpsUrlSchema.optional(),
+  meetup: HttpsUrlSchema.optional()
 }).strict();
 
 const StatusEnum = z.enum(["open", "upcoming", "closed"]);
@@ -49,8 +54,8 @@ export const EventInfoSchema = z.object({
     summary: z.string().min(1)
   }),
   sessionizeEventId: z.string().regex(/^[a-z0-9]+$/i).nullable(),
-  eventbriteEventUrl: z.string().url().nullable(),
-  cfpSubmissionUrl: z.string().url().nullable(),
+  eventbriteEventUrl: HttpsUrlSchema.nullable(),
+  cfpSubmissionUrl: HttpsUrlSchema.nullable(),
   cfpStatus: StatusEnum,
   cfpDeadline: z.string().datetime({ offset: true }).nullable(),
   registrationStatus: StatusEnum,
@@ -77,8 +82,8 @@ export type EventInfo = z.infer<typeof EventInfoSchema>;
 const SponsorTierEnum = z.enum(["Platinum", "Gold", "Silver", "Bronze", "Community"]);
 
 const ImageRefSchema = z.union([
-  z.string().url(),
-  z.string().regex(/^\/(logos|public\/logos)\//, "Repo paths must live under /logos/")
+  RemoteImageUrlSchema,
+  z.string().regex(/^\/logos\//, "Repo paths must live under /logos/")
 ]);
 
 const SponsorSchema = z.object({
@@ -89,7 +94,7 @@ const SponsorSchema = z.object({
     light: ImageRefSchema,
     dark: ImageRefSchema.optional()
   }),
-  url: z.string().url(),
+  url: HttpUrlSchema,
   description: z.string().optional()
 });
 
@@ -115,10 +120,10 @@ export type Sponsor = z.infer<typeof SponsorSchema>;
 
 ```ts
 const OrganizerLinksSchema = z.object({
-  linkedin: z.string().url().optional(),
-  twitter: z.string().url().optional(),
-  github: z.string().url().optional(),
-  website: z.string().url().optional()
+  linkedin: HttpsUrlSchema.optional(),
+  twitter: HttpsUrlSchema.optional(),
+  github: HttpsUrlSchema.optional(),
+  website: HttpUrlSchema.optional()
 }).strict();
 
 const OrganizerSchema = z.object({
@@ -126,7 +131,7 @@ const OrganizerSchema = z.object({
   name: z.string().min(1),
   role: z.string().min(1),
   photo: z.union([
-    z.string().url(),
+    RemoteImageUrlSchema,
     z.string().regex(/^\/(team)\//, "Repo paths must live under /team/")
   ]).optional(),
   links: OrganizerLinksSchema.optional().default({})
@@ -191,8 +196,8 @@ const TRUSTED_MAP_HOSTS = [
 export const VenueSchema = z.object({
   name: z.string().min(1),
   address: z.string().min(1),
-  mapUrl: z.string().url(),
-  embedMapUrl: z.string().url().optional(),
+  mapUrl: HttpUrlSchema,
+  embedMapUrl: HttpsUrlSchema.optional(),
   transport: z.array(z.string().min(1)).default([]),
   accessibility: z.array(z.string().min(1)).optional().default([])
 }).superRefine((value, ctx) => {

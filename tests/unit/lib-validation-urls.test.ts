@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import {
   HttpUrlSchema,
   HttpsUrlSchema,
+  RemoteImageUrlSchema,
   isSafeMarkdownHref,
 } from "@/lib/validation/urls";
 
@@ -17,6 +18,33 @@ describe("URL policies", () => {
     ).toBe(true);
     expect(
       HttpsUrlSchema.safeParse("http://example.test/image.png").success
+    ).toBe(false);
+  });
+
+  it("rejects embedded credentials from every web URL policy", () => {
+    const credentialUrl = new URL("https://example.test/path");
+    credentialUrl.username = "user";
+    credentialUrl.password = "pass";
+    const value = credentialUrl.toString();
+
+    expect(HttpUrlSchema.safeParse(value).success).toBe(false);
+    expect(HttpsUrlSchema.safeParse(value).success).toBe(false);
+    expect(RemoteImageUrlSchema.safeParse(value).success).toBe(false);
+    expect(isSafeMarkdownHref(value)).toBe(false);
+  });
+
+  it.each([
+    "https://sessionize.com/image/speaker.jpg",
+    "https://img.evbuc.com/banner.png",
+    "https://cdn.evbuc.com/logo.svg",
+  ])("allows configured remote image host %s", (url) => {
+    expect(RemoteImageUrlSchema.safeParse(url).success).toBe(true);
+  });
+
+  it("rejects an HTTPS image host that Next Image cannot optimize", () => {
+    expect(
+      RemoteImageUrlSchema.safeParse("https://images.example.test/logo.svg")
+        .success
     ).toBe(false);
   });
 

@@ -10,7 +10,7 @@
 import { z } from "zod";
 import { apiFetch } from "@/lib/api/client";
 import { disambiguateSlugs, slugify } from "@/lib/utils/slug";
-import { HttpUrlSchema, HttpsUrlSchema } from "@/lib/validation/urls";
+import { HttpUrlSchema, RemoteImageUrlSchema } from "@/lib/validation/urls";
 
 const DEFAULT_SESSIONIZE_BASE_URL = "https://sessionize.com/api/v2";
 
@@ -55,7 +55,7 @@ export const SessionizeSpeakerSchema = z
     fullName: z.string().min(1).optional(),
     tagLine: z.string().optional().nullable(),
     bio: z.string().optional().nullable(),
-    profilePicture: HttpsUrlSchema.optional().nullable(),
+    profilePicture: RemoteImageUrlSchema.optional().nullable(),
     links: z.array(SpeakerLinkSchema).optional().default([]),
     sessions: z.array(SpeakerSessionRefSchema).optional().default([]),
     isTopSpeaker: z.boolean().optional(),
@@ -177,7 +177,7 @@ export const SpeakerWallSchema = z.array(
       lastName: z.string().optional(),
       fullName: z.string(),
       tagLine: z.string().optional().nullable(),
-      profilePicture: HttpsUrlSchema.optional().nullable(),
+      profilePicture: RemoteImageUrlSchema.optional().nullable(),
       isTopSpeaker: z.boolean().optional(),
     })
     .passthrough()

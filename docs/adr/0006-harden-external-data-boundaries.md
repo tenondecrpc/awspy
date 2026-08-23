@@ -9,7 +9,7 @@ Sessionize is public and untrusted. Zod validates shapes, but unrestricted URL s
 
 ## Decision
 
-Keep native `fetch` and Zod. Add explicit URL policies, safe JSON-LD serialization, finite request timeouts, and timestamp invariants at existing boundaries. Preserve tolerant empty-state behavior and do not add speculative retries.
+Keep native `fetch` and Zod. Add explicit URL and optimized-image host policies, safe JSON-LD serialization, finite request timeouts, bounded response bodies, and timestamp invariants at existing boundaries. Preserve tolerant empty-state behavior and do not add speculative retries.
 
 ## Alternatives
 
@@ -27,7 +27,7 @@ Reduces XSS, unsafe navigation, and resource-exhaustion exposure.
 
 ## Operational impact
 
-Timeout/fallback categories should be observable without payload or credential logging. Response-size limits remain future work pending an efficient streaming design.
+Timeout and response-size failures are bounded and retain existing tolerant fallback behavior. Sanitized failure telemetry remains future work; payloads and credentials must never be logged.
 
 ## Migration plan
 

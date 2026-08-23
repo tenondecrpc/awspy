@@ -172,6 +172,27 @@ describe("apiFetch", () => {
     vi.useRealTimers();
   });
 
+  it("preserves caller cancellation when composing the timeout signal", async () => {
+    mockFetch(
+      async (_input, init) =>
+        new Promise<Response>((_resolve, reject) => {
+          init?.signal?.addEventListener("abort", () => {
+            reject(new DOMException("Aborted", "AbortError"));
+          });
+        })
+    );
+    const controller = new AbortController();
+    const request = apiFetch("/things", {
+      schema: z.array(z.unknown()),
+      baseUrl: SAMPLE_BASE,
+      signal: controller.signal,
+    });
+
+    controller.abort();
+
+    await expect(request).rejects.toMatchObject({ name: "AbortError" });
+  });
+
   it("returns the fallback when a tolerated request times out", async () => {
     vi.useFakeTimers();
     mockFetch(

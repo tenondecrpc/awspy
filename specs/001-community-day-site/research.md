@@ -77,7 +77,7 @@ This document records the research and decisions that informed the Technical Con
 
 ## R6. Image strategy
 
-**Decision**: Use `next/image` with `next.config.ts` `images.remotePatterns` configured for `sessionize.com` (speaker headshots) and `img.evbuc.com` (Eventbrite assets if shown). Same-origin assets (sponsor logos and organizer photos) live under `public/logos/` and `public/team/` respectively when self-hosted, or use external HTTPS URLs already configured per content. Every `<Image>` instance receives explicit `width`, `height`, and `sizes` per Principle V.
+**Decision**: Use `next/image` with a shared remote-host allowlist consumed by both `next.config.ts` and content schemas. Same-origin sponsor logos and organizer photos live under `public/logos/` and `public/team/` and are referenced without the `/public` prefix. Every `<Image>` instance receives explicit `width`, `height`, and `sizes` per Principle V.
 
 **Rationale**:
 - `next/image` provides automatic responsive variants and lazy loading, which keeps Lighthouse Performance >= 90 (FR-032).

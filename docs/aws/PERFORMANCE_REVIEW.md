@@ -21,7 +21,12 @@
 - Final static chunks: 684,018 bytes total; 637,834 JavaScript bytes.
 - Reduction: 24,257 bytes in both totals, or approximately 3.7 percent of
   baseline JavaScript chunks.
-- Locked dependency graph: 645 packages audited at baseline, 545 after removal.
+- Locked package nodes: 747 at baseline and 647 after removal. Clean installs audit
+  645 packages at baseline and 545 after removal.
 - Production build: 27 routes passed after the change.
+- Unit and component coverage: 68.55% statements, 70.03% branches, 63.97%
+  functions, and 69.53% lines.
+- Production browser validation: 84 tests passed across desktop and mobile
+  Chromium.
 - Lighthouse and AWS runtime profiling: `NOT MEASURED`; external preview is
   blocked by AWS-001 and AWS-002.
