@@ -68,12 +68,28 @@ describe("buildSessionizeUrl", () => {
   credentialUrl.username = "user";
   credentialUrl.password = "pass";
 
-  it.each([
-    "http://example.test/api",
-    "ftp://example.test/api",
-    credentialUrl.toString(),
-  ])("rejects unsafe provider base URL %s", (url) => {
-    expect(() => normalizeSessionizeBaseUrl(url)).toThrow();
+  it("rejects malformed and non-web provider URLs with the HTTP(S) error", () => {
+    for (const url of [
+      "not a URL",
+      "ftp://example.test/api",
+      "ftp://user:pass@example.test/api",
+    ]) {
+      expect(() => normalizeSessionizeBaseUrl(url)).toThrow(
+        "Sessionize base URL must be an absolute HTTP(S) URL"
+      );
+    }
+  });
+
+  it("rejects credentials in a web provider URL with the credentials error", () => {
+    expect(() => normalizeSessionizeBaseUrl(credentialUrl.toString())).toThrow(
+      "Sessionize base URL must not contain credentials"
+    );
+  });
+
+  it("rejects remote HTTP with the transport-policy error", () => {
+    expect(() => normalizeSessionizeBaseUrl("http://example.test/api")).toThrow(
+      "Sessionize base URL must use HTTPS outside loopback"
+    );
   });
 
   it.each([

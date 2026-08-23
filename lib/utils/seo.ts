@@ -18,6 +18,9 @@ export function getSiteUrl(): string {
   } catch {
     throw new Error("NEXT_PUBLIC_SITE_URL must be an absolute HTTP(S) URL");
   }
+  if (url.protocol !== "http:" && url.protocol !== "https:") {
+    throw new Error("NEXT_PUBLIC_SITE_URL must be an absolute HTTP(S) URL");
+  }
   if (url.username || url.password) {
     throw new Error("NEXT_PUBLIC_SITE_URL must not contain credentials");
   }

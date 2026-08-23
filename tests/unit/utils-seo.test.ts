@@ -88,6 +88,20 @@ describe("site URL helpers", () => {
     process.env.NEXT_PUBLIC_SITE_URL = credentialUrl.toString();
     expect(() => getSiteUrl()).toThrow(/credentials/);
   });
+
+  it("preserves scheme validation precedence when userinfo is also present", () => {
+    process.env.NEXT_PUBLIC_SITE_URL = "ftp://user:pass@example.test";
+
+    expect(() => getSiteUrl()).toThrow(
+      "NEXT_PUBLIC_SITE_URL must be an absolute HTTP(S) URL"
+    );
+  });
+
+  it("accepts an HTTP loopback origin", () => {
+    process.env.NEXT_PUBLIC_SITE_URL = "http://localhost:3000/path";
+
+    expect(getSiteUrl()).toBe("http://localhost:3000");
+  });
 });
 
 describe("buildEventJsonLd", () => {

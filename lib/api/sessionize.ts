@@ -21,6 +21,9 @@ export function normalizeSessionizeBaseUrl(value: string): string {
   } catch {
     throw new Error("Sessionize base URL must be an absolute HTTP(S) URL");
   }
+  if (url.protocol !== "http:" && url.protocol !== "https:") {
+    throw new Error("Sessionize base URL must be an absolute HTTP(S) URL");
+  }
   if (url.username || url.password) {
     throw new Error("Sessionize base URL must not contain credentials");
   }
