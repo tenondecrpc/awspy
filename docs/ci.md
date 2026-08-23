@@ -28,13 +28,17 @@ server:
 npm run e2e
 ```
 
-Use `npm run verify:e2e` for the complete local release gate.
+Use `npm run verify:e2e` for the complete local release gate. It exercises the
+production server created by `npm run verify`; `npm run e2e` remains the faster
+development-server workflow.
 
 ## GitHub Actions
 
-`.github/workflows/ci.yml` runs `npm run verify` for pull requests and pushes to
-`main`. It uses read-only repository permissions, npm caching, and concurrency
-cancellation so a newer commit replaces an obsolete in-progress run.
+`.github/workflows/ci.yml` runs `npm run verify`, coverage, npm vulnerability
+and signature checks, redacted Gitleaks history scanning, and CycloneDX SBOM
+generation for pull requests and pushes to `main`. It uses read-only repository
+permissions, immutable Action SHAs, npm caching, artifact retention, and
+concurrency cancellation.
 
 The workflow does not receive AWS credentials and cannot deploy. Pull request
 code is executed with the normal `pull_request` event, not
@@ -68,8 +72,10 @@ explicit gap before deployment.
 
 ## Secret scan scope
 
-Secretlint scans the application, tests, configuration, and project
-documentation. `.secretlintignore` excludes generated output and vendored agent
-tooling (`.agents/`, `.claude/`, and `.codex/`) because those directories are
-not shipped as part of the site and may contain illustrative credential-shaped
-examples. Do not add product source paths to that exclusion list.
+Secretlint scans the application, tests, configuration, documentation,
+canonical `.ai/` guidance, Claude loader, and Codex configuration.
+`.secretlintignore` excludes generated output and vendored `.agents/` skills,
+which contain illustrative credential-shaped security examples. Gitleaks uses
+the same scoped vendored-skill exception and scans Git history with redaction.
+Review the exception when `skills-lock.json` changes. Do not add product source
+paths to either exclusion.

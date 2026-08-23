@@ -221,7 +221,7 @@ export type Venue = z.infer<typeof VenueSchema>;
 
 ## code-of-conduct.mdx
 
-The MDX file is rendered as Markdown plus optional embedded React components (none expected for v1). Optional frontmatter is parsed and validated:
+The `.mdx` file extension is retained for the versioned content contract. Its body is rendered as a restricted Markdown subset; embedded JSX, HTML, and executable components are not supported. Optional frontmatter is parsed and validated:
 
 ```ts
 export const CodeOfConductFrontmatterSchema = z.object({
@@ -232,7 +232,7 @@ export const CodeOfConductFrontmatterSchema = z.object({
 export type CodeOfConductFrontmatter = z.infer<typeof CodeOfConductFrontmatterSchema>;
 ```
 
-The MDX body must compile without errors. Compilation failure surfaces as a build failure.
+The source must parse without errors. Unsupported active content is rendered as inert text rather than executed.
 
 ## Loader contract
 

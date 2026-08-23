@@ -56,7 +56,7 @@ This document records the research and decisions that informed the Technical Con
 **Rationale**:
 - This is the pattern the AWS Community Day ecosystem (Taiwan, India, Brasil, Mumbai) uses for editorial content. It eliminates a backend, lets organizers iterate via PR, and gives Git history for editorial changes.
 - TypeScript strict + Zod gives the same type-level guarantees a database with schemas would, with zero runtime infrastructure.
-- MDX keeps the code of conduct human-readable in the repo and lets us render it through a single `MDXRemote`-style component without a separate parser.
+- The `.mdx` source keeps the code of conduct human-readable. The implemented renderer intentionally supports only the required Markdown subset and does not execute embedded JSX or components.
 
 **Alternatives considered**:
 - **YAML for content**: similar shape but more error-prone (indentation, type ambiguity) and adds a parser dep. Rejected.

@@ -19,7 +19,6 @@ This document captures every entity the site reads or stores, its source of trut
 | Speaker             | Sessionize `Speakers` view                                 | `lib/api/sessionize.ts` (`SpeakerSchema`)| Read-only; identified by Sessionize `id`; site computes a slug         |
 | Session             | Sessionize `Sessions` view                                 | `lib/api/sessionize.ts` (`SessionSchema`)| Read-only; references speakers and rooms                               |
 | Room                | Sessionize `Sessions`/`GridSmart` views                    | `lib/api/sessionize.ts` (`RoomSchema`)   | Read-only                                                              |
-| Track               | Sessionize categories                                       | `lib/api/sessionize.ts` (`TrackSchema`)  | Read-only; first-class category type                                   |
 | ScheduleGrid        | Sessionize `GridSmart` view                                | `lib/api/sessionize.ts` (`GridSchema`)   | Read-only; pre-grouped by day and room                                 |
 
 ## Edition
@@ -35,7 +34,7 @@ This document captures every entity the site reads or stores, its source of trut
 - `organizers`: array of `Organizer`
 - `faq`: array of `FAQItem`
 - `venue`: `Venue`
-- `codeOfConduct`: rendered MDX content (string of HTML or compiled MDX module, depending on the chosen MDX adapter)
+- `codeOfConduct`: validated frontmatter plus Markdown source rendered by the restricted local renderer
 - `isCurrent`: boolean derived from `process.env.CURRENT_EDITION`
 
 **Validation rules**:
@@ -45,7 +44,7 @@ This document captures every entity the site reads or stores, its source of trut
 - `event.json.year` must match the `year` argument; mismatch throws.
 
 **Relationships**:
-- An Edition has one EventInfo, zero-or-more Sponsors, zero-or-more Organizers, zero-or-more FAQItems, one Venue, one CodeOfConduct, and (via Sessionize) zero-or-more Speakers, Sessions, Rooms, and Tracks.
+- An Edition has one EventInfo, zero-or-more Sponsors, zero-or-more Organizers, zero-or-more FAQItems, one Venue, one CodeOfConduct, and (via Sessionize) zero-or-more Speakers, Sessions, and Rooms.
 
 **Lifecycle**:
 - An edition does not transition states explicitly; instead, its EventInfo carries `cfpStatus` and `registrationStatus` flags that drive UX.
@@ -165,11 +164,11 @@ This document captures every entity the site reads or stores, its source of trut
 **Source of truth**: `content/editions/{year}/code-of-conduct.mdx`.
 
 **Fields**:
-- `body`: compiled MDX module rendered in `CodeOfConductTemplate`
+- `body`: validated source rendered through the restricted Markdown renderer in `CodeOfConductTemplate`
 - `frontmatter`: optional with `lastUpdated` (ISO date) and `version` (semantic-versioning string)
 
 **Validation rules**:
-- The MDX file must compile.
+- Frontmatter and the supported Markdown subset must parse without executing embedded code or components.
 - `frontmatter`, when present, is validated by Zod (`lastUpdated` parseable to a Date, `version` matches `/^\d+\.\d+\.\d+$/`).
 
 ## Speaker (Sessionize)
@@ -213,17 +212,15 @@ This document captures every entity the site reads or stores, its source of trut
 - `endsAt`: ISO-8601 datetime
 - `roomId`: string optional
 - `speakers`: array of speaker ids
-- `categoryItems`: array of category ids (used to derive tracks)
 
 **Validation rules**:
 - `id` and `title` are non-empty
 - `startsAt` <= `endsAt`
-- All ids in `speakers` and `categoryItems`, when present, are non-empty strings
+- All ids in `speakers`, when present, are non-empty strings
 
 **Relationships**:
 - Many-to-many with `Speaker` via `speakers`.
 - Many-to-one with `Room` via `roomId`.
-- Many-to-many with `Track` via `categoryItems`.
 
 ## Room (Sessionize)
 
@@ -233,15 +230,6 @@ This document captures every entity the site reads or stores, its source of trut
 - `id`: string
 - `name`: string
 - `sort`: integer optional (display order)
-
-## Track (Sessionize)
-
-**Source of truth**: Sessionize categories with the predefined `Track` semantic. Surfaced via `categoryItems`.
-
-**Fields**:
-- `id`: string
-- `name`: string
-- `colorHint`: string optional (e.g., `"AI"`, `"DevOps"`); when used, the UI MUST pair color with text/icon (Principle VI).
 
 ## ScheduleGrid (Sessionize GridSmart)
 
@@ -262,7 +250,7 @@ ScheduleGridSchema = z.array(z.object({
       endsAt: z.string(),
       isPlenumSession: z.boolean().optional(),
       speakers: z.array(z.object({ id: z.string(), name: z.string() })),
-      categoryItems: z.array(z.string()).optional()
+      isServiceSession: z.boolean().optional()
     }))
   }))
 }))
@@ -270,7 +258,7 @@ ScheduleGridSchema = z.array(z.object({
 
 **Notes**:
 - Times are ISO-8601 in the event's configured timezone. The site formats them with `Intl.DateTimeFormat({ timeZone: 'America/Asuncion' })` to ensure correct display regardless of the event TZ setting.
-- A session marked `isPlenumSession: true` spans all rooms; the schedule renders it as a single row.
+- A session marked `isPlenumSession: true` receives a visible plenary badge and shape. Provider duplication and cross-room normalization are not currently modeled; LOGIC-009 tracks that product decision.
 
 ## Validation summary
 

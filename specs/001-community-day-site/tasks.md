@@ -94,7 +94,7 @@ Single Next.js application at the repo root. All paths in tasks below are relati
 
 **Goal**: a visitor lands on `/` and sees the hero, countdown, about section, navigation, and footer for the current edition; missing dynamic data renders Spanish empty states.
 
-**Independent Test**: with `CURRENT_EDITION=2026`, no Sessionize event id, no sponsors, and no schedule, opening `/` returns 200, renders the hero/countdown/footer, navigation reaches every other top-level route, and Lighthouse on desktop scores >= the targets in FR-032.
+**Independent Test**: with `CURRENT_EDITION=2026` and Sessionize deterministically unavailable, opening `/` returns 200, renders the hero/countdown/footer, navigation reaches every other top-level route, and Lighthouse on desktop scores >= the targets in FR-032.
 
 ### Tests for User Story 1
 
@@ -158,7 +158,7 @@ Single Next.js application at the repo root. All paths in tasks below are relati
 ### Tests for User Story 3
 
 - [X] T060 [P] [US3] Component test at `tests/components/molecules-schedule-slot.test.tsx` for `ScheduleSlot` (title, time range, speakers, link to speaker).
-- [X] T061 [P] [US3] Component test at `tests/components/organisms-schedule-grid.test.tsx` for `ScheduleGrid` (multi-day, multi-room layout, plenum row spans all rooms, empty fallback, midnight-crossing case where a session whose start and end straddle midnight in `America/Asuncion` appears under the start day only).
+- [ ] T061 [P] [US3] Complete component coverage at `tests/components/organisms-schedule-grid.test.tsx` for `ScheduleGrid`. Empty, ordering, matched/unmatched speakers, and midnight-crossing behavior are covered. Verified multi-day/multi-room and provider plenary semantics remain tracked under TEST-002.
 - [X] T062 [P] [US3] E2E test at `e2e/schedule.spec.ts` covering populated and empty.
 
 ### Implementation for User Story 3
@@ -404,3 +404,9 @@ Run sequentially: Phase 1 -> Phase 2 -> Phase 3 -> ... -> Phase 12. Use the `[P]
 - Commit after each user-story checkpoint (US1, US2, ...).
 - Stop at any checkpoint to validate the story independently in `npm run dev` and via the Vitest/Playwright suites.
 - Avoid: introducing `axios` or any other HTTP library, adding server state to Zustand, implementing persistence in this repo, breaking the atomic-design tier direction.
+
+## Modernization follow-up - 2026-08-23
+
+- [X] T126 Remove the unused TanStack Query provider, Zustand package, and inactive MDX compiler packages after characterization tests and bundle measurement confirmed no consumers.
+- [X] T127 Document the restricted Markdown renderer as the current code-of-conduct contract and verify LF and CRLF frontmatter parsing.
+- [ ] T128 Validate a populated, multi-room Sessionize schedule in deterministic E2E fixtures before claiming the plenary-layout requirement is complete.
