@@ -1,7 +1,11 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { z } from "zod";
 import { apiFetch } from "@/lib/api/client";
-import { ApiError, ApiValidationError } from "@/lib/api/errors";
+import {
+  ApiError,
+  ApiResponseSizeError,
+  ApiValidationError,
+} from "@/lib/api/errors";
 
 const SAMPLE_BASE = "https://example.test";
 
@@ -141,5 +145,90 @@ describe("apiFetch", () => {
     const schema = z.array(z.unknown());
     await apiFetch("https://other.example/api/things", { schema });
     expect(calls[0]).toBe("https://other.example/api/things");
+  });
+
+  it("aborts a request after the configured timeout", async () => {
+    vi.useFakeTimers();
+    mockFetch(
+      async (_input, init) =>
+        new Promise<Response>((_resolve, reject) => {
+          init?.signal?.addEventListener("abort", () => {
+            reject(new DOMException("Aborted", "AbortError"));
+          });
+        })
+    );
+
+    const request = apiFetch("/things", {
+      schema: z.array(z.unknown()),
+      baseUrl: SAMPLE_BASE,
+      timeoutMs: 25,
+    });
+    const rejection = expect(request).rejects.toMatchObject({
+      name: "AbortError",
+    });
+
+    await vi.advanceTimersByTimeAsync(25);
+    await rejection;
+    vi.useRealTimers();
+  });
+
+  it("returns the fallback when a tolerated request times out", async () => {
+    vi.useFakeTimers();
+    mockFetch(
+      async (_input, init) =>
+        new Promise<Response>((_resolve, reject) => {
+          init?.signal?.addEventListener("abort", () => {
+            reject(new DOMException("Aborted", "AbortError"));
+          });
+        })
+    );
+
+    const request = apiFetch("/things", {
+      schema: z.array(z.unknown()),
+      baseUrl: SAMPLE_BASE,
+      tolerateMissing: true,
+      fallback: [],
+      timeoutMs: 25,
+    });
+    await vi.advanceTimersByTimeAsync(25);
+
+    await expect(request).resolves.toEqual([]);
+    vi.useRealTimers();
+  });
+
+  it("rejects invalid timeout values before fetching", async () => {
+    await expect(
+      apiFetch("/things", {
+        schema: z.array(z.unknown()),
+        baseUrl: SAMPLE_BASE,
+        timeoutMs: 0,
+      })
+    ).rejects.toThrow(/positive number/);
+  });
+
+  it("rejects responses larger than the configured byte limit", async () => {
+    mockFetch(async () => new Response(JSON.stringify({ value: "too long" })));
+
+    await expect(
+      apiFetch("/things", {
+        schema: z.object({ value: z.string() }),
+        baseUrl: SAMPLE_BASE,
+        maxResponseBytes: 10,
+      })
+    ).rejects.toBeInstanceOf(ApiResponseSizeError);
+  });
+
+  it("uses the fallback when a tolerated response exceeds the byte limit", async () => {
+    mockFetch(async () => new Response(JSON.stringify(["too long"])));
+
+    await expect(
+      apiFetch("/things", {
+        schema: z.array(z.string()),
+        baseUrl: SAMPLE_BASE,
+        tolerateMissing: true,
+        fallback: [],
+        maxResponseBytes: 5,
+      })
+    ).resolves.toEqual([]);
   });
 });

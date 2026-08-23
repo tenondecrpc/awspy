@@ -3,6 +3,7 @@ import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import {
   SpeakerWallSchema,
+  SessionizeSessionSchema,
   SessionsListSchema,
   ScheduleGridSchema,
   SpeakersListSchema,
@@ -12,6 +13,7 @@ import {
   getSpeakerBySlug,
   listSessions,
   listSpeakers,
+  normalizeSessionizeBaseUrl,
 } from "@/lib/api/sessionize";
 
 function loadFixture(view: string): unknown {
@@ -43,13 +45,43 @@ afterEach(() => {
 });
 
 describe("buildSessionizeUrl", () => {
-  it("builds the canonical URL for each view", () => {
+  it("builds each view URL from the configured provider base", () => {
+    const baseUrl = normalizeSessionizeBaseUrl(
+      process.env.NEXT_PUBLIC_SESSIONIZE_BASE_URL ??
+        "https://sessionize.com/api/v2"
+    );
     expect(buildSessionizeUrl("jl4ktls0", "Speakers")).toBe(
-      "https://sessionize.com/api/v2/jl4ktls0/view/Speakers"
+      `${baseUrl}/jl4ktls0/view/Speakers`
     );
     expect(buildSessionizeUrl("jl4ktls0", "GridSmart")).toBe(
-      "https://sessionize.com/api/v2/jl4ktls0/view/GridSmart"
+      `${baseUrl}/jl4ktls0/view/GridSmart`
     );
+  });
+
+  it("normalizes a trailing slash from the base URL", () => {
+    expect(normalizeSessionizeBaseUrl("https://example.test/api/")).toBe(
+      "https://example.test/api"
+    );
+  });
+
+  const credentialUrl = new URL("https://example.test/api");
+  credentialUrl.username = "user";
+  credentialUrl.password = "pass";
+
+  it.each([
+    "http://example.test/api",
+    "ftp://example.test/api",
+    credentialUrl.toString(),
+  ])("rejects unsafe provider base URL %s", (url) => {
+    expect(() => normalizeSessionizeBaseUrl(url)).toThrow();
+  });
+
+  it.each([
+    "http://localhost:3001/api",
+    "http://127.0.0.1:3001/api",
+    "https://sessionize.example/api",
+  ])("accepts safe provider base URL %s", (url) => {
+    expect(normalizeSessionizeBaseUrl(url)).toBe(url);
   });
 });
 
@@ -72,6 +104,54 @@ describe("Zod schemas against the captured fixtures", () => {
   it("SpeakerWall fixture parses cleanly", () => {
     const data = loadFixture("SpeakerWall");
     expect(() => SpeakerWallSchema.parse(data)).not.toThrow();
+  });
+
+  it("accepts HTTP speaker links from the captured provider contract", () => {
+    const speakers = SpeakersListSchema.parse(loadFixture("Speakers"));
+    expect(speakers.some((speaker) => speaker.links.length > 0)).toBe(true);
+  });
+
+  it("rejects active and non-web speaker link schemes", () => {
+    const base = {
+      id: "1",
+      firstName: "Ada",
+      lastName: "Lovelace",
+      links: [],
+      sessions: [],
+    };
+    for (const url of [
+      "javascript:alert(1)",
+      "data:text/html,attack",
+      "ftp://example.test/file",
+    ]) {
+      const result = SpeakersListSchema.safeParse([
+        { ...base, links: [{ title: "Unsafe", url, linkType: "Other" }] },
+      ]);
+      expect(result.success).toBe(false);
+    }
+  });
+
+  it("rejects sessions whose end precedes their start", () => {
+    const result = SessionizeSessionSchema.safeParse({
+      id: "session-1",
+      title: "Invalid ordering",
+      startsAt: "2026-09-12T15:00:00-03:00",
+      endsAt: "2026-09-12T14:00:00-03:00",
+    });
+    expect(result.success).toBe(false);
+    if (!result.success) {
+      expect(result.error.issues[0].path).toEqual(["endsAt"]);
+    }
+  });
+
+  it("keeps one-sided optional session timestamps compatible", () => {
+    expect(
+      SessionizeSessionSchema.safeParse({
+        id: "session-1",
+        title: "Start only",
+        startsAt: "2026-09-12T15:00:00-03:00",
+      }).success
+    ).toBe(true);
   });
 });
 

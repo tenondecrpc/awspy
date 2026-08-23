@@ -10,7 +10,6 @@ import { Heading } from "@/components/atoms/Heading";
 import { EmptyState } from "@/components/organisms/EmptyState";
 import { LoadingGrid } from "@/components/atoms/LoadingGrid";
 import { formatDate, startOfDayKey } from "@/lib/utils/datetime";
-import { slugify } from "@/lib/utils/slug";
 import type { ScheduleGrid } from "@/lib/api/sessionize";
 import type { Speaker } from "@/lib/api/sessionize";
 
@@ -55,7 +54,7 @@ function groupByStartDay(grid: ScheduleGrid, speakers: Speaker[]): DayGroup[] {
           speakers: session.speakers.map((sp) => ({
             id: sp.id,
             name: sp.name,
-            slug: speakerSlugById.get(sp.id) ?? (slugify(sp.name) || undefined),
+            slug: speakerSlugById.get(sp.id),
           })),
         });
       }

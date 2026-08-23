@@ -5,17 +5,44 @@
 // images resolve correctly across environments (preview, production).
 
 import type { Metadata } from "next";
+import { HttpUrlSchema } from "@/lib/validation/urls";
 
 const DEFAULT_SITE_URL = "http://localhost:3000";
 
 /** Return the configured public origin without a trailing slash or path. */
 export function getSiteUrl(): string {
-  return new URL(process.env.NEXT_PUBLIC_SITE_URL ?? DEFAULT_SITE_URL).origin;
+  const configured = process.env.NEXT_PUBLIC_SITE_URL ?? DEFAULT_SITE_URL;
+  const parsed = HttpUrlSchema.safeParse(configured);
+  if (!parsed.success) {
+    throw new Error("NEXT_PUBLIC_SITE_URL must be an absolute HTTP(S) URL");
+  }
+  const url = new URL(parsed.data);
+  if (url.username || url.password) {
+    throw new Error("NEXT_PUBLIC_SITE_URL must not contain credentials");
+  }
+  return url.origin;
 }
 
 /** Return the hostname used in generated, user-visible share assets. */
 export function getSiteHostname(): string {
   return new URL(getSiteUrl()).hostname;
+}
+
+/**
+ * Serialize JSON-LD for an HTML script element without allowing data to close
+ * the element or introduce an HTML parsing boundary.
+ */
+export function serializeJsonLd(value: unknown): string {
+  const serialized = JSON.stringify(value);
+  if (serialized === undefined) {
+    throw new TypeError("JSON-LD value must be serializable");
+  }
+  return serialized
+    .replace(/</g, "\\u003c")
+    .replace(/>/g, "\\u003e")
+    .replace(/&/g, "\\u0026")
+    .replace(/\u2028/g, "\\u2028")
+    .replace(/\u2029/g, "\\u2029");
 }
 
 function absolute(path: string): string {

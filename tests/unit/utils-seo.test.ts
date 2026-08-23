@@ -6,6 +6,7 @@ import {
   buildPersonJsonLd,
   getSiteHostname,
   getSiteUrl,
+  serializeJsonLd,
 } from "@/lib/utils/seo";
 
 const ORIGINAL_SITE_URL = process.env.NEXT_PUBLIC_SITE_URL;
@@ -71,6 +72,22 @@ describe("site URL helpers", () => {
 
     expect(getSiteHostname()).toBe("awscommunitydayparaguay.com");
   });
+
+  it.each(["javascript:alert(1)", "ftp://example.test", "not a URL"])(
+    "rejects invalid site origin %s",
+    (value) => {
+      process.env.NEXT_PUBLIC_SITE_URL = value;
+      expect(() => getSiteUrl()).toThrow(/HTTP\(S\)/);
+    }
+  );
+
+  it("rejects credentials in the public site origin", () => {
+    const credentialUrl = new URL("https://example.test");
+    credentialUrl.username = "user";
+    credentialUrl.password = "pass";
+    process.env.NEXT_PUBLIC_SITE_URL = credentialUrl.toString();
+    expect(() => getSiteUrl()).toThrow(/credentials/);
+  });
 });
 
 describe("buildEventJsonLd", () => {
@@ -130,5 +147,28 @@ describe("buildBreadcrumbJsonLd", () => {
     expect(items[1].position).toBe(2);
     expect(items[2].position).toBe(3);
     expect(items[2].item).toBe("https://example.test/speakers/ada-lovelace");
+  });
+});
+
+describe("serializeJsonLd", () => {
+  it("prevents script termination while preserving the exact JSON value", () => {
+    const input = {
+      name: '</script><script data-attack="true">alert(1)</script>',
+      detail: "A&B > C < D\u2028next\u2029last",
+    };
+
+    const serialized = serializeJsonLd(input);
+
+    expect(serialized.toLowerCase()).not.toContain("</script");
+    expect(serialized).not.toContain("<");
+    expect(serialized).not.toContain(">");
+    expect(serialized).not.toContain("&");
+    expect(serialized).not.toContain("\u2028");
+    expect(serialized).not.toContain("\u2029");
+    expect(JSON.parse(serialized)).toEqual(input);
+  });
+
+  it("rejects values that JSON cannot serialize", () => {
+    expect(() => serializeJsonLd(undefined)).toThrow(/serializable/);
   });
 });

@@ -6,14 +6,15 @@
 import { z } from "zod";
 import { editionDir, readJsonOrThrow } from "@/lib/content/_fs";
 import { join } from "node:path";
+import { HttpsUrlSchema } from "@/lib/validation/urls";
 
 const SocialSchema = z
   .object({
-    twitter: z.string().url().optional(),
-    linkedin: z.string().url().optional(),
-    instagram: z.string().url().optional(),
-    youtube: z.string().url().optional(),
-    meetup: z.string().url().optional(),
+    twitter: HttpsUrlSchema.optional(),
+    linkedin: HttpsUrlSchema.optional(),
+    instagram: HttpsUrlSchema.optional(),
+    youtube: HttpsUrlSchema.optional(),
+    meetup: HttpsUrlSchema.optional(),
   })
   .strict();
 
@@ -39,8 +40,8 @@ export const EventInfoSchema = z
       .string()
       .regex(/^[a-z0-9]+$/i)
       .nullable(),
-    eventbriteEventUrl: z.string().url().nullable(),
-    cfpSubmissionUrl: z.string().url().nullable(),
+    eventbriteEventUrl: HttpsUrlSchema.nullable(),
+    cfpSubmissionUrl: HttpsUrlSchema.nullable(),
     cfpStatus: StatusEnum,
     cfpDeadline: z.string().datetime({ offset: true }).nullable(),
     registrationStatus: StatusEnum,

@@ -20,14 +20,13 @@ export default defineConfig({
   webServer: deployedBaseUrl
     ? undefined
     : {
-        command: "npm run dev",
+        command: "npm start",
         url: localBaseUrl,
-        reuseExistingServer: !process.env.CI,
+        reuseExistingServer: false,
         timeout: 120_000,
         env: {
           CURRENT_EDITION: "2026",
           NEXT_PUBLIC_SITE_URL: localBaseUrl,
-          // E2E must never depend on live Sessionize availability.
           NEXT_PUBLIC_SESSIONIZE_BASE_URL: "http://127.0.0.1:1/sessionize",
         },
       },

@@ -6,7 +6,11 @@ import { Section } from "@/components/atoms/Section";
 import { Heading } from "@/components/atoms/Heading";
 import { Link } from "@/components/atoms/Link";
 import { Button } from "@/components/atoms/Button";
-import { buildBreadcrumbJsonLd, buildPersonJsonLd } from "@/lib/utils/seo";
+import {
+  buildBreadcrumbJsonLd,
+  buildPersonJsonLd,
+  serializeJsonLd,
+} from "@/lib/utils/seo";
 import { formatTimeRange } from "@/lib/utils/datetime";
 import type { Speaker, SessionizeSession } from "@/lib/api/sessionize";
 
@@ -50,11 +54,11 @@ export function SpeakerDetailTemplate({
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(personLd) }}
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(personLd) }}
       />
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }}
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(breadcrumbLd) }}
       />
       <Section spacing="lg">
         <Container>

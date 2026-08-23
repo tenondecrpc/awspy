@@ -1,0 +1,6 @@
+[extend]
+useDefault = true
+
+[[allowlists]]
+description = "Vendored agent skills contain security-test examples; review when the skills lock changes (SEC-006)."
+paths = ['''^\.agents/skills/''']

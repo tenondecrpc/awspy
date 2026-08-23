@@ -13,6 +13,7 @@
 // later, replace this module with @next/mdx's component-import flow.
 
 import type { ReactNode } from "react";
+import { isSafeMarkdownHref } from "@/lib/validation/urls";
 
 type InlineToken =
   | { type: "text"; value: string }
@@ -108,11 +109,15 @@ function tokenizeInline(text: string): InlineToken[] {
     const linkMatch = /^\[([^\]]+)\]\(([^)\s]+)\)/.exec(rest);
     if (linkMatch) {
       flushText();
-      tokens.push({
-        type: "link",
-        href: linkMatch[2],
-        children: tokenizeInline(linkMatch[1]),
-      });
+      tokens.push(
+        isSafeMarkdownHref(linkMatch[2])
+          ? {
+              type: "link",
+              href: linkMatch[2],
+              children: tokenizeInline(linkMatch[1]),
+            }
+          : { type: "text", value: linkMatch[1] }
+      );
       i += linkMatch[0].length;
       continue;
     }

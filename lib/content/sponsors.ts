@@ -4,6 +4,7 @@
 import { z } from "zod";
 import { join } from "node:path";
 import { editionDir, readJsonOrThrow } from "@/lib/content/_fs";
+import { HttpUrlSchema, HttpsUrlSchema } from "@/lib/validation/urls";
 
 export const SponsorTierEnum = z.enum([
   "Platinum",
@@ -15,7 +16,7 @@ export const SponsorTierEnum = z.enum([
 export type SponsorTier = z.infer<typeof SponsorTierEnum>;
 
 const ImageRefSchema = z.union([
-  z.string().url(),
+  HttpsUrlSchema,
   z
     .string()
     .regex(/^\/(logos|public\/logos)\//, "Repo paths must live under /logos/"),
@@ -29,7 +30,7 @@ export const SponsorSchema = z.object({
     light: ImageRefSchema,
     dark: ImageRefSchema.optional(),
   }),
-  url: z.string().url(),
+  url: HttpUrlSchema,
   description: z.string().optional(),
 });
 

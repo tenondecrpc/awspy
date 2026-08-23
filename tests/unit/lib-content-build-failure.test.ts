@@ -1,30 +1,13 @@
-import { afterEach, describe, expect, it } from "vitest";
-import { mkdtempSync, mkdirSync, rmSync, writeFileSync } from "node:fs";
-import { join } from "node:path";
-import { tmpdir } from "node:os";
+import { describe, expect, it } from "vitest";
 import { EventInfoSchema } from "@/lib/content/event-info";
 import { SponsorsListSchema } from "@/lib/content/sponsors";
 import { FAQListSchema } from "@/lib/content/faq";
 import { VenueSchema } from "@/lib/content/venue";
+import { parseCodeOfConduct } from "@/lib/content/code-of-conduct";
 
 // FR-015 requires the build to fail with a descriptive message when content
 // is malformed. We exercise the loaders directly with bad payloads and assert
 // that they reject with a Zod issue list referencing the offending field.
-
-const tmpDirs: string[] = [];
-
-afterEach(() => {
-  for (const d of tmpDirs.splice(0)) {
-    rmSync(d, { recursive: true, force: true });
-  }
-});
-
-function mkTempEdition(year: string): string {
-  const root = mkdtempSync(join(tmpdir(), "awspy-content-"));
-  tmpDirs.push(root);
-  mkdirSync(join(root, "editions", year), { recursive: true });
-  return root;
-}
 
 describe("content schema build-time validation", () => {
   it("rejects an event.json without contactEmail", () => {
@@ -98,14 +81,31 @@ describe("content schema build-time validation", () => {
     }
   });
 
-  it("provides a sandbox to write a malformed file and verify the error path", () => {
-    // This sub-test exists to keep the temp-directory plumbing exercised so
-    // a future loader change that uses the path is straightforward to test.
-    const root = mkTempEdition("2024");
-    writeFileSync(
-      join(root, "editions", "2024", "event.json"),
-      JSON.stringify({ year: "24" })
-    );
-    expect(root).toBeTruthy();
+  it.each(["\n", "\r\n"])(
+    "removes frontmatter with %j line endings",
+    (lineEnding) => {
+      const raw = [
+        "---",
+        'lastUpdated: "2026-08-23T00:00:00Z"',
+        'version: "1.2.3"',
+        "---",
+        "# Conduct body",
+      ].join(lineEnding);
+
+      const result = parseCodeOfConduct(raw);
+
+      expect(result.frontmatter).toEqual({
+        lastUpdated: "2026-08-23T00:00:00Z",
+        version: "1.2.3",
+      });
+      expect(result.body).toBe("# Conduct body");
+      expect(result.body).not.toContain("lastUpdated");
+    }
+  );
+
+  it("reports the supplied source when frontmatter is invalid", () => {
+    expect(() =>
+      parseCodeOfConduct("---\nunknown: value\n---\nBody", "fixture.mdx")
+    ).toThrow(/fixture\.mdx.*unknown/);
   });
 });

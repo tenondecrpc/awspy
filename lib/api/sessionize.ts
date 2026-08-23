@@ -10,16 +10,35 @@
 import { z } from "zod";
 import { apiFetch } from "@/lib/api/client";
 import { disambiguateSlugs, slugify } from "@/lib/utils/slug";
+import { HttpUrlSchema, HttpsUrlSchema } from "@/lib/validation/urls";
 
-const SESSIONIZE_BASE_URL =
-  process.env.NEXT_PUBLIC_SESSIONIZE_BASE_URL ??
-  "https://sessionize.com/api/v2";
+const DEFAULT_SESSIONIZE_BASE_URL = "https://sessionize.com/api/v2";
+
+export function normalizeSessionizeBaseUrl(value: string): string {
+  const parsed = HttpUrlSchema.safeParse(value);
+  if (!parsed.success) {
+    throw new Error("Sessionize base URL must be an absolute HTTP(S) URL");
+  }
+  const url = new URL(parsed.data);
+  if (url.username || url.password) {
+    throw new Error("Sessionize base URL must not contain credentials");
+  }
+  const isLoopback = ["localhost", "127.0.0.1", "[::1]"].includes(url.hostname);
+  if (url.protocol !== "https:" && !isLoopback) {
+    throw new Error("Sessionize base URL must use HTTPS outside loopback");
+  }
+  return value.replace(/\/$/, "");
+}
+
+const SESSIONIZE_BASE_URL = normalizeSessionizeBaseUrl(
+  process.env.NEXT_PUBLIC_SESSIONIZE_BASE_URL ?? DEFAULT_SESSIONIZE_BASE_URL
+);
 
 // ---------- Speakers view ----------
 
 const SpeakerLinkSchema = z.object({
   title: z.string(),
-  url: z.string().url(),
+  url: HttpUrlSchema,
   linkType: z.string(),
 });
 
@@ -36,7 +55,7 @@ export const SessionizeSpeakerSchema = z
     fullName: z.string().min(1).optional(),
     tagLine: z.string().optional().nullable(),
     bio: z.string().optional().nullable(),
-    profilePicture: z.string().url().optional().nullable(),
+    profilePicture: HttpsUrlSchema.optional().nullable(),
     links: z.array(SpeakerLinkSchema).optional().default([]),
     sessions: z.array(SpeakerSessionRefSchema).optional().default([]),
     isTopSpeaker: z.boolean().optional(),
@@ -75,7 +94,17 @@ export const SessionizeSessionSchema = z
     isPlenumSession: z.boolean().optional().default(false),
     isServiceSession: z.boolean().optional().default(false),
   })
-  .passthrough();
+  .passthrough()
+  .superRefine((value, ctx) => {
+    if (!value.startsAt || !value.endsAt) return;
+    if (new Date(value.endsAt).getTime() < new Date(value.startsAt).getTime()) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ["endsAt"],
+        message: "endsAt must be on or after startsAt",
+      });
+    }
+  });
 
 const SessionGroupSchema = z
   .object({
@@ -113,7 +142,16 @@ const GridSessionSchema = z
       .optional()
       .default([]),
   })
-  .passthrough();
+  .passthrough()
+  .superRefine((value, ctx) => {
+    if (new Date(value.endsAt).getTime() < new Date(value.startsAt).getTime()) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ["endsAt"],
+        message: "endsAt must be on or after startsAt",
+      });
+    }
+  });
 
 const GridRoomSchema = z.object({
   id: z.union([z.string(), z.number()]).transform(String),
@@ -139,7 +177,7 @@ export const SpeakerWallSchema = z.array(
       lastName: z.string().optional(),
       fullName: z.string(),
       tagLine: z.string().optional().nullable(),
-      profilePicture: z.string().url().optional().nullable(),
+      profilePicture: HttpsUrlSchema.optional().nullable(),
       isTopSpeaker: z.boolean().optional(),
     })
     .passthrough()
@@ -155,9 +193,7 @@ export function buildSessionizeUrl(
   eventId: string,
   view: SessionizeView
 ): string {
-  return `${SESSIONIZE_BASE_URL.replace(/\/$/, "")}/${encodeURIComponent(
-    eventId
-  )}/view/${view}`;
+  return `${SESSIONIZE_BASE_URL}/${encodeURIComponent(eventId)}/view/${view}`;
 }
 
 // ---------- Public API ----------
