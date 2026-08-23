@@ -4,6 +4,12 @@ Public website for AWS Community Day Paraguay. The application is a Next.js
 App Router site with version-controlled event content and public Sessionize
 data.
 
+The repository contains only the public frontend. It has no application
+backend, database, authentication layer, queues, or private AWS SDK
+integration. Local edition content remains renderable when Sessionize is
+unavailable; Sessionize-dependent speaker and schedule views degrade through
+the application's explicit error and empty-state paths.
+
 ## Deployment status
 
 - Intended public URL: <https://awscommunitydayparaguay.com> (currently blocked by DNS; see `docs/status/BLOCKERS.md`)
@@ -25,6 +31,7 @@ architecture, CI contract, ADRs, and documented exceptions.
 - Tailwind CSS 4
 - Zod 4 at content and API boundaries
 - Vitest, React Testing Library, and Playwright
+- AWS Amplify Hosting as the conditional deployment target
 
 The repository does not contain a backend or database. Event metadata,
 sponsors, organizers, venue details, FAQ content, and the code of conduct live
@@ -35,6 +42,36 @@ The attendee registration provider is not finalized. The current code supports
 an optional external Eventbrite link, but the 2026 edition leaves it unset. If
 another provider is selected, update the Eventbrite-specific schema and
 component names before opening registration.
+
+## Repository structure
+
+```text
+.
+|-- .ai/                    Canonical AI roles, policies, workflows, and templates
+|-- .claude/                Claude Code compatibility loader and command imports
+|-- .codex/                 Project-scoped Codex configuration and agent profiles
+|-- .github/                CI, Dependabot, ownership, and contribution templates
+|-- app/                    App Router pages, metadata, sitemap, robots, and errors
+|-- components/             Atomic design: atoms, molecules, organisms, templates
+|-- content/editions/       Version-controlled event content by year
+|-- lib/
+|   |-- api/                Typed fetch client and Sessionize boundary
+|   |-- config/             Runtime-safe configuration helpers
+|   |-- content/            Local content loaders and Zod schemas
+|   |-- utils/              Shared rendering and SEO utilities
+|   `-- validation/         Reusable trust-boundary validation
+|-- tests/                  Vitest unit, integration, component tests, and fixtures
+|-- e2e/                    Playwright browser and deployment smoke tests
+|-- docs/                   Architecture, AWS, security, testing, status, and ADRs
+|-- scripts/                Repository-owned build and deployment helpers
+`-- specs/                  Feature requirements, plans, contracts, and task history
+```
+
+Start with [`docs/README.md`](docs/README.md) for the complete documentation
+map. Current implementation boundaries are described in
+[`docs/architecture/CURRENT_ARCHITECTURE.md`](docs/architecture/CURRENT_ARCHITECTURE.md),
+and the live audit dashboard is
+[`docs/status/PROJECT_STATUS.md`](docs/status/PROJECT_STATUS.md).
 
 ## Local setup
 
@@ -73,6 +110,7 @@ npm run typecheck
 npm test
 npm run test:coverage
 npm run e2e
+npm run e2e:production
 npm run build
 npm run verify
 npm run verify:e2e
@@ -80,10 +118,25 @@ npm run secretlint
 npm run security:audit
 npm run security:signatures
 npm run sbom
+npm run fixtures:sessionize
 npm start
 ```
 
-`npm run e2e` exercises the development server. `npm run verify:e2e` builds and exercises the production server. Set `BASE_URL` and run the deploy-smoke Playwright spec to check an authorized external preview without starting a local server.
+`npm run e2e` exercises the development server. `npm run e2e:production`
+builds and exercises the production server, while `npm run verify:e2e` runs the
+complete verification gate first. Set `BASE_URL` and run the deploy-smoke
+Playwright spec to check an authorized external preview without starting a
+local server.
+
+Refreshing committed Sessionize fixtures requires a deliberate public-network
+call and a valid public Sessionize event ID:
+
+```sh
+SESSIONIZE_FIXTURE_EVENT_ID=<public-event-id> npm run fixtures:sessionize
+```
+
+Review fixture changes before committing them. Tests and default CI never
+depend on live Sessionize data.
 
 The host used for this audit did not expose Node.js in `PATH`. The commands above were executed with the repository mounted into `node:24.15.0-bookworm-slim`; Playwright used `mcr.microsoft.com/playwright:v1.59.1-noble`. See `docs/status/BASELINE.md` and `docs/status/PROJECT_STATUS.md` for exact results and environment limitations.
 
@@ -102,8 +155,14 @@ for the complete editorial and new-edition workflow.
 
 React components follow atomic design under `components/`. Pages own data
 loading, `lib/content/` validates local content, and `lib/api/` is the only
-boundary for external HTTP data. Current and target diagrams are under
-[`docs/architecture/`](docs/architecture/).
+boundary for external HTTP data. URL and image-host validation is centralized
+under `lib/validation/` and `lib/config/`. Error boundaries preserve useful
+static event content without hiding contract drift from external data.
+
+Current and target diagrams are under
+[`docs/architecture/`](docs/architecture/). System requirements live under
+[`docs/specs/`](docs/specs/), while feature-specific delivery history remains
+under root [`specs/`](specs/).
 
 ## Security and supply chain
 
@@ -111,7 +170,8 @@ boundary for external HTTP data. Current and target diagrams are under
 - `npm run secretlint` scans project source and canonical AI guidance.
 - `npm run security:audit` checks the locked dependency graph.
 - `npm run security:signatures` verifies registry signatures and attestations.
-- CI additionally runs redacted Gitleaks history scanning and retains a CycloneDX SBOM without committing generated output.
+- CI additionally runs redacted Gitleaks history scanning and retains coverage
+  evidence and a CycloneDX SBOM without committing generated output.
 
 Findings, risks, and dependency status are in [`docs/status/`](docs/status/).
 
@@ -124,6 +184,11 @@ No IaC is included because external resource ownership and runtime support are n
 ## Multi-agent development
 
 Root [`AGENTS.md`](AGENTS.md) is a minimal loader. Canonical policy, roles, workflows, and templates live under [`.ai/`](.ai/). Claude Code loads `.claude/CLAUDE.md`; Codex uses `.codex/config.toml` and the narrow project agents under `.codex/agents/`. Spec Kit writes mutable plan context only to `.ai/generated/project-context.md`.
+
+Review agents are read-only. Only the implementation worker has workspace
+write access. The coordination workflow requires evidence-backed findings,
+disjoint ownership for parallel work, and an independent final review before
+release readiness is claimed.
 
 Use `docs/status/WORK_ITEMS.md` for completed, pending, blocked, and deferred work. Follow `CONTRIBUTING.md` and the applicable `.ai/workflows/` document for changes and handoffs.
 
