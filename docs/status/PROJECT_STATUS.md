@@ -4,10 +4,10 @@
 - Baseline commit: `1043a48c39e7db8fab1916f30119b43cb8165014`
 - Working branch: `refactor/security-sdlc-aws-multi-agent`
 - Overall health: Local application, security, build, and production-browser gates pass. External AWS release readiness remains conditional.
-- Validated work items: 31
+- Validated work items: 32
 - Implemented but externally unvalidated work items: 0
 - Deferred work items: 3
-- Blocked work items: 4
+- Blocked work items: 3
 - Findings discovered: 0 Critical, 3 High, 9 Medium, and 13 Low or Informational after audit reconciliation
 - Open application security findings: 0 Critical, 0 High, 0 Medium, 1 Low deferred contract decision
 - Tests: 41 Vitest files with 325 tests passed; 84 Playwright project-expanded tests passed
@@ -17,5 +17,5 @@
 - AWS readiness: Conditional. Amplify is retained as the simplest current target, but public DNS, Next.js 16 preview compatibility, and external account configuration are blocked.
 - Major risks: unsupported hosting/runtime combination, unavailable public DNS, and generation-time Sessionize outages affecting dynamic speaker routes
 - Independent review: no Critical, High, or Medium findings remain; all safe incremental Low findings were corrected in `1add156` and `c332ccb`
-- Current blockers: `BLK-001`, `BLK-002`, `BLK-003`, and non-release checkout limitation `BLK-005`
+- Current blockers: `BLK-001`, `BLK-002`, and `BLK-003`
 - Recommended next milestone: validate an authorized Amplify preview and repair public DNS before any production release.

@@ -34,5 +34,6 @@ The following items met their local acceptance criteria against baseline `1043a4
 | SEC-004 | Pinned GitHub Actions to immutable SHAs | `2b26a27` | actionlint and hosted run `32654046044` |
 | CI-001 | Added hosted quality, security, provenance, and SBOM gates | `2b26a27` | `verify` passed in 2m56s with retained evidence |
 | CI-002 | Added hosted production browser validation | `05c70f0` | `e2e` passed in 2m47s with 84 tests |
+| OPS-004 | Normalized Git index metadata and Sessionize fixture line endings | `d95b0f1` | CR-only diff verified; Git status, content, staged, and untracked counts are zero |
 
 Blocked and deferred items remain in `WORK_ITEMS.md`.

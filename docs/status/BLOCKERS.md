@@ -38,11 +38,10 @@
 ## BLK-005 - Current Windows checkout reports content-identical modifications
 
 - Type: Environment blocker
-- Status: OPEN
-- Blocks: OPS-004 only; it does not block build or release-gate evidence
-- Evidence: `git diff --quiet HEAD` passes and normalized worktree hashes match the index, while `git diff-index --quiet HEAD` and `git status --short` report 129 modified legacy paths after `.gitattributes` normalization. Metadata-only refresh did not clear them.
-- Required external action: Use a fresh checkout of this branch or perform a separately reviewed line-ending normalization after preserving all work.
-- Exit criteria: `git status --short`, `git diff --name-only`, and `git diff-index --quiet HEAD` all report clean without content loss.
+- Status: RESOLVED on 2026-08-23
+- Previously blocked: OPS-004 only
+- Resolution evidence: Index renormalization cleared 125 stale stat entries and exposed four Sessionize fixtures requiring CRLF-to-LF blob normalization. Commit `d95b0f1` contains only verified carriage-return differences. Final status, content diff, staged diff, and untracked counts are zero.
+- Exit criteria: Met.
 
 ## Non-blocking limitations
 
