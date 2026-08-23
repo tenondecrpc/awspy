@@ -30,11 +30,10 @@
 ## BLK-004 - Hosted CI has not executed the new workflow
 
 - Type: External-service blocker
-- Status: OPEN
-- Blocks: full validation of CI-001, CI-002, and SEC-004
-- Evidence: Local actionlint and every underlying command pass, but no push or pull request was authorized.
-- Required external action: Open a pull request and let GitHub Actions run with least-privilege permissions.
-- Exit criteria: The immutable-action workflow passes and retains coverage plus SBOM evidence.
+- Status: RESOLVED on 2026-08-23
+- Previously blocked: full validation of CI-001, CI-002, and SEC-004
+- Resolution evidence: Pull request 10 run `32654046044` passed `verify` in 2m56s and `e2e` in 2m47s, retaining coverage and SBOM evidence.
+- Exit criteria: Met.
 
 ## BLK-005 - Current Windows checkout reports content-identical modifications
 

@@ -31,5 +31,8 @@ The following items met their local acceptance criteria against baseline `1043a4
 | DOC-003 | Reconciled final validation evidence | N/A (tracking-only) | Cross-register search and final verification evidence |
 | LOGIC-014 | Preserved URL validation error precedence | `1add156`, `c332ccb` | 60 targeted tests, 325-test full suite, Secretlint, build, and 84 E2E tests |
 | DOC-004 | Refreshed sitemap validation evidence | N/A (tracking-only) | Work and completion registers cite five tests and `05c70f0` |
+| SEC-004 | Pinned GitHub Actions to immutable SHAs | `2b26a27` | actionlint and hosted run `32654046044` |
+| CI-001 | Added hosted quality, security, provenance, and SBOM gates | `2b26a27` | `verify` passed in 2m56s with retained evidence |
+| CI-002 | Added hosted production browser validation | `05c70f0` | `e2e` passed in 2m47s with 84 tests |
 
-SEC-004, CI-001, and CI-002 stay implemented until their hosted validation criteria complete. Blocked and deferred items remain in `WORK_ITEMS.md`.
+Blocked and deferred items remain in `WORK_ITEMS.md`.

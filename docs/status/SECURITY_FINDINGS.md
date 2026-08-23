@@ -9,7 +9,7 @@ No credential was confirmed, no credential value was printed, and no rotation is
 | SEC-001 | High | CWE-79 | RESOLVED | Central JSON-LD serializer escapes HTML-significant code points | Malicious round-trip and rendered-template tests pass |
 | SEC-002 | Medium | CWE-20 | RESOLVED | Explicit HTTP/HTTPS policies protect content, provider, image, site-origin, and Markdown boundaries | Allowed and rejected scheme tests plus fixtures pass |
 | SEC-003 | Medium | CWE-400 | RESOLVED | External fetch duration and response size are bounded while caller cancellation remains intact | Timeout, signal, size, success, and tolerant-fallback tests pass |
-| SEC-004 | Medium | Supply chain | IMPLEMENTED | GitHub Actions are pinned to verified immutable SHAs | actionlint passes; hosted execution blocked by BLK-004 |
+| SEC-004 | Medium | Supply chain | RESOLVED | GitHub Actions are pinned to verified immutable SHAs | actionlint and hosted run `32654046044` pass |
 | SEC-005 | Low | Defense in depth | RESOLVED | Sniffing, frame, referrer, capability, and powered-by controls are configured | Production E2E verifies headers in both projects |
 | SEC-006 | Low | Secret detection | RESOLVED | Project AI guidance is scanned; vendored skills and reproducible artifacts have precise, review-conditioned exclusions | Secretlint plus redacted Gitleaks history and 1.20 MB source-tree scans pass |
 | SEC-007 | Low | Configuration | RESOLVED | Sessionize base URL requires HTTPS except explicit loopback development addresses and rejects credentials | Environment-policy tests pass |
