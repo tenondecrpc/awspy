@@ -1,0 +1,36 @@
+name: Bug report
+description: Report a reproducible defect without sensitive information.
+title: "bug: "
+labels: ["bug"]
+body:
+  - type: textarea
+    id: behavior
+    attributes:
+      label: Current behavior
+      description: Describe the observed result and affected route or component.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Reproduction
+      description: Provide deterministic steps and redact sensitive values.
+    validations:
+      required: true
+  - type: input
+    id: revision
+    attributes:
+      label: Commit or deployment
+  - type: checkboxes
+    id: safety
+    attributes:
+      label: Safety check
+      options:
+        - label: This report contains no credentials or private data.
+          required: true
