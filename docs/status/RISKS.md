@@ -10,3 +10,4 @@
 | RISK-006 | Custom-domain and provider-console configuration are not represented as code | Medium | Medium | Runbook and authorized evidence review; defer IaC until ownership is clear | AWS owner | ACCEPTED |
 | RISK-007 | Expected 404 tests emit an internal Next.js `NoFallbackError` log | Medium | Low | Track framework behavior and reproduce after future Next.js patches | Maintainer | OPEN |
 | RISK-008 | A future private API consumer could expose retained `ApiError.body` data through logging | Low | Medium | Keep current integrations public; define a sanitized compatible contract before expansion | Security owner | OPEN |
+| RISK-009 | Windows line-ending normalization leaves the current checkout visually dirty despite identical normalized hashes | Medium | Low | Use content diffs for review and a fresh checkout before unrelated staging | Maintainer | OPEN |

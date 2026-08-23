@@ -24,8 +24,8 @@
 - Locked package nodes: 747 at baseline and 647 after removal. Clean installs audit
   645 packages at baseline and 545 after removal.
 - Production build: 27 routes passed after the change.
-- Unit and component coverage: 69.03% statements, 70.49% branches, 64.25%
-  functions, and 70.03% lines.
+- Unit and component coverage: 69.05% statements, 70.55% branches, 64.25%
+  functions, and 70.05% lines.
 - Production browser validation: 84 tests passed across desktop and mobile
   Chromium.
 - Lighthouse and AWS runtime profiling: `NOT MEASURED`; external preview is

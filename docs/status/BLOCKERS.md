@@ -36,6 +36,15 @@
 - Required external action: Open a pull request and let GitHub Actions run with least-privilege permissions.
 - Exit criteria: The immutable-action workflow passes and retains coverage plus SBOM evidence.
 
+## BLK-005 - Current Windows checkout reports content-identical modifications
+
+- Type: Environment blocker
+- Status: OPEN
+- Blocks: OPS-004 only; it does not block build or release-gate evidence
+- Evidence: `git diff --quiet HEAD` passes and normalized worktree hashes match the index, while `git diff-index --quiet HEAD` and `git status --short` report 129 modified legacy paths after `.gitattributes` normalization. Metadata-only refresh did not clear them.
+- Required external action: Use a fresh checkout of this branch or perform a separately reviewed line-ending normalization after preserving all work.
+- Exit criteria: `git status --short`, `git diff --name-only`, and `git diff-index --quiet HEAD` all report clean without content loss.
+
 ## Non-blocking limitations
 
 - Host Node.js and npm are unavailable; local validation uses the exact Node 24.15.0 container.

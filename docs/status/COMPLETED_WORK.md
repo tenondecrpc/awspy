@@ -15,8 +15,8 @@ The following items met their local acceptance criteria against baseline `1043a4
 | LOGIC-002 | Edition-scoped archived links | `ab043db` | Home-template and production E2E tests |
 | LOGIC-004 | No fabricated speaker detail links | `ab043db` | Matched and unmatched speaker tests |
 | LOGIC-005 | Session time-order invariant | `ab043db` | Ordered, reversed, and optional timestamp tests |
-| LOGIC-008 | Speaker detail routes in sitemap | `ab043db` | Tolerant current and archived sitemap tests |
-| TEST-001 | Coverage provider and ratchet | `ab043db` | 69.03/70.49/64.25/70.03 percent coverage |
+| LOGIC-008 | Speaker detail routes in sitemap | `ab043db`, `05c70f0` | Five tolerant current, archived, and fallback sitemap tests |
+| TEST-001 | Coverage provider and ratchet | `ab043db` | 69.05/70.55/64.25/70.05 percent coverage |
 | PERF-001 | Removed unused client provider and packages | `ab043db` | Build and E2E pass; JavaScript chunks reduced 24,257 bytes |
 | AWS-003 | Safe Amplify public-variable persistence | `ab043db` | Allowlist, newline, exclusion, and build tests |
 | DEP-101 | Removed six inactive dependency packages/groups | `ab043db` | Clean install graph, tests, build, audit, signatures, and SBOM |
@@ -27,7 +27,9 @@ The following items met their local acceptance criteria against baseline `1043a4
 | AI-003 | Standardized review-agent finding contracts | `05c70f0` | Every read-only role references the canonical template |
 | CI-003 | Documented the pinned Gitleaks version | `05c70f0` | actionlint and exact Gitleaks command |
 | DOC-001 | Established durable architecture, security, testing, AWS, SDD, status, and contributor records | `bfe2094`, `05c70f0` | Independent review and cross-document reconciliation |
-| LOGIC-013 | Preserved credential-specific URL configuration errors | `3a88154` | 58 targeted tests and the full 323-test suite |
+| LOGIC-013 | Preserved credential-specific URL configuration errors | `3a88154` | Targeted tests and the full 325-test suite |
 | DOC-003 | Reconciled final validation evidence | N/A (tracking-only) | Cross-register search and final verification evidence |
+| LOGIC-014 | Preserved URL validation error precedence | `1add156`, `c332ccb` | 60 targeted tests, 325-test full suite, Secretlint, build, and 84 E2E tests |
+| DOC-004 | Refreshed sitemap validation evidence | N/A (tracking-only) | Work and completion registers cite five tests and `05c70f0` |
 
 SEC-004, CI-001, and CI-002 stay implemented until their hosted validation criteria complete. Blocked and deferred items remain in `WORK_ITEMS.md`.
