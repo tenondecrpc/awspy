@@ -31,7 +31,7 @@
     "fixtures:sessionize": "for v in Speakers Sessions GridSmart SpeakerWall; do curl -sSf \"https://sessionize.com/api/v2/${SESSIONIZE_FIXTURE_EVENT_ID:-jl4ktls0}/view/$v\" -o \"tests/fixtures/sessionize/$v.json\" && echo \"refreshed $v\"; done"
   },
   "dependencies": {
-    "next": "16.3.2",
+    "next": "16.3.4",
     "react": "19.2.4",
     "react-dom": "19.2.4",
     "zod": "^4.4.3"
