@@ -29,13 +29,19 @@ test.describe("/register and /cfp", () => {
     expect(widgetScripts).toBe(0);
   });
 
-  test("/cfp shows the upcoming callout for the seeded null URL", async ({
+  test("/cfp shows the open callout with the official Sessionize URL", async ({
     page,
   }) => {
     await page.goto("/cfp");
     await expect(
       page.getByRole("heading", { level: 1, name: "Call for papers" })
     ).toBeVisible();
-    await expect(page.getByText(/CFP próximamente/i)).toBeVisible();
+    await expect(page.getByText(/CFP abierto/i)).toBeVisible();
+    await expect(
+      page.getByRole("link", { name: /enviar propuesta en sessionize/i })
+    ).toHaveAttribute(
+      "href",
+      "https://sessionize.com/aws-community-day-paraguay-2026"
+    );
   });
 });
