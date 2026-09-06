@@ -419,4 +419,4 @@ Run sequentially: Phase 1 -> Phase 2 -> Phase 3 -> ... -> Phase 12. Use the `[P]
 ## Volunteer registration - 2026-09-06
 
 - [X] T131 Add the current and archived volunteer routes, home invitation, navigation entry, Google Forms CTA, validated edition fields, and provider-aware privacy copy.
-- [ ] T132 Verify the public volunteer form link, desktop and mobile rendering, complete repository gate, and deployed Amplify route.
+- [X] T132 Verify the public volunteer form link, desktop and mobile rendering, complete repository gate, and deployed Amplify route. The Google Form and Amplify route returned HTTP 200; 332 tests, coverage thresholds, dependency and secret checks, the production build, and all 98 desktop and mobile browser tests passed in CI.
