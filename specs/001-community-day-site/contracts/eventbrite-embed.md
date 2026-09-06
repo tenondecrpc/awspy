@@ -60,7 +60,7 @@ No first-party cookies are set as part of the registration flow. No tracking pix
 ## Test plan
 
 - Component test `tests/components/organisms-eventbrite-register-button.test.tsx`: with a URL, asserts the rendered element is an `<a>` with `href={eventbriteEventUrl}`, `target="_blank"`, and `rel="noopener noreferrer"`; without a URL, asserts the alternative block renders with the mailto link; asserts no `<script>` tag is injected by the component.
-- E2E test `e2e/register.spec.ts`: with the seed `eventbriteEventUrl: null` plus `registrationStatus: "upcoming"`, asserts the "Aún no abrimos el registro" alternative is shown, the mailto link is present, and no `eb_widgets.js` script is loaded on the page.
+- E2E test `e2e/register.spec.ts`: with the current edition registration open, asserts the official Paraguay Eventbrite URL, safe external-link attributes, keyboard focus, absence of the upcoming fallback, and absence of `eb_widgets.js`.
 
 ## Migration note
 

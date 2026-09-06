@@ -14,7 +14,7 @@ context and must change when the implemented architecture changes.
 | Code of conduct | `content/editions/{year}/code-of-conduct.mdx` | MDX loader in `lib/content/` |
 | Speakers, sessions, schedule | Public Sessionize API | `lib/api/client.ts` plus `lib/api/sessionize.ts` |
 | CFP submissions | Sessionize external page | Public link from edition metadata |
-| Attendee registration | Not finalized | Optional Eventbrite link adapter is present but unconfigured |
+| Attendee registration | Eventbrite | Official Paraguay event URL from edition metadata; registration is open |
 
 The site does not persist attendee data. A future flow that requires private
 credentials, business rules, or persistence needs a separately approved

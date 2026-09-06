@@ -47,10 +47,9 @@ Next.js compute platform to retain current behavior.
 | `NEXT_PUBLIC_SESSIONIZE_BASE_URL` | no | `https://sessionize.com/api/v2` | Override for offline tests or staging. |
 
 No secrets are read by this app. Sessionize is consumed through its public API
-without authentication. The attendee registration provider is not finalized.
-The current implementation can render a plain external Eventbrite link, but
-the 2026 edition leaves that URL unset and does not load an Eventbrite widget
-or call its API.
+without authentication. Eventbrite is the attendee registration provider. The
+2026 edition links to its official public event page without loading an
+Eventbrite widget or calling its API.
 
 ## AWS Amplify Hosting (primary target)
 

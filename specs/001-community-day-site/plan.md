@@ -34,7 +34,7 @@ The constitution at `.specify/memory/constitution.md` is version 1.0.0. This pla
 
 ### Principle I - Frontend-Only Boundary (NON-NEGOTIABLE)
 
-- **PASS**. No backend service, database, or admin panel is built in this repository. Sessionize owns speakers, sessions, schedule, and CFP management. The attendee registration provider remains undecided; the existing Eventbrite link adapter is optional and unconfigured. Sponsor inquiries are handled with a `mailto:` link. Edition metadata, sponsors, organizers, venue, FAQ, and code of conduct are version-controlled content edited through pull requests.
+- **PASS**. No backend service, database, or admin panel is built in this repository. Sessionize owns speakers, sessions, schedule, and CFP management. Eventbrite is the selected attendee registration provider; the official Paraguay event URL is configured and registration is open. Server-rendered home and registration CTAs reuse the existing link component. Sponsor inquiries are handled with a `mailto:` link. Edition metadata, sponsors, organizers, venue, FAQ, and code of conduct are version-controlled content edited through pull requests.
 - Route Handlers and Server Actions in this plan are limited to: serving the dynamic OG image, generating the sitemap and robots, and reading Sessionize via the typed `fetch` client during server rendering and revalidation. None of these own persistent state.
 
 ### Principle II - Atomic Design Layering

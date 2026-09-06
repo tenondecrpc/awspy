@@ -89,12 +89,10 @@ Same pattern as sponsors: edit the corresponding file under `content/editions/{y
 Edit `content/editions/{year}/event.json`. The `cfpStatus` and `registrationStatus` fields drive the UX on `/cfp` and `/register`. Allowed values: `"open"`, `"upcoming"`, `"closed"`.
 
 Sessionize is the primary platform for speakers, schedule, and CFP management.
-The attendee registration provider is not finalized for the 2026 edition. The
-current implementation supports an optional external Eventbrite URL, but keep
-`eventbriteEventUrl` set to `null` and `registrationStatus` set to `"upcoming"`
-until the provider is selected. Choosing a non-Eventbrite provider requires a
-small code and schema rename because the current boundary is
-Eventbrite-specific.
+Eventbrite is the attendee registration provider for the 2026 edition. Keep
+`eventbriteEventUrl` aligned with the official public event page and update
+`registrationStatus` as registration moves from `"upcoming"` to `"open"` and
+then `"closed"`.
 
 ### Add or update speakers, sessions, schedule
 

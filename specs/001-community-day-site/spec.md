@@ -18,13 +18,12 @@
 - Q: Should analytics tooling be installed for the first edition? → A: No analytics on the first edition. Decision deferred to a follow-up feature if traffic insights are needed.
 - Q: What observability is required for the static site? → A: The hosting platform's built-in deployment and runtime logs are sufficient for the first edition. On AWS Amplify Hosting (primary target) build logs surface in the Amplify Console and runtime logs surface in CloudWatch. No custom logging, metrics, or tracing infrastructure is added.
 
-**2026 operational note**: Sessionize is the primary platform for speakers,
-schedule, and CFP management. The attendee registration provider is not yet
-finalized. Until that decision is made, `eventbriteEventUrl` remains `null`
-and `registrationStatus` remains `"upcoming"`. The Eventbrite requirements in
-this specification describe the currently implemented optional adapter, not a
-confirmed production provider. A different provider requires an explicit spec
-and schema update before registration opens.
+**2026 operational note (updated 2026-09-06)**: Sessionize owns speakers,
+schedule, and CFP management. Eventbrite is the selected attendee registration
+provider. `eventbriteEventUrl` contains the official Paraguay event page and
+`registrationStatus` is `"open"`. The home CTA leads to `/register`, which
+opens the official Eventbrite URL in a new tab. Closed and archived routes
+continue to hide registration links.
 - Q: How is Sessionize rate limiting handled? → A: Sessionize already caches responses for five minutes server-side, and the site adds its own ten-minute revalidation; rate limiting is not a practical concern at expected traffic. If a Sessionize request fails, the empty-state fallback already covers the user-visible behavior (see FR-013).
 
 ## User Scenarios & Testing *(mandatory)*

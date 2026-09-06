@@ -38,10 +38,9 @@ sponsors, organizers, venue details, FAQ content, and the code of conduct live
 under `content/editions/{year}/`. Speakers, schedule, and CFP management come
 from Sessionize.
 
-The attendee registration provider is not finalized. The current code supports
-an optional external Eventbrite link, but the 2026 edition leaves it unset. If
-another provider is selected, update the Eventbrite-specific schema and
-component names before opening registration.
+Eventbrite is the selected attendee registration provider. Registration for
+Paraguay 2026 is open through the official event URL in `eventbriteEventUrl`.
+The home CTA leads to `/register`, which opens Eventbrite in a new tab.
 
 ## Repository structure
 
@@ -144,8 +143,9 @@ The host used for this audit did not expose Node.js in `PATH`. The commands abov
 
 - Edit local event content under `content/editions/{year}/`.
 - Publish speakers, schedule, and CFP changes in Sessionize.
-- Keep `eventbriteEventUrl` unset and `registrationStatus` set to `upcoming`
-  until the attendee registration provider is selected.
+- Keep `eventbriteEventUrl` and `registrationStatus` aligned with the official
+  Eventbrite event. Update the content-specific assertions in
+  `e2e/register.spec.ts` and `e2e/home.spec.ts` when registration changes.
 - Run lint, type checking, tests, and a production build before release.
 
 See [`specs/001-community-day-site/quickstart.md`](specs/001-community-day-site/quickstart.md)

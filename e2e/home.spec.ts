@@ -27,17 +27,19 @@ test.describe("Home page", () => {
     page,
   }) => {
     await page.goto("/");
-    // The hero renders "Avisame del registro" while registrationStatus is
-    // "upcoming"; once the seeded status flips to "open" the copy becomes
-    // "Registrarme" and lives in the same hero slot. Either way the primary
-    // CTA points at /register. We scope to the main content area to avoid
-    // matching the header/footer nav entries.
     const main = page.locator("main");
-    const cta = main
-      .getByRole("link", { name: /^(Registrarme|Avisame del registro)$/i })
-      .first();
+    await expect(
+      main.getByText("Registro abierto", { exact: true })
+    ).toBeVisible();
+    const cta = main.getByRole("link", { name: "Registrarme", exact: true });
     await expect(cta).toBeVisible();
     await expect(cta).toHaveAttribute("href", "/register");
+    await cta.click();
+    await expect(
+      page
+        .locator("main")
+        .getByRole("link", { name: "Registrarme", exact: true })
+    ).toBeVisible();
   });
 
   test("has a working skip link", async ({ page }) => {

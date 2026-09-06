@@ -410,3 +410,8 @@ Run sequentially: Phase 1 -> Phase 2 -> Phase 3 -> ... -> Phase 12. Use the `[P]
 - [X] T126 Remove the unused TanStack Query provider, Zustand package, and inactive MDX compiler packages after characterization tests and bundle measurement confirmed no consumers.
 - [X] T127 Document the restricted Markdown renderer as the current code-of-conduct contract and verify LF and CRLF frontmatter parsing.
 - [ ] T128 Validate a populated, multi-room Sessionize schedule in deterministic E2E fixtures before claiming the plenary-layout requirement is complete.
+
+## Registration provider selection - 2026-09-06
+
+- [X] T129 Select Eventbrite, configure the official Paraguay event URL, open attendee registration, and update the content-specific E2E assertions.
+- [X] T130 Verify the official registration link on desktop and mobile and run repository and production-browser gates. The public Eventbrite URL returned HTTP 200; format, lint, types, secret scan, 325 tests, the Webpack production build, and all 84 production-browser tests passed. The local Turbopack build remained blocked by the environment's internal port restriction.
