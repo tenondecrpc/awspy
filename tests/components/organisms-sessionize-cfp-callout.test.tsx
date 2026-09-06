@@ -16,6 +16,8 @@ const BASE: EventInfo = {
   location: { city: "Asuncion", country: "Paraguay", summary: "Asuncion" },
   sessionizeEventId: null,
   eventbriteEventUrl: null,
+  volunteerRegistrationUrl: null,
+  volunteerRegistrationStatus: "upcoming",
   cfpSubmissionUrl: null,
   cfpStatus: "open",
   cfpDeadline: null,

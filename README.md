@@ -42,6 +42,11 @@ Eventbrite is the selected attendee registration provider. Registration for
 Paraguay 2026 is open through the official event URL in `eventbriteEventUrl`.
 The home CTA leads to `/register`, which opens Eventbrite in a new tab.
 
+Volunteer applications are open through the official Google Form configured
+in `volunteerRegistrationUrl`. The home invitation and team empty state lead
+to `/volunteers`, whose CTA opens the form in a new tab without embedding
+third-party scripts.
+
 ## Repository structure
 
 ```text
@@ -146,6 +151,9 @@ The host used for this audit did not expose Node.js in `PATH`. The commands abov
 - Keep `eventbriteEventUrl` and `registrationStatus` aligned with the official
   Eventbrite event. Update the content-specific assertions in
   `e2e/register.spec.ts` and `e2e/home.spec.ts` when registration changes.
+- Keep `volunteerRegistrationUrl` and `volunteerRegistrationStatus` aligned
+  with the official Google Form. Update `e2e/volunteers.spec.ts` when the
+  volunteer application changes.
 - Run lint, type checking, tests, and a production build before release.
 
 See [`specs/001-community-day-site/quickstart.md`](specs/001-community-day-site/quickstart.md)

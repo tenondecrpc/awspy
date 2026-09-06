@@ -15,10 +15,12 @@ context and must change when the implemented architecture changes.
 | Speakers, sessions, schedule | Public Sessionize API | `lib/api/client.ts` plus `lib/api/sessionize.ts` |
 | CFP submissions | Sessionize external page | Public link from edition metadata |
 | Attendee registration | Eventbrite | Official Paraguay event URL from edition metadata; registration is open |
+| Volunteer applications | Google Forms | Official public form URL from edition metadata; applications are open |
 
-The site does not persist attendee data. A future flow that requires private
-credentials, business rules, or persistence needs a separately approved
-backend architecture.
+The site does not persist attendee or volunteer data. External providers own
+data collection for their respective flows. A future flow that requires
+private credentials, business rules, or persistence needs a separately
+approved backend architecture.
 
 ## Rendering and request flow
 
@@ -50,8 +52,9 @@ A tier may import its own tier or a lower tier. Pages may also call
 ## Public routes
 
 The current edition is served at top-level routes such as `/`, `/speakers`,
-`/schedule`, `/sponsors`, `/venue`, `/team`, `/faq`, `/code-of-conduct`, `/cfp`,
-and `/register`. Edition snapshots are mirrored under `/editions/{year}/`.
+`/schedule`, `/sponsors`, `/venue`, `/team`, `/volunteers`, `/faq`,
+`/code-of-conduct`, `/cfp`, and `/register`. Edition snapshots are mirrored
+under `/editions/{year}/`.
 
 Next.js metadata conventions provide `sitemap.xml`, `robots.txt`, and the
 dynamic Open Graph image. Canonical URLs and generated share assets derive from

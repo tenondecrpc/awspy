@@ -64,7 +64,7 @@ export function SiteHeader({ editionYear }: SiteHeaderProps) {
             <EditionPill year={editionYear} className="hidden sm:inline-flex" />
           </NextLink>
 
-          <nav aria-label="Navegación principal" className="hidden lg:block">
+          <nav aria-label="Navegación principal" className="hidden xl:block">
             <ul className="flex items-center gap-1">
               {PRIMARY_NAV.map((entry) => (
                 <li key={entry.href}>
@@ -78,7 +78,7 @@ export function SiteHeader({ editionYear }: SiteHeaderProps) {
             ref={triggerRef}
             type="button"
             className={cn(
-              "lg:hidden inline-flex items-center justify-center rounded-[var(--radius-sm)] px-3 py-2 text-sm font-semibold",
+              "xl:hidden inline-flex items-center justify-center rounded-[var(--radius-sm)] px-3 py-2 text-sm font-semibold",
               "border border-[var(--color-surface-muted)]"
             )}
             aria-label="Abrir menú"

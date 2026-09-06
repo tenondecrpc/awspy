@@ -8,9 +8,14 @@ import type { EventInfo } from "@/lib/content/event-info";
 type TeamTemplateProps = {
   organizers: Organizer[];
   eventInfo: EventInfo;
+  volunteersHref?: string;
 };
 
-export function TeamTemplate({ organizers, eventInfo }: TeamTemplateProps) {
+export function TeamTemplate({
+  organizers,
+  eventInfo,
+  volunteersHref,
+}: TeamTemplateProps) {
   return (
     <Section spacing="lg">
       <Container>
@@ -21,7 +26,11 @@ export function TeamTemplate({ organizers, eventInfo }: TeamTemplateProps) {
             en Paraguay.
           </p>
         </div>
-        <OrganizersGrid organizers={organizers} eventInfo={eventInfo} />
+        <OrganizersGrid
+          organizers={organizers}
+          eventInfo={eventInfo}
+          volunteersHref={volunteersHref}
+        />
       </Container>
     </Section>
   );

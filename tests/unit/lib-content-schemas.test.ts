@@ -22,6 +22,8 @@ const VALID_EVENT = {
   location: { city: "Asuncion", country: "Paraguay", summary: "Asuncion" },
   sessionizeEventId: null,
   eventbriteEventUrl: null,
+  volunteerRegistrationUrl: null,
+  volunteerRegistrationStatus: "upcoming",
   cfpSubmissionUrl: null,
   cfpStatus: "upcoming",
   cfpDeadline: null,
@@ -72,6 +74,15 @@ describe("EventInfoSchema", () => {
   it("rejects an unknown cfpStatus value", () => {
     expect(() =>
       EventInfoSchema.parse({ ...VALID_EVENT, cfpStatus: "maybe" })
+    ).toThrow();
+  });
+
+  it("rejects a non-HTTPS volunteer registration URL", () => {
+    expect(() =>
+      EventInfoSchema.parse({
+        ...VALID_EVENT,
+        volunteerRegistrationUrl: "http://docs.google.com/forms/example",
+      })
     ).toThrow();
   });
 });

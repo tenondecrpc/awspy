@@ -56,6 +56,7 @@ export default async function EditionHomePage({
       cfpHref={`/editions/${year}/cfp`}
       speakersHref={`/editions/${year}/speakers`}
       sponsorsHref={`/editions/${year}/sponsors`}
+      volunteersHref={`/editions/${year}/volunteers`}
     />
   );
 }

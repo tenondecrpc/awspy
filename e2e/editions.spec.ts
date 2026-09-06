@@ -37,6 +37,13 @@ test.describe("editions", () => {
     await expect(page.getByText(/esta edición ya finalizó/i)).toBeVisible();
   });
 
+  test("/editions/2026/volunteers shows the archived notice", async ({
+    page,
+  }) => {
+    await page.goto("/editions/2026/volunteers");
+    await expect(page.getByText(/esta edición ya finalizó/i)).toBeVisible();
+  });
+
   test("/editions/9999 returns a 404", async ({ page }) => {
     const response = await page.goto("/editions/9999");
     expect(response?.status()).toBe(404);

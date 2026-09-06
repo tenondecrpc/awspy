@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation";
-import { TeamTemplate } from "@/components/templates/TeamTemplate";
+import { VolunteersTemplate } from "@/components/templates/VolunteersTemplate";
 import { editionExists, getEdition } from "@/lib/content/editions";
 import { buildPageMetadata } from "@/lib/utils/seo";
 import { listEditionParams, type EditionRouteParams } from "../_shared";
@@ -17,25 +17,19 @@ export async function generateMetadata({
 }) {
   const { year } = await params;
   return buildPageMetadata({
-    title: `Equipo ${year}`,
-    description: `Equipo organizador de la edición ${year} del AWS Community Day Paraguay.`,
-    path: `/editions/${year}/team`,
+    title: `Voluntariado ${year}`,
+    description: `Voluntariado de la edición ${year} del AWS Community Day Paraguay.`,
+    path: `/editions/${year}/volunteers`,
   });
 }
 
-export default async function EditionTeamPage({
+export default async function EditionVolunteersPage({
   params,
 }: {
   params: Promise<EditionRouteParams>;
 }) {
   const { year } = await params;
   if (!editionExists(year)) notFound();
-  const { eventInfo, organizers } = getEdition(year);
-  return (
-    <TeamTemplate
-      organizers={organizers}
-      eventInfo={eventInfo}
-      volunteersHref={`/editions/${year}/volunteers`}
-    />
-  );
+  const { eventInfo } = getEdition(year);
+  return <VolunteersTemplate eventInfo={eventInfo} archived />;
 }

@@ -1,5 +1,5 @@
-// Per FR-036: Spanish privacy notice plus a link to Eventbrite's privacy
-// policy. Renders inside SiteFooter; can also be reused on /register.
+// Spanish privacy notice for the external attendee and volunteer flows.
+// Renders inside SiteFooter; can also be reused on conversion pages.
 
 import { Link } from "@/components/atoms/Link";
 
@@ -14,7 +14,12 @@ export function PrivacyFooterNote() {
       >
         Eventbrite
       </Link>{" "}
-      según su política de privacidad.
+      según su política de privacidad. Las postulaciones de voluntariado se
+      realizan mediante Google Forms y están sujetas a la{" "}
+      <Link href="https://policies.google.com/privacy?hl=es-419" external>
+        Política de Privacidad de Google
+      </Link>
+      .
     </p>
   );
 }

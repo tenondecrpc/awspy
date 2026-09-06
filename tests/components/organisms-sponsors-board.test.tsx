@@ -24,6 +24,8 @@ const EVENT_INFO: EventInfo = {
   location: { city: "Asuncion", country: "Paraguay", summary: "Asuncion" },
   sessionizeEventId: null,
   eventbriteEventUrl: null,
+  volunteerRegistrationUrl: null,
+  volunteerRegistrationStatus: "upcoming",
   cfpSubmissionUrl: null,
   cfpStatus: "upcoming",
   cfpDeadline: null,

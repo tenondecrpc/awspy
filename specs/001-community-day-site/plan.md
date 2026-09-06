@@ -8,7 +8,7 @@
 Build the public, content-driven, SEO-sensitive website for AWS Community Day Paraguay 2026 as a Next.js App Router application that:
 
 - Reads speakers, sessions, and the schedule grid from the public Sessionize JSON API (no auth) and validates payloads with Zod at the data boundary.
-- Delegates attendee registration to a public Eventbrite event page (linked externally, not embedded) and call-for-papers to a Sessionize submission link.
+- Delegates attendee registration to a public Eventbrite event page, volunteer applications to a public Google Form, and call-for-papers to a Sessionize submission link. Every integration is link-only and not embedded.
 - Stores all other event content (sponsors, organizers, venue, FAQ, code of conduct, edition metadata, status flags) as version-controlled JSON/MDX files under `content/editions/{year}/`, also validated with Zod at load time.
 - Supports multiple editions from day one, with the current edition served at the bare URL and past editions under `/editions/{year}/...`.
 - Renders correctly when external services are unavailable, exposes SEO metadata and structured data on every route, and meets the constitution's accessibility non-negotiables.
@@ -34,7 +34,7 @@ The constitution at `.specify/memory/constitution.md` is version 1.0.0. This pla
 
 ### Principle I - Frontend-Only Boundary (NON-NEGOTIABLE)
 
-- **PASS**. No backend service, database, or admin panel is built in this repository. Sessionize owns speakers, sessions, schedule, and CFP management. Eventbrite is the selected attendee registration provider; the official Paraguay event URL is configured and registration is open. Server-rendered home and registration CTAs reuse the existing link component. Sponsor inquiries are handled with a `mailto:` link. Edition metadata, sponsors, organizers, venue, FAQ, and code of conduct are version-controlled content edited through pull requests.
+- **PASS**. No backend service, database, or admin panel is built in this repository. Sessionize owns speakers, sessions, schedule, and CFP management. Eventbrite owns attendee registration and Google Forms owns volunteer applications; both official Paraguay 2026 URLs are configured and open. Server-rendered CTAs use safe external links without embeds. Sponsor inquiries are handled with a `mailto:` link. Edition metadata, sponsors, organizers, venue, FAQ, and code of conduct are version-controlled content edited through pull requests.
 - Route Handlers and Server Actions in this plan are limited to: serving the dynamic OG image, generating the sitemap and robots, and reading Sessionize via the typed `fetch` client during server rendering and revalidation. None of these own persistent state.
 
 ### Principle II - Atomic Design Layering
@@ -60,7 +60,7 @@ The constitution at `.specify/memory/constitution.md` is version 1.0.0. This pla
 
 ### Principle VII - Language and Formatting Discipline
 
-- **PASS**. All routes (`/speakers`, `/schedule`, `/sponsors`, `/venue`, `/team`, `/faq`, `/code-of-conduct`, `/cfp`, `/register`, `/editions`, `/editions/[year]/*`), file names, identifiers, comments, commit messages, PR descriptions, and internal docs are in English. All visible UI copy is in Spanish. Spanish copy uses proper accents and inverted question/exclamation marks; English internal text remains ASCII (no em-dashes or en-dashes).
+- **PASS**. All routes (`/speakers`, `/schedule`, `/sponsors`, `/venue`, `/team`, `/volunteers`, `/faq`, `/code-of-conduct`, `/cfp`, `/register`, `/editions`, `/editions/[year]/*`), file names, identifiers, comments, commit messages, PR descriptions, and internal docs are in English. All visible UI copy is in Spanish. Spanish copy uses proper accents and inverted question/exclamation marks; English internal text remains ASCII (no em-dashes or en-dashes).
 
 ### Stack and Tooling Constraints
 
@@ -90,7 +90,8 @@ specs/001-community-day-site/
 ├── contracts/
 │   ├── sessionize-api.md                  # Sessionize JSON contract this site consumes
 │   ├── content-schemas.md                 # JSON/MDX schemas under content/editions/{year}/
-│   └── eventbrite-embed.md                # Eventbrite external link contract
+│   ├── eventbrite-embed.md                # Eventbrite external link contract
+│   └── google-forms-volunteer-registration.md # Google Forms external link contract
 └── tasks.md                               # /speckit.tasks output (NOT created by /speckit.plan)
 ```
 
@@ -110,6 +111,7 @@ app/
 ├── sponsors/page.tsx
 ├── venue/page.tsx
 ├── team/page.tsx
+├── volunteers/page.tsx
 ├── faq/page.tsx
 ├── code-of-conduct/page.tsx
 ├── cfp/page.tsx
@@ -125,6 +127,7 @@ app/
 │       ├── sponsors/page.tsx
 │       ├── venue/page.tsx
 │       ├── team/page.tsx
+│       ├── volunteers/page.tsx
 │       ├── faq/page.tsx
 │       ├── code-of-conduct/page.tsx
 │       ├── cfp/page.tsx
@@ -166,6 +169,7 @@ components/
 │   ├── EmptyState.tsx
 │   ├── EventbriteRegisterButton.tsx
 │   ├── SessionizeCFPCallout.tsx
+│   ├── VolunteerCallout.tsx
 │   └── PrivacyFooterNote.tsx
 └── templates/
     ├── HomeTemplate.tsx
@@ -178,6 +182,7 @@ components/
     ├── FAQTemplate.tsx
     ├── CodeOfConductTemplate.tsx
     ├── CFPTemplate.tsx
+    ├── VolunteersTemplate.tsx
     ├── RegisterTemplate.tsx
     └── EditionsIndexTemplate.tsx
 
@@ -232,6 +237,7 @@ tests/
     ├── organisms-faq-list.test.tsx
     ├── organisms-countdown.test.tsx
     ├── organisms-eventbrite-register-button.test.tsx
+    ├── organisms-volunteer-callout.test.tsx
     └── organisms-site-header.test.tsx
 
 e2e/
@@ -240,6 +246,7 @@ e2e/
 ├── speakers.spec.ts
 ├── schedule.spec.ts
 ├── register.spec.ts
+├── volunteers.spec.ts
 ├── editions.spec.ts
 └── empty-states.spec.ts
 
@@ -271,22 +278,24 @@ Topics resolved in research:
 8. **Slug derivation for speakers**: lowercase + diacritic strip + non-alphanumerics replaced with `-` + collapse + trim, plus a `[2]`, `[3]`, ... suffix when collisions occur in a single edition. Speakers carry a stable `id` from Sessionize that drives the suffix decision.
 9. **SEO/structured data approach**: `metadata` exports per route, `JSON-LD` script tags injected by server components for `Event`, `Person`, and `BreadcrumbList`. Dynamic OG image via `app/opengraph-image.tsx` reading `event.json`.
 10. **Testing strategy**: unit (schemas, helpers), component (RTL with jsdom), e2e (Playwright with the deployed preview URL or local `next dev`). Sessionize fixtures captured from the public demo event id `jl4ktls0` to drive deterministic tests. The deploy-smoke spec is host-agnostic: it accepts `BASE_URL` so the same spec can target an AWS Amplify preview, a Vercel preview, or any other Next.js deployment.
+11. **Google Forms volunteer integration**: render a plain external link to the public `viewform` URL; no iframe, script, proxy, or local persistence. A versioned status flag drives open, upcoming, closed, and archived copy.
 
 ## Phase 1: Design & Contracts
 
-`data-model.md`, `contracts/sessionize-api.md`, `contracts/content-schemas.md`, `contracts/eventbrite-embed.md`, and `quickstart.md` are produced as companion files in this feature directory.
+`data-model.md`, `contracts/sessionize-api.md`, `contracts/content-schemas.md`, `contracts/eventbrite-embed.md`, `contracts/google-forms-volunteer-registration.md`, and `quickstart.md` are produced as companion files in this feature directory.
 
 ### data-model.md
 
-Captures every entity in the spec's "Key Entities" section (Edition, Event metadata, Speaker, Session, Room/Track, Sponsor, Organizer, FAQ Item, Venue, Code of Conduct) with: source of truth (Sessionize, content, or computed), fields with types, validation rules, relationships, and lifecycle notes (e.g., the registration and CFP status flags transition open <-> upcoming <-> closed; speakers transition implicit accepted state in Sessionize). Each entity maps to its Zod schema location in `lib/api/sessionize.ts` or `lib/content/*.ts`.
+Captures every entity in the spec's "Key Entities" section (Edition, Event metadata, Speaker, Session, Room/Track, Sponsor, Organizer, FAQ Item, Venue, Code of Conduct) with: source of truth (Sessionize, content, or computed), fields with types, validation rules, relationships, and lifecycle notes (e.g., attendee, volunteer, and CFP status flags transition open <-> upcoming <-> closed; speakers transition implicit accepted state in Sessionize). Each entity maps to its Zod schema location in `lib/api/sessionize.ts` or `lib/content/*.ts`.
 
 ### contracts/
 
-The three contract files describe the external interfaces this site consumes (Sessionize, Eventbrite) and produces (the local content schema):
+The four contract files describe the external interfaces this site consumes (Sessionize, Eventbrite, Google Forms) and produces (the local content schema):
 
 - `contracts/sessionize-api.md`: documents the Sessionize JSON shape per view (`All`, `GridSmart`, `Sessions`, `Speakers`, `SpeakerWall`), the URL pattern (`https://sessionize.com/api/v2/{eventId}/view/{view}`), the cache behavior, and the empty/error contract this site relies on. Includes the Zod schema definitions to be implemented in `lib/api/sessionize.ts`.
 - `contracts/content-schemas.md`: documents the JSON/MDX shapes for `event.json`, `sponsors.json`, `organizers.json`, `faq.json`, `venue.json`, and `code-of-conduct.mdx`. Includes the Zod schemas to be implemented in `lib/content/*.ts`.
 - `contracts/eventbrite-embed.md`: documents how this site integrates with Eventbrite via a plain external link to the public event page. The site does NOT embed the Eventbrite widget script and does NOT call the Eventbrite REST API. The contract covers the input shape (`EventInfo.eventbriteEventUrl`), the link semantics (`target="_blank"`, `rel="noopener noreferrer"`), the status-flag-driven UX (`upcoming` / `open` / `closed` / `archived`), and the fallback behavior when the event URL is absent.
+- `contracts/google-forms-volunteer-registration.md`: documents the link-only volunteer application flow, edition metadata fields, safe external-link attributes, fallback states, and provider-aware privacy notice.
 
 ### quickstart.md
 
@@ -300,7 +309,7 @@ A short "from zero to running" guide for a new contributor: clone the repo, set 
 
 Re-evaluating each principle after the Phase 1 artifacts are produced:
 
-- **Frontend-Only Boundary**: research.md and contracts confirm no backend is introduced; data sources are Sessionize, the optional external registration link, and version-controlled content. PASS.
+- **Frontend-Only Boundary**: research.md and contracts confirm no backend is introduced; data sources are Sessionize, link-only Eventbrite and Google Forms flows, and version-controlled content. PASS.
 - **Atomic Design Layering**: the project structure section enforces the tier discipline; the component list above respects it. PASS.
 - **Typed API Boundary with Zod Validation**: `contracts/sessionize-api.md` and `contracts/content-schemas.md` make the Zod boundary explicit on every payload (inbound from Sessionize, inbound from the local files). PASS.
 - **State Layering**: the design has no global client state or client-side server-state provider because the implemented routes do not require either. PASS.

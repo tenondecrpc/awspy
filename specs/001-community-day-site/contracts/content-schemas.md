@@ -55,6 +55,8 @@ export const EventInfoSchema = z.object({
   }),
   sessionizeEventId: z.string().regex(/^[a-z0-9]+$/i).nullable(),
   eventbriteEventUrl: HttpsUrlSchema.nullable(),
+  volunteerRegistrationUrl: HttpsUrlSchema.nullable(),
+  volunteerRegistrationStatus: StatusEnum,
   cfpSubmissionUrl: HttpsUrlSchema.nullable(),
   cfpStatus: StatusEnum,
   cfpDeadline: z.string().datetime({ offset: true }).nullable(),

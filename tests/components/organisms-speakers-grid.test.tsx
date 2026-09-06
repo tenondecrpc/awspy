@@ -24,6 +24,8 @@ const EVENT_INFO: EventInfo = {
   location: { city: "Asuncion", country: "Paraguay", summary: "Asuncion" },
   sessionizeEventId: "jl4ktls0",
   eventbriteEventUrl: null,
+  volunteerRegistrationUrl: null,
+  volunteerRegistrationStatus: "upcoming",
   cfpSubmissionUrl: "https://sessionize.com/awspy",
   cfpStatus: "open",
   cfpDeadline: null,

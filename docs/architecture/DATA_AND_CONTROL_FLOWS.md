@@ -30,6 +30,6 @@ sequenceDiagram
 - Sessionize crosses an Internet-to-schema boundary and is always untrusted.
 - Environment variables cross a process-to-configuration boundary.
 - JSON-LD crosses a data-to-HTML execution boundary and requires safe serialization.
-- External registration/CFP/sponsor links cross a browser navigation boundary.
+- External attendee registration, volunteer application, CFP, and sponsor links cross a browser navigation boundary.
 
 Sessionize failures intentionally degrade to explicit empty states for the current read path. No automatic retry is added without quota and latency evidence. Static local content is independent of external availability.

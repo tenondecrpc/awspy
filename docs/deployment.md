@@ -49,7 +49,9 @@ Next.js compute platform to retain current behavior.
 No secrets are read by this app. Sessionize is consumed through its public API
 without authentication. Eventbrite is the attendee registration provider. The
 2026 edition links to its official public event page without loading an
-Eventbrite widget or calling its API.
+Eventbrite widget or calling its API. Google Forms receives volunteer
+applications through a plain external link; the site does not embed the form
+or load Google Forms scripts.
 
 ## AWS Amplify Hosting (primary target)
 

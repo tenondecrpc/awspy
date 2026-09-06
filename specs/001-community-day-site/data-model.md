@@ -10,7 +10,7 @@ This document captures every entity the site reads or stores, its source of trut
 | Entity              | Source of truth                                            | Schema location                          | Notes                                                                  |
 |---------------------|------------------------------------------------------------|------------------------------------------|------------------------------------------------------------------------|
 | Edition             | `content/editions/{year}/` directory layout                | `lib/content/editions.ts`                | Aggregates all per-year content; identified by year (4 digits)         |
-| EventInfo           | `content/editions/{year}/event.json`                       | `lib/content/event-info.ts`              | One per edition; contains Sessionize/Eventbrite references and status flags  |
+| EventInfo           | `content/editions/{year}/event.json`                       | `lib/content/event-info.ts`              | One per edition; contains Sessionize, Eventbrite, Google Forms references, and status flags  |
 | Sponsor             | `content/editions/{year}/sponsors.json`                    | `lib/content/sponsors.ts`                | Array per edition; tier-based grouping                                 |
 | Organizer           | `content/editions/{year}/organizers.json`                  | `lib/content/organizers.ts`              | Array per edition                                                      |
 | FAQItem             | `content/editions/{year}/faq.json`                         | `lib/content/faq.ts`                     | Array per edition                                                      |
@@ -47,8 +47,8 @@ This document captures every entity the site reads or stores, its source of trut
 - An Edition has one EventInfo, zero-or-more Sponsors, zero-or-more Organizers, zero-or-more FAQItems, one Venue, one CodeOfConduct, and (via Sessionize) zero-or-more Speakers, Sessions, and Rooms.
 
 **Lifecycle**:
-- An edition does not transition states explicitly; instead, its EventInfo carries `cfpStatus` and `registrationStatus` flags that drive UX.
-- Per FR-035, past editions ignore these flags and always render "Esta edición ya finalizó" on the register and CFP routes.
+- An edition does not transition states explicitly; instead, its EventInfo carries `cfpStatus`, `registrationStatus`, and `volunteerRegistrationStatus` flags that drive UX.
+- Per FR-035, past editions ignore these flags and always render "Esta edición ya finalizó" on the register, volunteer, and CFP routes.
 
 ## EventInfo
 
@@ -64,6 +64,8 @@ This document captures every entity the site reads or stores, its source of trut
 - `location`: object with `city`, `country`, `summary` (one-line, used in metadata and hero)
 - `sessionizeEventId`: string or null, the Sessionize event id consumed by `lib/api/sessionize.ts`
 - `eventbriteEventUrl`: URL string or null, the public Eventbrite event URL rendered as an external link by `EventbriteRegisterButton`
+- `volunteerRegistrationUrl`: URL string or null, the public Google Forms `viewform` URL rendered by `VolunteerCallout`
+- `volunteerRegistrationStatus`: enum `"open" | "upcoming" | "closed"`
 - `cfpSubmissionUrl`: URL string or null, the Sessionize submission URL used by `SessionizeCFPCallout`
 - `cfpStatus`: enum `"open" | "upcoming" | "closed"`
 - `cfpDeadline`: ISO-8601 datetime or null
@@ -78,14 +80,14 @@ This document captures every entity the site reads or stores, its source of trut
 - `dates.start` and `dates.end` are ISO-8601 datetimes parseable by `Date`
 - `dates.end` is on or after `dates.start`
 - `sessionizeEventId`, when present, matches `/^[a-z0-9]+$/i` (Sessionize uses short alphanumeric ids)
-- `eventbriteEventUrl` and `cfpSubmissionUrl`, when present, are valid HTTPS URLs
-- `cfpStatus` and `registrationStatus` are constrained to the enums above
+- `eventbriteEventUrl`, `volunteerRegistrationUrl`, and `cfpSubmissionUrl`, when present, are valid HTTPS URLs
+- `cfpStatus`, `registrationStatus`, and `volunteerRegistrationStatus` are constrained to the enums above
 - `cfpDeadline`, when present, is an ISO-8601 datetime
 - `contactEmail` is a valid email
 - `social.*`, when present, are valid HTTPS URLs
 
 **Lifecycle**:
-- Status flags (`cfpStatus`, `registrationStatus`) move forward only: `upcoming -> open -> closed`. Editing them is a content change and does not require a code release.
+- Status flags (`cfpStatus`, `registrationStatus`, `volunteerRegistrationStatus`) move forward only: `upcoming -> open -> closed`. Editing them is a content change and does not require a code release.
 
 ## Sponsor
 

@@ -47,4 +47,16 @@ test.describe("Home page", () => {
     const skip = page.getByRole("link", { name: /saltar al contenido/i });
     await expect(skip).toHaveAttribute("href", "#contenido-principal");
   });
+
+  test("links the volunteer invitation to the dedicated section", async ({
+    page,
+  }) => {
+    await page.goto("/");
+
+    const invitation = page.getByRole("link", {
+      name: "Quiero ser voluntario/a",
+    });
+    await expect(invitation).toBeVisible();
+    await expect(invitation).toHaveAttribute("href", "/volunteers");
+  });
 });

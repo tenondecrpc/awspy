@@ -27,6 +27,7 @@ describe("HomeTemplate edition links", () => {
         sponsorsPreview={[]}
         speakersHref="/editions/2026/speakers"
         sponsorsHref="/editions/2026/sponsors"
+        volunteersHref="/editions/2026/volunteers"
       />
     );
 
@@ -39,5 +40,8 @@ describe("HomeTemplate edition links", () => {
       "/editions/2026/speakers",
       "/editions/2026/sponsors",
     ]);
+    expect(
+      screen.getByRole("link", { name: "Quiero ser voluntario/a" })
+    ).toHaveAttribute("href", "/editions/2026/volunteers");
   });
 });

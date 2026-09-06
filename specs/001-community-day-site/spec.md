@@ -24,13 +24,19 @@ provider. `eventbriteEventUrl` contains the official Paraguay event page and
 `registrationStatus` is `"open"`. The home CTA leads to `/register`, which
 opens the official Eventbrite URL in a new tab. Closed and archived routes
 continue to hide registration links.
+
+**2026 volunteer note (updated 2026-09-06)**: Google Forms owns volunteer
+applications. `volunteerRegistrationUrl` contains the official public form and
+`volunteerRegistrationStatus` is `"open"`. The home, navigation, and team empty
+state lead to `/volunteers`, whose CTA opens the form in a new tab without an
+embed.
 - Q: How is Sessionize rate limiting handled? → A: Sessionize already caches responses for five minutes server-side, and the site adds its own ten-minute revalidation; rate limiting is not a practical concern at expected traffic. If a Sessionize request fails, the empty-state fallback already covers the user-visible behavior (see FR-013).
 
 ## User Scenarios & Testing *(mandatory)*
 
 ### User Story 1 - Discover the event from the home page (Priority: P1)
 
-A first-time visitor lands on the site root and immediately understands what AWS Community Day Paraguay is, when and where it will happen, and how to take the next step (register, submit a talk, or learn more). The home page works even before any speaker, sponsor, or session has been confirmed: missing data shows a clear "Próximamente" placeholder rather than breaking the page.
+A first-time visitor lands on the site root and immediately understands what AWS Community Day Paraguay is, when and where it will happen, and how to take the next step (register, volunteer, submit a talk, or learn more). The home page works even before any speaker, sponsor, or session has been confirmed: missing data shows a clear "Próximamente" placeholder rather than breaking the page.
 
 **Why this priority**: This is the core value of the site. Without a working landing page that communicates what the event is, no other feature delivers value. It is also the page that search engines and social shares hit first.
 
@@ -96,13 +102,13 @@ A visitor wants to know practical details that influence their decision to atten
 
 ---
 
-### User Story 5 - Register as attendee or submit a talk (Priority: P2)
+### User Story 5 - Register as attendee, volunteer, or speaker (Priority: P2)
 
-A visitor wants to register as attendee or submit a talk to the call for papers. They reach the corresponding page (`/register` or `/cfp`), find a clear explanation of the next step, and a primary call to action that takes them to the right external system (Eventbrite for registration, Sessionize for talk submissions). When the corresponding flow is not yet open, the page communicates that and shows when it will open or how to be notified.
+A visitor wants to register as an attendee, apply as a volunteer, or submit a talk to the call for papers. They reach the corresponding page (`/register`, `/volunteers`, or `/cfp`), find a clear explanation of the next step, and a primary call to action that takes them to the right external system (Eventbrite for attendees, Google Forms for volunteers, or Sessionize for talk submissions). When the corresponding flow is not yet open, the page communicates that and shows how to be notified.
 
 **Why this priority**: Registration and CFP are the conversion goals of the site. They are external by design (the organizing team relies on Eventbrite and Sessionize), so the site does not collect data itself but must guide visitors clearly.
 
-**Independent Test**: Configure the edition with an Eventbrite event URL and the registration status set to "open"; verify that `/register` shows the primary "Registrarme" button rendered as an external link to the Eventbrite event page (with `target="_blank"` and the safe `rel`). Set the status to "upcoming" and verify the page shows the "Aún no abrimos el registro" alternative with a mailto button instead. Repeat for `/cfp` against Sessionize.
+**Independent Test**: Configure the edition with Eventbrite, Google Forms, and Sessionize URLs and their statuses set to "open". Verify that `/register`, `/volunteers`, and `/cfp` show descriptive external links with `target="_blank"` and the safe `rel`. Remove each configured URL and verify its intentional fallback state.
 
 **Acceptance Scenarios**:
 
@@ -110,6 +116,7 @@ A visitor wants to register as attendee or submit a talk to the call for papers.
 2. **Given** registration is upcoming or closed, **When** a visitor opens `/register`, **Then** they see a clear Spanish message indicating the current state ("Registro próximamente" or "Registro cerrado") and an alternative call to action (subscribe via mailto or a link to the home page).
 3. **Given** the call for papers is open and the Sessionize submission URL is configured, **When** a visitor opens `/cfp`, **Then** they see the CFP description, the submission deadline, and a primary call to action that opens the Sessionize submission page in a new tab with secure link attributes.
 4. **Given** the call for papers is upcoming or closed, **When** a visitor opens `/cfp`, **Then** they see a clear Spanish message indicating the current state and the call to action is disabled or replaced.
+5. **Given** volunteer applications are open and the Google Form URL is configured, **When** a visitor opens `/volunteers`, **Then** they see a primary "Completar formulario de voluntariado" link that opens the public form in a new tab with secure link attributes. The site does not embed the form or load Google Forms scripts.
 
 ---
 
@@ -125,7 +132,7 @@ A visitor wants to look at previous editions of the event (speakers, schedule, s
 
 1. **Given** there is at least one past edition under `content/editions/`, **When** a visitor opens `/editions`, **Then** they see a list of all past editions with name, year, and a link to each.
 2. **Given** an edition year `Y` exists, **When** a visitor opens `/editions/{Y}`, **Then** they see the home of that edition rendered with the same template as the current edition.
-3. **Given** the visitor is on a past edition home, **When** they open `/editions/{Y}/speakers`, `/editions/{Y}/schedule`, `/editions/{Y}/sponsors`, `/editions/{Y}/venue`, `/editions/{Y}/team`, `/editions/{Y}/faq`, `/editions/{Y}/code-of-conduct`, `/editions/{Y}/cfp`, or `/editions/{Y}/register`, **Then** each page renders with that edition's data.
+3. **Given** the visitor is on a past edition home, **When** they open `/editions/{Y}/speakers`, `/editions/{Y}/schedule`, `/editions/{Y}/sponsors`, `/editions/{Y}/venue`, `/editions/{Y}/team`, `/editions/{Y}/volunteers`, `/editions/{Y}/faq`, `/editions/{Y}/code-of-conduct`, `/editions/{Y}/cfp`, or `/editions/{Y}/register`, **Then** each page renders with that edition's data.
 4. **Given** an edition year does not exist, **When** a visitor opens `/editions/{Y}`, **Then** they see a 404 page with a Spanish message and a link back to the current edition's home.
 
 ---
@@ -161,6 +168,7 @@ The site continues to render correctly when Sessionize or Eventbrite is slow, re
 1. **Given** Sessionize is unreachable or returns no accepted speakers, **When** a visitor opens `/`, `/speakers`, or `/schedule`, **Then** each page renders with a Spanish empty-state message and the navigation continues to work.
 2. **Given** the Eventbrite event URL is missing or invalid, **When** a visitor opens `/register`, **Then** the page renders with the "Registro próximamente" alternative and a contact CTA.
 3. **Given** a content file under `content/editions/{year}/` is missing or malformed, **When** the site is built, **Then** the build fails loudly with a clear validation error referencing the offending file (so it is caught before deploy, not in production).
+4. **Given** volunteer registration is marked open but its form URL is missing, **When** a visitor opens `/volunteers`, **Then** the page renders the upcoming state and a contact CTA instead of a broken link.
 
 ---
 
@@ -196,7 +204,7 @@ The site is published and reachable at its public domain on AWS Amplify Hosting,
 
 #### Navigation and content shell
 
-- **FR-001**: Site MUST expose the following routes for the current edition: `/`, `/speakers`, `/speakers/[slug]`, `/schedule`, `/sponsors`, `/venue`, `/team`, `/faq`, `/code-of-conduct`, `/cfp`, `/register`, `/editions`.
+- **FR-001**: Site MUST expose the following routes for the current edition: `/`, `/speakers`, `/speakers/[slug]`, `/schedule`, `/sponsors`, `/venue`, `/team`, `/volunteers`, `/faq`, `/code-of-conduct`, `/cfp`, `/register`, `/editions`.
 - **FR-002**: Site MUST mirror the routes above under `/editions/[year]/...` for every edition year present in the content directory.
 - **FR-003**: The bare URL (`/`) MUST always serve the current edition; the current edition is configurable via environment without code change.
 - **FR-004**: Every page MUST share a common header with navigation to all top-level routes, a common footer with the contact email and social links, and a skip link to the main content.
@@ -210,7 +218,7 @@ The site is published and reachable at its public domain on AWS Amplify Hosting,
 - **FR-009**: Call for papers submissions MUST be delegated to a public Sessionize submission page configured per edition; the site MUST link to it from `/cfp`.
 - **FR-010**: Sponsor inquiries MUST be delegated to a mailto link using the configured contact email; no internal sponsor application form is built.
 - **FR-011**: All other content (sponsors list, organizers, venue, FAQ, code of conduct, edition metadata such as dates and hero copy) MUST be stored in this repository under `content/editions/{year}/` and validated at load time.
-- **FR-012**: There MUST NOT be any backend service, database, or admin panel built in this repository; all editorial changes happen either in Sessionize, in Eventbrite, or via a pull request to this repository.
+- **FR-012**: There MUST NOT be any backend service, database, or admin panel built in this repository; all editorial changes happen either in Sessionize, Eventbrite, Google Forms, or via a pull request to this repository.
 
 #### Resilience and empty states
 
@@ -249,20 +257,22 @@ The site is published and reachable at its public domain on AWS Amplify Hosting,
 #### Performance
 
 - **FR-032**: The home page MUST achieve, on a desktop Lighthouse run, Performance >= 90, Accessibility >= 95, Best Practices >= 95, SEO >= 95.
-- **FR-033**: The site MUST NOT load any third-party script for the registration flow; registration is delegated entirely to the linked Eventbrite event page. Any third-party script added in the future (analytics, embeds for new content sections, etc.) MUST be lazy-loaded and MUST NOT block the largest contentful paint of any page.
+- **FR-033**: The site MUST NOT load any third-party script for attendee registration or volunteer applications; these flows are delegated entirely to linked external pages. Any third-party script added in the future (analytics, embeds for new content sections, etc.) MUST be lazy-loaded and MUST NOT block the largest contentful paint of any page.
 - **FR-034**: Speaker images MUST be served using the framework's optimized image pipeline with explicit dimensions and appropriate `sizes`.
 
 #### Privacy, observability, and past-edition behavior (clarifications applied 2026-05-23)
 
-- **FR-035**: Past-edition pages under `/editions/{year}/register` and `/editions/{year}/cfp` MUST render a single Spanish "Esta edición ya finalizó" message regardless of the historical status flags; only the current edition's pages read the dynamic registration and CFP statuses from its event metadata.
-- **FR-036**: The site MUST include a Spanish privacy footer noting that no personal data is collected by this site and that registration is delegated to Eventbrite (with a link to Eventbrite's privacy policy). No cookie banner is shown because no first-party tracking is installed.
+- **FR-035**: Past-edition pages under `/editions/{year}/register`, `/editions/{year}/volunteers`, and `/editions/{year}/cfp` MUST render a single Spanish "Esta edición ya finalizó" message regardless of the historical status flags; only the current edition's pages read the dynamic registration, volunteer, and CFP statuses from its event metadata.
+- **FR-036**: The site MUST include a Spanish privacy footer noting that no personal data is collected by this site, attendee registration is delegated to Eventbrite, and volunteer applications are delegated to Google Forms. The notice MUST link to both providers' privacy policies. No cookie banner is shown because no first-party tracking is installed.
 - **FR-037**: No analytics tooling MUST be added for the first edition; the decision is deferred to a follow-up feature if traffic insights are later needed.
 - **FR-038**: No custom logging, metrics, or tracing infrastructure MUST be added for the first edition; the hosting platform's built-in deployment and runtime logs are the sole observability surface. On AWS Amplify Hosting (primary target) this is the Amplify Console for build logs and AWS CloudWatch for SSR runtime logs.
+- **FR-039**: Volunteer applications MUST be delegated to the public Google Form configured per edition. `/volunteers` MUST expose a descriptive external link with `target="_blank"` and `rel="noopener noreferrer"`, and the home page plus team empty state MUST link to that section. The site MUST NOT embed the form, load Google Forms scripts, or submit application data itself.
+- **FR-040**: When volunteer registration is marked open but its URL is missing, `/volunteers` MUST render the Spanish upcoming-state alternative with a mailto contact CTA.
 
 ### Key Entities
 
-- **Edition**: A single year of the event. Identified by its year (a four-digit string). Aggregates all per-year content (event metadata, sponsors, organizers, venue, FAQ, code of conduct) and references the corresponding Sessionize event identifier and Eventbrite event URL. Exactly one edition is the "current" edition at any time.
-- **Event metadata**: Date(s), location summary, hero title and subtitle, contact email, social links, the Sessionize event identifier, the Eventbrite event URL, and status flags for the call for papers (open, upcoming, closed) and the registration (open, upcoming, closed). One per edition.
+- **Edition**: A single year of the event. Identified by its year (a four-digit string). Aggregates all per-year content (event metadata, sponsors, organizers, venue, FAQ, code of conduct) and references the corresponding Sessionize, Eventbrite, and Google Forms configuration. Exactly one edition is the "current" edition at any time.
+- **Event metadata**: Date(s), location summary, hero title and subtitle, contact email, social links, the Sessionize event identifier, Eventbrite attendee URL, Google Forms volunteer URL, and status flags for the call for papers, attendee registration, and volunteer applications (open, upcoming, closed). One per edition.
 - **Speaker**: A person presenting at an edition. Sourced from Sessionize. Identified by a slug derived from their name. Has a name, optional photo URL, optional tagline, optional biography, optional links (Twitter, LinkedIn, GitHub, blog, etc.), and a list of sessions they will deliver in that edition.
 - **Session**: A talk, workshop, or panel at an edition. Sourced from Sessionize. Has a title, optional description, start and end times in the Asunción timezone, an optional room, optional tracks, and references to its speakers.
 - **Room or Track**: A grouping used in the schedule grid. Sourced from Sessionize. Has a name and an order.

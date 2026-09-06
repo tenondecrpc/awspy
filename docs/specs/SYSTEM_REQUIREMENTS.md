@@ -9,8 +9,8 @@ The system publishes Spanish event information for AWS Community Day Paraguay. I
 - Render current and archived edition metadata from validated files under `content/editions/{year}/`.
 - Render speakers, sessions, and schedules from the public Sessionize API when configured.
 - Continue rendering local event content and explicit empty states when Sessionize is unavailable.
-- Provide edition-aware navigation, speaker details, venue, team, sponsor, FAQ, code-of-conduct, registration, and CFP routes.
-- Delegate registration, talk submission, and sponsor inquiry to approved external links or email actions.
+- Provide edition-aware navigation, speaker details, venue, team, volunteer, sponsor, FAQ, code-of-conduct, registration, and CFP routes.
+- Delegate attendee registration, volunteer applications, talk submission, and sponsor inquiry to approved external links or email actions.
 - Publish canonical metadata, Open Graph/Twitter data, robots directives, sitemap entries, and Event/Person structured data.
 
 ## Interfaces

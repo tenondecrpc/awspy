@@ -6,6 +6,7 @@ import NextLink from "next/link";
 import { Container } from "@/components/atoms/Container";
 import { Section } from "@/components/atoms/Section";
 import { Heading } from "@/components/atoms/Heading";
+import { Button } from "@/components/atoms/Button";
 import { Hero } from "@/components/organisms/Hero";
 import { Countdown } from "@/components/organisms/Countdown";
 import { EmptyState } from "@/components/organisms/EmptyState";
@@ -26,6 +27,7 @@ type HomeTemplateProps = {
   cfpHref?: string;
   speakersHref?: string;
   sponsorsHref?: string;
+  volunteersHref?: string;
 };
 
 export function HomeTemplate({
@@ -36,6 +38,7 @@ export function HomeTemplate({
   cfpHref,
   speakersHref = "/speakers",
   sponsorsHref = "/sponsors",
+  volunteersHref = "/volunteers",
 }: HomeTemplateProps) {
   return (
     <>
@@ -52,6 +55,36 @@ export function HomeTemplate({
               Cuenta regresiva
             </Heading>
             <Countdown targetDate={eventInfo.dates.start} />
+          </div>
+        </Container>
+      </Section>
+
+      <Section
+        spacing="md"
+        tone="inverse"
+        aria-labelledby="volunteers-title"
+        eyebrow="Voluntariado"
+      >
+        <Container>
+          <div className="mx-auto grid max-w-4xl items-center gap-6 md:grid-cols-[1fr_auto] md:gap-10">
+            <div className="space-y-3 text-center md:text-left">
+              <Heading id="volunteers-title" level={2}>
+                Ayudanos a hacer posible el evento
+              </Heading>
+              <p className="text-[var(--color-text-on-inverse)] opacity-90">
+                Sumate al equipo de voluntariado y colaborá con la experiencia
+                de speakers y asistentes antes y durante la jornada.
+              </p>
+            </div>
+            <Button
+              as="a"
+              href={volunteersHref}
+              variant="primary"
+              size="lg"
+              className="justify-self-center"
+            >
+              Quiero ser voluntario/a
+            </Button>
           </div>
         </Container>
       </Section>

@@ -9,12 +9,14 @@ type OrganizersGridProps = {
   eventInfo: EventInfo;
   /** When true and the list is empty, render a skeleton instead. */
   isLoading?: boolean;
+  volunteersHref?: string;
 };
 
 export function OrganizersGrid({
   organizers,
   eventInfo,
   isLoading = false,
+  volunteersHref = "/volunteers",
 }: OrganizersGridProps) {
   if (isLoading && organizers.length === 0) {
     return (
@@ -31,8 +33,16 @@ export function OrganizersGrid({
       <EmptyState
         variant="team"
         title="Equipo en formación"
-        description="Estamos sumando voluntarios al equipo organizador. Si querés colaborar, escribinos."
-        actionHref={`mailto:${eventInfo.contactEmail}?subject=Voluntariado%20AWS%20Community%20Day%20Paraguay`}
+        description={
+          eventInfo.volunteerRegistrationUrl
+            ? "Estamos sumando voluntarios al equipo organizador. Si querés colaborar, completá el formulario."
+            : "Estamos sumando voluntarios al equipo organizador. Si querés colaborar, escribinos."
+        }
+        actionHref={
+          eventInfo.volunteerRegistrationUrl
+            ? volunteersHref
+            : `mailto:${eventInfo.contactEmail}?subject=Voluntariado%20AWS%20Community%20Day%20Paraguay`
+        }
         actionLabel="Quiero colaborar"
       />
     );

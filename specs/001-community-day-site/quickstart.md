@@ -86,13 +86,18 @@ Same pattern as sponsors: edit the corresponding file under `content/editions/{y
 
 ### Update the event date, hero copy, status flags
 
-Edit `content/editions/{year}/event.json`. The `cfpStatus` and `registrationStatus` fields drive the UX on `/cfp` and `/register`. Allowed values: `"open"`, `"upcoming"`, `"closed"`.
+Edit `content/editions/{year}/event.json`. The `cfpStatus`, `registrationStatus`, and `volunteerRegistrationStatus` fields drive the UX on `/cfp`, `/register`, and `/volunteers`. Allowed values: `"open"`, `"upcoming"`, `"closed"`.
 
 Sessionize is the primary platform for speakers, schedule, and CFP management.
 Eventbrite is the attendee registration provider for the 2026 edition. Keep
 `eventbriteEventUrl` aligned with the official public event page and update
 `registrationStatus` as registration moves from `"upcoming"` to `"open"` and
 then `"closed"`.
+
+Google Forms owns volunteer applications. Keep `volunteerRegistrationUrl`
+pointing at the public `viewform` URL and update
+`volunteerRegistrationStatus` as the volunteer call moves from `"upcoming"` to
+`"open"` and then `"closed"`.
 
 ### Add or update speakers, sessions, schedule
 
@@ -126,7 +131,7 @@ To introduce edition `{Y+1}` (for example, `2027`):
 
 3. Edit each file:
 
-   - `event.json`: update `year`, `name`, `dates`, `location`, `sessionizeEventId` (new Sessionize event), `eventbriteEventUrl` (new Eventbrite event), `cfpSubmissionUrl`, status flags (typically `"upcoming"` for both at first), `previousEditions: ["2026"]`.
+   - `event.json`: update `year`, `name`, `dates`, `location`, `sessionizeEventId` (new Sessionize event), `eventbriteEventUrl` (new Eventbrite event), `volunteerRegistrationUrl` (new public Google Form), `cfpSubmissionUrl`, status flags (typically `"upcoming"` at first), `previousEditions: ["2026"]`.
    - `sponsors.json`, `organizers.json`, `faq.json`, `venue.json`: replace with the new edition's data, or start with an empty array `[]` and populate over time.
    - `code-of-conduct.mdx`: usually unchanged; bump `version` in frontmatter if the policy changed.
 

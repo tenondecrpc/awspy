@@ -42,6 +42,7 @@ describe("sitemap()", () => {
     expect(urls).toContain("https://example.test/sponsors");
     expect(urls).toContain("https://example.test/venue");
     expect(urls).toContain("https://example.test/team");
+    expect(urls).toContain("https://example.test/volunteers");
     expect(urls).toContain("https://example.test/faq");
     expect(urls).toContain("https://example.test/code-of-conduct");
     expect(urls).toContain("https://example.test/cfp");
@@ -58,6 +59,7 @@ describe("sitemap()", () => {
     expect(urls).toContain("https://example.test/editions/2026/sponsors");
     expect(urls).toContain("https://example.test/editions/2026/venue");
     expect(urls).toContain("https://example.test/editions/2026/team");
+    expect(urls).toContain("https://example.test/editions/2026/volunteers");
     expect(urls).toContain("https://example.test/editions/2026/faq");
     expect(urls).toContain(
       "https://example.test/editions/2026/code-of-conduct"

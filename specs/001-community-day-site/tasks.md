@@ -415,3 +415,8 @@ Run sequentially: Phase 1 -> Phase 2 -> Phase 3 -> ... -> Phase 12. Use the `[P]
 
 - [X] T129 Select Eventbrite, configure the official Paraguay event URL, open attendee registration, and update the content-specific E2E assertions.
 - [X] T130 Verify the official registration link on desktop and mobile and run repository and production-browser gates. The public Eventbrite URL returned HTTP 200; format, lint, types, secret scan, 325 tests, the Webpack production build, and all 84 production-browser tests passed. The local Turbopack build remained blocked by the environment's internal port restriction.
+
+## Volunteer registration - 2026-09-06
+
+- [X] T131 Add the current and archived volunteer routes, home invitation, navigation entry, Google Forms CTA, validated edition fields, and provider-aware privacy copy.
+- [ ] T132 Verify the public volunteer form link, desktop and mobile rendering, complete repository gate, and deployed Amplify route.

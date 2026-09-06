@@ -13,11 +13,16 @@ const ROUTES: Array<{ path: string; heading: RegExp }> = [
   { path: "/sponsors", heading: /^sponsors$/i },
   { path: "/venue", heading: /^sede$/i },
   { path: "/team", heading: /equipo organizador/i },
+  { path: "/volunteers", heading: /^voluntariado$/i },
   { path: "/faq", heading: /preguntas frecuentes/i },
   { path: "/code-of-conduct", heading: /código de conducta/i },
   { path: "/cfp", heading: /call for papers/i },
   { path: "/register", heading: /^registro$/i },
   { path: "/editions", heading: /ediciones anteriores/i },
+  {
+    path: "/editions/2026/volunteers",
+    heading: /^voluntariado$/i,
+  },
 ];
 
 const BASE = process.env.BASE_URL ?? "";

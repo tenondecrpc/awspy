@@ -24,6 +24,8 @@ const EVENT_INFO: EventInfo = {
   location: { city: "Asuncion", country: "Paraguay", summary: "Asuncion" },
   sessionizeEventId: null,
   eventbriteEventUrl: null,
+  volunteerRegistrationUrl: "https://docs.google.com/forms/d/example/viewform",
+  volunteerRegistrationStatus: "open",
   cfpSubmissionUrl: null,
   cfpStatus: "upcoming",
   cfpDeadline: null,
@@ -44,17 +46,14 @@ const ORGANIZERS: Organizer[] = [
 ];
 
 describe("OrganizersGrid", () => {
-  it("renders the empty state with a volunteer mailto when there are no organizers", () => {
+  it("renders the empty state with a link to volunteer registration", () => {
     render(<OrganizersGrid organizers={[]} eventInfo={EVENT_INFO} />);
     expect(
       screen.getByRole("heading", { name: /equipo en formación/i })
     ).toBeInTheDocument();
     expect(
       screen.getByRole("link", { name: /quiero colaborar/i })
-    ).toHaveAttribute(
-      "href",
-      `mailto:${EVENT_INFO.contactEmail}?subject=Voluntariado%20AWS%20Community%20Day%20Paraguay`
-    );
+    ).toHaveAttribute("href", "/volunteers");
   });
 
   it("renders one card per organizer", () => {

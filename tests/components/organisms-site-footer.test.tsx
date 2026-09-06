@@ -20,6 +20,8 @@ const FAKE_INFO: EventInfo = {
   location: { city: "Asuncion", country: "Paraguay", summary: "Asuncion" },
   sessionizeEventId: null,
   eventbriteEventUrl: null,
+  volunteerRegistrationUrl: null,
+  volunteerRegistrationStatus: "upcoming",
   cfpSubmissionUrl: null,
   cfpStatus: "upcoming",
   cfpDeadline: null,
@@ -44,6 +46,19 @@ describe("SiteFooter", () => {
     expect(link).toHaveAttribute(
       "href",
       "https://www.eventbrite.com/help/en-us/articles/460838/eventbrite-privacy-policy/"
+    );
+    expect(link).toHaveAttribute("target", "_blank");
+    expect(link).toHaveAttribute("rel", "noopener noreferrer");
+  });
+
+  it("links volunteer applicants to Google's privacy policy", () => {
+    render(<SiteFooter eventInfo={FAKE_INFO} />);
+    const link = screen.getByRole("link", {
+      name: "Política de Privacidad de Google",
+    });
+    expect(link).toHaveAttribute(
+      "href",
+      "https://policies.google.com/privacy?hl=es-419"
     );
     expect(link).toHaveAttribute("target", "_blank");
     expect(link).toHaveAttribute("rel", "noopener noreferrer");

@@ -10,6 +10,7 @@ test.describe("Site navigation", () => {
       "Sponsors",
       "Sede",
       "Equipo",
+      "Voluntarios",
       "Preguntas",
       "CFP",
       "Registrarme",
@@ -18,6 +19,17 @@ test.describe("Site navigation", () => {
       const link = page.getByRole("link", { name }).first();
       await expect(link).toBeVisible();
     }
+  });
+
+  test("tablet: uses the navigation drawer when all links do not fit", async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width: 1024, height: 768 });
+    await page.goto("/");
+
+    await expect(
+      page.getByRole("button", { name: /abrir menú/i })
+    ).toBeVisible();
   });
 
   test("mobile: opens and closes the navigation drawer", async ({ page }) => {
