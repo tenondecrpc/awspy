@@ -73,12 +73,19 @@ describe("getEdition", () => {
     const edition = getEdition("2026");
     expect(edition.year).toBe("2026");
     expect(edition.eventInfo.name).toMatch(/AWS Community Day Paraguay/);
+    expect(edition.eventInfo.contactEmail).toBe(
+      "awscommunitydayparaguay@gmail.com"
+    );
+    expect(edition.eventInfo.cfpDeadline).toBe("2026-09-30T23:59:00-03:00");
     expect(Array.isArray(edition.sponsors)).toBe(true);
     expect(Array.isArray(edition.organizers)).toBe(true);
     expect(Array.isArray(edition.faq)).toBe(true);
     expect(edition.faq.length).toBeGreaterThan(0);
     expect(edition.venue.name.length).toBeGreaterThan(0);
     expect(edition.codeOfConduct.body.length).toBeGreaterThan(0);
+    expect(edition.codeOfConduct.body).toContain(
+      "awscommunitydayparaguay@gmail.com"
+    );
   });
 
   it("throws for a missing edition", () => {

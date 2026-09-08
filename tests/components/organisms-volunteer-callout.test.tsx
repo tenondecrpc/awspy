@@ -38,7 +38,7 @@ describe("VolunteerCallout", () => {
       screen.getByRole("link", { name: "Avisame por mail" })
     ).toHaveAttribute(
       "href",
-      "mailto:hola@awscommunitydayparaguay.com?subject=Avisame%20cuando%20abra%20la%20convocatoria%20de%20voluntariado"
+      "mailto:awscommunitydayparaguay@gmail.com?subject=Avisame%20cuando%20abra%20la%20convocatoria%20de%20voluntariado"
     );
   });
 
