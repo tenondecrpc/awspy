@@ -58,7 +58,7 @@ const SessionizeSpeakerSchema = z.object({
   fullName: z.string().min(1).optional(),
   tagLine: z.string().optional().nullable(),
   bio: z.string().optional().nullable(),
-  profilePicture: HttpsUrlSchema.optional().nullable(),
+  profilePicture: RemoteImageUrlSchema.optional().nullable(),
   links: z.array(SpeakerLinkSchema).optional().default([]),
   sessions: z.array(z.object({
     id: z.union([z.string(), z.number()]).transform(String),
@@ -74,6 +74,8 @@ const SpeakersListSchema = z.array(SessionizeSpeakerSchema);
 
 Returns an array of groups. Each group contains a `sessions` array; the adapter
 flattens the groups after validation.
+The ungrouped `All` view uses `groupId: null`. Accepted sessions may have null
+start/end timestamps and room IDs before the schedule is published.
 
 ```ts
 const SessionizeSessionSchema = z.object({
@@ -94,7 +96,7 @@ const SessionizeSessionSchema = z.object({
 });
 
 const SessionGroupSchema = z.object({
-  groupId: z.union([z.string(), z.number()]).optional(),
+  groupId: z.union([z.string(), z.number()]).optional().nullable(),
   groupName: z.string().optional().nullable(),
   sessions: z.array(SessionizeSessionSchema)
 }).passthrough();
@@ -140,7 +142,7 @@ const SpeakerWallSchema = z.array(z.object({
   id: z.string(),
   fullName: z.string(),
   tagLine: z.string().optional().nullable(),
-  profilePicture: HttpsUrlSchema.optional().nullable()
+  profilePicture: RemoteImageUrlSchema.optional().nullable()
 }).passthrough());
 ```
 
@@ -153,5 +155,10 @@ const SpeakerWallSchema = z.array(z.object({
 
 ## Privacy and security notes
 
+- Production speaker photos use `https://cdn.sessionize.com/image/...`, while
+  the demo fixtures use `https://sessionize.com/image/...`. Both exact hosts
+  must be present in the shared image allowlist used by `RemoteImageUrlSchema`
+  and Next Image. Rejecting a photo fails the speaker-list schema and triggers
+  the empty-state fallback even when the provider returned accepted speakers.
 - The site exposes only the public Sessionize event id, not any private settings. The `endpoint URL` is not a secret per the playbook.
 - The Sessionize playbook recommends keeping endpoint URLs out of public-facing client code only when private custom fields are exposed. For the views above and with default custom-fields-disabled settings, public exposure is the explicit design.

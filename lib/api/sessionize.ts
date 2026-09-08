@@ -116,7 +116,7 @@ export const SessionizeSessionSchema = z
 
 const SessionGroupSchema = z
   .object({
-    groupId: z.union([z.string(), z.number()]).optional(),
+    groupId: z.union([z.string(), z.number()]).optional().nullable(),
     groupName: z.string().optional().nullable(),
     sessions: z.array(SessionizeSessionSchema),
   })

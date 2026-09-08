@@ -214,6 +214,30 @@ describe("attachSpeakerSlugs", () => {
 });
 
 describe("listSpeakers", () => {
+  it("keeps a published speaker whose photo is served by the Sessionize CDN", async () => {
+    // Production uses the CDN; the demo fixtures only exercise sessionize.com.
+    const speaker = {
+      id: "speaker-cdn",
+      firstName: "Ada",
+      lastName: "Lovelace",
+      fullName: "Ada Lovelace",
+      profilePicture: "https://cdn.sessionize.com/image/speaker.jpg",
+      links: [],
+      sessions: [{ id: 123, name: "Cloud operations" }],
+    };
+    mockFetch("Speakers", [speaker]);
+
+    const speakers = await listSpeakers("test-event");
+
+    expect(speakers).toHaveLength(1);
+    expect(speakers[0]).toMatchObject({
+      fullName: "Ada Lovelace",
+      slug: "ada-lovelace",
+      profilePicture: speaker.profilePicture,
+      sessions: [{ id: "123", name: "Cloud operations" }],
+    });
+  });
+
   it("returns the parsed speakers from the demo fixture", async () => {
     mockFetch("Speakers", loadFixture("Speakers"));
     const speakers = await listSpeakers("jl4ktls0");
@@ -262,6 +286,35 @@ describe("getSpeakerBySlug", () => {
 });
 
 describe("listSessions", () => {
+  it("keeps unscheduled sessions in the provider's ungrouped list", async () => {
+    mockFetch("Sessions", [
+      {
+        groupId: null,
+        groupName: "All",
+        sessions: [
+          {
+            id: "123",
+            title: "Cloud operations",
+            startsAt: null,
+            endsAt: null,
+            roomId: null,
+            speakers: [{ id: "speaker-cdn", name: "Ada Lovelace" }],
+          },
+        ],
+      },
+    ]);
+
+    const sessions = await listSessions("test-event");
+
+    expect(sessions).toHaveLength(1);
+    expect(sessions[0]).toMatchObject({
+      title: "Cloud operations",
+      startsAt: null,
+      endsAt: null,
+      speakers: [{ id: "speaker-cdn", name: "Ada Lovelace" }],
+    });
+  });
+
   it("flattens the grouped Sessions view into a single array", async () => {
     mockFetch("Sessions", loadFixture("Sessions"));
     const sessions = await listSessions("jl4ktls0");

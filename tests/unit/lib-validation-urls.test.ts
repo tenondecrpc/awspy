@@ -35,6 +35,7 @@ describe("URL policies", () => {
 
   it.each([
     "https://sessionize.com/image/speaker.jpg",
+    "https://cdn.sessionize.com/image/speaker.jpg",
     "https://img.evbuc.com/banner.png",
     "https://cdn.evbuc.com/logo.svg",
   ])("allows configured remote image host %s", (url) => {
@@ -46,6 +47,14 @@ describe("URL policies", () => {
       RemoteImageUrlSchema.safeParse("https://images.example.test/logo.svg")
         .success
     ).toBe(false);
+  });
+
+  it.each([
+    "http://cdn.sessionize.com/image/speaker.jpg",
+    "https://cdn.sessionize.com.example.test/image/speaker.jpg",
+    "https://other.sessionize.com/image/speaker.jpg",
+  ])("rejects insecure or unconfigured Sessionize image URLs %s", (url) => {
+    expect(RemoteImageUrlSchema.safeParse(url).success).toBe(false);
   });
 
   it.each([
