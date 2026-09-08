@@ -4,7 +4,7 @@ import { buildPageMetadata } from "@/lib/utils/seo";
 
 export async function generateMetadata() {
   return buildPageMetadata({
-    title: "Call for papers",
+    title: "Proponé una charla",
     description:
       "Enviá tu propuesta de charla o taller para el AWS Community Day Paraguay.",
     path: "/cfp",

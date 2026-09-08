@@ -18,7 +18,7 @@ export const PRIMARY_NAV: readonly NavEntry[] = [
   { href: "/team", label: "Equipo" },
   { href: "/volunteers", label: "Voluntarios" },
   { href: "/faq", label: "Preguntas" },
-  { href: "/cfp", label: "CFP" },
+  { href: "/cfp", label: "Proponer charla" },
   { href: "/register", label: "Registrarme" },
 ] as const;
 

@@ -12,9 +12,9 @@ type SessionizeCFPCalloutProps = {
 };
 
 const STATUS_COPY: Record<EventInfo["cfpStatus"], string> = {
-  open: "CFP abierto",
-  upcoming: "CFP próximamente",
-  closed: "CFP cerrado",
+  open: "Convocatoria abierta",
+  upcoming: "Convocatoria próximamente",
+  closed: "Convocatoria cerrada",
 };
 
 export function SessionizeCFPCallout({ eventInfo }: SessionizeCFPCalloutProps) {
@@ -50,13 +50,13 @@ export function SessionizeCFPCallout({ eventInfo }: SessionizeCFPCalloutProps) {
         </p>
       ) : cfpStatus === "upcoming" ? (
         <p className="text-[var(--color-text-primary)]">
-          Pronto vamos a abrir el call for papers. Si querés que te avisemos
-          cuando podés enviar tu propuesta, escribinos.
+          Pronto vamos a abrir la convocatoria de charlas. Si querés que te
+          avisemos cuando podés enviar tu propuesta, escribinos.
         </p>
       ) : (
         <p className="text-[var(--color-text-primary)]">
-          El call for papers para esta edición ya está cerrado. Pronto vamos a
-          publicar a los oradores seleccionados.
+          La convocatoria de charlas para esta edición ya está cerrada. Pronto
+          vamos a publicar a los oradores seleccionados.
         </p>
       )}
 
@@ -75,11 +75,11 @@ export function SessionizeCFPCallout({ eventInfo }: SessionizeCFPCalloutProps) {
         ) : cfpStatus === "upcoming" ? (
           <Button
             as="a"
-            href={`mailto:${contactEmail}?subject=Avisame%20cuando%20abra%20el%20CFP`}
+            href={`mailto:${contactEmail}?subject=Avisame%20cuando%20abra%20la%20convocatoria%20de%20charlas`}
             variant="secondary"
             size="md"
           >
-            Avisame del CFP
+            Avisame de la convocatoria
           </Button>
         ) : (
           <Button as="a" href="/speakers" variant="secondary" size="md">

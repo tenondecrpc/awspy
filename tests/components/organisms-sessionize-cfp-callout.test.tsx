@@ -39,7 +39,7 @@ describe("SessionizeCFPCallout", () => {
         }}
       />
     );
-    expect(screen.getByText(/CFP abierto/i)).toBeInTheDocument();
+    expect(screen.getByText(/convocatoria abierta/i)).toBeInTheDocument();
     const cta = screen.getByRole("link", {
       name: /enviar propuesta en sessionize/i,
     });
@@ -52,11 +52,13 @@ describe("SessionizeCFPCallout", () => {
     render(
       <SessionizeCFPCallout eventInfo={{ ...BASE, cfpStatus: "upcoming" }} />
     );
-    expect(screen.getByText(/CFP próximamente/i)).toBeInTheDocument();
-    const link = screen.getByRole("link", { name: /avisame del cfp/i });
+    expect(screen.getByText(/convocatoria próximamente/i)).toBeInTheDocument();
+    const link = screen.getByRole("link", {
+      name: /avisame de la convocatoria/i,
+    });
     expect(link).toHaveAttribute(
       "href",
-      "mailto:hola@awscommunitydayparaguay.com?subject=Avisame%20cuando%20abra%20el%20CFP"
+      "mailto:hola@awscommunitydayparaguay.com?subject=Avisame%20cuando%20abra%20la%20convocatoria%20de%20charlas"
     );
   });
 
@@ -70,7 +72,7 @@ describe("SessionizeCFPCallout", () => {
         }}
       />
     );
-    expect(screen.getByText(/CFP cerrado/i)).toBeInTheDocument();
+    expect(screen.getByText(/convocatoria cerrada/i)).toBeInTheDocument();
     expect(screen.getByText(/cerró el/i)).toBeInTheDocument();
     expect(
       screen.getByRole("link", { name: /ver speakers confirmados/i })

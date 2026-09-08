@@ -12,7 +12,7 @@ test.describe("Site navigation", () => {
       "Equipo",
       "Voluntarios",
       "Preguntas",
-      "CFP",
+      "Proponer charla",
       "Registrarme",
     ];
     for (const name of links) {

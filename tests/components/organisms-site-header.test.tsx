@@ -24,6 +24,10 @@ describe("SiteHeader", () => {
     expect(
       screen.getByRole("navigation", { name: /navegación principal/i })
     ).toBeInTheDocument();
+    expect(
+      screen.getAllByRole("link", { name: "Proponer charla" })
+    ).not.toHaveLength(0);
+    expect(screen.queryByRole("link", { name: "CFP" })).not.toBeInTheDocument();
   });
 
   it("opens the mobile drawer with focus on Cerrar and aria-expanded toggling", () => {

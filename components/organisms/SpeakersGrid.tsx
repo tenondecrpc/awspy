@@ -41,7 +41,7 @@ export function SpeakersGrid({
       <EmptyState
         variant="speakers"
         title="Pronto anunciamos a los speakers"
-        description="Estamos definiendo la grilla de oradores. Si querés proponer una charla, enviá tu propuesta desde la página de CFP."
+        description="Estamos definiendo la grilla de oradores. Si querés participar, enviá tu propuesta desde la página para proponer charlas."
         actionHref={
           eventInfo.cfpStatus === "open" && eventInfo.cfpSubmissionUrl
             ? "/cfp"

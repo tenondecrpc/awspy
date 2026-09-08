@@ -15,11 +15,12 @@ export function CFPTemplate({ eventInfo, archived = false }: CFPTemplateProps) {
     <Section spacing="lg">
       <Container>
         <div className="mx-auto max-w-2xl space-y-6">
-          <Heading level={1}>Call for papers</Heading>
+          <Heading level={1}>Proponé una charla</Heading>
 
           {archived ? (
             <p className="text-[var(--color-text-secondary)]">
-              Esta edición ya finalizó. El call for papers no está disponible.
+              Esta edición ya finalizó. La convocatoria de charlas no está
+              disponible.
             </p>
           ) : (
             <>

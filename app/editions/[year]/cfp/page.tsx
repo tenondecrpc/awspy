@@ -20,8 +20,8 @@ export async function generateMetadata({
 }) {
   const { year } = await params;
   return buildPageMetadata({
-    title: `Call for papers ${year}`,
-    description: `Call for papers archivado de la edición ${year}.`,
+    title: `Convocatoria de charlas ${year}`,
+    description: `Convocatoria de charlas archivada de la edición ${year}.`,
     path: `/editions/${year}/cfp`,
   });
 }
