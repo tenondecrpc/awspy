@@ -4,69 +4,69 @@ import { getSponsors } from "@/lib/content/sponsors";
 import { getOrganizers } from "@/lib/content/organizers";
 import { getVenue } from "@/lib/content/venue";
 
-// `CONTENT_PREVIEW=1` lets a `<name>.example.json` sibling stand in for a
-// content file that ships empty, so the sections with no records yet can be
-// looked at in development. The guard that matters is the last test in this
-// file: a production build must ignore the flag, because the deployed site is
-// public and placeholder sponsors must never be reachable from it.
+// A `<name>.example.json` sibling stands in for a live content file so the
+// sections whose real records are not ready yet have something to render.
+// It is on by default everywhere - deployed builds included - until
+// `CONTENT_PREVIEW=0` switches it off.
 
 afterEach(() => {
   vi.unstubAllEnvs();
 });
 
 describe("editionFile", () => {
-  it("resolves the live file when preview mode is off", () => {
-    expect(editionFile("2026", "sponsors.json")).toMatch(
-      /content\/editions\/2026\/sponsors\.json$/
+  describe("on by default", () => {
+    it.each(["development", "production", "test"])(
+      "prefers the example sibling with NODE_ENV=%s",
+      (nodeEnv) => {
+        vi.stubEnv("NODE_ENV", nodeEnv);
+        expect(editionFile("2026", "sponsors.json")).toMatch(
+          /content\/editions\/2026\/sponsors\.example\.json$/
+        );
+      }
     );
+
+    it.each(["1", "true"])("stays on when set to %s", (value) => {
+      vi.stubEnv("CONTENT_PREVIEW", value);
+      expect(editionFile("2026", "sponsors.json")).toMatch(
+        /content\/editions\/2026\/sponsors\.example\.json$/
+      );
+    });
   });
 
-  it("prefers the example sibling when preview mode is on", () => {
-    vi.stubEnv("CONTENT_PREVIEW", "1");
-    expect(editionFile("2026", "sponsors.json")).toMatch(
-      /content\/editions\/2026\/sponsors\.example\.json$/
-    );
+  describe("switched off", () => {
+    it.each(["0", "false"])("serves the live file when set to %s", (value) => {
+      vi.stubEnv("CONTENT_PREVIEW", value);
+      expect(editionFile("2026", "sponsors.json")).toMatch(
+        /content\/editions\/2026\/sponsors\.json$/
+      );
+    });
+
+    it("switches off in a production build too", () => {
+      vi.stubEnv("NODE_ENV", "production");
+      vi.stubEnv("CONTENT_PREVIEW", "0");
+      expect(editionFile("2026", "sponsors.json")).toMatch(
+        /content\/editions\/2026\/sponsors\.json$/
+      );
+    });
   });
 
-  it("falls back to the live file when no example sibling exists", () => {
-    vi.stubEnv("CONTENT_PREVIEW", "1");
-    expect(editionFile("2026", "faq.json")).toMatch(
-      /content\/editions\/2026\/faq\.json$/
-    );
-  });
+  describe("resolution", () => {
+    it("falls back to the live file when no example sibling exists", () => {
+      expect(editionFile("2026", "faq.json")).toMatch(
+        /content\/editions\/2026\/faq\.json$/
+      );
+    });
 
-  it("ignores a value other than 1", () => {
-    vi.stubEnv("CONTENT_PREVIEW", "true");
-    expect(editionFile("2026", "sponsors.json")).toMatch(
-      /content\/editions\/2026\/sponsors\.json$/
-    );
-  });
-
-  it("leaves an extensionless name alone", () => {
-    vi.stubEnv("CONTENT_PREVIEW", "1");
-    expect(editionFile("2026", "LICENSE")).toMatch(
-      /content\/editions\/2026\/LICENSE$/
-    );
-  });
-
-  it("ignores the flag entirely in a production build", () => {
-    vi.stubEnv("NODE_ENV", "production");
-    vi.stubEnv("CONTENT_PREVIEW", "1");
-    expect(editionFile("2026", "sponsors.json")).toMatch(
-      /content\/editions\/2026\/sponsors\.json$/
-    );
+    it("leaves an extensionless name alone", () => {
+      expect(editionFile("2026", "LICENSE")).toMatch(
+        /content\/editions\/2026\/LICENSE$/
+      );
+    });
   });
 });
 
-describe("content loaders in preview mode", () => {
-  it("serves the live (empty) records by default", () => {
-    expect(getSponsors("2026")).toEqual([]);
-    expect(getOrganizers("2026")).toEqual([]);
-  });
-
-  it("serves the placeholder records when preview mode is on", () => {
-    vi.stubEnv("CONTENT_PREVIEW", "1");
-
+describe("content loaders", () => {
+  it("serves the placeholder records by default", () => {
     const sponsors = getSponsors("2026");
     expect(sponsors.length).toBeGreaterThan(0);
     expect(sponsors.map((s) => s.tier)).toContain("Platinum");
@@ -80,8 +80,14 @@ describe("content loaders in preview mode", () => {
     expect(getVenue("2026").embedMapUrl).toBeTruthy();
   });
 
+  it("serves the live records once switched off", () => {
+    vi.stubEnv("CONTENT_PREVIEW", "0");
+    expect(getSponsors("2026")).toEqual([]);
+    expect(getOrganizers("2026")).toEqual([]);
+    expect(getVenue("2026").embedMapUrl).toBeUndefined();
+  });
+
   it("keeps placeholder records valid against the real schemas", () => {
-    vi.stubEnv("CONTENT_PREVIEW", "1");
     // Each loader throws on schema drift, so reaching this point means the
     // placeholder files satisfy the same contracts as production content.
     expect(() => {

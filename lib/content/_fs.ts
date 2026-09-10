@@ -17,24 +17,35 @@ export function editionDir(year: string): string {
 }
 
 /**
- * Resolves a content file inside an edition directory.
+ * Is a `<name>.example.json` sibling allowed to stand in for a live content
+ * file?
  *
- * Several sections ship with empty content (`sponsors.json` is `[]`, the
- * venue is "por confirmar"), which leaves their pages showing an empty state
- * with nothing to look at while working on the design. In **development
- * only**, setting `CONTENT_PREVIEW=1` makes a `<name>.example.json` sibling
- * win over the live file when one exists, so placeholder records can be
- * rendered without editing - or risking a commit of - the real content.
+ * **On by default, everywhere** - local development and deployed builds
+ * alike - until it is switched off with `CONTENT_PREVIEW=0`. That is a
+ * deliberate choice for this stage of the project: the sections whose real
+ * records are not ready yet (sponsors, organizers, venue) show placeholder
+ * data rather than an empty state.
  *
- * Production builds ignore the flag outright. That is deliberate: the site is
- * public, so placeholder sponsors or team members must not be reachable from
- * a deployed build even if the variable is set in the hosting environment.
+ * The consequence is that a deployed build serves placeholder records to
+ * real visitors, so every substitution logs a warning naming the file. To
+ * switch back to the real content, set `CONTENT_PREVIEW=0` in the hosting
+ * environment and redeploy. Removing a `*.example.json` file also drops just
+ * that section back to its live content.
+ */
+function previewEnabled(): boolean {
+  const flag = process.env.CONTENT_PREVIEW;
+  return flag !== "0" && flag !== "false";
+}
+
+/**
+ * Resolves a content file inside an edition directory, preferring a
+ * `<name>.example.json` sibling when preview mode is on and one exists. The
+ * live content file is never modified either way.
  */
 export function editionFile(year: string, fileName: string): string {
   const live = join(editionDir(year), fileName);
 
-  if (process.env.NODE_ENV === "production") return live;
-  if (process.env.CONTENT_PREVIEW !== "1") return live;
+  if (!previewEnabled()) return live;
 
   const dot = fileName.lastIndexOf(".");
   if (dot <= 0) return live;
@@ -58,8 +69,18 @@ function announcePreview(fileName: string): void {
   if (process.env.NODE_ENV === "test") return;
   if (announced.has(fileName)) return;
   announced.add(fileName);
+
+  if (process.env.NODE_ENV === "production") {
+    // A deployed build is showing placeholder records to real visitors, which
+    // is worth shouting about on every boot until it is switched off.
+    console.warn(
+      `[content] WARNING: serving placeholder ${fileName} to visitors. Set CONTENT_PREVIEW=0 and redeploy to serve the real content.`
+    );
+    return;
+  }
+
   console.warn(
-    `[content] CONTENT_PREVIEW=1: serving placeholder ${fileName} from its .example sibling. Not what a deployed build serves.`
+    `[content] preview mode: serving placeholder ${fileName} from its .example sibling. Set CONTENT_PREVIEW=0 to turn it off.`
   );
 }
 

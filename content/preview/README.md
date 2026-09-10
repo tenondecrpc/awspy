@@ -6,26 +6,22 @@ None of it reaches a deployed build.
 
 ## Two ways in
 
-### Sponsors, team and venue: your normal `npm run dev`
+### Sponsors, team and venue: nothing to configure
 
-These three come from version-controlled JSON, so all they need is
-`CONTENT_PREVIEW=1`. Put it in `.env.local`, which is gitignored, and the dev
-server you already run picks it up:
+These three come from version-controlled JSON, and preview mode is on by
+default, so your normal command already shows them:
 
 ```bash
-echo "CONTENT_PREVIEW=1" >> .env.local
 npm run dev
 ```
 
 Each substituted file is announced once in the terminal, so there is never
-any doubt about which mode you are looking at:
+any doubt about which mode a page is rendering:
 
 ```
-[content] CONTENT_PREVIEW=1: serving placeholder sponsors.json from its
-.example sibling. Not what a deployed build serves.
+[content] preview mode: serving placeholder sponsors.json from its .example
+sibling. Set CONTENT_PREVIEW=0 to turn it off.
 ```
-
-Remove the line from `.env.local` to go back to the real (empty) content.
 
 ### All five sections, including the schedule: `npm run dev:preview`
 
@@ -36,27 +32,50 @@ files, so they also need the local fixture server. One command starts both:
 npm run dev:preview
 ```
 
-It sets `CONTENT_PREVIEW=1`, starts the fixture server, points
-`NEXT_PUBLIC_SESSIONIZE_BASE_URL` at it and then runs `next dev`, forwarding
-any arguments (`npm run dev:preview -- -p 3001`).
+It starts the fixture server, points `NEXT_PUBLIC_SESSIONIZE_BASE_URL` at it
+and then runs `next dev`, forwarding any arguments
+(`npm run dev:preview -- -p 3001`).
 
 **Stop a running `npm run dev` first.** Next.js allows one dev server per
 directory, and the lock is per directory rather than per port, so a second
 one is refused even on a different port - while the first keeps answering and
-the sections still look empty. `dev:preview` reads `.next/dev/lock` and
+the schedule still looks empty. `dev:preview` reads `.next/dev/lock` and
 refuses up front with the offending pid rather than letting that happen
 quietly.
 
 **The live content files are never modified**, either way, so there is
 nothing to revert and no way to commit placeholder records by accident.
 
-## Why a production build ignores it
+## On by default, deployed builds included
 
-The site is public. Placeholder sponsors or team members must not be
-reachable from a deployed build even if `CONTENT_PREVIEW` were set in the
-hosting environment, so `editionFile` returns the live path whenever
-`NODE_ENV` is `production`. `tests/unit/lib-content-preview.test.ts` locks
-that behavior down.
+This is on everywhere until it is switched off:
+
+| `CONTENT_PREVIEW`  | Result                     |
+|--------------------|----------------------------|
+| unset / `1` / `true` | **on** (the default)     |
+| `0` / `false`      | off, serve the real content |
+
+That is a deliberate choice for this stage of the project, and it has a
+consequence worth stating plainly: **the deployed public site serves
+placeholder sponsors, a placeholder organizing team and a placeholder venue
+address to real visitors**, alongside the real speakers and the real
+registration link. Every substituted file logs a warning on boot:
+
+```
+[content] WARNING: serving placeholder sponsors.json to visitors.
+Set CONTENT_PREVIEW=0 and redeploy to serve the real content.
+```
+
+Two ways to switch off:
+
+- **Everything**: set `CONTENT_PREVIEW=0` in the Amplify environment
+  variables and redeploy.
+- **One section**: delete its `*.example.json`. Only files with a sibling are
+  ever substituted, so `venue.example.json` can go while the sponsors stay -
+  useful because the placeholder venue carries a fake street address, which
+  is the most consequential thing here for someone reading it as real.
+
+`tests/unit/lib-content-preview.test.ts` locks every cell of that table down.
 
 ## What is in here
 
