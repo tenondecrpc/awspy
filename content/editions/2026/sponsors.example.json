@@ -1,0 +1,47 @@
+[
+  {
+    "id": "demo-cloud",
+    "name": "Demo Cloud",
+    "tier": "Platinum",
+    "logo": { "light": "/logos/demo-cloud.svg" },
+    "url": "https://example.com/demo-cloud",
+    "description": "Datos de ejemplo. Reemplazar por el sponsor real antes de publicar."
+  },
+  {
+    "id": "demo-systems",
+    "name": "Demo Systems",
+    "tier": "Gold",
+    "logo": { "light": "/logos/demo-systems.svg" },
+    "url": "https://example.com/demo-systems",
+    "description": "Datos de ejemplo. Reemplazar por el sponsor real antes de publicar."
+  },
+  {
+    "id": "demo-labs",
+    "name": "Demo Labs",
+    "tier": "Gold",
+    "logo": { "light": "/logos/demo-labs.svg" },
+    "url": "https://example.com/demo-labs",
+    "description": "Datos de ejemplo. Reemplazar por el sponsor real antes de publicar."
+  },
+  {
+    "id": "demo-bank",
+    "name": "Demo Bank",
+    "tier": "Silver",
+    "logo": { "light": "/logos/demo-bank.svg" },
+    "url": "https://example.com/demo-bank"
+  },
+  {
+    "id": "demo-tech",
+    "name": "Demo Tech",
+    "tier": "Bronze",
+    "logo": { "light": "/logos/demo-tech.svg" },
+    "url": "https://example.com/demo-tech"
+  },
+  {
+    "id": "comunidad-demo",
+    "name": "Comunidad Demo",
+    "tier": "Community",
+    "logo": { "light": "/logos/comunidad-demo.svg" },
+    "url": "https://example.com/comunidad-demo"
+  }
+]

@@ -1,0 +1,74 @@
+[
+  {
+    "id": "s1",
+    "firstName": "Ana",
+    "lastName": "Demo",
+    "fullName": "Ana Demo",
+    "tagLine": "Cloud Architect en Demo Cloud",
+    "profilePicture": null,
+    "isTopSpeaker": true
+  },
+  {
+    "id": "s2",
+    "firstName": "Bruno",
+    "lastName": "Demo",
+    "fullName": "Bruno Demo",
+    "tagLine": "Backend Engineer, AWS Community Builder",
+    "profilePicture": null,
+    "isTopSpeaker": true
+  },
+  {
+    "id": "s3",
+    "firstName": "Carla",
+    "lastName": "Demo",
+    "fullName": "Carla Demo",
+    "tagLine": "SRE en Demo Systems",
+    "profilePicture": null,
+    "isTopSpeaker": false
+  },
+  {
+    "id": "s4",
+    "firstName": "Diego",
+    "lastName": "Demo",
+    "fullName": "Diego Demo",
+    "tagLine": "Data Engineer",
+    "profilePicture": null,
+    "isTopSpeaker": false
+  },
+  {
+    "id": "s5",
+    "firstName": "Elena",
+    "lastName": "Demo",
+    "fullName": "Elena Demo",
+    "tagLine": "FinOps Practitioner",
+    "profilePicture": null,
+    "isTopSpeaker": false
+  },
+  {
+    "id": "s6",
+    "firstName": "Fabián",
+    "lastName": "Demo",
+    "fullName": "Fabián Demo",
+    "tagLine": "Security Engineer en Demo Bank",
+    "profilePicture": null,
+    "isTopSpeaker": false
+  },
+  {
+    "id": "s7",
+    "firstName": "Gabriela",
+    "lastName": "Demo",
+    "fullName": "Gabriela Demo",
+    "tagLine": "Platform Engineer",
+    "profilePicture": null,
+    "isTopSpeaker": false
+  },
+  {
+    "id": "s8",
+    "firstName": "Hugo",
+    "lastName": "Demo",
+    "fullName": "Hugo Demo",
+    "tagLine": "DevOps Lead en Demo Labs",
+    "profilePicture": null,
+    "isTopSpeaker": false
+  }
+]

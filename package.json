@@ -28,6 +28,7 @@
     "security:audit": "npm audit --audit-level=high",
     "security:signatures": "npm audit signatures",
     "sbom": "npm sbom --package-lock-only --sbom-format cyclonedx",
+    "preview:data": "node scripts/preview-sessionize.mjs",
     "fixtures:sessionize": "for v in Speakers Sessions GridSmart SpeakerWall; do curl -sSf \"https://sessionize.com/api/v2/${SESSIONIZE_FIXTURE_EVENT_ID:-jl4ktls0}/view/$v\" -o \"tests/fixtures/sessionize/$v.json\" && echo \"refreshed $v\"; done"
   },
   "dependencies": {

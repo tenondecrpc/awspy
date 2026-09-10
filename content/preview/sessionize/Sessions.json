@@ -1,0 +1,249 @@
+[
+  {
+    "groupId": 1,
+    "groupName": "Agenda de ejemplo",
+    "sessions": [
+      {
+        "id": "101",
+        "title": "Acreditación y bienvenida",
+        "description": null,
+        "startsAt": "2026-10-17T13:00:00-03:00",
+        "endsAt": "2026-10-17T13:30:00-03:00",
+        "isPlenumSession": true,
+        "isServiceSession": true,
+        "speakers": [],
+        "roomId": "1"
+      },
+      {
+        "id": "102",
+        "title": "Keynote de apertura: la nube que construye la comunidad",
+        "description": "Datos de ejemplo. Cómo la comunidad AWS de Paraguay llegó a su primera edición y qué viene después.",
+        "startsAt": "2026-10-17T13:30:00-03:00",
+        "endsAt": "2026-10-17T14:15:00-03:00",
+        "isPlenumSession": true,
+        "isServiceSession": false,
+        "speakers": [
+          {
+            "id": "s1",
+            "name": "Ana Demo"
+          }
+        ],
+        "roomId": "1"
+      },
+      {
+        "id": "103",
+        "title": "Arquitecturas serverless que escalan sin sorpresas",
+        "description": "Datos de ejemplo. Patrones de diseño, límites reales y cómo evitar sorpresas en la factura.",
+        "startsAt": "2026-10-17T14:30:00-03:00",
+        "endsAt": "2026-10-17T15:15:00-03:00",
+        "isPlenumSession": false,
+        "isServiceSession": false,
+        "speakers": [
+          {
+            "id": "s2",
+            "name": "Bruno Demo"
+          }
+        ],
+        "roomId": "1"
+      },
+      {
+        "id": "104",
+        "title": "Observabilidad en EKS con OpenTelemetry",
+        "description": "Datos de ejemplo. Instrumentación, trazas distribuidas y alertas que sí sirven.",
+        "startsAt": "2026-10-17T14:30:00-03:00",
+        "endsAt": "2026-10-17T15:15:00-03:00",
+        "isPlenumSession": false,
+        "isServiceSession": false,
+        "speakers": [
+          {
+            "id": "s3",
+            "name": "Carla Demo"
+          }
+        ],
+        "roomId": "2"
+      },
+      {
+        "id": "105",
+        "title": "Taller: tu primera aplicación con Amazon Bedrock",
+        "description": "Datos de ejemplo. Taller práctico. Traeé tu notebook con una cuenta de AWS activa.",
+        "startsAt": "2026-10-17T14:30:00-03:00",
+        "endsAt": "2026-10-17T16:00:00-03:00",
+        "isPlenumSession": false,
+        "isServiceSession": false,
+        "speakers": [
+          {
+            "id": "s4",
+            "name": "Diego Demo"
+          }
+        ],
+        "roomId": "3"
+      },
+      {
+        "id": "106",
+        "title": "FinOps: bajar la factura sin frenar al equipo",
+        "description": "Datos de ejemplo. Etiquetado, presupuestos y las tres decisiones que más mueven el costo.",
+        "startsAt": "2026-10-17T15:30:00-03:00",
+        "endsAt": "2026-10-17T16:15:00-03:00",
+        "isPlenumSession": false,
+        "isServiceSession": false,
+        "speakers": [
+          {
+            "id": "s5",
+            "name": "Elena Demo"
+          }
+        ],
+        "roomId": "1"
+      },
+      {
+        "id": "107",
+        "title": "Identidades y accesos con IAM Identity Center",
+        "description": "Datos de ejemplo. De usuarios IAM a acceso federado y de mínimo privilegio.",
+        "startsAt": "2026-10-17T15:30:00-03:00",
+        "endsAt": "2026-10-17T16:15:00-03:00",
+        "isPlenumSession": false,
+        "isServiceSession": false,
+        "speakers": [
+          {
+            "id": "s6",
+            "name": "Fabián Demo"
+          }
+        ],
+        "roomId": "2"
+      },
+      {
+        "id": "108",
+        "title": "Coffee break y networking",
+        "description": null,
+        "startsAt": "2026-10-17T16:15:00-03:00",
+        "endsAt": "2026-10-17T16:45:00-03:00",
+        "isPlenumSession": true,
+        "isServiceSession": true,
+        "speakers": [],
+        "roomId": "4"
+      },
+      {
+        "id": "109",
+        "title": "Datos en tiempo real con Kinesis y Athena",
+        "description": "Datos de ejemplo. Ingesta, particionado y consultas que no cuestan una fortuna.",
+        "startsAt": "2026-10-17T16:45:00-03:00",
+        "endsAt": "2026-10-17T17:30:00-03:00",
+        "isPlenumSession": false,
+        "isServiceSession": false,
+        "speakers": [
+          {
+            "id": "s7",
+            "name": "Gabriela Demo"
+          }
+        ],
+        "roomId": "1"
+      },
+      {
+        "id": "110",
+        "title": "Del monolito a contenedores: una migración real",
+        "description": "Datos de ejemplo. Qué funcionó, qué rompí y qué haría distinto.",
+        "startsAt": "2026-10-17T16:45:00-03:00",
+        "endsAt": "2026-10-17T17:30:00-03:00",
+        "isPlenumSession": false,
+        "isServiceSession": false,
+        "speakers": [
+          {
+            "id": "s8",
+            "name": "Hugo Demo"
+          }
+        ],
+        "roomId": "2"
+      },
+      {
+        "id": "111",
+        "title": "Taller: infraestructura como código con AWS CDK",
+        "description": "Datos de ejemplo. Taller práctico desde cero hasta el primer despliegue.",
+        "startsAt": "2026-10-17T16:45:00-03:00",
+        "endsAt": "2026-10-17T18:15:00-03:00",
+        "isPlenumSession": false,
+        "isServiceSession": false,
+        "speakers": [
+          {
+            "id": "s1",
+            "name": "Ana Demo"
+          }
+        ],
+        "roomId": "3"
+      },
+      {
+        "id": "112",
+        "title": "Lightning talks de la comunidad",
+        "description": "Datos de ejemplo. Cinco charlas de diez minutos propuestas por la comunidad.",
+        "startsAt": "2026-10-17T17:45:00-03:00",
+        "endsAt": "2026-10-17T18:30:00-03:00",
+        "isPlenumSession": true,
+        "isServiceSession": false,
+        "speakers": [
+          {
+            "id": "s2",
+            "name": "Bruno Demo"
+          },
+          {
+            "id": "s3",
+            "name": "Carla Demo"
+          },
+          {
+            "id": "s5",
+            "name": "Elena Demo"
+          }
+        ],
+        "roomId": "1"
+      },
+      {
+        "id": "113",
+        "title": "Rendimiento y costos en bases de datos gestionadas",
+        "description": "Datos de ejemplo. Aurora, DynamoDB y cómo elegir sin arrepentirse.",
+        "startsAt": "2026-10-17T17:45:00-03:00",
+        "endsAt": "2026-10-17T18:30:00-03:00",
+        "isPlenumSession": false,
+        "isServiceSession": false,
+        "speakers": [
+          {
+            "id": "s4",
+            "name": "Diego Demo"
+          }
+        ],
+        "roomId": "2"
+      },
+      {
+        "id": "114",
+        "title": "Panel de cierre: cómo sigue la comunidad",
+        "description": "Datos de ejemplo. Panel abierto con preguntas del público.",
+        "startsAt": "2026-10-17T18:45:00-03:00",
+        "endsAt": "2026-10-17T19:30:00-03:00",
+        "isPlenumSession": true,
+        "isServiceSession": false,
+        "speakers": [
+          {
+            "id": "s1",
+            "name": "Ana Demo"
+          },
+          {
+            "id": "s6",
+            "name": "Fabián Demo"
+          },
+          {
+            "id": "s8",
+            "name": "Hugo Demo"
+          }
+        ],
+        "roomId": "1"
+      },
+      {
+        "id": "115",
+        "title": "Sorteos y cierre",
+        "description": null,
+        "startsAt": "2026-10-17T19:30:00-03:00",
+        "endsAt": "2026-10-17T20:00:00-03:00",
+        "isPlenumSession": true,
+        "isServiceSession": true,
+        "speakers": [],
+        "roomId": "1"
+      }
+    ]
+  }
+]

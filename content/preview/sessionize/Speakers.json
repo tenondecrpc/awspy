@@ -1,0 +1,218 @@
+[
+  {
+    "id": "s1",
+    "firstName": "Ana",
+    "lastName": "Demo",
+    "fullName": "Ana Demo",
+    "tagLine": "Cloud Architect en Demo Cloud",
+    "bio": "Biografía de ejemplo para previsualizar el diseño. Reemplazar por datos reales de Sessionize.",
+    "profilePicture": null,
+    "isTopSpeaker": true,
+    "links": [
+      {
+        "title": "LinkedIn",
+        "url": "https://www.linkedin.com/in/example",
+        "linkType": "LinkedIn"
+      }
+    ],
+    "sessions": [
+      {
+        "id": "102",
+        "name": "Keynote de apertura: la nube que construye la comunidad"
+      },
+      {
+        "id": "111",
+        "name": "Taller: infraestructura como código con AWS CDK"
+      },
+      {
+        "id": "114",
+        "name": "Panel de cierre: cómo sigue la comunidad"
+      }
+    ]
+  },
+  {
+    "id": "s2",
+    "firstName": "Bruno",
+    "lastName": "Demo",
+    "fullName": "Bruno Demo",
+    "tagLine": "Backend Engineer, AWS Community Builder",
+    "bio": "Biografía de ejemplo para previsualizar el diseño. Reemplazar por datos reales de Sessionize.",
+    "profilePicture": null,
+    "isTopSpeaker": true,
+    "links": [
+      {
+        "title": "LinkedIn",
+        "url": "https://www.linkedin.com/in/example",
+        "linkType": "LinkedIn"
+      }
+    ],
+    "sessions": [
+      {
+        "id": "103",
+        "name": "Arquitecturas serverless que escalan sin sorpresas"
+      },
+      {
+        "id": "112",
+        "name": "Lightning talks de la comunidad"
+      }
+    ]
+  },
+  {
+    "id": "s3",
+    "firstName": "Carla",
+    "lastName": "Demo",
+    "fullName": "Carla Demo",
+    "tagLine": "SRE en Demo Systems",
+    "bio": "Biografía de ejemplo para previsualizar el diseño. Reemplazar por datos reales de Sessionize.",
+    "profilePicture": null,
+    "isTopSpeaker": false,
+    "links": [
+      {
+        "title": "LinkedIn",
+        "url": "https://www.linkedin.com/in/example",
+        "linkType": "LinkedIn"
+      }
+    ],
+    "sessions": [
+      {
+        "id": "104",
+        "name": "Observabilidad en EKS con OpenTelemetry"
+      },
+      {
+        "id": "112",
+        "name": "Lightning talks de la comunidad"
+      }
+    ]
+  },
+  {
+    "id": "s4",
+    "firstName": "Diego",
+    "lastName": "Demo",
+    "fullName": "Diego Demo",
+    "tagLine": "Data Engineer",
+    "bio": "Biografía de ejemplo para previsualizar el diseño. Reemplazar por datos reales de Sessionize.",
+    "profilePicture": null,
+    "isTopSpeaker": false,
+    "links": [
+      {
+        "title": "LinkedIn",
+        "url": "https://www.linkedin.com/in/example",
+        "linkType": "LinkedIn"
+      }
+    ],
+    "sessions": [
+      {
+        "id": "105",
+        "name": "Taller: tu primera aplicación con Amazon Bedrock"
+      },
+      {
+        "id": "113",
+        "name": "Rendimiento y costos en bases de datos gestionadas"
+      }
+    ]
+  },
+  {
+    "id": "s5",
+    "firstName": "Elena",
+    "lastName": "Demo",
+    "fullName": "Elena Demo",
+    "tagLine": "FinOps Practitioner",
+    "bio": "Biografía de ejemplo para previsualizar el diseño. Reemplazar por datos reales de Sessionize.",
+    "profilePicture": null,
+    "isTopSpeaker": false,
+    "links": [
+      {
+        "title": "LinkedIn",
+        "url": "https://www.linkedin.com/in/example",
+        "linkType": "LinkedIn"
+      }
+    ],
+    "sessions": [
+      {
+        "id": "106",
+        "name": "FinOps: bajar la factura sin frenar al equipo"
+      },
+      {
+        "id": "112",
+        "name": "Lightning talks de la comunidad"
+      }
+    ]
+  },
+  {
+    "id": "s6",
+    "firstName": "Fabián",
+    "lastName": "Demo",
+    "fullName": "Fabián Demo",
+    "tagLine": "Security Engineer en Demo Bank",
+    "bio": "Biografía de ejemplo para previsualizar el diseño. Reemplazar por datos reales de Sessionize.",
+    "profilePicture": null,
+    "isTopSpeaker": false,
+    "links": [
+      {
+        "title": "LinkedIn",
+        "url": "https://www.linkedin.com/in/example",
+        "linkType": "LinkedIn"
+      }
+    ],
+    "sessions": [
+      {
+        "id": "107",
+        "name": "Identidades y accesos con IAM Identity Center"
+      },
+      {
+        "id": "114",
+        "name": "Panel de cierre: cómo sigue la comunidad"
+      }
+    ]
+  },
+  {
+    "id": "s7",
+    "firstName": "Gabriela",
+    "lastName": "Demo",
+    "fullName": "Gabriela Demo",
+    "tagLine": "Platform Engineer",
+    "bio": "Biografía de ejemplo para previsualizar el diseño. Reemplazar por datos reales de Sessionize.",
+    "profilePicture": null,
+    "isTopSpeaker": false,
+    "links": [
+      {
+        "title": "LinkedIn",
+        "url": "https://www.linkedin.com/in/example",
+        "linkType": "LinkedIn"
+      }
+    ],
+    "sessions": [
+      {
+        "id": "109",
+        "name": "Datos en tiempo real con Kinesis y Athena"
+      }
+    ]
+  },
+  {
+    "id": "s8",
+    "firstName": "Hugo",
+    "lastName": "Demo",
+    "fullName": "Hugo Demo",
+    "tagLine": "DevOps Lead en Demo Labs",
+    "bio": "Biografía de ejemplo para previsualizar el diseño. Reemplazar por datos reales de Sessionize.",
+    "profilePicture": null,
+    "isTopSpeaker": false,
+    "links": [
+      {
+        "title": "LinkedIn",
+        "url": "https://www.linkedin.com/in/example",
+        "linkType": "LinkedIn"
+      }
+    ],
+    "sessions": [
+      {
+        "id": "110",
+        "name": "Del monolito a contenedores: una migración real"
+      },
+      {
+        "id": "114",
+        "name": "Panel de cierre: cómo sigue la comunidad"
+      }
+    ]
+  }
+]
