@@ -3,7 +3,7 @@
 // and `aria-hidden="true"`. No textual content lives inside the SVG.
 //
 // One vocabulary across the site: the variants share a common composition
-// (a soft accent backdrop with a small action-orange highlight) so the empty
+// (a soft accent backdrop with a small high-contrast highlight) so the empty
 // states feel like a coherent set, not a grab-bag of unrelated images.
 
 import { cn } from "@/lib/utils/cn";

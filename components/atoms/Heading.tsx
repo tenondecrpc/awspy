@@ -16,7 +16,7 @@ type HeadingProps = {
   className?: string;
   id?: string;
   /**
-   * When true, render an action-orange accent bar before the heading text
+   * When true, render a Paraguayan-red accent bar before the heading text
    * to reinforce visual rhythm. Defaults to false (backwards compatible).
    */
   accent?: boolean;
@@ -46,7 +46,7 @@ export function Heading({
       {accent ? (
         <span
           aria-hidden="true"
-          className="mr-3 inline-block h-3 w-1.5 rounded-[var(--radius-sm)] bg-[var(--color-action)] align-middle"
+          className="mr-3 inline-block h-3 w-1.5 rounded-[var(--radius-sm)] bg-[var(--color-national-red)] align-middle"
         />
       ) : null}
       {children}

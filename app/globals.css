@@ -10,51 +10,53 @@
   utilities are allowed under `app/`, `components/`, or `lib/` outside this
   file.
 
-  The palette is aligned with AWS public branding (Squid Ink navy, Smile
-  Orange, Hyperlink Blue, neutrals) so the site visually belongs to the AWS
-  Community Day family. Both light and dark modes share the same semantic
-  token names. The OS preference is the default and a validated `data-theme`
-  override on `<html>` supports the manual theme control.
+  The palette combines the AWS visual family with colors sampled from the
+  2026 Paraguay event artwork: midnight blue, electric flag blue, Paraguayan
+  red, and cool whites. Blue owns navigation and actions; red is reserved for
+  national identity and decorative emphasis so it is not confused with error
+  states. Both modes share the same semantic token names. The OS preference is
+  the default and a validated `data-theme` override on `<html>` supports the
+  manual theme control.
 */
 
 @theme {
-  /* Brand and action */
-  --color-brand-primary: #232f3e;
-  /* Squid Ink */
-  --color-action: #ff9900;
-  /* Smile Orange */
-  --color-action-strong: #ec7211;
-  --color-action-label: #8a4b00;
-  --color-accent: #0073bb;
-  /* Hyperlink Blue */
-  --color-accent-strong: #005a91;
-  --color-accent-soft: #e6f0f7;
+  /* Brand, action, and national identity */
+  --color-brand-primary: #041a53;
+  --color-action: #0038a8;
+  --color-action-strong: #002b7a;
+  --color-action-label: #0038a8;
+  --color-accent: #0a4db8;
+  --color-accent-strong: #00368f;
+  --color-accent-soft: #e8efff;
+  --color-national-red: #f02f3b;
+  --color-national-red-label: #a91431;
+  --color-national-red-on-dark: #ff6673;
 
   /* Surfaces */
   --color-surface: #ffffff;
-  --color-surface-muted: #f4f6fa;
+  --color-surface-muted: #f4f6fc;
   --color-surface-elevated: #ffffff;
-  --color-surface-inverse: #0b1626;
-  --color-surface-hero: #232f3e;
-  --color-overlay: #0b1626b3;
+  --color-surface-inverse: #041a53;
+  --color-surface-hero: #000c2f;
+  --color-overlay: #000c2fb3;
 
   /* Text */
-  --color-text-primary: #0b1626;
-  --color-text-secondary: #364152;
-  --color-text-muted: #5c6573;
-  --color-text-on-action: #001022;
+  --color-text-primary: #08152f;
+  --color-text-secondary: #34415f;
+  --color-text-muted: #5b647a;
+  --color-text-on-action: #ffffff;
   --color-text-on-accent: #ffffff;
   --color-text-on-inverse: #ffffff;
-  --color-text-on-hero: #ffffff;
+  --color-text-on-hero: #f7f8ff;
   --color-text-on-tier: #ffffff;
 
   /* Borders */
-  --color-border-subtle: #e5e9f0;
-  --color-border-strong: #5c6573;
+  --color-border-subtle: #dfe4f2;
+  --color-border-strong: #5b647a;
 
   /* State */
-  --color-focus: #0073bb;
-  --color-focus-on-hero: #ffb85c;
+  --color-focus: #0a4db8;
+  --color-focus-on-hero: #ff6673;
   --color-success: #1f7a3a;
   --color-success-soft: #e5f5ea;
   --color-warning: #965000;
@@ -82,31 +84,34 @@
 
 @media (prefers-color-scheme: dark) {
   html:not([data-theme]) {
-    --color-brand-primary: #161e2d;
-    --color-action: #ff9900;
-    --color-action-strong: #ec7211;
-    --color-action-label: #ffb85c;
-    --color-accent: #3fa0e0;
-    --color-accent-strong: #74c1ef;
-    --color-accent-soft: #1a2d52;
-    --color-surface: #0b1626;
-    --color-surface-muted: #131f33;
-    --color-surface-elevated: #1a2638;
-    --color-surface-inverse: #161e2d;
-    --color-surface-hero: #161e2d;
-    --color-overlay: #000000b3;
-    --color-text-primary: #f5f7fa;
-    --color-text-secondary: #c5ccd6;
-    --color-text-muted: #97a0ae;
-    --color-text-on-action: #001022;
-    --color-text-on-accent: #0b1626;
-    --color-text-on-inverse: #f5f7fa;
-    --color-text-on-hero: #f5f7fa;
+    --color-brand-primary: #041a53;
+    --color-action: #6ea1ff;
+    --color-action-strong: #91b8ff;
+    --color-action-label: #8bb4ff;
+    --color-accent: #74a8ff;
+    --color-accent-strong: #9bbfff;
+    --color-accent-soft: #11285c;
+    --color-national-red: #ff4b5b;
+    --color-national-red-label: #ff7a86;
+    --color-national-red-on-dark: #ff6673;
+    --color-surface: #010928;
+    --color-surface-muted: #071438;
+    --color-surface-elevated: #0d1b46;
+    --color-surface-inverse: #000c2f;
+    --color-surface-hero: #01051d;
+    --color-overlay: #000c2fb3;
+    --color-text-primary: #f7f8ff;
+    --color-text-secondary: #c5ccea;
+    --color-text-muted: #9aa5ca;
+    --color-text-on-action: #000c2f;
+    --color-text-on-accent: #000c2f;
+    --color-text-on-inverse: #f7f8ff;
+    --color-text-on-hero: #f7f8ff;
     --color-text-on-tier: #0b1626;
-    --color-border-subtle: #1a2638;
-    --color-border-strong: #97a0ae;
-    --color-focus: #3fa0e0;
-    --color-focus-on-hero: #ffb85c;
+    --color-border-subtle: #1b2d5b;
+    --color-border-strong: #9aa5ca;
+    --color-focus: #74a8ff;
+    --color-focus-on-hero: #ff6673;
     --color-success: #52c97a;
     --color-success-soft: #14361f;
     --color-warning: #ffb85c;
@@ -122,31 +127,34 @@
 }
 
 html[data-theme="dark"] {
-  --color-brand-primary: #161e2d;
-  --color-action: #ff9900;
-  --color-action-strong: #ec7211;
-  --color-action-label: #ffb85c;
-  --color-accent: #3fa0e0;
-  --color-accent-strong: #74c1ef;
-  --color-accent-soft: #1a2d52;
-  --color-surface: #0b1626;
-  --color-surface-muted: #131f33;
-  --color-surface-elevated: #1a2638;
-  --color-surface-inverse: #161e2d;
-  --color-surface-hero: #161e2d;
-  --color-overlay: #000000b3;
-  --color-text-primary: #f5f7fa;
-  --color-text-secondary: #c5ccd6;
-  --color-text-muted: #97a0ae;
-  --color-text-on-action: #001022;
-  --color-text-on-accent: #0b1626;
-  --color-text-on-inverse: #f5f7fa;
-  --color-text-on-hero: #f5f7fa;
+  --color-brand-primary: #041a53;
+  --color-action: #6ea1ff;
+  --color-action-strong: #91b8ff;
+  --color-action-label: #8bb4ff;
+  --color-accent: #74a8ff;
+  --color-accent-strong: #9bbfff;
+  --color-accent-soft: #11285c;
+  --color-national-red: #ff4b5b;
+  --color-national-red-label: #ff7a86;
+  --color-national-red-on-dark: #ff6673;
+  --color-surface: #010928;
+  --color-surface-muted: #071438;
+  --color-surface-elevated: #0d1b46;
+  --color-surface-inverse: #000c2f;
+  --color-surface-hero: #01051d;
+  --color-overlay: #000c2fb3;
+  --color-text-primary: #f7f8ff;
+  --color-text-secondary: #c5ccea;
+  --color-text-muted: #9aa5ca;
+  --color-text-on-action: #000c2f;
+  --color-text-on-accent: #000c2f;
+  --color-text-on-inverse: #f7f8ff;
+  --color-text-on-hero: #f7f8ff;
   --color-text-on-tier: #0b1626;
-  --color-border-subtle: #1a2638;
-  --color-border-strong: #97a0ae;
-  --color-focus: #3fa0e0;
-  --color-focus-on-hero: #ffb85c;
+  --color-border-subtle: #1b2d5b;
+  --color-border-strong: #9aa5ca;
+  --color-focus: #74a8ff;
+  --color-focus-on-hero: #ff6673;
   --color-success: #52c97a;
   --color-success-soft: #14361f;
   --color-warning: #ffb85c;

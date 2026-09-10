@@ -6,55 +6,58 @@ This feature does not introduce backend or content entities. The "data model" he
 
 The following table lists every token introduced or refreshed by this feature. Light values resolve by default; dark values resolve under the OS preference or an explicit `data-theme="dark"` override.
 
-### Brand and action
+### Brand, action, and national identity
 
 | Token                       | Light value | Dark value  | Intended usage                                            |
 |-----------------------------|-------------|-------------|-----------------------------------------------------------|
-| `--color-brand-primary`     | `#232F3E`   | `#161E2D`   | Primary brand surface (hero, footer band, dark callouts). |
-| `--color-action`            | `#FF9900`   | `#FF9900`   | Primary CTA background (Smile Orange).                    |
-| `--color-action-strong`     | `#EC7211`   | `#EC7211`   | Primary CTA hover/active.                                 |
-| `--color-action-label`      | `#8A4B00`   | `#FFB85C`   | Accessible orange-like text on normal surfaces.           |
-| `--color-accent`            | `#0073BB`   | `#3FA0E0`   | Links and accent fills (Hyperlink Blue).                  |
-| `--color-accent-strong`     | `#005A91`   | `#74C1EF`   | Accent hover/active and text on accent-soft.               |
-| `--color-accent-soft`       | `#E6F0F7`   | `#1A2D52`   | Soft accent backgrounds (badges, avatar fallbacks).       |
+| `--color-brand-primary`     | `#041A53`   | `#041A53`   | Deep-blue brand surface sampled from the event artwork.   |
+| `--color-action`            | `#0038A8`   | `#6EA1FF`   | Primary CTA background; Paraguay flag blue.               |
+| `--color-action-strong`     | `#002B7A`   | `#91B8FF`   | Primary CTA hover/active.                                 |
+| `--color-action-label`      | `#0038A8`   | `#8BB4FF`   | Accessible action-blue text on normal surfaces.           |
+| `--color-accent`            | `#0A4DB8`   | `#74A8FF`   | Links and electric-blue accent fills.                     |
+| `--color-accent-strong`     | `#00368F`   | `#9BBFFF`   | Accent hover/active and text on accent-soft.               |
+| `--color-accent-soft`       | `#E8EFFF`   | `#11285C`   | Soft blue backgrounds (badges, avatar fallbacks).         |
+| `--color-national-red`      | `#F02F3B`   | `#FF4B5B`   | Decorative Paraguay-red fills; never body text.           |
+| `--color-national-red-label` | `#A91431`  | `#FF7A86`   | Paraguay-red text on normal and muted surfaces.           |
+| `--color-national-red-on-dark` | `#FF6673` | `#FF6673` | Paraguay-red text on inverse and hero surfaces.           |
 
 ### Surfaces
 
 | Token                       | Light value | Dark value  | Intended usage                                       |
 |-----------------------------|-------------|-------------|------------------------------------------------------|
-| `--color-surface`           | `#FFFFFF`   | `#0B1626`   | Page surface (default `Section tone="default"`).     |
-| `--color-surface-muted`     | `#F4F6FA`   | `#131F33`   | Alternating section surface.                         |
-| `--color-surface-elevated`  | `#FFFFFF`   | `#1A2638`   | Elevated card surface.                               |
-| `--color-surface-inverse`   | `#0B1626`   | `#161E2D`   | Consistently dark inverse/callout surface.           |
-| `--color-surface-hero`      | `#232F3E`   | `#161E2D`   | Hero section surface (Squid Ink / Anchor).           |
-| `--color-overlay`           | `#0B1626B3` | `#000000B3` | Modal/drawer backdrop; not used for text contrast.   |
+| `--color-surface`           | `#FFFFFF`   | `#010928`   | Page surface (default `Section tone="default"`).     |
+| `--color-surface-muted`     | `#F4F6FC`   | `#071438`   | Alternating blue-tinted section surface.             |
+| `--color-surface-elevated`  | `#FFFFFF`   | `#0D1B46`   | Elevated card surface.                               |
+| `--color-surface-inverse`   | `#041A53`   | `#000C2F`   | Consistently dark inverse/callout surface.           |
+| `--color-surface-hero`      | `#000C2F`   | `#01051D`   | Night-sky hero surface inspired by the artwork.      |
+| `--color-overlay`           | `#000C2FB3` | `#000C2FB3` | Modal/drawer backdrop; not used for text contrast.   |
 
 ### Text
 
 | Token                       | Light value | Dark value  | Intended usage                                       |
 |-----------------------------|-------------|-------------|------------------------------------------------------|
-| `--color-text-primary`      | `#0B1626`   | `#F5F7FA`   | Body and headings on default surface.                |
-| `--color-text-secondary`    | `#364152`   | `#C5CCD6`   | Secondary copy on default surface.                   |
-| `--color-text-muted`        | `#5C6573`   | `#97A0AE`   | Muted copy (captions, footnotes).                    |
-| `--color-text-on-action`    | `#001022`   | `#001022`   | Text on `--color-action`.                            |
-| `--color-text-on-accent`    | `#FFFFFF`   | `#0B1626`   | Text on `--color-accent`.                            |
-| `--color-text-on-inverse`   | `#FFFFFF`   | `#F5F7FA`   | Text on `--color-surface-inverse` (legacy alias).    |
-| `--color-text-on-hero`      | `#FFFFFF`   | `#F5F7FA`   | Text on `--color-surface-hero`.                      |
+| `--color-text-primary`      | `#08152F`   | `#F7F8FF`   | Body and headings on default surface.                |
+| `--color-text-secondary`    | `#34415F`   | `#C5CCEA`   | Secondary copy on default surface.                   |
+| `--color-text-muted`        | `#5B647A`   | `#9AA5CA`   | Muted copy (captions, footnotes).                    |
+| `--color-text-on-action`    | `#FFFFFF`   | `#000C2F`   | Text on `--color-action`.                            |
+| `--color-text-on-accent`    | `#FFFFFF`   | `#000C2F`   | Text on `--color-accent`.                            |
+| `--color-text-on-inverse`   | `#FFFFFF`   | `#F7F8FF`   | Text on `--color-surface-inverse` (legacy alias).    |
+| `--color-text-on-hero`      | `#F7F8FF`   | `#F7F8FF`   | Text on `--color-surface-hero`.                      |
 | `--color-text-on-tier`      | `#FFFFFF`   | `#0B1626`   | Text on sponsor-tier badges.                         |
 
 ### Borders
 
 | Token                       | Light value | Dark value  | Intended usage                                       |
 |-----------------------------|-------------|-------------|------------------------------------------------------|
-| `--color-border-subtle`     | `#E5E9F0`   | `#1A2638`   | Hairline dividers inside cards/sections.             |
-| `--color-border-strong`     | `#5C6573`   | `#97A0AE`   | Outline buttons, focus areas needing high contrast.  |
+| `--color-border-subtle`     | `#DFE4F2`   | `#1B2D5B`   | Hairline dividers inside cards/sections.             |
+| `--color-border-strong`     | `#5B647A`   | `#9AA5CA`   | Outline buttons, focus areas needing high contrast.  |
 
 ### State
 
 | Token                | Light value | Dark value  | Intended usage                            |
 |----------------------|-------------|-------------|-------------------------------------------|
-| `--color-focus`      | `#0073BB`   | `#3FA0E0`   | Visible focus ring on normal surfaces.    |
-| `--color-focus-on-hero` | `#FFB85C` | `#FFB85C` | Visible focus ring on dark callouts.      |
+| `--color-focus`      | `#0A4DB8`   | `#74A8FF`   | Visible focus ring on normal surfaces.    |
+| `--color-focus-on-hero` | `#FF6673` | `#FF6673` | Visible focus ring on dark callouts.      |
 | `--color-success`    | `#1F7A3A`   | `#52C97A`   | Success badges/inline messages.           |
 | `--color-success-soft` | `#E5F5EA` | `#14361F`   | Success badge background.                 |
 | `--color-warning`    | `#965000`   | `#FFB85C`   | Warning badges/inline messages.           |
@@ -78,19 +81,25 @@ Each foreground/background pair below MUST meet WCAG AA (>=4.5:1 for normal text
 
 | Foreground             | Background              | Light  | Dark   | AA bar |
 |------------------------|-------------------------|--------|--------|--------|
-| `text-primary`         | `surface`               | 18.15:1 | 16.91:1 | 4.5:1 |
-| `text-secondary`       | `surface`               | 10.32:1 | 11.22:1 | 4.5:1 |
-| `text-muted`           | `surface`               | 5.89:1  | 6.88:1  | 4.5:1 |
-| `text-primary`         | `surface-muted`         | 16.78:1 | 15.39:1 | 4.5:1 |
-| `text-on-action`       | `action`                | 8.94:1  | 8.94:1  | 4.5:1 |
-| `text-on-action`       | `action-strong`         | 6.36:1  | 6.36:1  | 4.5:1 |
-| `action-label`         | `surface`               | 6.80:1  | 10.60:1 | 4.5:1 |
-| `action-label`         | `surface-muted`         | 6.29:1  | 9.64:1  | 4.5:1 |
-| `text-on-accent`       | `accent`                | 5.04:1  | 6.32:1  | 4.5:1 |
-| `text-on-accent`       | `accent-strong`         | 7.31:1  | 9.18:1  | 4.5:1 |
-| `accent-strong`        | `accent-soft`           | 6.33:1  | 6.89:1  | 4.5:1 |
-| `text-on-inverse`      | `surface-inverse`       | 18.15:1 | 15.56:1 | 4.5:1 |
-| `text-on-hero`         | `surface-hero`          | 13.57:1 | 15.56:1 | 4.5:1 |
+| `text-primary`         | `surface`               | 18.12:1 | 18.51:1 | 4.5:1 |
+| `text-secondary`       | `surface`               | 10.16:1 | 12.32:1 | 4.5:1 |
+| `text-muted`           | `surface`               | 5.92:1  | 8.04:1  | 4.5:1 |
+| `text-primary`         | `surface-muted`         | 16.77:1 | 17.00:1 | 4.5:1 |
+| `text-on-action`       | `action`                | 9.85:1  | 7.50:1  | 4.5:1 |
+| `text-on-action`       | `action-strong`         | 12.91:1 | 9.60:1  | 4.5:1 |
+| `action-label`         | `surface`               | 9.85:1  | 9.40:1  | 4.5:1 |
+| `action-label`         | `surface-muted`         | 9.12:1  | 8.64:1  | 4.5:1 |
+| `text-on-accent`       | `accent`                | 7.59:1  | 8.04:1  | 4.5:1 |
+| `text-on-accent`       | `accent-strong`         | 10.91:1 | 10.32:1 | 4.5:1 |
+| `accent-strong`        | `accent-soft`           | 9.47:1  | 7.62:1  | 4.5:1 |
+| `accent`               | `surface`               | 7.59:1  | 8.21:1  | 4.5:1 |
+| `accent`               | `surface-muted`         | 7.02:1  | 7.54:1  | 4.5:1 |
+| `national-red-label`   | `surface`               | 7.42:1  | 7.82:1  | 4.5:1 |
+| `national-red-label`   | `surface-muted`         | 6.86:1  | 7.19:1  | 4.5:1 |
+| `national-red-on-dark` | `surface-inverse`       | 5.79:1  | 6.77:1  | 4.5:1 |
+| `national-red-on-dark` | `surface-hero`          | 6.77:1  | 7.11:1  | 4.5:1 |
+| `text-on-inverse`      | `surface-inverse`       | 16.43:1 | 18.13:1 | 4.5:1 |
+| `text-on-hero`         | `surface-hero`          | 18.13:1 | 19.05:1 | 4.5:1 |
 | `success`              | `success-soft`          | 4.76:1  | 6.34:1  | 4.5:1 |
 | `warning`              | `warning-soft`          | 5.48:1  | 8.07:1  | 4.5:1 |
 | `danger`               | `danger-soft`           | 5.40:1  | 6.12:1  | 4.5:1 |
@@ -99,13 +108,13 @@ Each foreground/background pair below MUST meet WCAG AA (>=4.5:1 for normal text
 | `text-on-tier`         | `tier-silver`           | 4.83:1  | 7.60:1  | 4.5:1 |
 | `text-on-tier`         | `tier-bronze`           | 6.77:1  | 7.04:1  | 4.5:1 |
 | `text-on-tier`         | `tier-community`        | 5.38:1  | 8.64:1  | 4.5:1 |
-| `focus`                | `surface`               | 5.04:1  | 6.32:1  | 3:1   |
-| `focus-on-hero`        | `surface-hero`          | 7.92:1  | 9.75:1  | 3:1   |
-| `border-strong`        | `surface`               | 5.89:1  | 6.88:1  | 3:1   |
+| `focus`                | `surface`               | 7.59:1  | 8.21:1  | 3:1   |
+| `focus-on-hero`        | `surface-hero`          | 6.77:1  | 7.11:1  | 3:1   |
+| `border-strong`        | `surface`               | 5.92:1  | 8.04:1  | 3:1   |
 
 ## Aliases preserved from v1
 
-To avoid touching v1 component code, the following names continue to resolve. Their values are refreshed (per the table above) but the names are not changed.
+To avoid unnecessary churn in v1 component code, the following names continue to resolve. Their values are refreshed (per the table above) but the names are not changed. The three `national-red` roles are additive and are consumed only where local identity is intentional.
 
 `--color-accent`, `--color-accent-strong`, `--color-accent-soft`, `--color-action`, `--color-action-strong`, `--color-surface`, `--color-surface-muted`, `--color-surface-elevated`, `--color-surface-inverse`, `--color-text-primary`, `--color-text-secondary`, `--color-text-muted`, `--color-text-on-accent`, `--color-text-on-action`, `--color-text-on-inverse`, `--color-focus`, `--color-success`, `--color-warning`, `--color-danger`, `--color-tier-*`.
 

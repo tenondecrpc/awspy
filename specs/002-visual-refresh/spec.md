@@ -13,26 +13,30 @@
   - Resolved during planning conversation and encoded in this spec: scope is visual-only (palette, layout, hero, empty states, skeleton loading, image placeholders), no behavioral or routing changes; palette must be the single source of truth for color and consumed by every page; speaker headshots continue to come from the Sessionize API; non-speaker imagery (hero pattern, sponsor logos, gallery, organizers, venue) uses placeholders with reserved aspect ratio so attendees can swap in real assets later under `public/assets/` without layout shift; the constitution's accessibility non-negotiables (AA contrast, keyboard reachability, prefers-reduced-motion, no color-only state) are enforced for the new look as they were for v1.
   - Outstanding low-impact items resolved by reasonable default (see Q-blocks below): sourcing of decorative AWS service icons, palette numerical values, empty-state visual treatment, dark mode behavior, scope of layout reorganization, motion intensity.
 - Q: De donde se obtienen los iconos decorativos estilo "servicios AWS flotando" del hero (similar al patron de Mexico)? -> A: Se usan los **AWS Architecture Icons** publicados oficialmente por AWS (paquete gratuito y de uso publico). NO se descargan los SVG originales de Mexico ni Colombia, que son obra original con derechos. Mexico y Colombia se usan solo como referencia visual.
-- Q: Cuales son los valores numericos exactos de la paleta? -> A: Se alinea con el "AWS branding" publico (Squid Ink #232F3E como navy de marca, Smile Orange #FF9900 como accion principal, Anchor #161E2D como inverso profundo, Hyperlink Blue #0073BB como enlace, mas neutros). El detalle vive en FR-002 y la unica copia se mantiene en `app/globals.css` via tokens `@theme` de Tailwind v4. Los tokens existentes en el repo se conservan o se renombran de forma backwards-compatible (alias) para no romper el codigo de v1.
+- Q: Cuales son los valores numericos exactos de la paleta? -> A: La respuesta inicial fue una paleta AWS publica; la sesion 2026-09-09 la reemplaza por valores inspirados en el arte de Paraguay 2026. El detalle vigente vive en FR-002 y la unica copia ejecutable se mantiene en `app/globals.css` via tokens `@theme` de Tailwind v4.
 - Q: Que aspecto deben tener los estados vacios? -> A: Cada estado vacio incluye un titulo en espanol, una descripcion breve, una ilustracion (SVG decorativo desde la paleta, sin texto en imagen), y un CTA secundario cuando aplica (escribir, enviar charla, suscribirse). El icono decorativo NO comunica informacion por si solo (constitution Principio VI).
 - Q: Como se comportan los estados de carga? -> A: Cada lista (speakers, sponsors, schedule) renderiza un esqueleto con la misma forma que el contenido cargado (mismas dimensiones, misma cuadricula, animacion de pulso suave que respeta `prefers-reduced-motion`). El esqueleto tiene `aria-busy="true"` y un `role="status"` con texto accesible "Cargando ...".
 - Q: Hay modo oscuro? -> A: Si. La paleta soporta dos modos (claro y oscuro) con los mismos tokens semanticos. La preferencia inicial se toma de `prefers-color-scheme`; un control sutil en el encabezado permite alternar manualmente y persiste una preferencia validada. Cada par foreground/background mantiene contraste AA en ambos modos.
 - Q: Cuanta reorganizacion de secciones esta permitida sin "refactorizar codigo"? -> A: Permitido reordenar secciones existentes en los `templates/` (orden de bloques) y ajustar paddings, grids, tipografia y fondos. NO permitido cambiar contratos de datos, props publicas de componentes, rutas, ni mover archivos entre tiers de atomic design. Tambien permitido agregar atomos/moleculas decorativos nuevos (por ejemplo `DecorativePattern`, `IconTile`) bajo las reglas de atomic design.
 - Q: Que intensidad tiene la animacion? -> A: Animaciones sutiles por defecto (fade/translate cortos al entrar en viewport, brillo del esqueleto). Todas se suprimen bajo `prefers-reduced-motion: reduce` por la regla global ya existente en `app/globals.css`.
 
+### Session 2026-09-09
+
+- Q: Como debe evolucionar la paleta para reflejar mejor a Paraguay? -> A: Se toma como referencia cromatica el arte provisto para AWS Community Day Paraguay 2026. La paleta usa azul medianoche, azul electrico, rojo paraguayo y blancos frios. El azul conserva los roles de navegacion y accion; el rojo se reserva para identidad y decoracion, con variantes de texto separadas para fondos claros y oscuros. Todos los pares documentados mantienen contraste WCAG AA en ambos modos.
+
 ## User Scenarios & Testing *(mandatory)*
 
 ### User Story 1 - Look-and-feel coherente con la familia AWS Community Day (Priority: P1)
 
-Un visitante que ya conoce los sitios de AWS Community Day Mexico o Colombia abre el sitio de Paraguay y reconoce de inmediato la familia visual: navy oscuro de marca, naranja AWS para acciones principales, jerarquia tipografica clara, hero con un patron decorativo construido con iconos de arquitectura AWS, y bloques de seccion bien separados. La paleta es la misma en toda la pagina, sin colores "sueltos" definidos en cada componente.
+Un visitante abre el sitio de Paraguay y reconoce de inmediato tanto la familia AWS Community Day como la identidad local: azul medianoche, azul electrico y acentos rojos inspirados en el arte 2026, jerarquia tipografica clara, hero con un patron decorativo construido con iconos de arquitectura AWS, y bloques de seccion bien separados. La paleta es la misma en toda la pagina, sin colores "sueltos" definidos en cada componente.
 
 **Why this priority**: La principal queja del usuario es que el sitio actual no parece estar en la misma familia visual. Esto bloquea la sensacion de marca regional y la confianza del visitante. Es la base sobre la cual se montan los demas refinamientos visuales (empty/loading, placeholders).
 
-**Independent Test**: Abrir `/` con datos minimos (solo el `event.json` actual), comparar lado a lado con `https://day.awscommunity.mx/` y verificar que el hero, los CTAs primarios, los headings y los fondos de seccion comparten el lenguaje visual (navy + naranja AWS, tipografia jerarquizada, patron decorativo). Verificar que ningun componente declara colores fuera del archivo de tokens centralizado: `grep -r '#[0-9A-Fa-f]\{3,6\}' app/ components/` retorna unicamente `app/globals.css`.
+**Independent Test**: Abrir `/` con datos minimos (solo el `event.json` actual), comparar con el arte Paraguay 2026 y verificar el hero azul medianoche, CTAs azul bandera, acentos rojos y fondos frios, junto con la tipografia jerarquizada y el patron decorativo AWS. Verificar que ningun componente declara colores fuera del archivo de tokens centralizado: `grep -r '#[0-9A-Fa-f]\{3,6\}' app/ components/` retorna unicamente `app/globals.css` y la excepcion Satori documentada.
 
 **Acceptance Scenarios**:
 
-1. **Given** el sitio esta desplegado con la paleta refrescada, **When** un visitante abre `/`, **Then** el hero muestra fondo navy de marca con un patron decorativo (iconos de servicios AWS oficiales en SVG) en bajo contraste, el titulo en blanco con CTA naranja "Registrarme" y CTA secundario en outline, y el resto de la pagina alterna fondos `surface` y `surface-muted` consistentes.
+1. **Given** el sitio esta desplegado con la paleta refrescada, **When** un visitante abre `/`, **Then** el hero muestra fondo azul medianoche con un patron decorativo (iconos de servicios AWS oficiales en SVG) en bajo contraste, el titulo en blanco frio con CTA azul "Registrarme" y CTA secundario en outline, y el resto de la pagina alterna fondos `surface` y `surface-muted` consistentes con acentos rojos.
 2. **Given** una persona desarrolladora abre el repositorio, **When** ejecuta `grep -r '#[0-9A-Fa-f]\{3,6\}' app/ components/ lib/`, **Then** solo aparece la definicion de tokens en `app/globals.css`. Cualquier otro hex es un bug que el lint catchea (FR-013).
 3. **Given** el visitante usa `prefers-color-scheme: dark`, **When** abre cualquier pagina, **Then** el sitio se renderiza con la variante oscura de los mismos tokens semanticos y todos los pares texto/fondo siguen cumpliendo AA.
 4. **Given** el visitante revisa la pagina con un lector de pantalla, **When** navega por el hero y los CTAs, **Then** el contenido es accesible (orden logico, focus visible, no hay informacion comunicada solo por color).
@@ -97,7 +101,7 @@ Un visitante abre `/sponsors`, `/team`, `/venue` o el hero del home y, aunque la
 
 Un colaborador o agente automatico que abre el repositorio para tocar estilos sabe exactamente donde estan los colores: en el archivo de tokens de Tailwind v4 (`app/globals.css` con `@theme`). Ningun componente declara hex o rgb en su archivo. Si alguien intenta colar un hex en un componente, el lint o un test lo bloquea.
 
-**Why this priority**: Es la condicion previa para mantener la coherencia visual a lo largo del sitio y permitir cambios futuros (por ejemplo, ajustar el tono de naranja) en un solo lugar. Sin esta disciplina, las correcciones visuales sucesivas vuelven a fragmentar la paleta.
+**Why this priority**: Es la condicion previa para mantener la coherencia visual a lo largo del sitio y permitir cambios futuros (por ejemplo, ajustar el azul de accion) en un solo lugar. Sin esta disciplina, las correcciones visuales sucesivas vuelven a fragmentar la paleta.
 
 **Independent Test**: Ejecutar `npm run lint` con un component al que se le inyecto manualmente `#FF9900` y verificar que falla. Eliminar el hex y reemplazarlo por `var(--color-action)` y verificar que pasa.
 
@@ -105,7 +109,7 @@ Un colaborador o agente automatico que abre el repositorio para tocar estilos sa
 
 1. **Given** la regla de lint esta activa, **When** un componente bajo `app/`, `components/` o `lib/` contiene un hex literal (`#aabbcc`, `#abc`) o `rgb(...)`/`rgba(...)`/`hsl(...)`/`hsla(...)`, **Then** `npm run lint` falla con un mensaje claro indicando el archivo y la linea.
 2. **Given** la documentacion incluye una guia de paleta, **When** un colaborador la abre, **Then** ve la lista de tokens semanticos con el caso de uso de cada uno (background, text, border, action, etc.).
-3. **Given** la paleta cambia el tono de naranja en `globals.css`, **When** se rebuild-ea el sitio, **Then** todos los CTAs primarios reflejan el nuevo tono sin requerir cambios en componentes individuales.
+3. **Given** la paleta cambia el tono azul de accion en `globals.css`, **When** se rebuild-ea el sitio, **Then** todos los CTAs primarios reflejan el nuevo tono sin requerir cambios en componentes individuales.
 
 ---
 
@@ -141,8 +145,8 @@ Un visitante percibe un patron decorativo (iconos de arquitectura AWS flotando c
 #### Paleta y tokens
 
 - **FR-001**: La paleta DEBE estar centralizada en `app/globals.css` usando los tokens `@theme` de Tailwind v4. Ningun otro archivo del repositorio (bajo `app/`, `components/`, `lib/`) puede declarar valores literales de color (hex, rgb, hsl, named colors fuera de `currentColor`/`inherit`/`transparent`).
-- **FR-002**: La paleta DEBE incluir, como minimo, los siguientes tokens semanticos (los valores numericos exactos se ajustan a la familia AWS publica y se eligen para cumplir AA en cada par foreground/background):
-  - Acciones y marca: `--color-brand-primary` (Squid Ink navy ~ #232F3E), `--color-action` (Smile orange ~ #FF9900), `--color-action-strong` (orange darker), `--color-action-label` (orange accesible como texto pequeno), `--color-accent` (Hyperlink blue ~ #0073BB), `--color-accent-strong`, `--color-accent-soft`.
+- **FR-002**: La paleta DEBE incluir, como minimo, los siguientes tokens semanticos (los valores numericos exactos se inspiran en el arte 2026 de Paraguay, conservan la familia visual AWS y cumplen AA en cada par foreground/background):
+  - Acciones y marca: `--color-brand-primary` (azul profundo), `--color-action` (azul bandera accesible), `--color-action-strong`, `--color-action-label`, `--color-accent` (azul electrico accesible), `--color-accent-strong`, `--color-accent-soft`, `--color-national-red` (solo relleno/decoracion), `--color-national-red-label` (texto sobre superficies claras) y `--color-national-red-on-dark` (texto sobre hero/inverse).
   - Superficies: `--color-surface`, `--color-surface-muted`, `--color-surface-elevated`, `--color-surface-inverse`, `--color-surface-hero` (variante usada por el hero), `--color-overlay`.
   - Texto: `--color-text-primary`, `--color-text-secondary`, `--color-text-muted`, `--color-text-on-action`, `--color-text-on-accent`, `--color-text-on-inverse`, `--color-text-on-hero`, `--color-text-on-tier`.
   - Bordes y separadores: `--color-border-subtle`, `--color-border-strong`.
@@ -155,7 +159,7 @@ Un visitante percibe un patron decorativo (iconos de arquitectura AWS flotando c
 
 - **FR-005**: El hero del home y de cada home de edicion DEBE usar como fondo `--color-surface-hero` (variante navy oscuro), texto en `--color-text-on-hero`, CTA primario con `--color-action` y CTA secundario en outline con `--color-text-on-hero`.
 - **FR-006**: El hero DEBE incluir un patron decorativo de baja opacidad construido con iconos de AWS Architecture Icons. El patron es estatico (puro CSS o SVG inline), `aria-hidden="true"`, y NO comunica informacion.
-- **FR-007**: Las secciones a continuacion del hero DEBEN alternar `--color-surface` y `--color-surface-muted` para crear ritmo visual; los headings de seccion DEBEN tener una linea o pill decorativa (en `--color-action`) que ayuda a marcar jerarquia.
+- **FR-007**: Las secciones a continuacion del hero DEBEN alternar `--color-surface` y `--color-surface-muted` para crear ritmo visual; los headings de seccion DEBEN tener una linea o pill decorativa en `--color-national-red` que ayuda a marcar jerarquia sin usar rojo como accion principal.
 - **FR-008**: El orden de secciones del home DEBE ser: hero -> contador regresivo -> "Que es el Community Day" -> highlights/numeros del evento (cuando existan; si no, se omite) -> preview de speakers -> preview de sponsors -> CTA final de registro/CFP. NO se eliminan secciones existentes; solo se reorganiza el orden visual y se agregan los bloques permitidos ya enumerados.
 
 #### Estados vacios

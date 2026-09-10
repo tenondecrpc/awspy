@@ -1,6 +1,6 @@
 // Hero block on the home page. Server component; consumes the validated
-// EventInfo. Provides primary and secondary CTAs over a Squid Ink surface
-// with a low-opacity AWS Architecture Icons pattern in the background.
+// EventInfo. Provides primary and secondary CTAs over an image-inspired
+// midnight-blue surface with a low-opacity AWS Architecture Icons pattern.
 
 import { Container } from "@/components/atoms/Container";
 import { Section } from "@/components/atoms/Section";

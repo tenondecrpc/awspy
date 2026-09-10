@@ -96,7 +96,7 @@ npm run e2e
 
 Manually verify in a browser:
 
-- The home page hero shows Squid Ink navy with the AWS icon pattern at low opacity, an orange CTA, and an outline secondary CTA.
+- The home page hero shows image-inspired midnight blue with the AWS icon pattern at low opacity, a flag-blue CTA, red identity accents, and an outline secondary CTA.
 - `/speakers`, `/schedule`, `/sponsors`, `/team`, `/venue` show themed empty states (title + description + illustration + CTA where applicable) when their data sources are empty.
 - Throttling the network in DevTools (slow 3G) on `/speakers` shows a skeleton grid that matches the final layout, and the layout does not shift when data loads.
 - Toggling the OS to dark mode flips the palette without breaking contrast.

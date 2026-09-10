@@ -22,6 +22,8 @@ The full token list with values per mode lives in `data-model.md`. This contract
 - A component MUST NOT inline a hex like `#FF9900` or `rgb(...)`. The lint rule (see `lint-color-rule.md`) enforces this.
 - Sponsor tier colors MUST always be paired with text or icon (constitution Principle VI). The `Badge` atom already does this; new components reusing tier colors MUST do the same.
 - The hero surface (`--color-surface-hero`) is reserved for hero sections and dark callout blocks. Other sections use `--color-surface` and `--color-surface-muted` alternated.
+- Blue action tokens own links, navigation, and CTA fills. National red MUST NOT replace danger semantics or primary actions.
+- `--color-national-red` is decorative only. Red text uses `--color-national-red-label` on normal surfaces and `--color-national-red-on-dark` on hero/inverse surfaces.
 
 ## Mode rules
 

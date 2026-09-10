@@ -24,8 +24,9 @@ recorded. A gap documents a problem but does not approve it for indefinite use.
 - **Reason**: The Satori renderer used by `ImageResponse` generates a PNG and
   cannot resolve CSS custom properties from the application stylesheet.
 - **Mitigation**: The literals are documented beside their matching semantic
-  tokens. ESLint suppresses the rule only in this file, and the palette boundary
-  test rejects literals elsewhere.
+  tokens. The image-only red uses a darker AA-safe variant for its white label.
+  ESLint suppresses the rule only in this file, and the palette boundary test
+  rejects literals elsewhere.
 - **Approved by**: Repository implementation baseline, 2026-05-24.
 - **Revisit**: When the Open Graph renderer can consume the shared token source
   without duplicating literal values.

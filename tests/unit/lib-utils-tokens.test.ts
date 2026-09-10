@@ -9,7 +9,7 @@ import { dirname, resolve } from "node:path";
 // both modes together.
 
 const REQUIRED_TOKENS = [
-  // Brand and action
+  // Brand, action, and national identity
   "--color-brand-primary",
   "--color-action",
   "--color-action-strong",
@@ -17,6 +17,9 @@ const REQUIRED_TOKENS = [
   "--color-accent",
   "--color-accent-strong",
   "--color-accent-soft",
+  "--color-national-red",
+  "--color-national-red-label",
+  "--color-national-red-on-dark",
   // Surfaces
   "--color-surface",
   "--color-surface-muted",
@@ -115,6 +118,36 @@ const CONTRAST_PAIRS: ContrastPair[] = [
   {
     foreground: "--color-accent-strong",
     background: "--color-accent-soft",
+    minimum: 4.5,
+  },
+  {
+    foreground: "--color-accent",
+    background: "--color-surface",
+    minimum: 4.5,
+  },
+  {
+    foreground: "--color-accent",
+    background: "--color-surface-muted",
+    minimum: 4.5,
+  },
+  {
+    foreground: "--color-national-red-label",
+    background: "--color-surface",
+    minimum: 4.5,
+  },
+  {
+    foreground: "--color-national-red-label",
+    background: "--color-surface-muted",
+    minimum: 4.5,
+  },
+  {
+    foreground: "--color-national-red-on-dark",
+    background: "--color-surface-inverse",
+    minimum: 4.5,
+  },
+  {
+    foreground: "--color-national-red-on-dark",
+    background: "--color-surface-hero",
     minimum: 4.5,
   },
   {

@@ -8,7 +8,7 @@
 Refresh the visual layer of the AWS Community Day Paraguay public website so it feels part of the regional AWS Community Day family (Mexico and Colombia as visual references), without changing routes, data flow, component contracts, or the data layer. Concretely:
 
 - Centralize the color palette as the single source of truth in `app/globals.css` via Tailwind v4 `@theme` tokens. Every other file under `app/`, `components/`, and `lib/` consumes those tokens via CSS custom properties or Tailwind utilities. A lint rule enforces the boundary.
-- Adopt an AWS-aligned palette (Squid Ink navy, Smile Orange, Hyperlink Blue, neutrals) with semantic token names that work in both light and dark modes, defaulting to `prefers-color-scheme` with a subtle manual toggle.
+- Adopt an AWS-compatible, Paraguay-specific palette sampled from the 2026 event artwork: midnight blue, electric flag blue, Paraguayan red, and cool neutrals. Semantic token names work in both light and dark modes, defaulting to `prefers-color-scheme` with a subtle manual toggle.
 - Replace the bare "Proximamente" gray box with themed empty states (title, short description, decorative SVG illustration, contextual CTA) on `/speakers`, `/schedule`, `/sponsors`, `/team`, `/venue`, `/faq`, and the home previews.
 - Add accessible loading skeletons that mirror the final content shape on `SpeakersGrid`, `ScheduleGrid`, `SponsorsBoard`, and `OrganizersGrid` so suspense states do not produce CLS and respect `prefers-reduced-motion`.
 - Reserve image space with explicit aspect ratios under `public/assets/{hero,team,venue,sponsors,gallery,icons/aws-architecture}/`. The site renders themed placeholders when the file is missing and uses the real asset automatically once it is added.
@@ -195,10 +195,10 @@ e2e/
 
 `research.md` (companion file) consolidates the decisions that informed the Technical Context above and the contracts produced in Phase 1. Topics resolved in research:
 
-1. **Palette numerical values aligned with AWS public branding**
-   - Decision: Use Squid Ink (`#232F3E`) as `--color-brand-primary` (also the hero surface in light mode), Smile Orange (`#FF9900`) as `--color-action`, Hyperlink Blue (`#0073BB`) as `--color-accent`, plus a small set of derived strong/soft variants and AA-verified neutrals.
-   - Rationale: These are the colors AWS uses across its own properties and the regional Community Day sites consistently echo them. Using the same hues makes the Paraguay site sit in the same family without copying any specific design.
-   - Alternatives considered: Pure-white + magenta (rejected, breaks AWS visual language); gradient-heavy hero (rejected, hurts contrast and Lighthouse).
+1. **Palette numerical values inspired by the Paraguay 2026 event artwork**
+   - Decision: Use midnight blue (`#000C2F`) for the hero, deep blue (`#041A53`) for brand surfaces, flag blue (`#0038A8`) for primary actions, accessible electric blues for links, and separated Paraguayan-red roles for decoration and readable labels.
+   - Rationale: The artwork's red-white-blue light trails and night skyline give the event a local identity while the dark blue foundation and AWS iconography preserve the Community Day family. Blue actions also avoid conflating national red with destructive UI states.
+   - Alternatives considered: Using the sampled bright red for primary CTAs (rejected because red conventionally signals danger); using one red token for every surface (rejected because it cannot maintain AA contrast in every context); gradient-heavy hero (rejected, hurts contrast and Lighthouse).
 
 2. **Single source of truth for tokens**
    - Decision: Tailwind v4 `@theme { ... }` block in `app/globals.css` for both modes; the existing v1 token names are preserved as aliases so v1 components keep working without edits.
@@ -236,7 +236,7 @@ e2e/
    - Alternatives considered: A manual toggle (deferred to a future feature); a system-driven toggle that overrides user OS (rejected as user-hostile).
 
 9. **Hero composition**
-   - Decision: A `Section` with `tone="hero"` (new variant on the existing atom) wraps the hero content. A `DecorativePattern` atom renders the low-opacity AWS Arch icons grid behind the heading. The CTAs reuse the existing `Button` variants with action-orange primary and ghost-on-dark secondary.
+   - Decision: A `Section` with `tone="hero"` (new variant on the existing atom) wraps the hero content. A `DecorativePattern` atom renders the low-opacity AWS Arch icons grid behind the heading. The CTAs reuse the existing `Button` variants with flag-blue primary and ghost-on-dark secondary; red remains a non-action identity accent.
    - Rationale: Keeps the hero composable from primitives, decorative pattern is reusable in other sections (e.g. CTA banners), and CTA semantics do not change.
    - Alternatives considered: A gradient hero (rejected, hurts contrast); a video hero (rejected, weight, motion concerns).
 

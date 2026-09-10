@@ -9,9 +9,10 @@
 // not resolve CSS custom properties because the output is a PNG, not an HTML
 // document. The palette tokens declared in `app/globals.css` are unreachable
 // at this layer. The hex values below are intentionally synchronized with the
-// palette: #232F3E == --color-surface-hero, #FF9900 == --color-action,
-// #001022 == --color-text-on-action, #FFFFFF == --color-text-on-hero. If the
-// palette changes, update both this file and `app/globals.css`.
+// image-inspired palette: #000C2F == --color-surface-hero and #F7F8FF ==
+// --color-text-on-hero. The darker #B01A38 red is used only in this generated
+// social card so its white year label remains AA-readable. If the palette
+// changes, update both this file and `app/globals.css`.
 
 /* eslint-disable local/no-color-literals */
 import { ImageResponse } from "next/og";
@@ -36,8 +37,8 @@ export default function OpengraphImage() {
         flexDirection: "column",
         justifyContent: "space-between",
         padding: 80,
-        background: "#232F3E",
-        color: "#FFFFFF",
+        background: "#000C2F",
+        color: "#F7F8FF",
         fontFamily:
           "system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif",
       }}
@@ -47,8 +48,8 @@ export default function OpengraphImage() {
           style={{
             fontSize: 28,
             fontWeight: 800,
-            background: "#FF9900",
-            color: "#001022",
+            background: "#B01A38",
+            color: "#FFFFFF",
             padding: "6px 16px",
             borderRadius: 12,
           }}

@@ -1,6 +1,6 @@
 // Vertical section primitive. Adds breathing room above/below content,
 // optionally a muted/inverse/hero background, and an optional eyebrow slot
-// rendered above the children for visual rhythm (orange accent line).
+// rendered above the children for visual rhythm (Paraguayan red accent line).
 
 import type { ReactNode } from "react";
 import { cn } from "@/lib/utils/cn";
@@ -16,7 +16,7 @@ type SectionProps = {
   id?: string;
   "aria-labelledby"?: string;
   /**
-   * Optional eyebrow content rendered above children with an action-orange
+   * Optional eyebrow content rendered above children with a national-red
    * accent. Use for short uppercase labels ("KEYNOTE", "AGENDA").
    */
   eyebrow?: ReactNode;
@@ -37,10 +37,10 @@ const SPACING_CLASS: Record<NonNullable<SectionProps["spacing"]>, string> = {
 };
 
 const EYEBROW_CLASS: Record<NonNullable<SectionProps["tone"]>, string> = {
-  default: "text-[var(--color-action-label)]",
-  muted: "text-[var(--color-action-label)]",
-  inverse: "text-[var(--color-action)]",
-  hero: "text-[var(--color-action)]",
+  default: "text-[var(--color-national-red-label)]",
+  muted: "text-[var(--color-national-red-label)]",
+  inverse: "text-[var(--color-national-red-on-dark)]",
+  hero: "text-[var(--color-national-red-on-dark)]",
 };
 
 export function Section({
@@ -67,12 +67,12 @@ export function Section({
           )}
         >
           <span
-            className="inline-block h-px w-8 bg-[var(--color-action)]"
+            className="inline-block h-px w-8 bg-[var(--color-national-red)]"
             aria-hidden="true"
           />
           <span>{eyebrow}</span>
           <span
-            className="inline-block h-px w-8 bg-[var(--color-action)]"
+            className="inline-block h-px w-8 bg-[var(--color-national-red)]"
             aria-hidden="true"
           />
         </div>

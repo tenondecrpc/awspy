@@ -82,12 +82,12 @@ description: "Task list for the AWS Community Day Paraguay visual refresh"
 
 **Goal**: Refresh the hero, the section rhythm, and the typographic eyebrows so the home and inner pages visually belong to the AWS Community Day family.
 
-**Independent Test**: Open `/` with the current `event-info.json`. Compare side by side with the Mexico site. Verify Squid Ink hero, AWS arch icon pattern at low opacity, orange CTA, alternating section surfaces, and AA contrast in light and dark.
+**Independent Test**: Open `/` with the current `event-info.json`. Compare with the Paraguay 2026 artwork. Verify the midnight-blue hero, AWS arch icon pattern at low opacity, blue CTA, red identity accents, alternating section surfaces, and AA contrast in light and dark.
 
 ### Implementation for User Story 1
 
 - [X] T020 Edit `Section.tsx`: added `tone="hero"` and `eyebrow` slot.
-- [X] T021 Edit `Heading.tsx`: added optional `accent` prop (orange pill).
+- [X] T021 Edit `Heading.tsx`: added optional `accent` prop (now backed by the national-red decorative token).
 - [X] T022 Edit `Button.tsx`: added `outline-on-dark` variant; primary/secondary already token-only.
 - [X] T023 Edit `Hero.tsx`: wraps content in `Section tone="hero"`, places `DecorativePattern` behind, switches secondary CTA to `outline-on-dark`.
 - [X] T024 SiteHeader was already token-only (v1 work). Verified no color literals.
@@ -104,6 +104,7 @@ description: "Task list for the AWS Community Day Paraguay visual refresh"
 - [X] T039 `npm run lint` and `npm run typecheck` clean.
 - [X] T040 `npm test` clean (268 tests, 36 files).
 - [ ] T041 Manual screenshot pass in browser: deferred to user verification (sandboxed env cannot launch a browser).
+- [X] T041a Refresh the centralized palette from the Paraguay 2026 artwork, separate red roles by surface, and verify every new contrast pair in light and dark mode.
 
 **Checkpoint**: User Story 1 is independently usable. The site looks and feels part of the family even with all other stories pending.
 

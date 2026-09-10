@@ -2,28 +2,32 @@
 
 This document records the technical decisions taken during Phase 0 of the visual refresh, the rationale, and the alternatives considered. It resolves every "NEEDS CLARIFICATION" in `plan.md`.
 
-## R1. Palette numerical values aligned with AWS public branding
+## R1. Palette numerical values inspired by Paraguay 2026 artwork
 
-**Decision**: Adopt the following base values for the brand-aligned palette:
+**Decision**: Adopt the following base values sampled from, or visually aligned with, the supplied event artwork:
 
-- Brand primary (Squid Ink navy): `#232F3E`
-- Action (Smile Orange): `#FF9900`
-- Action strong (orange darker, hover/active): `#EC7211`
-- Accent (Hyperlink Blue): `#0073BB`
-- Accent strong: `#005A91`
-- Accent soft (background tint): `#E6F0F7`
-- Anchor (very dark navy, used by hero in dark mode): `#161E2D`
-- Neutral surfaces: `#FFFFFF`, `#F4F6FA`, `#E5E9F0`
-- Text scale: `#0B1626` (primary), `#364152` (secondary), `#5C6573` (muted)
+- Brand primary (deep night blue): `#041A53`
+- Hero (skyline midnight): `#000C2F`
+- Action (Paraguay flag blue): `#0038A8`
+- Action strong: `#002B7A`
+- Accent (accessible electric blue): `#0A4DB8`
+- Accent strong: `#00368F`
+- Accent soft: `#E8EFFF`
+- National red (decoration): `#F02F3B`
+- National red label (normal surfaces): `#A91431`
+- National red on dark: `#FF6673`
+- Neutral surfaces: `#FFFFFF`, `#F4F6FC`, `#DFE4F2`
+- Text scale: `#08152F` (primary), `#34415F` (secondary), `#5B647A` (muted)
 - State: `#1F7A3A` (success), `#965000` (warning), `#B3261E` (danger)
 
 All token-to-value pairs are formalized in `contracts/palette-tokens.md`.
 
-**Rationale**: These hues are the ones AWS uses across `aws.amazon.com`, `community.aws`, and the AWS Architecture Icons set. Using the same values gives the Paraguay site immediate visual association with the AWS family without copying any specific community design. AA contrast is verified per pair (see contracts).
+**Rationale**: The red-white-blue light trails, illuminated skyline, and deep night sky give the Paraguay event a distinct local identity. The dark-blue foundation and AWS iconography preserve association with the Community Day family. Blue owns interactive actions, while red is separated into decorative and context-specific text roles so it is not confused with errors and remains AA-readable. Contrast is verified per pair (see `data-model.md`).
 
 **Alternatives considered**:
 
-- A custom palette inspired by Paraguay flag colors. Rejected because it weakens the AWS visual signal that the user explicitly asked for.
+- Using the bright sampled red as a primary action. Rejected because red conventionally signals danger or destructive intent in interfaces.
+- A single national-red token for decoration and text. Rejected because the same shade does not maintain AA contrast across both light and dark surfaces.
 - Pure Tailwind defaults (`slate`, `orange-500`). Rejected because the resulting tokens drift from the AWS hues and require constant manual overrides.
 
 ## R2. Single source of truth for tokens
@@ -112,7 +116,7 @@ The conventions for which file path each placeholder swaps to are in `contracts/
 
 ## R9. Hero composition
 
-**Decision**: Promote `Section` to a `tone="hero"` variant that paints `--color-surface-hero` (Squid Ink in light mode, Anchor navy in dark mode) and sets the text color to `--color-text-on-hero`. Behind the hero content, a `DecorativePattern` atom renders a low-opacity grid of AWS Architecture Icons. The CTAs reuse the existing `Button` variants (primary action-orange, secondary outline on dark).
+**Decision**: Promote `Section` to a `tone="hero"` variant that paints `--color-surface-hero` (image-inspired midnight blue) and sets the text color to `--color-text-on-hero`. Behind the hero content, a `DecorativePattern` atom renders a low-opacity grid of AWS Architecture Icons. The CTAs reuse the existing `Button` variants (primary flag-blue, secondary outline on dark); section eyebrows use the dedicated national-red tokens.
 
 **Rationale**: Composes from primitives, keeps CTA semantics unchanged, and lets the hero pattern be reused later (CTA banner, end-of-page decoration).
 
@@ -149,7 +153,7 @@ The conventions for which file path each placeholder swaps to are in `contracts/
 
 ## R12. Compatibility with v1 token names
 
-**Decision**: Every v1 token referenced in `app/globals.css` and the components today is preserved. New tokens are added; some existing tokens get a refreshed value (e.g. `--color-accent` may shift from the v1 `#0B5FFF` to the AWS Hyperlink Blue `#0073BB`). The change is value-only, not name-only, so no component code edit is required for renaming.
+**Decision**: Every v1 token referenced in `app/globals.css` and the components today is preserved. New national-red tokens are added, while existing blue/action tokens receive image-inspired values. The change preserves existing names, so component edits are limited to the places that intentionally introduce the new red identity accents.
 
 **Rationale**: The refresh remains visual-only. v1 component code keeps compiling and rendering correctly with the refreshed values.
 

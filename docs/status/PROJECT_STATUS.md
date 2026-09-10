@@ -10,7 +10,7 @@
 - Blocked work items: 3
 - Findings discovered: 0 Critical, 3 High, 9 Medium, and 13 Low or Informational after audit reconciliation
 - Open application security findings: 0 Critical, 0 High, 0 Medium, 1 Low deferred contract decision
-- Tests: 44 Vitest files with 358 tests passed; 100 Playwright project-expanded tests passed
+- Tests: 44 Vitest files with 364 tests passed; 100 Playwright project-expanded tests passed
 - Coverage baseline: `NOT AVAILABLE`
 - Coverage final: 69.05% statements, 70.55% branches, 64.25% functions, 70.05% lines
 - Dependency status: 0 known npm vulnerabilities; 542 package signatures and 144 attestations verified; maintenance and legal review remain `NOT VERIFIED`
