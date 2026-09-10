@@ -2,7 +2,7 @@
 
 import { Container } from "@/components/atoms/Container";
 import { Section } from "@/components/atoms/Section";
-import { Heading } from "@/components/atoms/Heading";
+import { SectionHeading } from "@/components/molecules/SectionHeading";
 import { SpeakersGrid } from "@/components/organisms/SpeakersGrid";
 import type { Speaker } from "@/lib/api/sessionize";
 import type { EventInfo } from "@/lib/content/event-info";
@@ -21,13 +21,14 @@ export function SpeakersTemplate({
   return (
     <Section spacing="lg">
       <Container>
-        <div className="mb-10 max-w-3xl space-y-3">
-          <Heading level={1}>Speakers</Heading>
-          <p className="text-[var(--color-text-secondary)]">
-            Conocé a los oradores que estarán compartiendo charlas y talleres en{" "}
-            {eventInfo.name}.
-          </p>
-        </div>
+        <SectionHeading
+          level={1}
+          eyebrow="Comunidad"
+          eyebrowGlyph="mic"
+          title="Speakers"
+          description={`Conocé a los oradores que estarán compartiendo charlas y talleres en ${eventInfo.name}.`}
+          className="mb-14"
+        />
         <SpeakersGrid
           speakers={speakers}
           eventInfo={eventInfo}

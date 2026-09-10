@@ -1,6 +1,6 @@
 import { Container } from "@/components/atoms/Container";
 import { Section } from "@/components/atoms/Section";
-import { Heading } from "@/components/atoms/Heading";
+import { SectionHeading } from "@/components/molecules/SectionHeading";
 import { FAQList } from "@/components/organisms/FAQList";
 import type { FAQItem } from "@/lib/content/faq";
 
@@ -12,13 +12,14 @@ export function FAQTemplate({ items }: FAQTemplateProps) {
   return (
     <Section spacing="lg">
       <Container>
-        <div className="mb-10 max-w-3xl space-y-3">
-          <Heading level={1}>Preguntas frecuentes</Heading>
-          <p className="text-[var(--color-text-secondary)]">
-            Lo más consultado sobre el AWS Community Day Paraguay. ¿No encontrás
-            tu pregunta? Escribinos.
-          </p>
-        </div>
+        <SectionHeading
+          level={1}
+          eyebrow="Ayuda"
+          eyebrowGlyph="book"
+          title="Preguntas frecuentes"
+          description="Lo más consultado sobre el AWS Community Day Paraguay. ¿No encontrás tu pregunta? Escribinos."
+          className="mb-14"
+        />
         <div className="max-w-3xl">
           <FAQList items={items} />
         </div>

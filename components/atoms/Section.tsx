@@ -25,8 +25,10 @@ type SectionProps = {
 const TONE_CLASS: Record<NonNullable<SectionProps["tone"]>, string> = {
   default: "bg-[var(--color-surface)] text-[var(--color-text-primary)]",
   muted: "bg-[var(--color-surface-muted)] text-[var(--color-text-primary)]",
+  // `relative overflow-hidden` so an absolutely positioned DecorativePattern
+  // is clipped to the band, the same way the hero tone does it.
   inverse:
-    "bg-[var(--color-surface-inverse)] text-[var(--color-text-on-inverse)]",
+    "relative overflow-hidden bg-[var(--color-surface-inverse)] text-[var(--color-text-on-inverse)]",
   hero: "relative overflow-hidden bg-[var(--color-surface-hero)] text-[var(--color-text-on-hero)]",
 };
 

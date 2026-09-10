@@ -72,6 +72,21 @@ function groupByStartDay(grid: ScheduleGrid, speakers: Speaker[]): DayGroup[] {
   return days;
 }
 
+/**
+ * Maps every room name to a stable accent index, ordered by first appearance
+ * in the grid. A room therefore keeps the same accent across days and across
+ * re-renders, which is what makes the color useful as a visual anchor.
+ */
+function buildRoomAccents(days: DayGroup[]): Map<string, number> {
+  const accents = new Map<string, number>();
+  for (const day of days) {
+    for (const slot of day.slots) {
+      if (!accents.has(slot.roomName)) accents.set(slot.roomName, accents.size);
+    }
+  }
+  return accents;
+}
+
 export function ScheduleGridOrganism({
   grid,
   speakers,
@@ -79,6 +94,7 @@ export function ScheduleGridOrganism({
   isLoading = false,
 }: ScheduleGridOrganismProps) {
   const days = groupByStartDay(grid, speakers);
+  const roomAccents = buildRoomAccents(days);
 
   if (isLoading && days.length === 0) {
     return (
@@ -108,18 +124,32 @@ export function ScheduleGridOrganism({
           key={day.dayKey}
           aria-labelledby={`schedule-day-${day.dayKey}`}
         >
-          <Heading
-            id={`schedule-day-${day.dayKey}`}
-            level={2}
-            visualLevel={3}
-            className="mb-4 capitalize"
-          >
-            {formatDate(day.representative)}
-          </Heading>
-          <ul className="space-y-3">
+          <div className="mb-6 flex flex-wrap items-center gap-4">
+            <Heading
+              id={`schedule-day-${day.dayKey}`}
+              level={2}
+              visualLevel={3}
+              className="first-letter:uppercase"
+            >
+              {formatDate(day.representative)}
+            </Heading>
+            <span
+              aria-hidden="true"
+              className="h-1 min-w-12 flex-1 rounded-[var(--radius-pill)] bg-[var(--color-border-subtle)]"
+            />
+            <span className="text-sm font-semibold text-[var(--color-text-muted)]">
+              {day.slots.length}{" "}
+              {day.slots.length === 1 ? "actividad" : "actividades"}
+            </span>
+          </div>
+          <ul className="space-y-4">
             {day.slots.map((slot) => (
               <li key={slot.id}>
-                <ScheduleSlot slot={slot} speakerBasePath={speakerBasePath} />
+                <ScheduleSlot
+                  slot={slot}
+                  speakerBasePath={speakerBasePath}
+                  accentIndex={roomAccents.get(slot.roomName) ?? 0}
+                />
               </li>
             ))}
           </ul>

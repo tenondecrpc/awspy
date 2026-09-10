@@ -40,6 +40,24 @@ describe("ScheduleSlot", () => {
     expect(screen.getByText("Plenaria")).toBeInTheDocument();
   });
 
+  it("gives different rooms different decorative accents", () => {
+    const { container: a } = render(
+      <ScheduleSlot slot={SLOT} accentIndex={0} />
+    );
+    const { container: b } = render(
+      <ScheduleSlot slot={SLOT} accentIndex={1} />
+    );
+    const styleOf = (el: HTMLElement) =>
+      el.querySelector("article")?.getAttribute("style");
+    expect(styleOf(a)).toContain("--card-accent");
+    expect(styleOf(a)).not.toEqual(styleOf(b));
+  });
+
+  it("still names the room in text next to the accent", () => {
+    render(<ScheduleSlot slot={SLOT} accentIndex={2} />);
+    expect(screen.getByText("Sala Principal")).toBeInTheDocument();
+  });
+
   it("respects a custom speakerBasePath for archived editions", () => {
     render(
       <ScheduleSlot slot={SLOT} speakerBasePath="/editions/2025/speakers" />

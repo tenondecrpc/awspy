@@ -6,6 +6,9 @@ import { Section } from "@/components/atoms/Section";
 import { Heading } from "@/components/atoms/Heading";
 import { Link } from "@/components/atoms/Link";
 import { Button } from "@/components/atoms/Button";
+import { EyebrowPill } from "@/components/atoms/EyebrowPill";
+import { GlyphIcon } from "@/components/atoms/GlyphIcon";
+import { DecorativePattern } from "@/components/atoms/DecorativePattern";
 import {
   buildBreadcrumbJsonLd,
   buildPersonJsonLd,
@@ -13,6 +16,16 @@ import {
 } from "@/lib/utils/seo";
 import { formatTimeRange } from "@/lib/utils/datetime";
 import type { Speaker, SessionizeSession } from "@/lib/api/sessionize";
+
+function initials(name: string): string {
+  return name
+    .split(/\s+/)
+    .map((part) => part[0])
+    .filter(Boolean)
+    .slice(0, 2)
+    .join("")
+    .toUpperCase();
+}
 
 type SpeakerDetailTemplateProps = {
   speaker: Speaker;
@@ -60,51 +73,59 @@ export function SpeakerDetailTemplate({
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: serializeJsonLd(breadcrumbLd) }}
       />
-      <Section spacing="lg">
-        <Container>
-          <div className="grid gap-10 lg:grid-cols-[200px_1fr]">
-            <div className="flex justify-center lg:block">
-              {speaker.profilePicture ? (
-                <Image
-                  src={speaker.profilePicture}
-                  alt=""
-                  width={200}
-                  height={200}
-                  sizes="(min-width: 1024px) 200px, 160px"
-                  className="h-[200px] w-[200px] rounded-full object-cover"
-                />
-              ) : (
-                <div
-                  aria-hidden="true"
-                  className="flex h-[200px] w-[200px] items-center justify-center rounded-full bg-[var(--color-accent-soft)] text-5xl font-bold text-[var(--color-accent-strong)]"
-                >
-                  {speaker.fullName
-                    .split(" ")
-                    .map((p) => p[0])
-                    .filter(Boolean)
-                    .slice(0, 2)
-                    .join("")
-                    .toUpperCase()}
-                </div>
-              )}
+      {/* Identity band. The portrait sits on the midnight-blue surface the
+          same way the family sites present a keynote, and the practical
+          content (bio, talks) follows on the light surface below. */}
+      <Section spacing="lg" tone="inverse">
+        <DecorativePattern
+          density="low"
+          opacity={0.06}
+          seed={`speaker-${speaker.slug}`}
+        />
+        <Container className="relative">
+          <div className="grid items-center gap-10 lg:grid-cols-[260px_1fr] lg:gap-14">
+            <div className="mx-auto w-full max-w-[260px] lg:mx-0">
+              <div className="relative aspect-square w-full overflow-hidden rounded-[var(--radius-lg)] border-4 border-[var(--color-national-red)] bg-[var(--color-accent-soft)]">
+                {speaker.profilePicture ? (
+                  <Image
+                    src={speaker.profilePicture}
+                    alt=""
+                    fill
+                    sizes="(min-width: 1024px) 260px, 260px"
+                    className="object-cover"
+                  />
+                ) : (
+                  <div
+                    aria-hidden="true"
+                    className="flex h-full w-full items-center justify-center text-6xl font-bold text-[var(--color-accent-strong)]"
+                  >
+                    {initials(speaker.fullName)}
+                  </div>
+                )}
+              </div>
             </div>
-            <div className="space-y-4">
-              <Heading level={1}>{speaker.fullName}</Heading>
+
+            <div className="flex flex-col items-start gap-5">
+              <EyebrowPill tone="inverse" glyph="mic">
+                Speaker
+              </EyebrowPill>
+              <Heading level={1} className="text-balance">
+                {speaker.fullName}
+              </Heading>
               {speaker.tagLine ? (
-                <p className="text-lg text-[var(--color-text-secondary)]">
+                <p className="text-lg text-[var(--color-text-on-inverse)] opacity-90 sm:text-xl">
                   {speaker.tagLine}
-                </p>
-              ) : null}
-              {speaker.bio ? (
-                <p className="text-[var(--color-text-primary)]">
-                  {speaker.bio}
                 </p>
               ) : null}
               {speaker.links && speaker.links.length > 0 ? (
                 <ul className="flex flex-wrap gap-3">
                   {speaker.links.map((l) => (
                     <li key={l.url}>
-                      <Link href={l.url} external className="text-sm">
+                      <Link
+                        href={l.url}
+                        external
+                        className="glass-panel inline-flex items-center gap-2 rounded-[var(--radius-pill)] px-4 py-2 text-sm font-semibold text-[var(--color-text-on-inverse)]"
+                      >
                         {l.title || l.linkType}
                       </Link>
                     </li>
@@ -113,26 +134,42 @@ export function SpeakerDetailTemplate({
               ) : null}
             </div>
           </div>
+        </Container>
+      </Section>
+
+      <Section spacing="lg">
+        <Container>
+          {speaker.bio ? (
+            <div className="max-w-3xl space-y-4">
+              <Heading level={2} visualLevel={4}>
+                Sobre {speaker.firstName}
+              </Heading>
+              <p className="text-lg text-[var(--color-text-secondary)]">
+                {speaker.bio}
+              </p>
+            </div>
+          ) : null}
 
           {ownSessions.length > 0 ? (
-            <div className="mt-10 space-y-4">
+            <div className={speaker.bio ? "mt-14 space-y-6" : "space-y-6"}>
               <Heading level={2} visualLevel={3}>
                 Sus charlas
               </Heading>
-              <ul className="space-y-3">
+              <ul className="grid gap-6 lg:grid-cols-2">
                 {ownSessions.map((s) => (
                   <li
                     key={s.id}
-                    className="rounded-[var(--radius-lg)] bg-[var(--color-surface-muted)] p-4"
+                    className="media-card flex h-full flex-col gap-3 rounded-[var(--radius-lg)] bg-[var(--color-surface-elevated)] p-6 shadow-sm"
                   >
-                    <p className="font-semibold">{s.title}</p>
+                    <h3 className="text-lg font-bold">{s.title}</h3>
                     {s.startsAt && s.endsAt ? (
-                      <p className="text-sm text-[var(--color-text-secondary)]">
+                      <p className="inline-flex items-center gap-1.5 text-sm font-semibold text-[var(--color-text-secondary)]">
+                        <GlyphIcon name="clock" size={15} />
                         {formatTimeRange(s.startsAt, s.endsAt)}
                       </p>
                     ) : null}
                     {s.description ? (
-                      <p className="mt-2 text-sm text-[var(--color-text-secondary)]">
+                      <p className="text-sm text-[var(--color-text-secondary)]">
                         {s.description}
                       </p>
                     ) : null}
@@ -142,8 +179,14 @@ export function SpeakerDetailTemplate({
             </div>
           ) : null}
 
-          <div className="mt-10">
-            <Button as="a" href={backPath} variant="ghost" size="md">
+          <div className="mt-14">
+            <Button
+              as="a"
+              href={backPath}
+              variant="ghost"
+              size="md"
+              shape="pill"
+            >
               Volver a speakers
             </Button>
           </div>

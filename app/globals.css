@@ -40,6 +40,15 @@
   --color-surface-hero: #000c2f;
   --color-overlay: #000c2fb3;
 
+  /* Scrims, glass panels, and decorative glow. Always paired with a
+     text label; never the only carrier of meaning. */
+  --color-scrim-strong: #000c2feb;
+  --color-glass: #ffffff14;
+  --color-glass-border: #ffffff3d;
+  --color-glow-action: #0038a852;
+  --color-glow-accent: #0a4db852;
+  --color-glow-red: #f02f3b52;
+
   /* Text */
   --color-text-primary: #08152f;
   --color-text-secondary: #34415f;
@@ -100,6 +109,12 @@
     --color-surface-inverse: #000c2f;
     --color-surface-hero: #01051d;
     --color-overlay: #000c2fb3;
+    --color-scrim-strong: #01051deb;
+    --color-glass: #ffffff14;
+    --color-glass-border: #ffffff33;
+    --color-glow-action: #6ea1ff3d;
+    --color-glow-accent: #74a8ff3d;
+    --color-glow-red: #ff4b5b3d;
     --color-text-primary: #f7f8ff;
     --color-text-secondary: #c5ccea;
     --color-text-muted: #9aa5ca;
@@ -143,6 +158,12 @@ html[data-theme="dark"] {
   --color-surface-inverse: #000c2f;
   --color-surface-hero: #01051d;
   --color-overlay: #000c2fb3;
+  --color-scrim-strong: #01051deb;
+  --color-glass: #ffffff14;
+  --color-glass-border: #ffffff33;
+  --color-glow-action: #6ea1ff3d;
+  --color-glow-accent: #74a8ff3d;
+  --color-glow-red: #ff4b5b3d;
   --color-text-primary: #f7f8ff;
   --color-text-secondary: #c5ccea;
   --color-text-muted: #9aa5ca;
@@ -293,4 +314,68 @@ html[data-theme="dark"] .theme-toggle__moon {
 
 .decorative-pattern-fade {
   animation: pattern-fade-in 0.2s ease-out forwards;
+}
+
+/* ---------------------------------------------------------------------------
+   Composite surface helpers.
+
+   These classes exist here (and not as Tailwind utilities in a component)
+   because they combine several color stops. Keeping them in this file
+   preserves the single-source-of-truth boundary enforced by
+   `local/no-color-literals`.
+   --------------------------------------------------------------------------- */
+
+/* Frosted panel used for the hero countdown boxes and eyebrow pills over
+   dark surfaces. */
+.glass-panel {
+  background: var(--color-glass);
+  border: 1px solid var(--color-glass-border);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+}
+
+/* Portrait media card with an accent border that reacts to hover and to
+   keyboard focus anywhere inside it. Consumers set `--card-accent` and
+   `--card-glow` from palette tokens. */
+.media-card {
+  border: 1px solid var(--color-border-subtle);
+  transition:
+    transform 0.25s ease,
+    border-color 0.25s ease,
+    box-shadow 0.25s ease;
+}
+
+.media-card:hover,
+.media-card:focus-within {
+  transform: translateY(-6px);
+  border-color: var(--card-accent, var(--color-accent));
+  box-shadow:
+    0 0 0 1px var(--card-accent, var(--color-accent)),
+    0 22px 45px -20px var(--card-glow, var(--color-glow-accent));
+}
+
+/* Scrim that reveals secondary content (a talk title) over a photo. The
+   content stays in the DOM and in the accessibility tree at all times, so a
+   screen reader announces it regardless of the visual state. */
+.media-card__scrim {
+  background: linear-gradient(
+    to top,
+    var(--color-scrim-strong) 0%,
+    var(--color-overlay) 55%,
+    transparent 100%
+  );
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+
+.media-card:hover .media-card__scrim,
+.media-card:focus-within .media-card__scrim {
+  opacity: 1;
+}
+
+/* Touch devices have no hover state, so the scrim is always visible there. */
+@media (hover: none) {
+  .media-card__scrim {
+    opacity: 1;
+  }
 }

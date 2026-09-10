@@ -44,4 +44,24 @@ describe("Countdown", () => {
     render(<Countdown targetDate="2026-09-12T13:00:00-03:00" />);
     expect(screen.getByRole("status")).toHaveAttribute("aria-live", "polite");
   });
+
+  it("renders frosted boxes on the hero tone and keeps the same labels", () => {
+    const { container } = render(
+      <Countdown targetDate="2026-09-12T13:00:00-03:00" tone="hero" />
+    );
+    expect(container.querySelectorAll(".glass-panel")).toHaveLength(3);
+    expect(screen.getByText("días")).toBeInTheDocument();
+    expect(screen.getByText("hs")).toBeInTheDocument();
+    expect(screen.getByText("min")).toBeInTheDocument();
+  });
+
+  it("keeps the muted panel on the default tone", () => {
+    const { container } = render(
+      <Countdown targetDate="2026-09-12T13:00:00-03:00" />
+    );
+    expect(container.querySelectorAll(".glass-panel")).toHaveLength(0);
+    expect(screen.getByRole("status").className).toContain(
+      "var(--color-surface-muted)"
+    );
+  });
 });

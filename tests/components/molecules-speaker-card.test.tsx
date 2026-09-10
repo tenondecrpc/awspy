@@ -59,4 +59,61 @@ describe("SpeakerCard", () => {
     render(<SpeakerCard speaker={{ ...SPEAKER, profilePicture: null }} />);
     expect(screen.getByText("AL")).toBeInTheDocument();
   });
+
+  it("exposes exactly one link so the card is a single tab stop", () => {
+    render(<SpeakerCard speaker={SPEAKER} />);
+    expect(screen.getAllByRole("link")).toHaveLength(1);
+  });
+
+  it("stretches the single link over the whole card", () => {
+    render(<SpeakerCard speaker={SPEAKER} />);
+    expect(
+      screen.getByRole("link", { name: "Ada Lovelace" }).className
+    ).toContain("after:absolute");
+  });
+
+  it("keeps the talk title in the accessibility tree, not only on hover", () => {
+    render(
+      <SpeakerCard
+        speaker={{
+          ...SPEAKER,
+          sessions: [{ id: "42", name: "Serverless en producción" }],
+        }}
+      />
+    );
+    // Rendered unconditionally: the scrim animates opacity, so a screen
+    // reader announces the talk regardless of the visual state.
+    expect(screen.getByText("Serverless en producción")).toBeInTheDocument();
+    expect(screen.getByText(/^Charla:/)).toBeInTheDocument();
+  });
+
+  it("omits the talk block when Sessionize reports no named session", () => {
+    render(<SpeakerCard speaker={{ ...SPEAKER, sessions: [{ id: "42" }] }} />);
+    expect(screen.queryByText(/^Charla:/)).not.toBeInTheDocument();
+  });
+
+  it("labels a Sessionize top speaker with text, not only with color", () => {
+    render(<SpeakerCard speaker={{ ...SPEAKER, isTopSpeaker: true }} />);
+    expect(screen.getByText("Top speaker")).toBeInTheDocument();
+  });
+
+  it("cycles the decorative accent so neighbouring cards differ", () => {
+    const { container: first } = render(
+      <SpeakerCard speaker={SPEAKER} accentIndex={0} />
+    );
+    const { container: second } = render(
+      <SpeakerCard speaker={SPEAKER} accentIndex={1} />
+    );
+    const accentOf = (el: HTMLElement) =>
+      el.querySelector("article")?.getAttribute("style");
+    expect(accentOf(first)).toContain("--card-accent");
+    expect(accentOf(first)).not.toEqual(accentOf(second));
+  });
+
+  it("wraps the accent index so any list length is safe", () => {
+    render(<SpeakerCard speaker={SPEAKER} accentIndex={97} />);
+    expect(
+      screen.getByRole("link", { name: "Ada Lovelace" })
+    ).toBeInTheDocument();
+  });
 });

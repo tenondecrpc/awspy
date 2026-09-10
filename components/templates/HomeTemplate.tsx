@@ -1,14 +1,23 @@
-// Home page template. Composes Hero, Countdown, About, and placeholder
-// preview slots for speakers and sponsors. The page-level component is
-// responsible for fetching Sessionize/EventInfo and passing it down.
+// Home page template. Composes the hero, the "about" band with its feature
+// cards, the speakers preview, the volunteering call to action, and the
+// sponsors preview. The page-level component is responsible for fetching
+// Sessionize/EventInfo and passing it down.
+//
+// Section order follows the AWS Community Day family: pitch -> what it is ->
+// who speaks -> how to take part -> who makes it possible. Backgrounds
+// alternate `surface` / `surface-muted` with one inverse band so the page
+// reads as distinct blocks rather than one continuous column.
+//
+// The countdown is part of the hero, not a band of its own.
 
 import NextLink from "next/link";
 import { Container } from "@/components/atoms/Container";
 import { Section } from "@/components/atoms/Section";
-import { Heading } from "@/components/atoms/Heading";
+import { GlyphIcon, type GlyphName } from "@/components/atoms/GlyphIcon";
 import { Button } from "@/components/atoms/Button";
+import { DecorativePattern } from "@/components/atoms/DecorativePattern";
+import { SectionHeading } from "@/components/molecules/SectionHeading";
 import { Hero } from "@/components/organisms/Hero";
-import { Countdown } from "@/components/organisms/Countdown";
 import { EmptyState } from "@/components/organisms/EmptyState";
 import { SpeakerCard } from "@/components/molecules/SpeakerCard";
 import { SponsorsBoard } from "@/components/organisms/SponsorsBoard";
@@ -30,6 +39,36 @@ type HomeTemplateProps = {
   volunteersHref?: string;
 };
 
+/** Two full rows of the four-column grid. */
+const SPEAKERS_PREVIEW_LIMIT = 8;
+
+const FEATURES: { glyph: GlyphName; title: string; description: string }[] = [
+  {
+    glyph: "target",
+    title: "Objetivo",
+    description:
+      "Acercar la nube a más personas en Paraguay con contenido técnico gratuito y en español.",
+  },
+  {
+    glyph: "users",
+    title: "Comunidad",
+    description:
+      "Un evento organizado por voluntarios y voluntarias del user group local, para la comunidad.",
+  },
+  {
+    glyph: "book",
+    title: "Aprendizaje",
+    description:
+      "Charlas y talleres sobre servicios y buenas prácticas de Amazon Web Services.",
+  },
+  {
+    glyph: "bolt",
+    title: "Innovación",
+    description:
+      "Casos reales, herramientas nuevas y espacios para intercambiar experiencias.",
+  },
+];
+
 export function HomeTemplate({
   eventInfo,
   speakersPreview,
@@ -48,98 +87,81 @@ export function HomeTemplate({
         cfpHref={cfpHref}
       />
 
-      <Section spacing="md" tone="default">
+      <Section spacing="lg" tone="muted" aria-labelledby="about-title">
         <Container>
-          <div className="flex flex-col items-center gap-6">
-            <Heading level={2} visualLevel={3} accent>
-              Cuenta regresiva
-            </Heading>
-            <Countdown targetDate={eventInfo.dates.start} />
-          </div>
-        </Container>
-      </Section>
+          <SectionHeading
+            id="about-title"
+            level={2}
+            eyebrow="Sobre el evento"
+            title="¿Qué es el"
+            highlight="Community Day?"
+            tone="muted"
+            description={
+              <>
+                El AWS Community Day Paraguay es una jornada gratuita organizada
+                por la comunidad local. Reunimos charlas técnicas, talleres y
+                espacios de networking enfocados en servicios y prácticas de
+                Amazon Web Services. Es un evento de la comunidad, para la
+                comunidad.
+              </>
+            }
+          />
 
-      <Section
-        spacing="md"
-        tone="inverse"
-        aria-labelledby="volunteers-title"
-        eyebrow="Voluntariado"
-      >
-        <Container>
-          <div className="mx-auto grid max-w-4xl items-center gap-6 md:grid-cols-[1fr_auto] md:gap-10">
-            <div className="space-y-3 text-center md:text-left">
-              <Heading id="volunteers-title" level={2}>
-                Ayudanos a hacer posible el evento
-              </Heading>
-              <p className="text-[var(--color-text-on-inverse)] opacity-90">
-                Sumate al equipo de voluntariado y colaborá con la experiencia
-                de speakers y asistentes antes y durante la jornada.
-              </p>
-            </div>
-            <Button
-              as="a"
-              href={volunteersHref}
-              variant="primary"
-              size="lg"
-              className="justify-self-center"
-            >
-              Quiero ser voluntario/a
-            </Button>
-          </div>
-        </Container>
-      </Section>
-
-      <Section
-        spacing="md"
-        tone="muted"
-        aria-labelledby="about-title"
-        eyebrow="Sobre el evento"
-      >
-        <Container>
-          <div className="mx-auto max-w-3xl space-y-4 text-center">
-            <Heading id="about-title" level={2} className="text-balance">
-              ¿Qué es el Community Day?
-            </Heading>
-            <p className="text-[var(--color-text-secondary)]">
-              El AWS Community Day Paraguay es una jornada gratuita organizada
-              por la comunidad local. Reunimos charlas técnicas, talleres y
-              espacios de networking enfocados en servicios y prácticas de
-              Amazon Web Services. Es un evento de la comunidad, para la
-              comunidad.
-            </p>
-            <p className="text-[var(--color-text-secondary)]">
-              Esta es la primera edición en Paraguay. Si querés colaborar como
-              sponsor o presentar una charla, escribinos a{" "}
-              <a
-                href={`mailto:${eventInfo.contactEmail}`}
-                className="text-[var(--color-accent)] underline-offset-2 hover:underline"
+          <ul className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+            {FEATURES.map((feature) => (
+              <li
+                key={feature.title}
+                className="flex flex-col gap-3 rounded-[var(--radius-lg)] border border-[var(--color-border-subtle)] bg-[var(--color-surface)] p-6"
               >
-                {eventInfo.contactEmail}
-              </a>
-              .
-            </p>
-          </div>
+                <span className="flex h-12 w-12 items-center justify-center rounded-[var(--radius-md)] bg-[var(--color-accent-soft)] text-[var(--color-accent-strong)]">
+                  <GlyphIcon name={feature.glyph} size={24} />
+                </span>
+                <h3 className="text-lg font-bold">{feature.title}</h3>
+                <p className="text-sm text-[var(--color-text-secondary)]">
+                  {feature.description}
+                </p>
+              </li>
+            ))}
+          </ul>
+
+          <p className="mt-10 text-center text-[var(--color-text-secondary)]">
+            Esta es la primera edición en Paraguay. Si querés colaborar como
+            sponsor o presentar una charla, escribinos a{" "}
+            <a
+              href={`mailto:${eventInfo.contactEmail}`}
+              className="font-semibold text-[var(--color-accent)] underline-offset-2 hover:underline"
+            >
+              {eventInfo.contactEmail}
+            </a>
+            .
+          </p>
         </Container>
       </Section>
 
       <Section
-        spacing="md"
+        spacing="lg"
         tone="default"
         aria-labelledby="speakers-preview-title"
-        eyebrow="Speakers"
       >
         <Container>
-          <div className="mb-8 flex items-baseline justify-between gap-4">
-            <Heading id="speakers-preview-title" level={2} accent>
-              Conocé a los speakers
-            </Heading>
+          <SectionHeading
+            id="speakers-preview-title"
+            level={2}
+            eyebrow="Speakers"
+            eyebrowGlyph="mic"
+            title="Conocé a los"
+            highlight="speakers"
+            description="Las personas que van a compartir su experiencia con la comunidad durante la jornada."
+            className="mb-12"
+          >
             <NextLink
               href={speakersHref}
-              className="text-sm font-semibold text-[var(--color-accent)] hover:underline"
+              className="inline-flex items-center rounded-[var(--radius-pill)] border border-[var(--color-accent)] px-5 py-2 text-sm font-bold text-[var(--color-accent)] transition hover:-translate-y-0.5 hover:bg-[var(--color-accent)] hover:text-[var(--color-text-on-accent)]"
             >
               Ver todos
             </NextLink>
-          </div>
+          </SectionHeading>
+
           {speakersPreview.length === 0 ? (
             <EmptyState
               title="Pronto anunciamos a los speakers"
@@ -149,12 +171,16 @@ export function HomeTemplate({
             />
           ) : (
             <ul
-              className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3"
+              className="grid grid-cols-2 gap-4 sm:gap-6 lg:grid-cols-4 lg:gap-8"
               aria-label="Vista previa de speakers"
             >
-              {speakersPreview.slice(0, 6).map((s) => (
-                <li key={s.id}>
-                  <SpeakerCard speaker={s} basePath={speakersHref} />
+              {speakersPreview.slice(0, SPEAKERS_PREVIEW_LIMIT).map((s, i) => (
+                <li key={s.id} className="h-full">
+                  <SpeakerCard
+                    speaker={s}
+                    basePath={speakersHref}
+                    accentIndex={i}
+                  />
                 </li>
               ))}
             </ul>
@@ -162,24 +188,60 @@ export function HomeTemplate({
         </Container>
       </Section>
 
+      <Section spacing="lg" tone="inverse" aria-labelledby="volunteers-title">
+        <DecorativePattern
+          density="low"
+          opacity={0.06}
+          seed={`volunteers-${eventInfo.year}`}
+        />
+        <Container className="relative">
+          <SectionHeading
+            id="volunteers-title"
+            level={2}
+            eyebrow="Voluntariado"
+            eyebrowGlyph="users"
+            title="Sumate al equipo de"
+            highlight="voluntariado"
+            tone="inverse"
+            description="Colaborá con la experiencia de speakers y asistentes antes y durante la jornada. No necesitás experiencia previa, solo ganas de ayudar."
+          >
+            <Button
+              as="a"
+              href={volunteersHref}
+              variant="primary"
+              size="lg"
+              shape="pill"
+            >
+              Quiero ser voluntario/a
+            </Button>
+          </SectionHeading>
+        </Container>
+      </Section>
+
       <Section
-        spacing="md"
+        spacing="lg"
         tone="muted"
         aria-labelledby="sponsors-preview-title"
-        eyebrow="Sponsors"
       >
         <Container>
-          <div className="mb-8 flex items-baseline justify-between gap-4">
-            <Heading id="sponsors-preview-title" level={2} accent>
-              Quienes hacen posible el evento
-            </Heading>
+          <SectionHeading
+            id="sponsors-preview-title"
+            level={2}
+            eyebrow="Sponsors"
+            title="Quienes hacen posible"
+            highlight="el evento"
+            tone="muted"
+            description="Gracias a estas organizaciones la entrada al Community Day es gratuita."
+            className="mb-12"
+          >
             <NextLink
               href={sponsorsHref}
-              className="text-sm font-semibold text-[var(--color-accent)] hover:underline"
+              className="inline-flex items-center rounded-[var(--radius-pill)] border border-[var(--color-accent)] px-5 py-2 text-sm font-bold text-[var(--color-accent)] transition hover:-translate-y-0.5 hover:bg-[var(--color-accent)] hover:text-[var(--color-text-on-accent)]"
             >
               Ver todos
             </NextLink>
-          </div>
+          </SectionHeading>
+
           {sponsorsPreview.length === 0 ? (
             <EmptyState
               title="Sumate como sponsor"

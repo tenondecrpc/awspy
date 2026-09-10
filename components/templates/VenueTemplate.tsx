@@ -1,6 +1,6 @@
 import { Container } from "@/components/atoms/Container";
 import { Section } from "@/components/atoms/Section";
-import { Heading } from "@/components/atoms/Heading";
+import { SectionHeading } from "@/components/molecules/SectionHeading";
 import { VenueCard } from "@/components/organisms/VenueCard";
 import type { Venue } from "@/lib/content/venue";
 
@@ -12,12 +12,14 @@ export function VenueTemplate({ venue }: VenueTemplateProps) {
   return (
     <Section spacing="lg">
       <Container>
-        <div className="mb-10 max-w-3xl space-y-3">
-          <Heading level={1}>Sede</Heading>
-          <p className="text-[var(--color-text-secondary)]">
-            Dónde nos vemos para el AWS Community Day Paraguay.
-          </p>
-        </div>
+        <SectionHeading
+          level={1}
+          eyebrow="Ubicación"
+          eyebrowGlyph="pin"
+          title="Sede"
+          description="Dónde nos vemos para el AWS Community Day Paraguay."
+          className="mb-14"
+        />
       </Container>
       <VenueCard venue={venue} />
     </Section>

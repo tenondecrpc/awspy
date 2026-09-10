@@ -31,6 +31,19 @@ The following table lists every token introduced or refreshed by this feature. L
 | `--color-surface-inverse`   | `#041A53`   | `#000C2F`   | Consistently dark inverse/callout surface.           |
 | `--color-surface-hero`      | `#000C2F`   | `#01051D`   | Night-sky hero surface inspired by the artwork.      |
 | `--color-overlay`           | `#000C2FB3` | `#000C2FB3` | Modal/drawer backdrop; not used for text contrast.   |
+| `--color-scrim-strong`      | `#000C2FEB` | `#01051DEB` | Base of the photo scrim that reveals a talk title.   |
+| `--color-glass`             | `#FFFFFF14` | `#FFFFFF14` | Frosted panel fill over dark surfaces.               |
+| `--color-glass-border`      | `#FFFFFF3D` | `#FFFFFF33` | Frosted panel hairline over dark surfaces.           |
+
+### Decorative glow
+
+Used only as the outer color stop of a card `box-shadow` on hover or focus. Never behind text, so no contrast pair applies.
+
+| Token                       | Light value | Dark value  | Intended usage                                       |
+|-----------------------------|-------------|-------------|------------------------------------------------------|
+| `--color-glow-action`       | `#0038A852` | `#6EA1FF3D` | Glow paired with `--color-action` borders.           |
+| `--color-glow-accent`       | `#0A4DB852` | `#74A8FF3D` | Glow paired with `--color-accent` borders.           |
+| `--color-glow-red`          | `#F02F3B52` | `#FF4B5B3D` | Glow paired with `--color-national-red` borders.     |
 
 ### Text
 
@@ -131,5 +144,9 @@ These are not data entities, but they are the "shape" of the new visual primitiv
 - **DecorativePattern**: a grid of `aria-hidden` SVG icons rendered at low opacity over a brand surface. Density and opacity are props.
 - **EmptyStateIllustration**: a token-only inline SVG with no embedded text, decorative.
 - **LoadingGrid**: a skeleton with the same column count, gap, and item template as the populated grid. Exposes `aria-busy` and a Spanish loading label.
+- **SectionHeading**: eyebrow pill, large title with an optional accent-tinted trailing phrase, and a lead paragraph. The single source of the section rhythm shared by the home page and every inner page.
+- **EyebrowPill**: the uppercase, letter-spaced label above a section title. Typographic only; `Badge` remains the component for state (registration, sponsor tier).
+- **GlyphIcon**: inline `aria-hidden` concept glyphs (date, place, time, community) that inherit `currentColor`. Always adjacent to a visible text label.
+- **`.glass-panel` / `.media-card` / `.media-card__scrim`**: composite helpers declared in `app/globals.css` because they combine several color stops. Consumers set `--card-accent` and `--card-glow` from palette tokens; the accent is decorative and every card also carries its information as text.
 
 These primitives have no runtime state, no fetching, and no validation. They are pure render functions of their props.

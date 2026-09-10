@@ -28,9 +28,10 @@ export function SpeakersGrid({
   if (isLoading && speakers.length === 0) {
     return (
       <LoadingGrid
-        columns={3}
+        columns={4}
         rows={2}
-        itemAspectRatio={1}
+        itemAspectRatio={4 / 5}
+        gap="lg"
         loadingLabel="Cargando speakers"
       />
     );
@@ -56,12 +57,12 @@ export function SpeakersGrid({
 
   return (
     <ul
-      className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3"
+      className="grid grid-cols-2 gap-4 sm:gap-6 lg:grid-cols-4 lg:gap-8"
       aria-label="Lista de speakers"
     >
-      {speakers.map((s) => (
-        <li key={s.id}>
-          <SpeakerCard speaker={s} basePath={basePath} />
+      {speakers.map((s, index) => (
+        <li key={s.id} className="h-full">
+          <SpeakerCard speaker={s} basePath={basePath} accentIndex={index} />
         </li>
       ))}
     </ul>

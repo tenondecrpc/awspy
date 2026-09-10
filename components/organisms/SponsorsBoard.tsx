@@ -6,7 +6,11 @@ import { Heading } from "@/components/atoms/Heading";
 import { LoadingGrid } from "@/components/atoms/LoadingGrid";
 import { SponsorCard } from "@/components/molecules/SponsorCard";
 import { EmptyState } from "@/components/organisms/EmptyState";
-import { groupSponsorsByTier, type Sponsor } from "@/lib/content/sponsors";
+import {
+  groupSponsorsByTier,
+  type Sponsor,
+  type SponsorTier,
+} from "@/lib/content/sponsors";
 import type { EventInfo } from "@/lib/content/event-info";
 import { cn } from "@/lib/utils/cn";
 
@@ -21,6 +25,18 @@ type SponsorsBoardProps = {
   /** When true and the list is empty, render a skeleton instead. */
   isLoading?: boolean;
   className?: string;
+};
+
+// Decorative rule under each tier heading. The tier name is always written
+// out next to it, so the tint is reinforcement rather than the only signal.
+// Text keeps its own AA-verified token; these values are only ever used as a
+// background, which is the pairing verified in the palette contract.
+const TIER_RULE: Record<SponsorTier, string> = {
+  Platinum: "var(--color-tier-platinum)",
+  Gold: "var(--color-tier-gold)",
+  Silver: "var(--color-tier-silver)",
+  Bronze: "var(--color-tier-bronze)",
+  Community: "var(--color-tier-community)",
 };
 
 export function SponsorsBoard({
@@ -74,21 +90,23 @@ export function SponsorsBoard({
 
   const groups = groupSponsorsByTier(sponsors);
   return (
-    <div className={cn("space-y-12", className)}>
+    <div className={cn("space-y-16", className)}>
       {groups.map((group) => (
         <section key={group.tier} aria-labelledby={`tier-${group.tier}`}>
-          <Heading
-            id={`tier-${group.tier}`}
-            level={2}
-            visualLevel={3}
-            className="mb-4"
-          >
-            {group.tier}
-          </Heading>
-          <ul className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="mb-8 flex flex-col items-center gap-3">
+            <Heading id={`tier-${group.tier}`} level={2} visualLevel={4}>
+              {group.tier}
+            </Heading>
+            <span
+              aria-hidden="true"
+              className="h-1 w-16 rounded-[var(--radius-pill)]"
+              style={{ background: TIER_RULE[group.tier] }}
+            />
+          </div>
+          <ul className="grid justify-center gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {group.sponsors.map((s) => (
-              <li key={s.id}>
-                <SponsorCard sponsor={s} />
+              <li key={s.id} className="h-full">
+                <SponsorCard sponsor={s} className="h-full" />
               </li>
             ))}
           </ul>

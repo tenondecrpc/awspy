@@ -22,10 +22,13 @@ type HeadingProps = {
   accent?: boolean;
 };
 
+// Display scale. Levels 1 and 2 carry the extra step at `lg` that gives the
+// section titles the same presence they have across the AWS Community Day
+// family; the tighter leading keeps two-line titles from drifting apart.
 const VISUAL_CLASS: Record<HeadingLevel, string> = {
-  1: "text-4xl sm:text-5xl font-bold tracking-tight",
-  2: "text-3xl sm:text-4xl font-bold tracking-tight",
-  3: "text-2xl sm:text-3xl font-semibold",
+  1: "text-4xl leading-[1.08] sm:text-5xl lg:text-6xl font-bold tracking-tight",
+  2: "text-3xl leading-[1.1] sm:text-4xl lg:text-5xl font-bold tracking-tight",
+  3: "text-2xl sm:text-3xl font-semibold tracking-tight",
   4: "text-xl sm:text-2xl font-semibold",
   5: "text-lg font-semibold",
   6: "text-base font-semibold",

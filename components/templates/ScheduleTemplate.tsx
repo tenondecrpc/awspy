@@ -2,7 +2,7 @@
 
 import { Container } from "@/components/atoms/Container";
 import { Section } from "@/components/atoms/Section";
-import { Heading } from "@/components/atoms/Heading";
+import { SectionHeading } from "@/components/molecules/SectionHeading";
 import { ScheduleGridOrganism } from "@/components/organisms/ScheduleGrid";
 import type { ScheduleGrid, Speaker } from "@/lib/api/sessionize";
 import type { EventInfo } from "@/lib/content/event-info";
@@ -23,13 +23,14 @@ export function ScheduleTemplate({
   return (
     <Section spacing="lg">
       <Container>
-        <div className="mb-10 max-w-3xl space-y-3">
-          <Heading level={1}>Agenda</Heading>
-          <p className="text-[var(--color-text-secondary)]">
-            Charlas, talleres y actividades de {eventInfo.name}. Los horarios se
-            muestran en hora local de Asunción (UTC-3).
-          </p>
-        </div>
+        <SectionHeading
+          level={1}
+          eyebrow="Programa"
+          eyebrowGlyph="calendar"
+          title="Agenda"
+          description={`Charlas, talleres y actividades de ${eventInfo.name}. Los horarios se muestran en hora local de Asunción (UTC-3).`}
+          className="mb-14"
+        />
         <ScheduleGridOrganism
           grid={grid}
           speakers={speakers}
