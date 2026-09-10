@@ -36,6 +36,13 @@ const SPACING_CLASS: Record<NonNullable<SectionProps["spacing"]>, string> = {
   lg: "py-16 sm:py-24",
 };
 
+const EYEBROW_CLASS: Record<NonNullable<SectionProps["tone"]>, string> = {
+  default: "text-[var(--color-action-label)]",
+  muted: "text-[var(--color-action-label)]",
+  inverse: "text-[var(--color-action)]",
+  hero: "text-[var(--color-action)]",
+};
+
 export function Section({
   children,
   className,
@@ -53,7 +60,12 @@ export function Section({
       data-tone={tone}
     >
       {eyebrow ? (
-        <div className="mb-3 flex items-center justify-center gap-2 text-xs font-bold uppercase tracking-[0.18em] text-[var(--color-action)]">
+        <div
+          className={cn(
+            "mb-3 flex items-center justify-center gap-2 text-xs font-bold uppercase tracking-[0.18em]",
+            EYEBROW_CLASS[tone]
+          )}
+        >
           <span
             className="inline-block h-px w-8 bg-[var(--color-action)]"
             aria-hidden="true"

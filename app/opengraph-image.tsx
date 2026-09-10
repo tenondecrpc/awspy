@@ -9,7 +9,7 @@
 // not resolve CSS custom properties because the output is a PNG, not an HTML
 // document. The palette tokens declared in `app/globals.css` are unreachable
 // at this layer. The hex values below are intentionally synchronized with the
-// palette: #0B1626 == --color-surface-inverse, #FF9900 == --color-action,
+// palette: #232F3E == --color-surface-hero, #FF9900 == --color-action,
 // #001022 == --color-text-on-action, #FFFFFF == --color-text-on-hero. If the
 // palette changes, update both this file and `app/globals.css`.
 
@@ -36,8 +36,7 @@ export default function OpengraphImage() {
         flexDirection: "column",
         justifyContent: "space-between",
         padding: 80,
-        background:
-          "linear-gradient(135deg, #0B1626 0%, #003FB3 60%, #0B5FFF 100%)",
+        background: "#232F3E",
         color: "#FFFFFF",
         fontFamily:
           "system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif",

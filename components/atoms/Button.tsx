@@ -20,7 +20,7 @@ const VARIANT_CLASS: Record<Variant, string> = {
   ghost:
     "bg-transparent text-[var(--color-text-primary)] hover:bg-[var(--color-surface-muted)] disabled:text-[var(--color-text-muted)]",
   "outline-on-dark":
-    "bg-transparent text-[var(--color-text-on-hero)] border-2 border-[var(--color-text-on-hero)] hover:bg-[var(--color-accent-soft)] hover:text-[var(--color-text-on-accent)] hover:border-transparent disabled:text-[var(--color-text-muted)] disabled:border-[var(--color-text-muted)]",
+    "bg-transparent text-[var(--color-text-on-hero)] border-2 border-[var(--color-text-on-hero)] hover:bg-[var(--color-accent)] hover:text-[var(--color-text-on-accent)] hover:border-[var(--color-accent)] disabled:text-[var(--color-text-muted)] disabled:border-[var(--color-text-muted)]",
 };
 
 const SIZE_CLASS: Record<Size, string> = {

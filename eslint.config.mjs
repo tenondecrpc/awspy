@@ -7,12 +7,15 @@ import nextTs from "eslint-config-next/typescript";
 // Source of truth for colors is `app/globals.css` (Tailwind v4 @theme tokens).
 // Components reference colors via `var(--color-...)` or Tailwind utilities
 // derived from @theme. The rule fires on hex, rgb(a), hsl(a), oklch, oklab,
-// color() inside JSX `style` props, `className` strings, and styling-tagged
-// template literals. See specs/002-visual-refresh/contracts/lint-color-rule.md
-// for the full contract.
+// color(), and Tailwind named color utilities inside JSX `style` props,
+// `className` strings, and styling-tagged template literals. See
+// specs/002-visual-refresh/contracts/lint-color-rule.md for the full contract.
 
 const COLOR_PATTERN =
   /(?:#[0-9a-fA-F]{3,8}\b|\brgba?\s*\(|\bhsla?\s*\(|\boklch\s*\(|\boklab\s*\(|\bcolor\s*\()/;
+
+const TAILWIND_NAMED_COLOR_PATTERN =
+  /\b(?:bg|text|border|ring|outline|fill|stroke|from|via|to)-(?:black|white|slate|gray|zinc|neutral|stone|red|orange|amber|yellow|lime|green|emerald|teal|cyan|sky|blue|indigo|violet|purple|fuchsia|pink|rose)(?:-\d{2,3})?(?:\/\d+)?\b/;
 
 const ALLOWED_VALUES = new Set([
   "currentColor",
@@ -63,11 +66,12 @@ function isStylingContext(node) {
 function checkValue(value, context, node) {
   if (typeof value !== "string") return;
   if (ALLOWED_VALUES.has(value.trim())) return;
-  if (!COLOR_PATTERN.test(value)) return;
+  if (!COLOR_PATTERN.test(value) && !TAILWIND_NAMED_COLOR_PATTERN.test(value))
+    return;
   context.report({
     node,
     message:
-      "Color literal '{{value}}' is forbidden outside `app/globals.css`. Use a palette token (`var(--color-...)`) or a Tailwind utility derived from `@theme`.",
+      "Color literal or named utility '{{value}}' is forbidden outside `app/globals.css`. Use a palette token (`var(--color-...)`) or a Tailwind utility derived from `@theme`.",
     data: { value: value.length > 40 ? value.slice(0, 40) + "..." : value },
   });
 }
@@ -77,7 +81,7 @@ const noColorLiteralsRule = {
     type: "problem",
     docs: {
       description:
-        "Forbid color literals (hex, rgb, hsl, etc.) outside `app/globals.css`.",
+        "Forbid color literals and Tailwind named colors outside `app/globals.css`.",
     },
     schema: [],
     messages: {},

@@ -50,8 +50,8 @@ description: "Task list for the AWS Community Day Paraguay visual refresh"
 ### Palette tokens
 
 - [X] T005 Edit `app/globals.css` to add the full token map under `@theme` for the light scheme.
-- [X] T006 Edit `app/globals.css` to add the dark scheme token block under `@media (prefers-color-scheme: dark) { @theme { ... } }`.
-- [X] T007 Add `tests/unit/lib-utils-tokens.test.ts` asserting every token is declared in both the light and the dark block.
+- [X] T006 Edit `app/globals.css` to register tokens in one top-level `@theme` block and add OS/manual dark overrides.
+- [X] T007 Add `tests/unit/lib-utils-tokens.test.ts` asserting every token is declared in both modes and every documented contrast pair passes.
 
 ### Lint rule (no color literals outside globals.css)
 
@@ -230,7 +230,7 @@ description: "Task list for the AWS Community Day Paraguay visual refresh"
 - [X] T082 `npm run lint`, `npm run typecheck`, `npm test` clean (268 tests, 36 files). `npm run e2e` deferred to local run (browser not available in sandbox).
 - [ ] T083 Lighthouse desktop audit: deferred to local run.
 - [ ] T084 axe-core sweep: deferred to local Playwright run.
-- [ ] T085 Manual dark/light contrast verification: tokens map asserted by tests; numeric AA contrast verification recommended at PR time using a public calculator.
+- [X] T085 Automate dark/light WCAG contrast verification for documented text and component-boundary pairs.
 - [X] T086 `CLAUDE.md` updated by `update-agent-context.sh claude` during the plan phase.
 - [ ] T087 PR creation: deferred to user (`git diff package.json` returns no changes; no new deps added; tasks.md ready for the PR body).
 

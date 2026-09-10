@@ -55,3 +55,6 @@ exception or describe an open deployment gap.
   refreshed safe transitive versions with `npm audit fix` without `--force`.
 - **Verification**: `npm audit` reports zero vulnerabilities. The repository
   verification and Playwright results are recorded with the completing change.
+- **Follow-up (2026-09-09)**: Patched Next.js and its aligned ESLint package to
+  `16.3.4`, `sharp` to `0.35.4`, and `js-yaml` to `4.3.2` after new advisories;
+  `npm audit --audit-level=high` and registry-signature verification pass.

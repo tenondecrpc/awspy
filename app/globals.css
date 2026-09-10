@@ -6,14 +6,15 @@
   Source of truth: this file. The full token map and the AA-verified contrast
   matrix live in `specs/002-visual-refresh/data-model.md`. The boundary is
   enforced by the local ESLint rule defined in `eslint.config.mjs`
-  (`local/no-color-literals`): no hex, rgb, rgba, hsl, or hsla literals are
-  allowed under `app/`, `components/`, or `lib/` outside this file.
+  (`local/no-color-literals`): no color literals or Tailwind named color
+  utilities are allowed under `app/`, `components/`, or `lib/` outside this
+  file.
 
   The palette is aligned with AWS public branding (Squid Ink navy, Smile
   Orange, Hyperlink Blue, neutrals) so the site visually belongs to the AWS
   Community Day family. Both light and dark modes share the same semantic
-  token names; only the values change. Mode is driven by
-  `prefers-color-scheme` (no manual toggle in this iteration).
+  token names. The OS preference is the default and a validated `data-theme`
+  override on `<html>` supports the manual theme control.
 */
 
 @theme {
@@ -23,6 +24,7 @@
   --color-action: #ff9900;
   /* Smile Orange */
   --color-action-strong: #ec7211;
+  --color-action-label: #8a4b00;
   --color-accent: #0073bb;
   /* Hyperlink Blue */
   --color-accent-strong: #005a91;
@@ -34,6 +36,7 @@
   --color-surface-elevated: #ffffff;
   --color-surface-inverse: #0b1626;
   --color-surface-hero: #232f3e;
+  --color-overlay: #0b1626b3;
 
   /* Text */
   --color-text-primary: #0b1626;
@@ -43,6 +46,7 @@
   --color-text-on-accent: #ffffff;
   --color-text-on-inverse: #ffffff;
   --color-text-on-hero: #ffffff;
+  --color-text-on-tier: #ffffff;
 
   /* Borders */
   --color-border-subtle: #e5e9f0;
@@ -50,16 +54,17 @@
 
   /* State */
   --color-focus: #0073bb;
+  --color-focus-on-hero: #ffb85c;
   --color-success: #1f7a3a;
   --color-success-soft: #e5f5ea;
-  --color-warning: #b26200;
+  --color-warning: #965000;
   --color-warning-soft: #fff1dd;
   --color-danger: #b3261e;
   --color-danger-soft: #fce4e2;
 
   /* Sponsor tier (always paired with text label) */
   --color-tier-platinum: #2a2e36;
-  --color-tier-gold: #b07f00;
+  --color-tier-gold: #8a6300;
   --color-tier-silver: #6b7280;
   --color-tier-bronze: #8a4b1a;
   --color-tier-community: #1f7a3a;
@@ -76,45 +81,38 @@
 }
 
 @media (prefers-color-scheme: dark) {
-  @theme {
-    /* Brand and action */
+  html:not([data-theme]) {
     --color-brand-primary: #161e2d;
     --color-action: #ff9900;
     --color-action-strong: #ec7211;
+    --color-action-label: #ffb85c;
     --color-accent: #3fa0e0;
-    --color-accent-strong: #0073bb;
+    --color-accent-strong: #74c1ef;
     --color-accent-soft: #1a2d52;
-
-    /* Surfaces */
     --color-surface: #0b1626;
     --color-surface-muted: #131f33;
     --color-surface-elevated: #1a2638;
-    --color-surface-inverse: #ffffff;
+    --color-surface-inverse: #161e2d;
     --color-surface-hero: #161e2d;
-
-    /* Text */
+    --color-overlay: #000000b3;
     --color-text-primary: #f5f7fa;
     --color-text-secondary: #c5ccd6;
     --color-text-muted: #97a0ae;
     --color-text-on-action: #001022;
     --color-text-on-accent: #0b1626;
-    --color-text-on-inverse: #0b1626;
+    --color-text-on-inverse: #f5f7fa;
     --color-text-on-hero: #f5f7fa;
-
-    /* Borders */
+    --color-text-on-tier: #0b1626;
     --color-border-subtle: #1a2638;
     --color-border-strong: #97a0ae;
-
-    /* State */
     --color-focus: #3fa0e0;
+    --color-focus-on-hero: #ffb85c;
     --color-success: #52c97a;
     --color-success-soft: #14361f;
     --color-warning: #ffb85c;
     --color-warning-soft: #3a2a12;
     --color-danger: #ff7a6e;
     --color-danger-soft: #3a1b17;
-
-    /* Sponsor tier */
     --color-tier-platinum: #c5ccd6;
     --color-tier-gold: #ffb85c;
     --color-tier-silver: #a1a8b6;
@@ -123,10 +121,63 @@
   }
 }
 
+html[data-theme="dark"] {
+  --color-brand-primary: #161e2d;
+  --color-action: #ff9900;
+  --color-action-strong: #ec7211;
+  --color-action-label: #ffb85c;
+  --color-accent: #3fa0e0;
+  --color-accent-strong: #74c1ef;
+  --color-accent-soft: #1a2d52;
+  --color-surface: #0b1626;
+  --color-surface-muted: #131f33;
+  --color-surface-elevated: #1a2638;
+  --color-surface-inverse: #161e2d;
+  --color-surface-hero: #161e2d;
+  --color-overlay: #000000b3;
+  --color-text-primary: #f5f7fa;
+  --color-text-secondary: #c5ccd6;
+  --color-text-muted: #97a0ae;
+  --color-text-on-action: #001022;
+  --color-text-on-accent: #0b1626;
+  --color-text-on-inverse: #f5f7fa;
+  --color-text-on-hero: #f5f7fa;
+  --color-text-on-tier: #0b1626;
+  --color-border-subtle: #1a2638;
+  --color-border-strong: #97a0ae;
+  --color-focus: #3fa0e0;
+  --color-focus-on-hero: #ffb85c;
+  --color-success: #52c97a;
+  --color-success-soft: #14361f;
+  --color-warning: #ffb85c;
+  --color-warning-soft: #3a2a12;
+  --color-danger: #ff7a6e;
+  --color-danger-soft: #3a1b17;
+  --color-tier-platinum: #c5ccd6;
+  --color-tier-gold: #ffb85c;
+  --color-tier-silver: #a1a8b6;
+  --color-tier-bronze: #d69262;
+  --color-tier-community: #52c97a;
+}
+
 /* Sensible base styles. */
 
 html {
-  color-scheme: light dark;
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: dark) {
+  html:not([data-theme]) {
+    color-scheme: dark;
+  }
+}
+
+html[data-theme="light"] {
+  color-scheme: light;
+}
+
+html[data-theme="dark"] {
+  color-scheme: dark;
 }
 
 body {
@@ -157,6 +208,23 @@ body {
   outline: 2px solid var(--color-focus);
   outline-offset: 2px;
   border-radius: var(--radius-sm);
+}
+
+[data-tone="hero"] :focus-visible,
+[data-tone="inverse"] :focus-visible {
+  outline-color: var(--color-focus-on-hero);
+}
+
+.theme-toggle__sun {
+  display: none;
+}
+
+html[data-theme="dark"] .theme-toggle__sun {
+  display: block;
+}
+
+html[data-theme="dark"] .theme-toggle__moon {
+  display: none;
 }
 
 /* Honor reduced motion globally. */

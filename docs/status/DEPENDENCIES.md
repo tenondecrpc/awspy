@@ -1,12 +1,12 @@
 # Dependency inventory
 
-Verified on 2026-08-23 with npm registry data, the lockfile, `npm audit`, and `npm audit signatures`. Maintenance health and legal compatibility are `NOT VERIFIED` unless stated otherwise. The lockfile resolves only through `https://registry.npmjs.org/`; no Git, file, alternate-registry, plaintext HTTP, AWS SDK, container, system-package, or IaC dependency is present.
+Verified on 2026-09-09 with npm registry data, the lockfile, `npm audit`, and `npm audit signatures`. Maintenance health and legal compatibility are `NOT VERIFIED` unless stated otherwise. The lockfile resolves only through `https://registry.npmjs.org/`; no Git, file, alternate-registry, plaintext HTTP, AWS SDK, container, system-package, or IaC dependency is present.
 
 ## Direct production dependencies
 
 | Dependency | Ecosystem and scope | Current | Constraint | Purpose | Latest compatible verified | Vulnerability | Maintenance | License | Action | Recommendation | Blocker | Task |
 | --- | --- | ---: | ---: | --- | ---: | --- | --- | --- | --- | --- | --- | --- |
-| `next` | npm direct | 16.3.2 | 16.3.2 | App Router runtime | 16.3.2 | None reported | Active | MIT | Retained | Keep exact; validate hosting | BLK-002 | AWS-002 |
+| `next` | npm direct | 16.3.4 | 16.3.4 | App Router runtime | 16.3.4 | None reported | Active | MIT | Patched | Keep exact; validate hosting | BLK-002 | AWS-002 |
 | `react`, `react-dom` | npm direct | 19.2.4 | 19.2.4 | UI runtime | 19.2.8 | None reported | Active | MIT | Retained | Update together in a dedicated group | None | DEP-102 |
 | `zod` | npm direct | 4.4.3 | ^4.4.3 | Boundary validation | 4.4.3 | None reported | Active | MIT | Retained | Keep | None | SEC-002 |
 
@@ -17,7 +17,7 @@ Verified on 2026-08-23 with npm registry data, the lockfile, `npm audit`, and `n
 | Vitest and V8 coverage | npm direct | 4.1.11 | exact | Unit, component, and coverage | 4.1.11 | None reported | Active | MIT | Coverage provider added | Keep versions aligned | None | TEST-001 |
 | Playwright | npm direct | 1.59.1 | ^1.59.1 | Browser tests | 1.62.1 | None reported | Active | Apache-2.0 | Retained | Update with browser image in one group | None | DEP-102 |
 | Tailwind pair | npm direct | 4.2.4 | ^4 | Styling | 4.3.3 | None reported | Active | MIT | Retained | Update together after visual validation | None | DEP-102 |
-| ESLint stack | npm direct | 9.39.4 | ^9 | Static analysis | 9.39.5 | None reported | Active | MIT | Retained | Patch separately; defer major 10 | None | DEP-102 |
+| ESLint stack | npm direct | 9.39.4 / 16.3.4 | ^9 / 16.3.4 | Static analysis and Next.js rules | 9.39.5 / 16.3.4 | None reported | Active | MIT | Patched | Keep Next.js pair aligned; defer ESLint major 10 | None | DEP-102 |
 | TypeScript | npm direct | 5.9.3 | ^5 | Static typing | 5.9.3 in declared major | None reported | Active | Apache-2.0 | Retained | Defer major 7 migration | None | DEP-102 |
 | Secretlint stack | npm direct | 13.0.4 | exact | Secret scanning | 13.0.4 | None reported | Active | MIT | Retained | Keep precise exclusions | None | SEC-006 |
 | Testing Library stack | npm direct | 6.9.1/16.3.2/14.6.1 | mixed | Component testing | user-event 14.6.6 | None reported | Active | MIT | Retained | Update in an isolated test-only group | None | DEP-102 |
@@ -35,10 +35,11 @@ Verified on 2026-08-23 with npm registry data, the lockfile, `npm audit`, and `n
 
 ## Transitive and toolchain state
 
-- Locked package nodes: 647 excluding the root, reduced from 747.
-- Final clean installation target: 545 packages audited, reduced from 645 at baseline.
+- Locked package nodes: 646 excluding the root, reduced from 747.
+- Final clean installation target: 544 packages audited, reduced from 645 at baseline.
 - npm audit: zero vulnerabilities in production and development graphs.
-- Provenance: 543 verified registry signatures and 145 verified attestations.
+- Provenance: 542 verified registry signatures and 144 verified attestations.
+- Security patches: `next` and `eslint-config-next` 16.3.4, transitive `sharp` 0.35.4, and transitive `js-yaml` 4.3.2.
 - CycloneDX SBOM generation: passed; generated artifact size was 631,811 bytes and was not committed.
 - Deprecated packages: none marked during the audit.
 - License metadata exists in the lock graph, but full legal compatibility is `NOT VERIFIED`.

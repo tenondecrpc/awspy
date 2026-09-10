@@ -5,8 +5,8 @@ This document is the authoritative contract for the color palette of the AWS Com
 ## Source of truth
 
 - File: `app/globals.css`
-- Mechanism: Tailwind v4 `@theme { ... }` block for the light scheme, plus `@media (prefers-color-scheme: dark) { @theme { ... } }` for the dark scheme.
-- No other file in the repository (under `app/`, `components/`, `lib/`) MAY declare a color literal (hex, rgb, rgba, hsl, hsla). Allowed exceptions: `currentColor`, `inherit`, `transparent`, `none`.
+- Mechanism: one top-level Tailwind v4 `@theme { ... }` block registers the semantic utilities. Regular CSS overrides the same variables for the OS dark preference and `html[data-theme="dark"]`.
+- No other file in the repository (under `app/`, `components/`, `lib/`) MAY declare a color literal or a Tailwind named color utility. Allowed exceptions: `currentColor`, `inherit`, `transparent`, `none`, and the documented Satori boundary in `app/opengraph-image.tsx`.
 
 ## Token inventory
 
@@ -26,14 +26,15 @@ The full token list with values per mode lives in `data-model.md`. This contract
 ## Mode rules
 
 - The site honors the user OS preference via `prefers-color-scheme`.
-- No JavaScript toggle is shipped in this iteration.
+- A subtle header toggle can override the active mode with `data-theme="light|dark"`; its validated choice is persisted under the versioned site theme key.
+- A synchronous, static initialization script applies the saved or OS-derived mode before hydration to prevent an incorrect-theme flash.
 - Both modes MUST satisfy AA contrast on every documented foreground/background pair.
 
 ## Verification
 
 - `npm run lint` MUST pass with the no-color-literals rule.
-- A unit test under `tests/unit/lib-utils-tokens.test.ts` parses `app/globals.css` and asserts that every token name listed in `data-model.md` is present in both modes.
-- A manual contrast check (using a public WCAG calculator) MUST be recorded once per release for each pair in the contrast verification matrix.
+- A unit test under `tests/unit/lib-utils-tokens.test.ts` parses `app/globals.css`, asserts that every token is present in both modes, and calculates every documented WCAG contrast ratio.
+- Component and Playwright tests verify the accessible toggle state and persistence across reloads.
 
 ## Out of scope
 

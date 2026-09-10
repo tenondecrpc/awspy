@@ -9,7 +9,7 @@ The site is a read-heavy Next.js frontend with ISR and image optimization. It al
 
 ## Decision
 
-Keep Amplify `WEB_COMPUTE` as the target only after an isolated preview validates Next.js 16.3.2. Do not add or deploy IaC while external ownership and runtime compatibility are unresolved. Keep OpenNext as a contingency, not a parallel platform.
+Keep Amplify `WEB_COMPUTE` as the target only after an isolated preview validates the locked Next.js 16.3.4 runtime. Do not add or deploy IaC while external ownership and runtime compatibility are unresolved. Keep OpenNext as a contingency, not a parallel platform.
 
 ## Alternatives
 

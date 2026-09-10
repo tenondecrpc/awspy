@@ -6,6 +6,7 @@ import { SiteFooter } from "@/components/organisms/SiteFooter";
 import { currentEdition } from "@/lib/content/editions";
 import { getEventInfo } from "@/lib/content/event-info";
 import { getSiteUrl } from "@/lib/utils/seo";
+import { THEME_STORAGE_KEY } from "@/lib/theme";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -24,6 +25,10 @@ export const metadata: Metadata = {
     "La primera edición del AWS Community Day en Paraguay: charlas, talleres y networking organizados por la comunidad AWS local.",
 };
 
+const themeInitScript = `(()=>{try{const stored=localStorage.getItem(${JSON.stringify(
+  THEME_STORAGE_KEY
+)});const theme=stored==="light"||stored==="dark"?stored:(matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light");document.documentElement.dataset.theme=theme;document.documentElement.style.colorScheme=theme}catch{}})();`;
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -36,7 +41,10 @@ export default function RootLayout({
   const eventInfo = getEventInfo(editionYear);
 
   return (
-    <html lang="es-PY">
+    <html lang="es-PY" suppressHydrationWarning>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
+      </head>
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
         <SiteHeader editionYear={editionYear} />
         <main>{children}</main>

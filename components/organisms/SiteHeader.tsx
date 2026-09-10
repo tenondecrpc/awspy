@@ -7,6 +7,7 @@
 import { useEffect, useRef, useState } from "react";
 import NextLink from "next/link";
 import { Container } from "@/components/atoms/Container";
+import { ThemeToggle } from "@/components/atoms/ThemeToggle";
 import { NavLink } from "@/components/molecules/NavLink";
 import { EditionPill } from "@/components/molecules/EditionPill";
 import { PRIMARY_NAV } from "@/lib/nav";
@@ -74,27 +75,30 @@ export function SiteHeader({ editionYear }: SiteHeaderProps) {
             </ul>
           </nav>
 
-          <button
-            ref={triggerRef}
-            type="button"
-            className={cn(
-              "xl:hidden inline-flex items-center justify-center rounded-[var(--radius-sm)] px-3 py-2 text-sm font-semibold",
-              "border border-[var(--color-surface-muted)]"
-            )}
-            aria-label="Abrir menú"
-            aria-expanded={isDrawerOpen}
-            aria-controls="mobile-nav-drawer"
-            onClick={() => setDrawerOpen(true)}
-          >
-            Menú
-          </button>
+          <div className="flex items-center gap-2">
+            <ThemeToggle />
+            <button
+              ref={triggerRef}
+              type="button"
+              className={cn(
+                "xl:hidden inline-flex min-h-11 items-center justify-center rounded-[var(--radius-sm)] px-3 py-2 text-sm font-semibold",
+                "border border-[var(--color-border-strong)]"
+              )}
+              aria-label="Abrir menú"
+              aria-expanded={isDrawerOpen}
+              aria-controls="mobile-nav-drawer"
+              onClick={() => setDrawerOpen(true)}
+            >
+              Menú
+            </button>
+          </div>
         </div>
       </Container>
 
       {/* Mobile drawer */}
       {isDrawerOpen ? (
         <div
-          className="fixed inset-0 z-50 bg-black/40"
+          className="fixed inset-0 z-50 bg-[var(--color-overlay)]"
           onClick={(e) => {
             if (e.target === e.currentTarget) setDrawerOpen(false);
           }}
@@ -114,7 +118,7 @@ export function SiteHeader({ editionYear }: SiteHeaderProps) {
                 ref={closeBtnRef}
                 type="button"
                 aria-label="Cerrar menú"
-                className="inline-flex items-center justify-center rounded-[var(--radius-sm)] px-3 py-2 text-sm font-semibold border border-[var(--color-surface-muted)]"
+                className="inline-flex min-h-11 items-center justify-center rounded-[var(--radius-sm)] border border-[var(--color-border-strong)] px-3 py-2 text-sm font-semibold"
                 onClick={() => setDrawerOpen(false)}
               >
                 Cerrar

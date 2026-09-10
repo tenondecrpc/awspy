@@ -1,6 +1,28 @@
 import { test, expect } from "@playwright/test";
 
 test.describe("Site navigation", () => {
+  test("persists a manual color theme across reloads", async ({ page }) => {
+    await page.goto("/");
+    const toggle = page.getByRole("button", {
+      name: /cambiar entre modo claro y oscuro/i,
+    });
+    await expect(toggle).toBeVisible();
+
+    const initialTheme = await page.locator("html").getAttribute("data-theme");
+    await toggle.click();
+    const expectedTheme = initialTheme === "dark" ? "light" : "dark";
+    await expect(page.locator("html")).toHaveAttribute(
+      "data-theme",
+      expectedTheme
+    );
+
+    await page.reload();
+    await expect(page.locator("html")).toHaveAttribute(
+      "data-theme",
+      expectedTheme
+    );
+  });
+
   test("desktop: every primary nav entry is visible", async ({ page }) => {
     await page.setViewportSize({ width: 1280, height: 800 });
     await page.goto("/");

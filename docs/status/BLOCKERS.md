@@ -14,7 +14,7 @@
 - Type: External-service blocker
 - Status: OPEN
 - Blocks: AWS-002 and production release readiness
-- Evidence: The repository uses Next.js 16.3.2 while reviewed Amplify documentation lists support through Next.js 15. On 2026-09-09, the public Sessionize API exposed seven accepted speakers while Amplify repeatedly served a cached prerender containing only one, despite the configured ten-minute ISR interval.
+- Evidence: The repository uses Next.js 16.3.4 while reviewed Amplify documentation lists support through Next.js 15. On 2026-09-09, the then-deployed 16.3.2 runtime repeatedly served a cached prerender containing one speaker while the public Sessionize API exposed seven, despite the configured ten-minute ISR interval.
 - Required external action: Run an isolated Amplify preview with authorized AWS access or obtain AWS support confirmation.
 - Exit criteria: Critical routing, ISR, image, environment, observability, and rollback checks pass.
 

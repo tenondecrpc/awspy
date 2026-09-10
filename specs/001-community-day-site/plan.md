@@ -19,7 +19,7 @@ The technical approach honors all seven constitution principles. Routes, identif
 ## Technical Context
 
 **Language/Version**: TypeScript 5.x (strict mode), Node.js 24.15.0 runtime
-**Primary Dependencies**: Next.js 16.3.2 (App Router, Server Components), React 19.2.4, Tailwind CSS 4.x, and Zod 4.x. The code of conduct uses the repository's restricted Markdown renderer; no client state library is required by the implemented site.
+**Primary Dependencies**: Next.js 16.3.4 (App Router, Server Components), React 19.2.4, Tailwind CSS 4.x, and Zod 4.x. The code of conduct uses the repository's restricted Markdown renderer; no client state library is required by the implemented site.
 **Storage**: None. Content lives in version-controlled JSON/MDX under `content/editions/{year}/`. No database or external persistence in this repository.
 **Testing**: Vitest 4.x with jsdom environment for unit and integration; React Testing Library 16.x with `@testing-library/jest-dom` for component tests; Playwright 1.59 for end-to-end  
 **Target Platform**: AWS Amplify Hosting as the primary deployment target for v1. The site is cloud-agnostic and remains deployable on Vercel, OpenNext on raw AWS, Netlify, or self-hosted Node.js without code changes; see `docs/deployment.md` and `amplify.yml`. Modern evergreen browsers (last 2 versions of Chrome/Firefox/Safari/Edge); mobile and desktop.  

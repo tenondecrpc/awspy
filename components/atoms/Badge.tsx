@@ -31,15 +31,14 @@ const VARIANT_CLASS: Record<Variant, string> = {
   warning: "bg-[var(--color-warning-soft)] text-[var(--color-warning)]",
   danger: "bg-[var(--color-danger-soft)] text-[var(--color-danger)]",
   "tier-platinum":
-    "bg-[var(--color-tier-platinum)] text-[var(--color-text-on-inverse)]",
-  "tier-gold":
-    "bg-[var(--color-tier-gold)] text-[var(--color-text-on-inverse)]",
+    "bg-[var(--color-tier-platinum)] text-[var(--color-text-on-tier)]",
+  "tier-gold": "bg-[var(--color-tier-gold)] text-[var(--color-text-on-tier)]",
   "tier-silver":
-    "bg-[var(--color-tier-silver)] text-[var(--color-text-on-inverse)]",
+    "bg-[var(--color-tier-silver)] text-[var(--color-text-on-tier)]",
   "tier-bronze":
-    "bg-[var(--color-tier-bronze)] text-[var(--color-text-on-inverse)]",
+    "bg-[var(--color-tier-bronze)] text-[var(--color-text-on-tier)]",
   "tier-community":
-    "bg-[var(--color-tier-community)] text-[var(--color-text-on-inverse)]",
+    "bg-[var(--color-tier-community)] text-[var(--color-text-on-tier)]",
 };
 
 export function Badge({

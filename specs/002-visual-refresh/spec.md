@@ -16,7 +16,7 @@
 - Q: Cuales son los valores numericos exactos de la paleta? -> A: Se alinea con el "AWS branding" publico (Squid Ink #232F3E como navy de marca, Smile Orange #FF9900 como accion principal, Anchor #161E2D como inverso profundo, Hyperlink Blue #0073BB como enlace, mas neutros). El detalle vive en FR-002 y la unica copia se mantiene en `app/globals.css` via tokens `@theme` de Tailwind v4. Los tokens existentes en el repo se conservan o se renombran de forma backwards-compatible (alias) para no romper el codigo de v1.
 - Q: Que aspecto deben tener los estados vacios? -> A: Cada estado vacio incluye un titulo en espanol, una descripcion breve, una ilustracion (SVG decorativo desde la paleta, sin texto en imagen), y un CTA secundario cuando aplica (escribir, enviar charla, suscribirse). El icono decorativo NO comunica informacion por si solo (constitution Principio VI).
 - Q: Como se comportan los estados de carga? -> A: Cada lista (speakers, sponsors, schedule) renderiza un esqueleto con la misma forma que el contenido cargado (mismas dimensiones, misma cuadricula, animacion de pulso suave que respeta `prefers-reduced-motion`). El esqueleto tiene `aria-busy="true"` y un `role="status"` con texto accesible "Cargando ...".
-- Q: Hay modo oscuro? -> A: Si. La paleta soporta dos modos (claro y oscuro) con los mismos tokens semanticos. La preferencia se toma de `prefers-color-scheme` y NO se expone toggle manual en esta iteracion (queda fuera de alcance). Cada par foreground/background mantiene contraste AA en ambos modos.
+- Q: Hay modo oscuro? -> A: Si. La paleta soporta dos modos (claro y oscuro) con los mismos tokens semanticos. La preferencia inicial se toma de `prefers-color-scheme`; un control sutil en el encabezado permite alternar manualmente y persiste una preferencia validada. Cada par foreground/background mantiene contraste AA en ambos modos.
 - Q: Cuanta reorganizacion de secciones esta permitida sin "refactorizar codigo"? -> A: Permitido reordenar secciones existentes en los `templates/` (orden de bloques) y ajustar paddings, grids, tipografia y fondos. NO permitido cambiar contratos de datos, props publicas de componentes, rutas, ni mover archivos entre tiers de atomic design. Tambien permitido agregar atomos/moleculas decorativos nuevos (por ejemplo `DecorativePattern`, `IconTile`) bajo las reglas de atomic design.
 - Q: Que intensidad tiene la animacion? -> A: Animaciones sutiles por defecto (fade/translate cortos al entrar en viewport, brillo del esqueleto). Todas se suprimen bajo `prefers-reduced-motion: reduce` por la regla global ya existente en `app/globals.css`.
 
@@ -36,6 +36,7 @@ Un visitante que ya conoce los sitios de AWS Community Day Mexico o Colombia abr
 2. **Given** una persona desarrolladora abre el repositorio, **When** ejecuta `grep -r '#[0-9A-Fa-f]\{3,6\}' app/ components/ lib/`, **Then** solo aparece la definicion de tokens en `app/globals.css`. Cualquier otro hex es un bug que el lint catchea (FR-013).
 3. **Given** el visitante usa `prefers-color-scheme: dark`, **When** abre cualquier pagina, **Then** el sitio se renderiza con la variante oscura de los mismos tokens semanticos y todos los pares texto/fondo siguen cumpliendo AA.
 4. **Given** el visitante revisa la pagina con un lector de pantalla, **When** navega por el hero y los CTAs, **Then** el contenido es accesible (orden logico, focus visible, no hay informacion comunicada solo por color).
+5. **Given** el visitante prefiere un modo distinto al del sistema, **When** activa el control de tema del encabezado, **Then** la pagina cambia entre claro y oscuro, anuncia el estado como toggle y conserva la eleccion despues de recargar sin mostrar un flash del tema incorrecto.
 
 ---
 
@@ -141,13 +142,13 @@ Un visitante percibe un patron decorativo (iconos de arquitectura AWS flotando c
 
 - **FR-001**: La paleta DEBE estar centralizada en `app/globals.css` usando los tokens `@theme` de Tailwind v4. Ningun otro archivo del repositorio (bajo `app/`, `components/`, `lib/`) puede declarar valores literales de color (hex, rgb, hsl, named colors fuera de `currentColor`/`inherit`/`transparent`).
 - **FR-002**: La paleta DEBE incluir, como minimo, los siguientes tokens semanticos (los valores numericos exactos se ajustan a la familia AWS publica y se eligen para cumplir AA en cada par foreground/background):
-  - Acciones y marca: `--color-brand-primary` (Squid Ink navy ~ #232F3E), `--color-action` (Smile orange ~ #FF9900), `--color-action-strong` (orange darker), `--color-accent` (Hyperlink blue ~ #0073BB), `--color-accent-strong`, `--color-accent-soft`.
-  - Superficies: `--color-surface`, `--color-surface-muted`, `--color-surface-elevated`, `--color-surface-inverse`, `--color-surface-hero` (variante usada por el hero).
-  - Texto: `--color-text-primary`, `--color-text-secondary`, `--color-text-muted`, `--color-text-on-action`, `--color-text-on-accent`, `--color-text-on-inverse`, `--color-text-on-hero`.
+  - Acciones y marca: `--color-brand-primary` (Squid Ink navy ~ #232F3E), `--color-action` (Smile orange ~ #FF9900), `--color-action-strong` (orange darker), `--color-action-label` (orange accesible como texto pequeno), `--color-accent` (Hyperlink blue ~ #0073BB), `--color-accent-strong`, `--color-accent-soft`.
+  - Superficies: `--color-surface`, `--color-surface-muted`, `--color-surface-elevated`, `--color-surface-inverse`, `--color-surface-hero` (variante usada por el hero), `--color-overlay`.
+  - Texto: `--color-text-primary`, `--color-text-secondary`, `--color-text-muted`, `--color-text-on-action`, `--color-text-on-accent`, `--color-text-on-inverse`, `--color-text-on-hero`, `--color-text-on-tier`.
   - Bordes y separadores: `--color-border-subtle`, `--color-border-strong`.
-  - Estado: `--color-focus`, `--color-success`, `--color-warning`, `--color-danger`.
+  - Estado: `--color-focus`, `--color-focus-on-hero`, `--color-success`, `--color-warning`, `--color-danger`.
   - Tier de sponsors (existentes en v1): se conservan sin perdida de compatibilidad.
-- **FR-003**: La paleta DEBE soportar variante oscura via `@media (prefers-color-scheme: dark)`. Los tokens semanticos (NO los crudos) son los mismos en ambos modos; lo unico que cambia es el valor que toman.
+- **FR-003**: La paleta DEBE soportar variante oscura via `@media (prefers-color-scheme: dark)` por defecto y overrides explicitos `data-theme="light|dark"` en `<html>`. El control manual DEBE persistir solo valores validados, ejecutarse antes de la hidratacion para evitar flashes y exponer nombre y estado accesibles.
 - **FR-004**: Los tokens existentes en v1 (`--color-accent`, `--color-action`, `--color-surface*`, `--color-text*`, `--color-tier-*`, etc.) DEBEN seguir resolviendose para no romper componentes ya construidos. Cualquier renombrado se hace con alias en el mismo archivo.
 
 #### Hero y secciones
@@ -186,7 +187,7 @@ Un visitante percibe un patron decorativo (iconos de arquitectura AWS flotando c
 
 #### Accesibilidad y rendimiento
 
-- **FR-019**: Cada par foreground/background derivado de los tokens DEBE cumplir WCAG AA (>=4.5:1 para texto normal, >=3:1 para texto grande). El cumplimiento se verifica en modo claro y oscuro.
+- **FR-019**: Cada par foreground/background derivado de los tokens DEBE cumplir WCAG AA (>=4.5:1 para texto normal y >=3:1 para texto grande o limites visuales de componentes). El cumplimiento se verifica automaticamente en modo claro y oscuro.
 - **FR-020**: Toda animacion introducida por esta feature (esqueletos, transiciones de seccion, fade del hero) DEBE respetar `prefers-reduced-motion: reduce`.
 - **FR-021**: La feature NO DEBE bajar los objetivos Lighthouse del home: Performance >= 90, Accessibility >= 95, Best Practices >= 95, SEO >= 95 en escritorio. CLS sigue por debajo de 0.1 cuando se cargan datos remotos o imagenes.
 - **FR-022**: Toda imagen renderizada por `next/image` DEBE seguir teniendo `width`, `height` y `sizes` explicitos.

@@ -8,7 +8,7 @@ Enforce, at lint time, that no file under `app/`, `components/`, or `lib/` decla
 
 - Hex literals: `#abc`, `#aabbcc`, `#aabbccdd` (3, 6, or 8 hex digits, case insensitive).
 - Functional notations: `rgb(...)`, `rgba(...)`, `hsl(...)`, `hsla(...)`, `oklch(...)`, `oklab(...)`, `color(...)`.
-- Named CSS colors (`red`, `blue`, `slategray`, etc.) used in `style` attributes or template strings.
+- Tailwind named color utilities such as `bg-black/40`, `text-white`, `border-slate-300`, and gradient stops such as `from-blue-500`.
 
 ## Patterns allowed (exceptions)
 
@@ -31,7 +31,7 @@ The rule visits:
 
 When a match is found, the rule reports an error with this message:
 
-> "Color literal '<value>' is forbidden outside `app/globals.css`. Use a palette token (`var(--color-...)`) or a Tailwind utility derived from `@theme`."
+> "Color literal or named utility '<value>' is forbidden outside `app/globals.css`. Use a palette token (`var(--color-...)`) or a Tailwind utility derived from `@theme`."
 
 ## CI integration
 
@@ -41,8 +41,8 @@ When a match is found, the rule reports an error with this message:
 
 ## Tests
 
-- A small fixture test under `tests/unit/lib-utils-tokens.test.ts` checks the **token presence** side of the contract (every token from `data-model.md` exists in `app/globals.css`).
-- The lint rule itself is exercised by `npm run lint` against the codebase. There is no separate unit test for the ESLint rule in v1 of the refresh; if the rule grows complex, a dedicated test will be added under `tests/unit/eslint-no-color-literals.test.ts`.
+- `tests/unit/lib-utils-tokens.test.ts` checks token presence and WCAG contrast in both modes.
+- `tests/unit/palette-boundary.test.ts` scans the source tree and includes regression samples for Tailwind named colors. The lint rule is also exercised by `npm run lint` against the codebase.
 
 ## Failure mode and overrides
 

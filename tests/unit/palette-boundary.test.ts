@@ -23,6 +23,9 @@ const SKIP_FILES = new Set([
 const COLOR_PATTERN =
   /(#[0-9a-fA-F]{3,8}\b|\brgba?\s*\(|\bhsla?\s*\(|\boklch\s*\(|\boklab\s*\(|\bcolor\s*\()/;
 
+const TAILWIND_NAMED_COLOR_PATTERN =
+  /\b(?:bg|text|border|ring|outline|fill|stroke|from|via|to)-(?:black|white|slate|gray|zinc|neutral|stone|red|orange|amber|yellow|lime|green|emerald|teal|cyan|sky|blue|indigo|violet|purple|fuchsia|pink|rose)(?:-\d{2,3})?(?:\/\d+)?\b/;
+
 const STYLING_CONTEXT_HINT_PATTERN =
   /(className\s*[:=]|style\s*[:=]|`[^`]*\$\{[^}]*\}[^`]*`)/;
 
@@ -40,7 +43,14 @@ function* walk(dir: string): Generator<string> {
 }
 
 describe("palette boundary in app/, components/, lib/", () => {
-  it("no source file under app/, components/, lib/ contains a color literal in a styling context", () => {
+  it.each(["bg-black/40", "text-white", "border-slate-300", "from-blue-500"])(
+    "recognizes Tailwind named color utility %s as outside the palette",
+    (utility) => {
+      expect(TAILWIND_NAMED_COLOR_PATTERN.test(utility)).toBe(true);
+    }
+  );
+
+  it("no source file under app/, components/, lib/ contains an out-of-palette color in a styling context", () => {
     const offenders: { file: string; line: number; text: string }[] = [];
 
     for (const dir of SCAN_DIRS) {
@@ -50,7 +60,12 @@ describe("palette boundary in app/, components/, lib/", () => {
         const lines = source.split(/\r?\n/);
         for (let i = 0; i < lines.length; i++) {
           const line = lines[i];
-          if (!COLOR_PATTERN.test(line)) continue;
+          if (
+            !COLOR_PATTERN.test(line) &&
+            !TAILWIND_NAMED_COLOR_PATTERN.test(line)
+          ) {
+            continue;
+          }
           // Skip lines that are clearly comments-only.
           const trimmed = line.trim();
           if (trimmed.startsWith("//") || trimmed.startsWith("*")) continue;

@@ -15,7 +15,7 @@ This document records the technical decisions taken during Phase 0 of the visual
 - Anchor (very dark navy, used by hero in dark mode): `#161E2D`
 - Neutral surfaces: `#FFFFFF`, `#F4F6FA`, `#E5E9F0`
 - Text scale: `#0B1626` (primary), `#364152` (secondary), `#5C6573` (muted)
-- State: `#1F7A3A` (success), `#B26200` (warning), `#B3261E` (danger)
+- State: `#1F7A3A` (success), `#965000` (warning), `#B3261E` (danger)
 
 All token-to-value pairs are formalized in `contracts/palette-tokens.md`.
 
@@ -28,7 +28,7 @@ All token-to-value pairs are formalized in `contracts/palette-tokens.md`.
 
 ## R2. Single source of truth for tokens
 
-**Decision**: All tokens live in `app/globals.css` as Tailwind v4 `@theme { ... }` declarations, with a second `@media (prefers-color-scheme: dark) { @theme { ... } }` block for the dark variant. Existing v1 tokens (`--color-accent`, `--color-action`, etc.) are kept under their original names. New tokens introduced by this feature are added alongside.
+**Decision**: All tokens live in `app/globals.css`. One top-level Tailwind v4 `@theme { ... }` declaration registers their utilities, and normal CSS selectors override the same custom properties for OS-derived and explicit dark mode. Existing v1 tokens (`--color-accent`, `--color-action`, etc.) are kept under their original names. New tokens introduced by this feature are added alongside.
 
 **Rationale**: Tailwind v4 already exposes `@theme` tokens as both utility classes and CSS custom properties. Components can consume `var(--color-action)` directly or use generated utilities; either way, the source is one file. No build step is added.
 
@@ -101,13 +101,13 @@ The conventions for which file path each placeholder swaps to are in `contracts/
 
 ## R8. Dark mode behavior
 
-**Decision**: Driven entirely by `prefers-color-scheme`. No JavaScript toggle. The light values are declared on `:root` (via `@theme`), the dark values are declared inside `@media (prefers-color-scheme: dark) { @theme { ... } }`. Both share the same semantic token names; only the values differ.
+**Decision**: Use `prefers-color-scheme` as the default and expose a subtle, accessible header toggle that applies `data-theme="light|dark"`. A static inline initializer validates persisted values and applies the resolved mode before hydration. Tailwind tokens are registered in one top-level `@theme` block; normal CSS overrides their values for dark mode because Tailwind v4 theme declarations cannot be nested.
 
-**Rationale**: Minimal scope for v1 of the refresh. Matches user OS preference. No layout shift or hydration concern because there is no client toggle.
+**Rationale**: The OS remains the no-configuration default, while attendees can correct the theme for their current environment. Applying the value before hydration avoids layout/color flicker, and the small client boundary is isolated to one atom.
 
 **Alternatives considered**:
 
-- Manual UI toggle. Deferred to a future feature.
+- A three-state light/dark/system menu. Rejected because the requested two-mode toggle is simpler; clearing storage restores the OS-derived default.
 - Force-light only. Rejected as user-hostile.
 
 ## R9. Hero composition

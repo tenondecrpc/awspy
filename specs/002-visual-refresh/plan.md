@@ -8,7 +8,7 @@
 Refresh the visual layer of the AWS Community Day Paraguay public website so it feels part of the regional AWS Community Day family (Mexico and Colombia as visual references), without changing routes, data flow, component contracts, or the data layer. Concretely:
 
 - Centralize the color palette as the single source of truth in `app/globals.css` via Tailwind v4 `@theme` tokens. Every other file under `app/`, `components/`, and `lib/` consumes those tokens via CSS custom properties or Tailwind utilities. A lint rule enforces the boundary.
-- Adopt an AWS-aligned palette (Squid Ink navy, Smile Orange, Hyperlink Blue, neutrals) with semantic token names that work in both light and dark modes (`prefers-color-scheme`-driven, no manual toggle in this iteration).
+- Adopt an AWS-aligned palette (Squid Ink navy, Smile Orange, Hyperlink Blue, neutrals) with semantic token names that work in both light and dark modes, defaulting to `prefers-color-scheme` with a subtle manual toggle.
 - Replace the bare "Proximamente" gray box with themed empty states (title, short description, decorative SVG illustration, contextual CTA) on `/speakers`, `/schedule`, `/sponsors`, `/team`, `/venue`, `/faq`, and the home previews.
 - Add accessible loading skeletons that mirror the final content shape on `SpeakersGrid`, `ScheduleGrid`, `SponsorsBoard`, and `OrganizersGrid` so suspense states do not produce CLS and respect `prefers-reduced-motion`.
 - Reserve image space with explicit aspect ratios under `public/assets/{hero,team,venue,sponsors,gallery,icons/aws-architecture}/`. The site renders themed placeholders when the file is missing and uses the real asset automatically once it is added.
@@ -19,7 +19,7 @@ The refresh is visual-only. It does not touch `lib/api/`, `lib/content/`, route 
 ## Technical Context
 
 **Language/Version**: TypeScript 5.x (strict mode), Node.js 24.15.0 runtime
-**Primary Dependencies**: Next.js 16.3.2 (App Router, Server Components), React 19.2.4, Tailwind CSS 4.x (`@theme` tokens), already installed
+**Primary Dependencies**: Next.js 16.3.4 (App Router, Server Components), React 19.2.4, Tailwind CSS 4.x (`@theme` tokens), already installed
 **Storage**: None. Static visual assets under `public/assets/`. No persistence touched
 **Testing**: Vitest 4.x with jsdom for unit and component tests, React Testing Library 16.x with `@testing-library/jest-dom`, Playwright 1.59 for end-to-end (empty states and skeletons under `e2e/empty-states.spec.ts`)
 **Target Platform**: Same as v1 (AWS Amplify Hosting primary, cloud-agnostic build). Modern evergreen browsers, mobile and desktop

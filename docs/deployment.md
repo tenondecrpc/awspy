@@ -5,7 +5,7 @@ but hosting support must be verified per provider. A generic claim of Next.js
 support is not sufficient for ISR, image optimization, and route behavior.
 
 The conditional target is **AWS Amplify Hosting**. Current AWS documentation
-lists Next.js support through version 15, so Next.js 16.3.2 requires the preview
+lists Next.js support through version 15, so Next.js 16.3.4 requires the preview
 qualification tracked by AWS-002 before production release.
 
 ## Production coordinates
