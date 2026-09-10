@@ -34,8 +34,9 @@ Sessionize API ------> lib/api + Zod --------+
 - Components receive validated data through props and never call `fetch`.
 - React Server Components are the default.
 - Client Components are limited to interaction that needs browser state.
-- Sessionize reads revalidate every 10 minutes and fall back to empty states on
-  network or contract failures.
+- Sessionize reads use `cache: "no-store"` and render dynamically to avoid the
+  unqualified Next.js 16 ISR path on Amplify. They still fall back to empty
+  states on network or contract failures.
 - Local content validation fails loudly during build.
 
 ## Component boundaries

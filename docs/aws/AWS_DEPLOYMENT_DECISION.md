@@ -2,11 +2,11 @@
 
 ## Workload
 
-This is a public, read-heavy Next.js App Router frontend with static generation, scheduled revalidation, image optimization, and no database or private API.
+This is a public, read-heavy Next.js App Router frontend with static generation for repository content, dynamic server reads for Sessionize, image optimization, and no database or private API.
 
 ## Decision
 
-Retain AWS Amplify Hosting `WEB_COMPUTE` as the conditional target because it matches the existing repository and operational model. Production release remains blocked until an isolated preview proves Next.js 16.3.2 behavior and the public DNS is restored.
+Retain AWS Amplify Hosting `WEB_COMPUTE` as the conditional target because it matches the existing repository and operational model. Production evidence showed stale ISR output under Next.js 16.3.2, so Sessionize reads bypass the persistent Next.js cache as a compatibility mitigation. Production release remains blocked until the remaining Next.js 16 behavior is qualified or the application moves to a supported runtime, and until the public DNS is restored.
 
 ## Relevant alternatives
 
@@ -29,6 +29,8 @@ Future deployment automation must use GitHub OIDC, a protected environment, temp
 ## Rollback and disaster recovery
 
 Rollback is an Amplify redeploy of a known-good commit after smoke checks. Repository content and build configuration are source-controlled. DNS, console settings, app ownership, retention, and preview evidence remain external prerequisites.
+
+The LOGIC-016 mitigation can be rolled back by restoring time-based Sessionize revalidation only after the selected hosting/runtime combination passes an ISR freshness test. Until then, rollback means redeploying the preceding application commit and accepting that Sessionize updates may remain stale.
 
 ## Unresolved decisions
 

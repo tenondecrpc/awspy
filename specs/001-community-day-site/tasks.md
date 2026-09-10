@@ -65,7 +65,7 @@ Single Next.js application at the repo root. All paths in tasks below are relati
 
 ### Sessionize integration
 
-- [X] T022 Implement `lib/api/sessionize.ts` per `contracts/sessionize-api.md`: Zod schemas `SessionizeSpeakerSchema`, `SpeakersListSchema`, `SessionizeSessionSchema`, `SessionsListSchema`, `ScheduleGridSchema`, `SpeakerWallSchema`; helper `buildSessionizeUrl(eventId, view)`; functions `listSpeakers(eventId)`, `getSpeakerBySlug(eventId, slug)`, `listSessions(eventId)`, `getScheduleGrid(eventId)`, `getSpeakerWall(eventId)`; all calls go through `apiFetch` with `tolerateMissing: true` and `next: { revalidate: 600, tags: [`sessionize:${eventId}`] }`.
+- [X] T022 Implement `lib/api/sessionize.ts` per `contracts/sessionize-api.md`: Zod schemas `SessionizeSpeakerSchema`, `SpeakersListSchema`, `SessionizeSessionSchema`, `SessionsListSchema`, `ScheduleGridSchema`, `SpeakerWallSchema`; helper `buildSessionizeUrl(eventId, view)`; functions `listSpeakers(eventId)`, `getSpeakerBySlug(eventId, slug)`, `listSessions(eventId)`, `getScheduleGrid(eventId)`, `getSpeakerWall(eventId)`; all calls go through `apiFetch` with `tolerateMissing: true`. The original ISR option was superseded on 2026-09-09 by `cache: "no-store"` after Amplify retained obsolete speaker output under unsupported Next.js 16.
 - [X] T023 Capture Sessionize fixtures from the public demo event id `jl4ktls0` (Speakers, Sessions, GridSmart, SpeakerWall) into `tests/fixtures/sessionize/{view}.json`. Add a script entry in `package.json` (`fixtures:sessionize`) that re-fetches them via `curl`.
 - [X] T024 Add unit tests at `tests/unit/lib-api-sessionize.test.ts` mocking `fetch`: speakers parse from fixture, sessions parse from fixture, grid parses from fixture, missing event id returns `[]`, malformed payload with `tolerateMissing: true` returns `[]`, `getSpeakerBySlug` finds the right speaker and disambiguates collisions deterministically.
 
@@ -302,7 +302,7 @@ Single Next.js application at the repo root. All paths in tasks below are relati
 
 ## Phase 11: User Story 9 - Reach the public domain reliably (Priority: P3)
 
-**Goal**: production deploy on AWS Amplify Hosting (primary target), reachable, with the right edition served and revalidation working. The build remains cloud-agnostic so a future migration to Vercel, OpenNext on raw AWS, Netlify, or self-hosted Node.js requires no code change (see `docs/deployment.md`).
+**Goal**: production deploy on AWS Amplify Hosting (primary target), reachable, with the right edition served and Sessionize freshness working. The build remains cloud-agnostic so a future migration to Vercel, OpenNext on raw AWS, Netlify, or self-hosted Node.js requires no code change (see `docs/deployment.md`).
 
 ### Tests for User Story 9
 

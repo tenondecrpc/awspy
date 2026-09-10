@@ -28,7 +28,7 @@ Notes on content quality:
 
 Notes on requirement completeness:
 - All decisions captured during planning (multi-page, no backend, no admin, Eventbrite + Sessionize, multi-edition from day one, English routes, Spanish copy, AWS Amplify Hosting as primary deployment target with a cloud-agnostic build) are encoded as functional requirements.
-- Success criteria avoid framework names; they target measurable user-facing outcomes (Lighthouse on a desktop run, 15-minute revalidation window, smoke tests on every route).
+- Success criteria avoid framework names; they target measurable user-facing outcomes (Lighthouse on a desktop run, provider-publication freshness, smoke tests on every route).
 
 ## Feature Readiness
 

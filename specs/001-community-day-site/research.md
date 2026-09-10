@@ -7,12 +7,12 @@ This document records the research and decisions that informed the Technical Con
 
 ## R1. Sessionize public API surface
 
-**Decision**: Consume the four public read-only views `Speakers`, `Sessions`, `GridSmart`, and `SpeakerWall` from the Sessionize API at `https://sessionize.com/api/v2/{eventId}/view/{view}`. Do not request the `All` view because the four scoped views are smaller, easier to validate, and let the cache layer hit them independently when only one section of the site is rebuilt.
+**Decision**: Consume the four public read-only views `Speakers`, `Sessions`, `GridSmart`, and `SpeakerWall` from the Sessionize API at `https://sessionize.com/api/v2/{eventId}/view/{view}`. Do not request the `All` view because the four scoped views are smaller, easier to validate, and avoid fetching unrelated data for a provider-backed route.
 
 **Rationale**:
 - Sessionize exposes a public, read-only JSON endpoint for any event (including private events made public via Embed page settings) without authentication. The endpoint stays stable across event lifecycles.
 - Speakers and Sessions are the most read views; SpeakerWall is useful for the home page preview; GridSmart is the only view that returns pre-grouped day/room cells, which is exactly the layout the schedule page wants.
-- Sessionize already caches responses for five minutes server-side. With our own ten-minute revalidation (`next: { revalidate: 600 }`) and the unique `tags: [`sessionize:${eventId}`]`, we get a clean invalidation lever without owning a custom cache layer.
+- Sessionize already caches responses for approximately five minutes server-side. The original design added ten-minute ISR, but production evidence on 2026-09-09 showed Amplify retaining obsolete output under unsupported Next.js 16. Sessionize reads now use `cache: "no-store"` until the hosting/runtime combination is supported and qualified.
 - The API is documented at `https://sessionize.com/playbook/developers/api` and confirmed during planning research.
 
 **Alternatives considered**:

@@ -24,7 +24,7 @@ The technical approach honors all seven constitution principles. Routes, identif
 **Testing**: Vitest 4.x with jsdom environment for unit and integration; React Testing Library 16.x with `@testing-library/jest-dom` for component tests; Playwright 1.59 for end-to-end  
 **Target Platform**: AWS Amplify Hosting as the primary deployment target for v1. The site is cloud-agnostic and remains deployable on Vercel, OpenNext on raw AWS, Netlify, or self-hosted Node.js without code changes; see `docs/deployment.md` and `amplify.yml`. Modern evergreen browsers (last 2 versions of Chrome/Firefox/Safari/Edge); mobile and desktop.  
 **Project Type**: Single Next.js application (frontend only, no backend in this repo)
-**Performance Goals**: Home Lighthouse on desktop: Performance >= 90, Accessibility >= 95, Best Practices >= 95, SEO >= 95. LCP < 2.5s on desktop reference connection. Sessionize revalidation window: 600s (10 min)  
+**Performance Goals**: Home Lighthouse on desktop: Performance >= 90, Accessibility >= 95, Best Practices >= 95, SEO >= 95. LCP < 2.5s on desktop reference connection. Sessionize changes become visible on the first request after the provider's approximately five-minute public cache updates.
 **Constraints**: AA contrast on every text/background pair; `prefers-reduced-motion` honored; keyboard reachable on every interactive element; build MUST fail on malformed `content/editions/{year}/*` files; site MUST keep rendering when Sessionize is empty or unreachable; no axios or other HTTP libraries (native `fetch` only); no backend logic, no admin, no persistence in this repo; no analytics tooling for v1  
 **Scale/Scope**: ~30-50 speakers and ~40-60 sessions per edition (typical for a regional Community Day); single concurrent edition; up to a few thousand attendees over the event week; first edition has no historical data, so empty-state coverage is mandatory
 
@@ -35,7 +35,7 @@ The constitution at `.specify/memory/constitution.md` is version 1.0.0. This pla
 ### Principle I - Frontend-Only Boundary (NON-NEGOTIABLE)
 
 - **PASS**. No backend service, database, or admin panel is built in this repository. Sessionize owns speakers, sessions, schedule, and CFP management. Eventbrite owns attendee registration and Google Forms owns volunteer applications; both official Paraguay 2026 URLs are configured and open. Server-rendered CTAs use safe external links without embeds. Sponsor inquiries are handled with a `mailto:` link. Edition metadata, sponsors, organizers, venue, FAQ, and code of conduct are version-controlled content edited through pull requests.
-- Route Handlers and Server Actions in this plan are limited to: serving the dynamic OG image, generating the sitemap and robots, and reading Sessionize via the typed `fetch` client during server rendering and revalidation. None of these own persistent state.
+- Route Handlers and Server Actions in this plan are limited to: serving the dynamic OG image, generating the sitemap and robots, and reading Sessionize via the typed `fetch` client during server rendering. None of these own persistent state.
 
 ### Principle II - Atomic Design Layering
 
@@ -52,7 +52,7 @@ The constitution at `.specify/memory/constitution.md` is version 1.0.0. This pla
 
 ### Principle V - Server-First, Statically Rendered Content
 
-- **PASS**. All routes default to React Server Components. Static event content (sponsors, organizers, venue, FAQ, code of conduct, edition metadata) is statically rendered at build time. Sessionize-sourced content (speakers, sessions, schedule) uses `fetch(..., { next: { revalidate: 600, tags: [`sessionize:${eventId}`] } })`. No parallel custom caching is introduced. The home page renders even when Sessionize is empty or unreachable, fulfilling the resilience requirement (FR-013, FR-014, US8). Metadata, sitemap, robots, OG image, and JSON-LD are produced via Next.js conventions (`metadata` exports, `app/sitemap.ts`, `app/robots.ts`, `app/opengraph-image.tsx`, JSON-LD blocks in server components).
+- **PASS with operational mitigation**. All routes default to React Server Components. Static event content (sponsors, organizers, venue, FAQ, code of conduct, edition metadata) is statically rendered at build time. Sessionize-sourced content (speakers, sessions, schedule) uses `fetch(..., { cache: "no-store" })` because production evidence showed stale ISR output on the unsupported Next.js 16 and Amplify combination. No parallel custom caching is introduced. The home page renders even when Sessionize is empty or unreachable, fulfilling the resilience requirement (FR-013, FR-014, US8). Metadata, sitemap, robots, OG image, and JSON-LD are produced via Next.js conventions (`metadata` exports, `app/sitemap.ts`, `app/robots.ts`, `app/opengraph-image.tsx`, JSON-LD blocks in server components).
 
 ### Principle VI - Accessibility Non-Negotiables (NON-NEGOTIABLE)
 

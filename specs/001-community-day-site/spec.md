@@ -30,7 +30,7 @@ applications. `volunteerRegistrationUrl` contains the official public form and
 `volunteerRegistrationStatus` is `"open"`. The home, navigation, and team empty
 state lead to `/volunteers`, whose CTA opens the form in a new tab without an
 embed.
-- Q: How is Sessionize rate limiting handled? → A: Sessionize already caches responses for five minutes server-side, and the site adds its own ten-minute revalidation; rate limiting is not a practical concern at expected traffic. If a Sessionize request fails, the empty-state fallback already covers the user-visible behavior (see FR-013).
+- Q: How is Sessionize rate limiting handled? → A: Sessionize already caches responses for approximately five minutes server-side. The site uses uncached server renders for Sessionize reads while Next.js 16 remains unsupported on Amplify, because production evidence showed ISR retaining obsolete speaker data. Expected event traffic remains within the provider's public-read model. If a Sessionize request fails, the empty-state fallback already covers the user-visible behavior (see FR-013).
 
 ## User Scenarios & Testing *(mandatory)*
 
@@ -57,7 +57,7 @@ A visitor wants to see who is speaking at the event. They navigate from the home
 
 **Why this priority**: Speakers are the main reason most attendees register. The list must reflect organizer changes in Sessionize without redeploying the site, and it must not block the page render when the data is empty or temporarily unavailable.
 
-**Independent Test**: Configure the Sessionize event identifier in the edition metadata and verify that the speakers list renders the current speakers from Sessionize within the configured revalidation window. With an unconfigured or missing identifier, verify the empty-state copy renders without errors and the rest of the navigation continues to work.
+**Independent Test**: Configure the Sessionize event identifier in the edition metadata and verify that the speakers list renders the current public speakers from Sessionize on request. With an unconfigured or missing identifier, verify the empty-state copy renders without errors and the rest of the navigation continues to work.
 
 **Acceptance Scenarios**:
 
@@ -174,23 +174,23 @@ The site continues to render correctly when Sessionize or Eventbrite is slow, re
 
 ### User Story 9 - Reach the public domain reliably (Priority: P3)
 
-The site is published and reachable at its public domain on AWS Amplify Hosting, with the correct edition served at the bare URL and revalidation tuned so that newly accepted speakers or schedule changes appear within minutes without requiring a manual redeploy. The build remains cloud-agnostic so a future migration to Vercel, OpenNext on raw AWS, or self-hosted Node.js requires no code change.
+The site is published and reachable at its public domain on AWS Amplify Hosting, with the correct edition served at the bare URL and dynamic Sessionize reads so that newly accepted speakers or schedule changes appear without requiring a manual redeploy. The build remains cloud-agnostic so a future migration to Vercel, OpenNext on raw AWS, or self-hosted Node.js requires no code change.
 
-**Why this priority**: The end goal of the project is a live, public site. The hosting target for v1 is AWS Amplify Hosting (primary), and revalidation timings are user-visible (organizers expect their changes to appear soon). The constitution's frontend-only boundary plus the Next.js standard build keeps the project portable.
+**Why this priority**: The end goal of the project is a live, public site. The hosting target for v1 is AWS Amplify Hosting (primary), and Sessionize publication latency is user-visible (organizers expect their changes to appear soon). The constitution's frontend-only boundary plus the Next.js standard build keeps the project portable.
 
-**Independent Test**: Deploy to AWS Amplify Hosting, hit every route in the public preview, and confirm that an organizer change in Sessionize is reflected in the live site within the configured revalidation window. Re-running `BASE_URL=<preview-url> npx playwright test --project=chromium e2e/deploy-smoke.spec.ts` against the preview returns 27 passes.
+**Independent Test**: Deploy to AWS Amplify Hosting, hit every route in the public preview, and confirm that an organizer change already visible in the public Sessionize API is reflected on the next site request. Re-running `BASE_URL=<preview-url> npx playwright test --project=chromium e2e/deploy-smoke.spec.ts` against the preview returns 27 passes.
 
 **Acceptance Scenarios**:
 
 1. **Given** the site is deployed to its production hosting platform, **When** a visitor opens any route listed in the route map, **Then** the route returns a 200 response with the expected content.
-2. **Given** an organizer accepts a new speaker in Sessionize, **When** the configured revalidation window passes, **Then** the new speaker appears on `/speakers` without a manual redeploy.
+2. **Given** an organizer accepts a new speaker in Sessionize and the speaker is visible in its public API, **When** a visitor requests `/speakers`, **Then** the new speaker appears without a manual redeploy.
 3. **Given** the current edition is set to 2026, **When** a visitor opens `/`, **Then** they see the 2026 content; when 2027 becomes the current edition, the same URL serves the 2027 content with no other change required.
 
 ---
 
 ### Edge Cases
 
-- A speaker is removed from Sessionize after the static page has been built; the speaker disappears within the revalidation window, and old direct links to `/speakers/[slug]` return a 404 with a friendly Spanish message.
+- A speaker is removed from Sessionize; after the provider's public response reflects the removal, the next site request omits the speaker and old direct links to `/speakers/[slug]` return a 404 with a friendly Spanish message.
 - Two speakers share the same first and last name; the slug helper must disambiguate (for example, by appending a numeric or middle-name token) so both detail pages remain reachable.
 - A session in Sessionize spans across midnight in Asunción time; the schedule grid must render the session correctly on the day it starts.
 - A sponsor's logo URL becomes unavailable; the sponsors page must show the sponsor's name as a fallback rather than a broken image.
@@ -289,7 +289,7 @@ The site is published and reachable at its public domain on AWS Amplify Hosting,
 - **SC-001**: A visitor opening the home page on a desktop connection sees the hero, the date, and the primary CTAs in less than 2.5 seconds (largest contentful paint).
 - **SC-002**: The home page achieves Lighthouse Performance >= 90, Accessibility >= 95, Best Practices >= 95, and SEO >= 95 on a desktop run.
 - **SC-003**: With no speakers, no sponsors, and no schedule data, every route renders without error and shows the appropriate Spanish empty state. 100 percent of routes pass a smoke test in the empty-data scenario.
-- **SC-004**: An organizer accepting a new speaker in Sessionize sees that speaker appear on the live `/speakers` page within 15 minutes (the configured revalidation window).
+- **SC-004**: An organizer accepting a new speaker in Sessionize sees that speaker appear on the live `/speakers` page on the first request after Sessionize's public API reflects the change (normally within approximately five minutes).
 - **SC-005**: Adding a new edition to the site (for example, 2027) requires only adding a new folder under `content/editions/2027/` with the required files and changing the `CURRENT_EDITION` configuration; no code changes are required. This is verifiable by following the documented quickstart.
 - **SC-006**: 100 percent of interactive elements on every public page are reachable and operable by keyboard, verified by a manual keyboard pass on the home and the speakers list.
 - **SC-007**: The site renders correctly with `prefers-reduced-motion` enabled (no animations on countdown or transitions). Verified by a manual check.

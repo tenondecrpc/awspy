@@ -11,7 +11,7 @@
 ## Availability and resilience
 
 - Local event content renders without Sessionize.
-- Static-ish content uses Next.js caching/revalidation rather than request-by-request provider calls.
+- Repository-owned content remains static. Sessionize data is read on each server render while Next.js 16 ISR remains unqualified on Amplify; the provider's public edge cache bounds upstream freshness and load.
 - Provider, build, DNS, and hosting failures have explicit operational runbooks and rollback paths.
 
 ## Performance

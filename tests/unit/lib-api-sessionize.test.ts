@@ -10,6 +10,7 @@ import {
   attachSpeakerSlugs,
   buildSessionizeUrl,
   getScheduleGrid,
+  getSpeakerWall,
   getSpeakerBySlug,
   listSessions,
   listSpeakers,
@@ -214,6 +215,47 @@ describe("attachSpeakerSlugs", () => {
 });
 
 describe("listSpeakers", () => {
+  it("opts every Sessionize view out of the persistent Next.js cache", async () => {
+    const requests: Array<{
+      view: string;
+      payload: unknown;
+      load: () => Promise<unknown>;
+    }> = [
+      {
+        view: "Speakers",
+        payload: loadFixture("Speakers"),
+        load: () => listSpeakers("test-event"),
+      },
+      {
+        view: "Sessions",
+        payload: loadFixture("Sessions"),
+        load: () => listSessions("test-event"),
+      },
+      {
+        view: "GridSmart",
+        payload: loadFixture("GridSmart"),
+        load: () => getScheduleGrid("test-event"),
+      },
+      {
+        view: "SpeakerWall",
+        payload: loadFixture("SpeakerWall"),
+        load: () => getSpeakerWall("test-event"),
+      },
+    ];
+
+    for (const request of requests) {
+      mockFetch(request.view, request.payload);
+
+      await request.load();
+
+      const fetchMock = vi.mocked(fetch);
+      expect(fetchMock).toHaveBeenCalledOnce();
+      const [, init] = fetchMock.mock.calls[0];
+      expect(init).toMatchObject({ cache: "no-store" });
+      expect(init).not.toHaveProperty("next");
+    }
+  });
+
   it("keeps a published speaker whose photo is served by the Sessionize CDN", async () => {
     // Production uses the CDN; the demo fixtures only exercise sessionize.com.
     const speaker = {

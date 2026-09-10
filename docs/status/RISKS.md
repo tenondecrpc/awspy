@@ -2,9 +2,9 @@
 
 | ID | Risk | Likelihood | Impact | Mitigation | Owner | Status |
 | --- | --- | --- | --- | --- | --- | --- |
-| RISK-001 | Amplify may not fully support Next.js 16 runtime features | Medium | High | Isolated preview validation and documented OpenNext contingency | AWS owner | OPEN |
+| RISK-001 | Amplify does not officially support Next.js 16, and production ISR retained obsolete Sessionize data | High | High | Bypass persistent caching for Sessionize reads; validate Next.js 15 downgrade or documented OpenNext contingency | AWS owner | OPEN |
 | RISK-002 | Public DNS remains unavailable | High | High | Registrar and Route 53 investigation under authorized access | AWS owner | OPEN |
-| RISK-003 | Sessionize outage during generation can publish incomplete dynamic routes | Medium | Medium | Keep static content resilient; evaluate stale-last-known-good route strategy | Product and engineering | OPEN |
+| RISK-003 | A Sessionize outage during a dynamic request can show an empty provider section | Medium | Medium | Keep repository content resilient and retain tolerant empty states; evaluate a platform-supported stale-last-known-good strategy | Product and engineering | OPEN |
 | RISK-004 | Broad dependency updates could introduce visual or runtime drift | Medium | Medium | Updates are deferred into coherent groups with full E2E | Maintainer | MITIGATED |
 | RISK-005 | Hosted CI behavior was not observed before the first pull request | Low | Medium | Immutable pins, actionlint, local evidence, and pull request 10 validation | DevSecOps | MITIGATED |
 | RISK-006 | Custom-domain and provider-console configuration are not represented as code | Medium | Medium | Runbook and authorized evidence review; defer IaC until ownership is clear | AWS owner | ACCEPTED |

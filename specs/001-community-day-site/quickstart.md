@@ -101,10 +101,9 @@ pointing at the public `viewform` URL and update
 
 ### Add or update speakers, sessions, schedule
 
-Speakers, sessions, and the schedule are sourced from Sessionize. Editing them happens in the Sessionize dashboard, not in this repo. Once a change is published in Sessionize:
+Speakers, sessions, and the schedule are sourced from Sessionize. Editing them happens in the Sessionize dashboard, not in this repo. Once a change is visible in Sessionize's public API, the site reads it on the next server request. Sessionize's own public edge cache can delay that API publication by approximately five minutes.
 
-- The site picks it up within `next.revalidate` (10 minutes by default).
-- A manual purge can be triggered by re-deploying through the hosting platform (Amplify Console -> branch -> Redeploy this version) or by hitting `revalidateTag` from a server action that the editorial team can call manually.
+The site deliberately uses `cache: "no-store"` for these reads while Next.js 16 ISR remains unqualified on Amplify. A normal content update does not require a cache purge or redeploy.
 
 If Sessionize changes its public response shape, tolerant list reads fall back to empty states. The current client does not emit custom failure telemetry; sanitized provider observability is tracked as future operational work.
 

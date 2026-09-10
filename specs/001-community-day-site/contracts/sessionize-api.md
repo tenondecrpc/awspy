@@ -29,12 +29,13 @@ The public Sessionize demo event id `jl4ktls0` is used in tests as a fixture sou
 - **Headers sent by this site**: `Accept: application/json`
 - **Authentication**: none
 - **Caching by Sessionize**: ~5 minutes server-side
-- **Caching by this site**: `next: { revalidate: 600, tags: [`sessionize:${eventId}`] }` (10 minutes)
+- **Caching by this site**: `cache: "no-store"`. Sessionize reads render dynamically while the Next.js 16 and Amplify runtime combination remains unsupported and its ISR behavior is unqualified.
 - **Expected status codes**:
   - `200 OK`: successful response, JSON body
   - `404 Not Found`: event id is unknown or not yet public; the site treats this as an empty result via `tolerateMissing: true`
   - `5xx`: treated as a transient failure; tolerant reads return an empty result so local content keeps rendering. Sanitized server-side failure telemetry is tracked as future work because the current client does not log tolerated failures.
 - **Timeout**: 8 seconds by default; tolerant reads return their configured fallback after timeout.
+- **Provider caching**: Sessionize applies its own short public edge cache (approximately five minutes), so `no-store` avoids the site's stale persistent cache without bypassing the provider's cache policy.
 
 ## Response shapes
 

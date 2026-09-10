@@ -206,10 +206,11 @@ export function buildSessionizeUrl(
 
 // ---------- Public API ----------
 
-const NEXT_OPTS = (eventId: string) => ({
-  revalidate: 600,
-  tags: [`sessionize:${eventId}`],
-});
+// Amplify does not currently support the project's Next.js 16 runtime, and
+// production evidence showed its ISR cache retaining an obsolete prerender.
+// Keep provider reads dynamic until the hosting/runtime combination is
+// supported and qualified. Sessionize still applies its own short edge cache.
+const SESSIONIZE_CACHE_MODE: RequestCache = "no-store";
 
 function deriveFullName(s: SessionizeSpeaker): string {
   if (s.fullName && s.fullName.trim().length > 0) return s.fullName;
@@ -235,7 +236,7 @@ export async function listSpeakers(eventId: string | null): Promise<Speaker[]> {
     schema: SpeakersListSchema,
     tolerateMissing: true,
     fallback: [] as SessionizeSpeaker[],
-    next: NEXT_OPTS(eventId),
+    cache: SESSIONIZE_CACHE_MODE,
   });
   return attachSpeakerSlugs(raw);
 }
@@ -257,7 +258,7 @@ export async function listSessions(
     schema: SessionsListSchema,
     tolerateMissing: true,
     fallback: [],
-    next: NEXT_OPTS(eventId),
+    cache: SESSIONIZE_CACHE_MODE,
   });
   return groups.flatMap((g) => g.sessions);
 }
@@ -271,7 +272,7 @@ export async function getScheduleGrid(
     schema: ScheduleGridSchema,
     tolerateMissing: true,
     fallback: [] as ScheduleGrid,
-    next: NEXT_OPTS(eventId),
+    cache: SESSIONIZE_CACHE_MODE,
   });
 }
 
@@ -284,6 +285,6 @@ export async function getSpeakerWall(
     schema: SpeakerWallSchema,
     tolerateMissing: true,
     fallback: [] as SpeakerWallItem[],
-    next: NEXT_OPTS(eventId),
+    cache: SESSIONIZE_CACHE_MODE,
   });
 }
