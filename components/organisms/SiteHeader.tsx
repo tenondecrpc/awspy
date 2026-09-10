@@ -57,7 +57,7 @@ export function SiteHeader({ editionYear }: SiteHeaderProps) {
         <div className="flex h-16 items-center justify-between gap-4">
           <NextLink
             href="/"
-            className="flex items-center gap-2 font-bold tracking-tight"
+            className="flex items-center gap-2 whitespace-nowrap font-bold tracking-tight"
           >
             <span aria-hidden="true">AWS</span>
             <span className="hidden sm:inline">Community Day</span>

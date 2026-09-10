@@ -37,7 +37,7 @@ export function NavLink({
       aria-current={isActive ? "page" : undefined}
       onClick={onNavigate}
       className={cn(
-        "inline-flex items-center rounded-[var(--radius-sm)] px-3 py-2 text-sm font-medium",
+        "inline-flex items-center whitespace-nowrap rounded-[var(--radius-sm)] px-3 py-2 text-sm font-medium",
         "text-[var(--color-text-primary)] hover:bg-[var(--color-surface-muted)]",
         // Active state: bold weight + underline, never color alone.
         isActive &&
