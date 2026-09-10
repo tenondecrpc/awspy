@@ -1,8 +1,7 @@
 // Loader for `content/editions/{year}/organizers.json`.
 
 import { z } from "zod";
-import { join } from "node:path";
-import { editionDir, readJsonOrThrow } from "@/lib/content/_fs";
+import { editionFile, readJsonOrThrow } from "@/lib/content/_fs";
 import {
   HttpUrlSchema,
   HttpsUrlSchema,
@@ -50,7 +49,7 @@ export const OrganizersListSchema = z
 export type Organizer = z.infer<typeof OrganizerSchema>;
 
 export function getOrganizers(year: string): Organizer[] {
-  const path = join(editionDir(year), "organizers.json");
+  const path = editionFile(year, "organizers.json");
   const raw = readJsonOrThrow(path);
   const result = OrganizersListSchema.safeParse(raw);
   if (!result.success) {

@@ -2,8 +2,7 @@
 // in `specs/001-community-day-site/contracts/content-schemas.md`.
 
 import { z } from "zod";
-import { join } from "node:path";
-import { editionDir, readJsonOrThrow } from "@/lib/content/_fs";
+import { editionFile, readJsonOrThrow } from "@/lib/content/_fs";
 import { HttpUrlSchema, RemoteImageUrlSchema } from "@/lib/validation/urls";
 
 export const SponsorTierEnum = z.enum([
@@ -51,7 +50,7 @@ export const SponsorsListSchema = z
 export type Sponsor = z.infer<typeof SponsorSchema>;
 
 export function getSponsors(year: string): Sponsor[] {
-  const path = join(editionDir(year), "sponsors.json");
+  const path = editionFile(year, "sponsors.json");
   const raw = readJsonOrThrow(path);
   const result = SponsorsListSchema.safeParse(raw);
   if (!result.success) {

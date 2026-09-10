@@ -3,8 +3,7 @@
 // iframes.
 
 import { z } from "zod";
-import { join } from "node:path";
-import { editionDir, readJsonOrThrow } from "@/lib/content/_fs";
+import { editionFile, readJsonOrThrow } from "@/lib/content/_fs";
 import { HttpUrlSchema, HttpsUrlSchema } from "@/lib/validation/urls";
 
 const TRUSTED_MAP_HOSTS = [
@@ -53,7 +52,7 @@ export const VenueSchema = z
 export type Venue = z.infer<typeof VenueSchema>;
 
 export function getVenue(year: string): Venue {
-  const path = join(editionDir(year), "venue.json");
+  const path = editionFile(year, "venue.json");
   const raw = readJsonOrThrow(path);
   const result = VenueSchema.safeParse(raw);
   if (!result.success) {

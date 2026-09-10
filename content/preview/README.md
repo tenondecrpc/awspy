@@ -1,37 +1,53 @@
 # Preview data
 
-Placeholder data used to look at sections that have no real content yet. **No
-application code reads anything in this directory**, and none of it ships to
-the deployed site.
+Placeholder data for the sections that ship with no real content yet:
+sponsors, the organizing team, the venue, the schedule and the speakers.
+None of it reaches a deployed build.
 
-## Sessionize views (`sessionize/`)
-
-`/schedule`, and the "Sus charlas" block on a speaker page, come from the
-public Sessionize API. The real 2026 event has not published its grid yet, so
-those sections render their empty state. To work on them with content:
+## One command
 
 ```bash
-# terminal 1
-npm run preview:data
-
-# terminal 2
-NEXT_PUBLIC_SESSIONIZE_BASE_URL=http://127.0.0.1:8799 npm run dev
+npm run dev:preview
 ```
 
+Next.js allows a single dev server per directory, so stop a running
+`npm run dev` first. Extra arguments are forwarded:
+`npm run dev:preview -- -p 3001`.
+
+That wires up two things and nothing else:
+
+1. `CONTENT_PREVIEW=1`, which makes the content loaders prefer a
+   `<name>.example.json` sibling over the live file when one exists. The
+   resolver is `editionFile` in `lib/content/_fs.ts`.
+2. `NEXT_PUBLIC_SESSIONIZE_BASE_URL` pointed at a local fixture server, so
+   `/schedule` and `/speakers` get a full day of sessions instead of the
+   empty state. That override is the one `.env.example` already documents.
+
+**The live content files are never modified**, so there is nothing to revert
+and no way to commit placeholder records by accident.
+
+## Why a production build ignores it
+
+The site is public. Placeholder sponsors or team members must not be
+reachable from a deployed build even if `CONTENT_PREVIEW` were set in the
+hosting environment, so `editionFile` returns the live path whenever
+`NODE_ENV` is `production`. `tests/unit/lib-content-preview.test.ts` locks
+that behavior down.
+
+## What is in here
+
+### `sessionize/`
+
+A full event day on the real date (2026-10-17) across four rooms, so the
+per-room accents, the plenary badges and the time chips all have something to
+render. Four views are served, matching the real API shape: `GridSmart`,
+`Speakers`, `Sessions`, `SpeakerWall`.
+
 `scripts/preview-sessionize.mjs` answers the same URL shape as Sessionize
-(`/{eventId}/view/{View}`) from `sessionize/*.json`. The override env var is
-the one already documented in `.env.example`.
+(`/{eventId}/view/{View}`); the event id is ignored. Run it on its own with
+`npm run preview:data` to point something else at it.
 
-The fixture day is the real event date (2026-10-17) across four rooms, so the
-per-room accents, the plenary badge and the time chips all have something to
-render.
-
-## Edition content (`../editions/2026/*.example.json`)
-
-Sponsors, the organizing team and the venue are version-controlled JSON. The
-live files are intentionally empty or minimal, which is why those pages show
-their empty state. Each one has an `*.example.json` sibling with placeholder
-data:
+### `../editions/2026/*.example.json`
 
 | Live file          | Placeholder file           |
 |--------------------|----------------------------|
@@ -39,18 +55,19 @@ data:
 | `organizers.json`  | `organizers.example.json`  |
 | `venue.json`       | `venue.example.json`       |
 
-To preview one, copy it over the live file and revert when you are done:
+They validate against the same Zod schemas as production content, so a
+placeholder that would not load as real content fails the test suite.
 
-```bash
-cp content/editions/2026/sponsors.example.json content/editions/2026/sponsors.json
-# ... look at /sponsors ...
-git checkout content/editions/2026/sponsors.json
-```
+Adding an `*.example.json` sibling for another edition file is enough to make
+it available; the loader has to call `editionFile` rather than building the
+path itself, which `sponsors`, `organizers` and `venue` already do.
 
-Every name in the placeholder data is obviously fake ("Demo Cloud",
-"Ana Demo") on purpose: the site is public, and a real-looking sponsor wall or
-team list would mislead attendees if it ever reached production. Replace the
-placeholders with real records rather than editing the fake ones.
+## The names are fake on purpose
 
-The sponsor logos those files point at live in `public/logos/demo-*.svg` and
-are placeholder marks, not real brand assets.
+Every placeholder reads as a placeholder ("Demo Cloud", "Ana Demo"). A
+real-looking sponsor wall or team list would mislead attendees if it ever
+reached production. Replace the placeholders with real records rather than
+editing the fake ones.
+
+The sponsor logos they point at live in `public/logos/demo-*.svg` and are
+placeholder marks, not real brand assets.
