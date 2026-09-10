@@ -43,7 +43,24 @@ export function editionFile(year: string, fileName: string): string {
     editionDir(year),
     `${fileName.slice(0, dot)}.example${fileName.slice(dot)}`
   );
-  return existsSync(example) ? example : live;
+  if (!existsSync(example)) return live;
+
+  announcePreview(fileName);
+  return example;
+}
+
+// Announced once per file per process. Without it there is no way to tell,
+// from a page that renders placeholder sponsors, whether preview mode is on
+// or the real records just landed.
+const announced = new Set<string>();
+
+function announcePreview(fileName: string): void {
+  if (process.env.NODE_ENV === "test") return;
+  if (announced.has(fileName)) return;
+  announced.add(fileName);
+  console.warn(
+    `[content] CONTENT_PREVIEW=1: serving placeholder ${fileName} from its .example sibling. Not what a deployed build serves.`
+  );
 }
 
 export function readJsonOrThrow<T = unknown>(absolutePath: string): T {

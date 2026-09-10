@@ -4,27 +4,51 @@ Placeholder data for the sections that ship with no real content yet:
 sponsors, the organizing team, the venue, the schedule and the speakers.
 None of it reaches a deployed build.
 
-## One command
+## Two ways in
+
+### Sponsors, team and venue: your normal `npm run dev`
+
+These three come from version-controlled JSON, so all they need is
+`CONTENT_PREVIEW=1`. Put it in `.env.local`, which is gitignored, and the dev
+server you already run picks it up:
+
+```bash
+echo "CONTENT_PREVIEW=1" >> .env.local
+npm run dev
+```
+
+Each substituted file is announced once in the terminal, so there is never
+any doubt about which mode you are looking at:
+
+```
+[content] CONTENT_PREVIEW=1: serving placeholder sponsors.json from its
+.example sibling. Not what a deployed build serves.
+```
+
+Remove the line from `.env.local` to go back to the real (empty) content.
+
+### All five sections, including the schedule: `npm run dev:preview`
+
+The schedule and the speakers come from the Sessionize API rather than these
+files, so they also need the local fixture server. One command starts both:
 
 ```bash
 npm run dev:preview
 ```
 
-Next.js allows a single dev server per directory, so stop a running
-`npm run dev` first. Extra arguments are forwarded:
-`npm run dev:preview -- -p 3001`.
+It sets `CONTENT_PREVIEW=1`, starts the fixture server, points
+`NEXT_PUBLIC_SESSIONIZE_BASE_URL` at it and then runs `next dev`, forwarding
+any arguments (`npm run dev:preview -- -p 3001`).
 
-That wires up two things and nothing else:
+**Stop a running `npm run dev` first.** Next.js allows one dev server per
+directory, and the lock is per directory rather than per port, so a second
+one is refused even on a different port - while the first keeps answering and
+the sections still look empty. `dev:preview` reads `.next/dev/lock` and
+refuses up front with the offending pid rather than letting that happen
+quietly.
 
-1. `CONTENT_PREVIEW=1`, which makes the content loaders prefer a
-   `<name>.example.json` sibling over the live file when one exists. The
-   resolver is `editionFile` in `lib/content/_fs.ts`.
-2. `NEXT_PUBLIC_SESSIONIZE_BASE_URL` pointed at a local fixture server, so
-   `/schedule` and `/speakers` get a full day of sessions instead of the
-   empty state. That override is the one `.env.example` already documents.
-
-**The live content files are never modified**, so there is nothing to revert
-and no way to commit placeholder records by accident.
+**The live content files are never modified**, either way, so there is
+nothing to revert and no way to commit placeholder records by accident.
 
 ## Why a production build ignores it
 
