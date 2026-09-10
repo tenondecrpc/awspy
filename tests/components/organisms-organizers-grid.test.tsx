@@ -62,6 +62,18 @@ describe("OrganizersGrid", () => {
     expect(screen.getByText("Beto Lopez")).toBeInTheDocument();
   });
 
+  it("alternates the decorative accent between neighbouring cards", () => {
+    const { container } = render(
+      <OrganizersGrid organizers={ORGANIZERS} eventInfo={EVENT_INFO} />
+    );
+    const styles = Array.from(container.querySelectorAll("article")).map((el) =>
+      el.getAttribute("style")
+    );
+    expect(styles).toHaveLength(2);
+    expect(styles[0]).toContain("--card-accent");
+    expect(styles[0]).not.toEqual(styles[1]);
+  });
+
   it("renders organizer social links with safe attributes", () => {
     render(<OrganizersGrid organizers={ORGANIZERS} eventInfo={EVENT_INFO} />);
     const link = screen.getByRole("link", { name: "LinkedIn" });

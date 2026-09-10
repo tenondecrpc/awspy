@@ -21,9 +21,10 @@ export function OrganizersGrid({
   if (isLoading && organizers.length === 0) {
     return (
       <LoadingGrid
-        columns={3}
+        columns={4}
         rows={2}
         itemAspectRatio={1}
+        gap="lg"
         loadingLabel="Cargando equipo"
       />
     );
@@ -49,12 +50,12 @@ export function OrganizersGrid({
   }
   return (
     <ul
-      className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3"
+      className="grid grid-cols-2 gap-4 sm:gap-6 lg:grid-cols-4 lg:gap-8"
       aria-label="Equipo organizador"
     >
-      {organizers.map((o) => (
-        <li key={o.id}>
-          <OrganizerCard organizer={o} />
+      {organizers.map((o, index) => (
+        <li key={o.id} className="h-full">
+          <OrganizerCard organizer={o} accentIndex={index} />
         </li>
       ))}
     </ul>

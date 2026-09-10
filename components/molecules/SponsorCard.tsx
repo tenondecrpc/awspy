@@ -2,8 +2,13 @@
 
 // Sponsor card molecule. Renders the sponsor's logo (with name fallback when
 // the image fails to load) plus tier badge and link to the sponsor's site.
+//
+// The tier tints the accent border and the top stripe; the tier name is still
+// spelled out in the badge, so the color is reinforcement and never the only
+// signal (constitution Principle VI). The whole card is clickable through a
+// stretched overlay on the single link, which keeps one tab stop per sponsor.
 
-import { useState } from "react";
+import { useState, type CSSProperties } from "react";
 import Image from "next/image";
 import { Badge } from "@/components/atoms/Badge";
 import { Link } from "@/components/atoms/Link";
@@ -27,6 +32,25 @@ const TIER_VARIANT: Record<
   Community: "tier-community",
 };
 
+// Tier tokens are only ever used as a background here, which is the pairing
+// verified in the palette contract.
+const TIER_ACCENT: Record<SponsorTier, { accent: string; glow: string }> = {
+  Platinum: {
+    accent: "var(--color-tier-platinum)",
+    glow: "var(--color-glow-accent)",
+  },
+  Gold: { accent: "var(--color-tier-gold)", glow: "var(--color-glow-action)" },
+  Silver: {
+    accent: "var(--color-tier-silver)",
+    glow: "var(--color-glow-accent)",
+  },
+  Bronze: { accent: "var(--color-tier-bronze)", glow: "var(--color-glow-red)" },
+  Community: {
+    accent: "var(--color-tier-community)",
+    glow: "var(--color-glow-accent)",
+  },
+};
+
 export function SponsorCard({
   sponsor,
   variant = "full",
@@ -34,47 +58,90 @@ export function SponsorCard({
 }: SponsorCardProps) {
   const [logoFailed, setLogoFailed] = useState(false);
 
-  const logoSize = variant === "compact" ? 80 : 160;
+  const isCompact = variant === "compact";
+  const logoSize = isCompact ? 120 : 240;
   const logoSrc = sponsor.logo.light;
   const showLogo = !logoFailed;
+  const { accent, glow } = TIER_ACCENT[sponsor.tier];
+
+  const logo = showLogo ? (
+    <Image
+      src={logoSrc}
+      alt={sponsor.name}
+      width={logoSize}
+      height={logoSize}
+      sizes={`${logoSize}px`}
+      className={cn(
+        "w-auto object-contain",
+        isCompact ? "max-h-[48px]" : "max-h-[64px]"
+      )}
+      onError={() => setLogoFailed(true)}
+    />
+  ) : (
+    // Visible name fallback when the logo URL fails (Edge Case in spec).
+    <span className="text-lg font-bold">{sponsor.name}</span>
+  );
+
+  if (isCompact) {
+    return (
+      <article
+        className={cn(
+          "flex items-center justify-center px-2 py-1",
+          "opacity-80 transition hover:opacity-100",
+          className
+        )}
+      >
+        <Link
+          href={sponsor.url}
+          external
+          aria-label={`${sponsor.name} (sponsor ${sponsor.tier})`}
+        >
+          {logo}
+        </Link>
+      </article>
+    );
+  }
 
   return (
     <article
       className={cn(
-        "flex flex-col items-center gap-3 rounded-[var(--radius-lg)] bg-[var(--color-surface)] p-4 text-center shadow-sm",
-        variant === "compact" && "p-2 shadow-none bg-transparent",
+        "media-card relative flex h-full flex-col items-center gap-4 overflow-hidden",
+        "rounded-[var(--radius-lg)] bg-[var(--color-surface-elevated)] pb-6 text-center shadow-sm",
         className
       )}
+      style={
+        {
+          "--card-accent": accent,
+          "--card-glow": glow,
+        } as CSSProperties
+      }
     >
+      <span
+        aria-hidden="true"
+        className="h-1 w-full shrink-0 bg-[var(--card-accent)]"
+      />
+
       <Link
         href={sponsor.url}
         external
-        className="flex flex-col items-center gap-2"
+        className={cn(
+          "flex flex-1 flex-col items-center justify-center gap-4 px-6 pt-2",
+          "after:absolute after:inset-0 after:content-['']"
+        )}
         aria-label={`${sponsor.name} (sponsor ${sponsor.tier})`}
       >
-        {showLogo ? (
-          <Image
-            src={logoSrc}
-            alt={sponsor.name}
-            width={logoSize}
-            height={logoSize}
-            sizes={`${logoSize}px`}
-            className="h-auto max-h-[80px] w-auto object-contain"
-            onError={() => setLogoFailed(true)}
-          />
-        ) : (
-          // Visible name fallback when the logo URL fails (Edge Case in spec).
-          <span className="text-base font-bold">{sponsor.name}</span>
-        )}
-        {variant === "full" ? (
-          <span className="font-semibold">{sponsor.name}</span>
-        ) : null}
+        <span className="flex h-[72px] items-center justify-center">
+          {logo}
+        </span>
+        <span className="text-base font-bold text-[var(--color-text-primary)]">
+          {sponsor.name}
+        </span>
       </Link>
-      {variant === "full" ? (
-        <Badge variant={TIER_VARIANT[sponsor.tier]}>{sponsor.tier}</Badge>
-      ) : null}
-      {variant === "full" && sponsor.description ? (
-        <p className="text-sm text-[var(--color-text-secondary)]">
+
+      <Badge variant={TIER_VARIANT[sponsor.tier]}>{sponsor.tier}</Badge>
+
+      {sponsor.description ? (
+        <p className="px-6 text-sm text-[var(--color-text-secondary)]">
           {sponsor.description}
         </p>
       ) : null}

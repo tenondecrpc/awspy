@@ -59,4 +59,21 @@ describe("VolunteerCallout", () => {
       })
     ).not.toBeInTheDocument();
   });
+
+  it("lists what helping involves while the call is not closed", () => {
+    render(<VolunteerCallout eventInfo={EVENT_INFO} />);
+    expect(screen.getByText(/en qué podés ayudar/i)).toBeInTheDocument();
+    expect(
+      screen.getByText("Acreditación y bienvenida de asistentes")
+    ).toBeInTheDocument();
+  });
+
+  it("drops the task list once the call is closed", () => {
+    render(
+      <VolunteerCallout
+        eventInfo={{ ...EVENT_INFO, volunteerRegistrationStatus: "closed" }}
+      />
+    );
+    expect(screen.queryByText(/en qué podés ayudar/i)).not.toBeInTheDocument();
+  });
 });

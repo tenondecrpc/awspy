@@ -54,6 +54,18 @@ describe("SponsorCard", () => {
     expect(link.textContent).toContain("Acme Cloud");
   });
 
+  it("tints the card accent from the tier token", () => {
+    const { container } = render(<SponsorCard sponsor={SPONSOR} />);
+    const style = container.querySelector("article")?.getAttribute("style");
+    expect(style).toContain("--card-accent: var(--color-tier-gold)");
+  });
+
+  it("exposes exactly one link so the card is a single tab stop", () => {
+    render(<SponsorCard sponsor={SPONSOR} />);
+    expect(screen.getAllByRole("link")).toHaveLength(1);
+    expect(screen.getByRole("link").className).toContain("after:absolute");
+  });
+
   it("hides the tier badge in compact variant", () => {
     render(<SponsorCard sponsor={SPONSOR} variant="compact" />);
     expect(screen.queryByText("Gold")).not.toBeInTheDocument();

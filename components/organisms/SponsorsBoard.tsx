@@ -103,9 +103,9 @@ export function SponsorsBoard({
               style={{ background: TIER_RULE[group.tier] }}
             />
           </div>
-          <ul className="grid justify-center gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          <ul className="flex flex-wrap justify-center gap-6">
             {group.sponsors.map((s) => (
-              <li key={s.id} className="h-full">
+              <li key={s.id} className="w-full sm:w-[18rem]">
                 <SponsorCard sponsor={s} className="h-full" />
               </li>
             ))}
