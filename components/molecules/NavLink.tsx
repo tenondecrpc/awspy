@@ -37,11 +37,12 @@ export function NavLink({
       aria-current={isActive ? "page" : undefined}
       onClick={onNavigate}
       className={cn(
-        "inline-flex items-center whitespace-nowrap rounded-[var(--radius-sm)] px-3 py-2 text-sm font-medium",
-        "text-[var(--color-text-primary)] hover:bg-[var(--color-surface-muted)]",
-        // Active state: bold weight + underline, never color alone.
+        "inline-flex items-center whitespace-nowrap px-2.5 py-1.5 text-[13.5px] font-medium",
+        "border-b-2 border-transparent text-[var(--color-text-secondary)]",
+        "hover:border-[var(--color-text-primary)] hover:text-[var(--color-text-primary)]",
+        // Active: bold + navy + navy underline (never color alone).
         isActive &&
-          "font-bold underline decoration-[var(--color-accent)] decoration-2 underline-offset-4",
+          "border-[var(--color-text-primary)] font-bold text-[var(--color-text-primary)]",
         className
       )}
     >

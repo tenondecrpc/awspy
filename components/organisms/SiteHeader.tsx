@@ -1,21 +1,29 @@
 "use client";
 
-// Site-wide header. Includes a skip link, the brand mark, the desktop nav,
-// and a mobile drawer with focus-trapped open state, Escape-to-close, and
-// click-outside-to-close.
+// Site-wide header, styled after the "colored" mockup: a light bar with a
+// condensed primary nav and an Amazon-Orange "Registrarme" call to action.
+// Includes a skip link, the brand mark, the desktop nav, and a mobile drawer
+// with focus management, Escape-to-close, and click-outside-to-close.
+//
+// The primary nav is intentionally condensed (see lib/nav PRIMARY_NAV); the
+// destinations it omits (Proponer charla, Voluntarios, …) remain reachable in
+// the footer and on their own pages, so no navigation is lost.
 
 import { useEffect, useRef, useState } from "react";
 import NextLink from "next/link";
+import Image from "next/image";
 import { Container } from "@/components/atoms/Container";
-import { ThemeToggle } from "@/components/atoms/ThemeToggle";
 import { NavLink } from "@/components/molecules/NavLink";
 import { EditionPill } from "@/components/molecules/EditionPill";
-import { PRIMARY_NAV } from "@/lib/nav";
+import { PRIMARY_NAV, REGISTER_CTA } from "@/lib/nav";
 import { cn } from "@/lib/utils/cn";
 
 type SiteHeaderProps = {
   editionYear: string;
 };
+
+const CTA_CLASS =
+  "inline-flex items-center justify-center whitespace-nowrap rounded-[var(--radius-sm)] bg-[var(--color-surface-inverse)] px-4 py-2 text-[13.5px] font-bold text-[var(--color-text-on-inverse)] transition-colors hover:bg-[var(--color-action)] hover:text-[var(--color-text-on-action)]";
 
 export function SiteHeader({ editionYear }: SiteHeaderProps) {
   const [isDrawerOpen, setDrawerOpen] = useState(false);
@@ -47,7 +55,7 @@ export function SiteHeader({ editionYear }: SiteHeaderProps) {
 
   return (
     <header
-      className="sticky top-0 z-40 border-b border-[var(--color-surface-muted)] bg-[var(--color-surface)]"
+      className="sticky top-0 z-40 border-b border-[var(--color-text-primary)] bg-[var(--color-surface)] backdrop-blur"
       role="banner"
     >
       <a href="#contenido-principal" className="skip-link">
@@ -57,26 +65,37 @@ export function SiteHeader({ editionYear }: SiteHeaderProps) {
         <div className="flex h-16 items-center justify-between gap-4">
           <NextLink
             href="/"
-            className="flex items-center gap-2 whitespace-nowrap font-bold tracking-tight"
+            className="flex items-center gap-3 whitespace-nowrap"
           >
-            <span aria-hidden="true">AWS</span>
-            <span className="hidden sm:inline">Community Day</span>
-            <span>Paraguay</span>
+            <Image
+              src="/assets/logo-dark.png"
+              alt="AWS Community Day Paraguay"
+              width={501}
+              height={139}
+              priority
+              className="h-8 w-auto"
+            />
             <EditionPill year={editionYear} className="hidden sm:inline-flex" />
           </NextLink>
 
-          <nav aria-label="Navegación principal" className="hidden xl:block">
-            <ul className="flex items-center gap-1">
-              {PRIMARY_NAV.map((entry) => (
-                <li key={entry.href}>
-                  <NavLink href={entry.href}>{entry.label}</NavLink>
-                </li>
-              ))}
-            </ul>
-          </nav>
+          <div className="flex items-center gap-3">
+            <nav aria-label="Navegación principal" className="hidden xl:block">
+              <ul className="flex items-center gap-1">
+                {PRIMARY_NAV.map((entry) => (
+                  <li key={entry.href}>
+                    <NavLink href={entry.href}>{entry.label}</NavLink>
+                  </li>
+                ))}
+              </ul>
+            </nav>
 
-          <div className="flex items-center gap-2">
-            <ThemeToggle />
+            <NextLink
+              href={REGISTER_CTA.href}
+              className={cn(CTA_CLASS, "hidden xl:inline-flex")}
+            >
+              {REGISTER_CTA.label}
+            </NextLink>
+
             <button
               ref={triggerRef}
               type="button"
@@ -139,6 +158,13 @@ export function SiteHeader({ editionYear }: SiteHeaderProps) {
                 ))}
               </ul>
             </nav>
+            <NextLink
+              href={REGISTER_CTA.href}
+              onClick={() => setDrawerOpen(false)}
+              className={cn(CTA_CLASS, "mt-4 w-full")}
+            >
+              {REGISTER_CTA.label}
+            </NextLink>
           </div>
         </div>
       ) : null}

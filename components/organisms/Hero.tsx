@@ -1,32 +1,23 @@
-// Hero block on the home page. Server component; consumes the validated
-// EventInfo.
+// Hero block on the home page, styled after the light "Home Light" mockup.
+// Server component; consumes the validated EventInfo.
 //
-// Layout: two columns from `lg` up - the pitch, the practical details, the
-// countdown and the CTAs on the left; a decorative edition mark on the right.
-// Below `lg` it collapses to a single column and the decorative mark is
-// dropped so the primary CTA stays close to the fold.
+// Layout: a light panel with two columns from `lg` up — the pitch, the
+// practical details, the CTAs and the live countdown on the left; an image
+// panel with a navy date badge on the right. Below `lg` it stacks.
 //
-// The countdown lives here rather than in its own band so a visitor gets the
-// date, the place and the time remaining in one glance, the way the rest of
-// the AWS Community Day family presents it.
-//
-// The Asuncion skyline sits along the bottom edge, cropped from the event
-// banner. Only the text-free strip of that artwork is used: the banner also
-// carries the title, date and venue baked in, which would collide with the
-// live copy above it and turn illegible on a phone. It is decorative
-// (`aria-hidden`, empty alt) - everything it shows is already written out in
-// the text beside it - and a scrim keeps the city lights from competing with
-// the headline.
+// The countdown is kept live (it is the AWS Community Day family's signature)
+// and the CTAs preserve the register/CFP/contact fallbacks from the previous
+// hero, so no functionality is lost in the restyle. The decorative skyline and
+// dot-grid from the old dark hero are intentionally dropped: the mockup's
+// light hero is clean, and both were purely decorative.
 
-import Image from "next/image";
 import { Container } from "@/components/atoms/Container";
 import { Section } from "@/components/atoms/Section";
 import { Heading } from "@/components/atoms/Heading";
 import { Button } from "@/components/atoms/Button";
-import { Badge } from "@/components/atoms/Badge";
-import { GlyphIcon, type GlyphName } from "@/components/atoms/GlyphIcon";
-import { DecorativePattern } from "@/components/atoms/DecorativePattern";
+import { Placeholder } from "@/components/atoms/Placeholder";
 import { Countdown } from "@/components/organisms/Countdown";
+import { cn } from "@/lib/utils/cn";
 import type { EventInfo } from "@/lib/content/event-info";
 import { formatDate, formatTimeRange } from "@/lib/utils/datetime";
 
@@ -44,24 +35,16 @@ const STATUS_COPY: Record<EventInfo["registrationStatus"], string> = {
   closed: "Registro cerrado",
 };
 
-function EventDetail({
-  glyph,
-  children,
-}: {
-  glyph: GlyphName;
-  children: string;
-}) {
+function Detail({ label, value }: { label: string; value: string }) {
   return (
-    <li className="flex items-center gap-3 text-[var(--color-text-on-hero)]">
-      <GlyphIcon
-        name={glyph}
-        size={22}
-        className="text-[var(--color-national-red-on-dark)]"
-      />
-      <span className="text-sm font-medium first-letter:uppercase sm:text-base">
-        {children}
-      </span>
-    </li>
+    <div className="border-b border-[var(--color-border-subtle)] px-0 py-3.5 sm:px-4 sm:[&:not(:first-child)]:border-l">
+      <dt className="mb-1 font-mono text-[10.5px] uppercase tracking-[0.14em] text-[var(--color-text-muted)]">
+        {label}
+      </dt>
+      <dd className="m-0 text-[15px] font-semibold text-[var(--color-text-primary)] first-letter:uppercase">
+        {value}
+      </dd>
+    </div>
   );
 }
 
@@ -72,123 +55,119 @@ export function Hero({
 }: HeroProps) {
   const dateLabel = formatDate(eventInfo.dates.start);
   const timeLabel = formatTimeRange(eventInfo.dates.start, eventInfo.dates.end);
+  const isOpen = eventInfo.registrationStatus === "open";
   const showRegistrationCta = eventInfo.registrationStatus !== "closed";
   const showCfpCta = eventInfo.cfpStatus === "open";
 
   return (
-    <Section spacing="lg" tone="hero" id="contenido-principal">
-      <DecorativePattern
-        density="medium"
-        opacity={0.08}
-        seed={`hero-${eventInfo.year}`}
-      />
-      {/* Anchored to the bottom edge, where a skyline belongs. `object-bottom`
-          keeps the waterline in frame as the band gets shorter. */}
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-x-0 bottom-0 h-48 sm:h-64 lg:h-72"
-      >
-        <Image
-          src="/assets/hero/skyline.jpg"
-          alt=""
-          fill
-          priority
-          sizes="100vw"
-          className="object-cover object-bottom opacity-60"
-        />
-        {/* Top-down scrim: the headline keeps its AA contrast over the city
-            lights, and the image fades in rather than starting as a hard edge. */}
-        <div className="absolute inset-0 bg-gradient-to-b from-[var(--color-surface-hero)] via-[var(--color-overlay)] to-transparent" />
-      </div>
+    <Section
+      spacing="lg"
+      tone="muted"
+      id="contenido-principal"
+      className="border-b border-[var(--color-text-primary)]"
+    >
+      <Container>
+        <div className="grid items-center gap-12 lg:grid-cols-[1.1fr_0.9fr] lg:gap-16">
+          <div className="flex min-w-0 flex-col items-start">
+            {/* Eyebrow row: edition marker + live registration status. */}
+            <div className="mb-6 flex w-full items-center gap-3">
+              <span className="font-mono text-[11.5px] uppercase tracking-[0.14em] text-[var(--color-text-muted)]">
+                Primera edición
+              </span>
+              <span
+                aria-hidden="true"
+                className="h-px flex-1 bg-[var(--color-border-subtle)]"
+              />
+              <span
+                className={cn(
+                  "inline-flex items-center gap-2 font-mono text-[11.5px] uppercase tracking-[0.1em]",
+                  isOpen
+                    ? "text-[var(--color-success)]"
+                    : "text-[var(--color-text-secondary)]"
+                )}
+              >
+                <span
+                  aria-hidden="true"
+                  className={cn(
+                    "h-1.5 w-1.5 rounded-full",
+                    isOpen
+                      ? "bg-[var(--color-success)]"
+                      : "bg-[var(--color-text-muted)]"
+                  )}
+                />
+                {STATUS_COPY[eventInfo.registrationStatus]}
+              </span>
+            </div>
 
-      <Container className="relative">
-        <div className="grid items-center gap-12 lg:grid-cols-[1.15fr_1fr] lg:gap-16">
-          <div className="flex flex-col items-start gap-6">
-            <Badge
-              variant={
-                eventInfo.registrationStatus === "open" ? "info" : "neutral"
-              }
+            <Heading
+              level={1}
+              className="leading-[0.94] tracking-[-0.045em] text-[var(--color-text-primary)]"
             >
-              {STATUS_COPY[eventInfo.registrationStatus]}
-            </Badge>
-
-            <Heading level={1} className="text-balance">
-              {eventInfo.heroTitle}
+              AWS
+              <br />
+              Community&nbsp;Day
+              <br />
+              <span className="text-[var(--color-action)]">Paraguay</span>
             </Heading>
 
-            <p className="max-w-[40rem] text-lg text-[var(--color-text-on-hero)] opacity-90">
+            <p className="mt-6 max-w-[34rem] text-lg text-[var(--color-text-secondary)]">
               {eventInfo.heroSubtitle}
             </p>
 
-            <ul className="flex flex-col gap-2">
-              <EventDetail glyph="calendar">{dateLabel}</EventDetail>
-              <EventDetail glyph="clock">{timeLabel}</EventDetail>
-              <EventDetail glyph="pin">
-                {eventInfo.location.summary}
-              </EventDetail>
-            </ul>
+            <dl className="mt-8 grid w-full grid-cols-2 border-t border-[var(--color-text-primary)] sm:grid-cols-4">
+              <Detail label="Fecha" value={dateLabel} />
+              <Detail label="Horario" value={timeLabel} />
+              <Detail label="Sede" value={eventInfo.location.summary} />
+              <Detail label="Entrada" value="Gratuita" />
+            </dl>
 
-            <div className="flex w-full flex-col gap-3">
-              <p className="text-xs font-bold uppercase tracking-[0.22em] text-[var(--color-text-on-hero)] opacity-70">
-                Faltan
-              </p>
-              <Countdown targetDate={eventInfo.dates.start} tone="hero" />
-            </div>
-
-            <div className="flex flex-wrap items-center gap-3">
+            <div className="mt-8 flex flex-wrap items-center gap-4">
               {showRegistrationCta ? (
-                <Button
-                  as="a"
-                  href={registerHref}
-                  variant="primary"
-                  size="lg"
-                  shape="pill"
-                >
-                  {eventInfo.registrationStatus === "open"
-                    ? "Registrarme"
-                    : "Avisame del registro"}
+                <Button as="a" href={registerHref} variant="primary" size="lg">
+                  {isOpen ? "Registrarme gratis" : "Avisame del registro"}
                 </Button>
               ) : null}
               {showCfpCta ? (
                 <Button
                   as="a"
                   href={cfpHref}
-                  variant="outline-on-dark"
+                  variant="ghost"
                   size="lg"
-                  shape="pill"
+                  className="border-2 border-[var(--color-text-primary)]"
                 >
-                  Enviar mi charla
+                  Proponer una charla
                 </Button>
               ) : null}
               {!showRegistrationCta && !showCfpCta ? (
                 <Button
                   as="a"
                   href={`mailto:${eventInfo.contactEmail}`}
-                  variant="outline-on-dark"
+                  variant="ghost"
                   size="lg"
-                  shape="pill"
+                  className="border-2 border-[var(--color-text-primary)]"
                 >
                   Escribirnos
                 </Button>
               ) : null}
+              <Countdown
+                targetDate={eventInfo.dates.start}
+                variant="inline"
+              />
             </div>
           </div>
 
-          {/* Decorative edition mark. It restates the h1, so it is hidden from
-              assistive technology and from small screens. */}
-          <div aria-hidden="true" className="hidden lg:flex lg:justify-center">
-            <div className="glass-panel flex aspect-square w-full max-w-[21rem] flex-col items-center justify-center gap-3 rounded-[var(--radius-lg)] p-8 text-center">
-              <span className="text-xs font-bold uppercase tracking-[0.28em] text-[var(--color-text-on-hero)] opacity-70">
-                AWS Community Day
-              </span>
-              <span className="text-7xl font-bold leading-none text-[var(--color-text-on-hero)]">
-                {eventInfo.year}
-              </span>
-              <span className="h-1 w-16 rounded-[var(--radius-pill)] bg-[var(--color-national-red)]" />
-              <span className="text-2xl font-semibold text-[var(--color-text-on-hero)]">
-                {eventInfo.location.country}
-              </span>
-            </div>
+          {/* Image panel with a navy date badge (decorative until a real photo
+              is dropped in; see public-assets contract). */}
+          <div className="relative min-w-0">
+            <Placeholder
+              kind="cover"
+              aspectRatio={4 / 5}
+              label="Foto de la comunidad"
+              className="h-full"
+            />
+            <span className="absolute bottom-0 left-0 bg-[var(--color-surface-inverse)] px-5 py-3 font-mono text-[11.5px] uppercase tracking-[0.14em] text-[var(--color-text-on-inverse)]">
+              {dateLabel} — {eventInfo.location.summary}
+            </span>
           </div>
         </div>
       </Container>

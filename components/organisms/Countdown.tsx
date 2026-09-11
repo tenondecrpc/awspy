@@ -15,6 +15,11 @@ type CountdownProps = {
    * `hero`: frosted glass boxes sitting directly on the midnight-blue hero.
    */
   tone?: "default" | "hero";
+  /**
+   * `grid` (default): the three-cell días/hs/min block.
+   * `inline`: a single "Faltan N días" line, used in the light hero CTA row.
+   */
+  variant?: "grid" | "inline";
   className?: string;
 };
 
@@ -43,6 +48,7 @@ function pad(n: number): string {
 export function Countdown({
   targetDate,
   tone = "default",
+  variant = "grid",
   className,
 }: CountdownProps) {
   const target = new Date(targetDate).getTime();
@@ -59,6 +65,21 @@ export function Countdown({
   }, [target]);
 
   if (Number.isNaN(target)) return null;
+
+  if (variant === "inline") {
+    return (
+      <p
+        className={cn(
+          "font-mono text-[12.5px] text-[var(--color-text-muted)]",
+          className
+        )}
+        role="status"
+        aria-live="polite"
+      >
+        {parts.past ? "El evento ya comenzó" : `Faltan ${parts.days} días`}
+      </p>
+    );
+  }
 
   if (parts.past) {
     return (

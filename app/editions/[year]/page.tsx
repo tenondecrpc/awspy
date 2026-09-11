@@ -6,6 +6,8 @@ import { notFound } from "next/navigation";
 import { HomeTemplate } from "@/components/templates/HomeTemplate";
 import { editionExists, getEdition } from "@/lib/content/editions";
 import { listSpeakers } from "@/lib/api/sessionize";
+import { getFAQ } from "@/lib/content/faq";
+import { getOrganizers } from "@/lib/content/organizers";
 import { buildPageMetadata } from "@/lib/utils/seo";
 import { listEditionParams, type EditionRouteParams } from "./_shared";
 
@@ -50,12 +52,15 @@ export default async function EditionHomePage({
   return (
     <HomeTemplate
       eventInfo={edition.eventInfo}
-      speakersPreview={speakers}
-      sponsorsPreview={edition.sponsors}
+      speakers={speakers}
+      sponsors={edition.sponsors}
+      faq={getFAQ(year)}
+      organizers={getOrganizers(year)}
       registerHref={`/editions/${year}/register`}
       cfpHref={`/editions/${year}/cfp`}
       speakersHref={`/editions/${year}/speakers`}
-      sponsorsHref={`/editions/${year}/sponsors`}
+      scheduleHref={`/editions/${year}/schedule`}
+      teamHref={`/editions/${year}/team`}
       volunteersHref={`/editions/${year}/volunteers`}
     />
   );

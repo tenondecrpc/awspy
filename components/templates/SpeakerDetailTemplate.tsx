@@ -1,14 +1,12 @@
-// Speaker detail template. Bio, links, sessions, JSON-LD Person.
+// Speaker detail page, rebuilt from scratch to reproduce the "Speaker" mockup
+// (`AWS Community Day Paraguay (colored)/Speaker.dc.html`) 1:1 — breadcrumb
+// band, a split portrait/identity hero, a numbered sessions list, and the
+// closing "volver / registrarme" bar. Real Sessionize data drives the hero and
+// the sessions; the Person + Breadcrumb JSON-LD and every empty-state branch
+// are preserved.
 
-import Image from "next/image";
-import { Container } from "@/components/atoms/Container";
-import { Section } from "@/components/atoms/Section";
-import { Heading } from "@/components/atoms/Heading";
-import { Link } from "@/components/atoms/Link";
-import { Button } from "@/components/atoms/Button";
-import { EyebrowPill } from "@/components/atoms/EyebrowPill";
-import { GlyphIcon } from "@/components/atoms/GlyphIcon";
-import { DecorativePattern } from "@/components/atoms/DecorativePattern";
+import NextLink from "next/link";
+import { NumberHeading, Frame, WRAP, SECTION_BORDER } from "@/components/site/primitives";
 import {
   buildBreadcrumbJsonLd,
   buildPersonJsonLd,
@@ -16,16 +14,6 @@ import {
 } from "@/lib/utils/seo";
 import { formatTimeRange } from "@/lib/utils/datetime";
 import type { Speaker, SessionizeSession } from "@/lib/api/sessionize";
-
-function initials(name: string): string {
-  return name
-    .split(/\s+/)
-    .map((part) => part[0])
-    .filter(Boolean)
-    .slice(0, 2)
-    .join("")
-    .toUpperCase();
-}
 
 type SpeakerDetailTemplateProps = {
   speaker: Speaker;
@@ -57,8 +45,8 @@ export function SpeakerDetailTemplate({
     { name: speaker.fullName, path: detailPath },
   ]);
 
-  // Filter to the sessions that include this speaker (Sessionize's `Sessions`
-  // view returns all sessions; we join client-side by speaker id).
+  // Sessionize's `Sessions` view returns every session; join client-side by
+  // speaker id to keep only the ones this person is presenting.
   const ownSessions = sessions.filter((s) =>
     s.speakers?.some((sp) => sp.id === speaker.id)
   );
@@ -73,125 +61,154 @@ export function SpeakerDetailTemplate({
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: serializeJsonLd(breadcrumbLd) }}
       />
-      {/* Identity band. The portrait sits on the midnight-blue surface the
-          same way the family sites present a keynote, and the practical
-          content (bio, talks) follows on the light surface below. */}
-      <Section spacing="lg" tone="inverse">
-        <DecorativePattern
-          density="low"
-          opacity={0.06}
-          seed={`speaker-${speaker.slug}`}
-        />
-        <Container className="relative">
-          <div className="grid items-center gap-10 lg:grid-cols-[260px_1fr] lg:gap-14">
-            <div className="mx-auto w-full max-w-[260px] lg:mx-0">
-              <div className="relative aspect-square w-full overflow-hidden rounded-[var(--radius-lg)] border-4 border-[var(--color-national-red)] bg-[var(--color-accent-soft)]">
-                {speaker.profilePicture ? (
-                  <Image
-                    src={speaker.profilePicture}
-                    alt=""
-                    fill
-                    sizes="(min-width: 1024px) 260px, 260px"
-                    className="object-cover"
-                  />
-                ) : (
-                  <div
-                    aria-hidden="true"
-                    className="flex h-full w-full items-center justify-center text-6xl font-bold text-[var(--color-accent-strong)]"
-                  >
-                    {initials(speaker.fullName)}
-                  </div>
-                )}
-              </div>
+
+      {/* ── Breadcrumb ───────────────────────────────────────── */}
+      <section className="border-b border-[var(--color-border-subtle)] bg-[var(--color-surface-muted)]">
+        <div className={`${WRAP} py-3.5`}>
+          <nav
+            aria-label="Migas"
+            className="flex items-center gap-2 font-mono text-[11.5px] text-[var(--color-text-muted)]"
+          >
+            <NextLink href="/" className="text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)]">
+              Inicio
+            </NextLink>
+            <span aria-hidden="true">/</span>
+            <NextLink
+              href={backPath}
+              className="text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)]"
+            >
+              Speakers
+            </NextLink>
+            <span aria-hidden="true">/</span>
+            <span className="text-[var(--color-text-primary)]">
+              {speaker.fullName}
+            </span>
+          </nav>
+        </div>
+      </section>
+
+      {/* ── Identity hero ────────────────────────────────────── */}
+      <section
+        id="contenido-principal"
+        className={`${SECTION_BORDER} bg-[var(--color-surface)]`}
+      >
+        <div className={WRAP}>
+          <div className="grid items-stretch [grid-template-columns:repeat(auto-fit,minmax(300px,1fr))]">
+            <div className="relative min-h-[460px] min-w-0 border-b border-[var(--color-border-subtle)] lg:border-b-0 lg:border-r">
+              <Frame
+                label={`Retrato de ${speaker.fullName}`}
+                photo={speaker.profilePicture ?? undefined}
+                className="h-full w-full"
+              />
             </div>
 
-            <div className="flex flex-col items-start gap-5">
-              <EyebrowPill tone="inverse" glyph="mic">
-                Speaker
-              </EyebrowPill>
-              <Heading level={1} className="text-balance">
+            <div className="flex min-w-0 flex-col justify-center py-[52px] lg:pl-12">
+              {speaker.isTopSpeaker ? (
+                <div className="mb-4 flex flex-wrap gap-2.5">
+                  <span className="rounded-[3px] bg-[var(--color-text-primary)] px-[9px] py-1 font-mono text-[10px] uppercase tracking-[0.12em] text-[var(--color-text-on-inverse)]">
+                    Top speaker
+                  </span>
+                </div>
+              ) : null}
+
+              <h1 className="m-0 mb-2.5 text-[clamp(34px,4.6vw,54px)] font-extrabold leading-none tracking-[-0.04em] text-[var(--color-text-primary)]">
                 {speaker.fullName}
-              </Heading>
+              </h1>
+
               {speaker.tagLine ? (
-                <p className="text-lg text-[var(--color-text-on-inverse)] opacity-90 sm:text-xl">
+                <p className="m-0 mb-[26px] text-[18px] font-semibold text-[var(--color-accent)]">
                   {speaker.tagLine}
                 </p>
               ) : null}
-              {speaker.links && speaker.links.length > 0 ? (
-                <ul className="flex flex-wrap gap-3">
-                  {speaker.links.map((l) => (
-                    <li key={l.url}>
-                      <Link
-                        href={l.url}
-                        external
-                        className="glass-panel inline-flex items-center gap-2 rounded-[var(--radius-pill)] px-4 py-2 text-sm font-semibold text-[var(--color-text-on-inverse)]"
-                      >
-                        {l.title || l.linkType}
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
+
+              {speaker.bio ? (
+                <p className="m-0 mb-7 max-w-[34rem] text-[16px] leading-[1.65] text-[var(--color-text-secondary)]">
+                  {speaker.bio}
+                </p>
               ) : null}
+
+              <div className="flex flex-wrap gap-2.5">
+                {speaker.links?.map((l) => (
+                  <a
+                    key={l.url}
+                    href={l.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 rounded-[4px] border-[1.5px] border-[var(--color-text-primary)] px-[22px] py-[11px] text-[14.5px] font-semibold text-[var(--color-text-primary)] transition-colors hover:bg-[var(--color-text-primary)] hover:text-[var(--color-surface)]"
+                  >
+                    {l.title || l.linkType}
+                    <span aria-hidden="true">↗</span>
+                  </a>
+                ))}
+                <NextLink
+                  href="/schedule"
+                  className="inline-flex items-center rounded-[4px] border-[1.5px] border-[var(--color-border-subtle)] px-[22px] py-[11px] text-[14.5px] font-semibold text-[var(--color-text-secondary)] transition-colors hover:border-[var(--color-text-primary)] hover:text-[var(--color-text-primary)]"
+                >
+                  Ver en la agenda
+                </NextLink>
+              </div>
             </div>
           </div>
-        </Container>
-      </Section>
+        </div>
+      </section>
 
-      <Section spacing="lg">
-        <Container>
-          {speaker.bio ? (
-            <div className="max-w-3xl space-y-4">
-              <Heading level={2} visualLevel={4}>
-                Sobre {speaker.firstName}
-              </Heading>
-              <p className="text-lg text-[var(--color-text-secondary)]">
-                {speaker.bio}
-              </p>
-            </div>
-          ) : null}
-
-          {ownSessions.length > 0 ? (
-            <div className={speaker.bio ? "mt-14 space-y-6" : "space-y-6"}>
-              <Heading level={2} visualLevel={3}>
-                Sus charlas
-              </Heading>
-              <ul className="grid gap-6 lg:grid-cols-2">
-                {ownSessions.map((s) => (
-                  <li
-                    key={s.id}
-                    className="media-card flex h-full flex-col gap-3 rounded-[var(--radius-lg)] bg-[var(--color-surface-elevated)] p-6 shadow-sm"
-                  >
-                    <h3 className="text-lg font-bold">{s.title}</h3>
-                    {s.startsAt && s.endsAt ? (
-                      <p className="inline-flex items-center gap-1.5 text-sm font-semibold text-[var(--color-text-secondary)]">
-                        <GlyphIcon name="clock" size={15} />
-                        {formatTimeRange(s.startsAt, s.endsAt)}
-                      </p>
-                    ) : null}
+      {/* ── Sessions ─────────────────────────────────────────── */}
+      <section className={`${SECTION_BORDER} bg-[var(--color-surface)]`}>
+        <div className={`${WRAP} py-[52px]`}>
+          <NumberHeading n="01" title="Sesiones" />
+          {ownSessions.length === 0 ? (
+            <p className="m-0 text-[15px] text-[var(--color-text-secondary)]">
+              Todavía no hay sesiones publicadas para este speaker. Volvé pronto:
+              la grilla se completa a medida que se confirma la agenda.
+            </p>
+          ) : (
+            <div className="border-t border-[var(--color-text-primary)]">
+              {ownSessions.map((s) => (
+                <div
+                  key={s.id}
+                  className="grid items-baseline gap-[18px] border-b border-[var(--color-border-subtle)] px-1 py-[18px] [grid-template-columns:minmax(110px,130px)_minmax(0,1fr)]"
+                >
+                  <span className="font-mono text-[14px] text-[var(--color-text-primary)]">
+                    {s.startsAt && s.endsAt
+                      ? formatTimeRange(s.startsAt, s.endsAt)
+                      : "Por confirmar"}
+                  </span>
+                  <div className="min-w-0">
+                    <h3 className="m-0 mb-1 text-[17px] font-bold tracking-[-0.018em]">
+                      {s.title}
+                    </h3>
                     {s.description ? (
-                      <p className="text-sm text-[var(--color-text-secondary)]">
+                      <p className="m-0 text-[14px] text-[var(--color-text-muted)]">
                         {s.description}
                       </p>
                     ) : null}
-                  </li>
-                ))}
-              </ul>
+                  </div>
+                </div>
+              ))}
             </div>
-          ) : null}
+          )}
+        </div>
+      </section>
 
-          <div className="mt-14">
-            <Button
-              as="a"
+      {/* ── Volver / registrarme ─────────────────────────────── */}
+      <section className="bg-[var(--color-surface)]">
+        <div className={`${WRAP} pb-[72px] pt-[52px]`}>
+          <div className="flex flex-wrap items-center justify-between gap-4">
+            <NextLink
               href={backPath}
-              variant="ghost"
-              size="md"
-              shape="pill"
+              className="text-[15px] font-semibold text-[var(--color-accent)]"
             >
-              Volver a speakers
-            </Button>
+              ← Volver a todos los speakers
+            </NextLink>
+            <NextLink
+              href="/register"
+              className="inline-flex flex-none items-center whitespace-nowrap rounded-[4px] bg-[var(--color-action)] px-[26px] py-[13px] text-[15px] font-bold text-[var(--color-text-on-action)] transition hover:brightness-95"
+            >
+              Registrarme gratis
+            </NextLink>
           </div>
-        </Container>
-      </Section>
+        </div>
+      </section>
     </>
   );
 }
