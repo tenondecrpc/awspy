@@ -29,12 +29,12 @@
   --color-accent-strong: #00368f;
   --color-accent-soft: #e8efff;
   --color-national-red: #f02f3b;
-  --color-national-red-label: #a91431;
-  --color-national-red-on-dark: #ff6673;
+  --color-national-red-label: #c4152f;
+  --color-national-red-on-dark: #ff5566;
 
   /* Surfaces */
   --color-surface: #ffffff;
-  --color-surface-muted: #f4f6fc;
+  --color-surface-muted: #eef2fd;
   --color-surface-elevated: #ffffff;
   --color-surface-inverse: #041a53;
   --color-surface-hero: #000c2f;
@@ -65,7 +65,7 @@
 
   /* State */
   --color-focus: #0a4db8;
-  --color-focus-on-hero: #ff6673;
+  --color-focus-on-hero: #ff5566;
   --color-success: #1f7a3a;
   --color-success-soft: #e5f5ea;
   --color-warning: #965000;
@@ -73,7 +73,21 @@
   --color-danger: #b3261e;
   --color-danger-soft: #fce4e2;
 
+  /* Decorative categorical ramp. A fixed-order set of hues that labels
+     sibling cards apart (feature tiles and the like). It is identity, never
+     meaning: every tile that uses one also carries its own text label, so a
+     reader who cannot tell the hues apart loses nothing. Assign in order;
+     never generate a seventh. Each holds --color-text-on-category at AA. */
+  --color-category-blue: #0b52c4;
+  --color-category-violet: #6127c4;
+  --color-category-teal: #0f6b7a;
+  --color-category-amber: #9a5200;
+  --color-category-green: #11743c;
+  --color-category-pink: #bc1a5e;
+  --color-text-on-category: #ffffff;
+
   /* Sponsor tier (always paired with text label) */
+  --color-tier-diamante: #0f6b7a;
   --color-tier-platinum: #2a2e36;
   --color-tier-gold: #8a6300;
   --color-tier-silver: #6b7280;
@@ -101,8 +115,8 @@
     --color-accent-strong: #9bbfff;
     --color-accent-soft: #11285c;
     --color-national-red: #ff4b5b;
-    --color-national-red-label: #ff7a86;
-    --color-national-red-on-dark: #ff6673;
+    --color-national-red-label: #ff5566;
+    --color-national-red-on-dark: #ff5566;
     --color-surface: #010928;
     --color-surface-muted: #071438;
     --color-surface-elevated: #0d1b46;
@@ -126,13 +140,21 @@
     --color-border-subtle: #1b2d5b;
     --color-border-strong: #9aa5ca;
     --color-focus: #74a8ff;
-    --color-focus-on-hero: #ff6673;
+    --color-focus-on-hero: #ff5566;
     --color-success: #52c97a;
     --color-success-soft: #14361f;
     --color-warning: #ffb85c;
     --color-warning-soft: #3a2a12;
     --color-danger: #ff7a6e;
     --color-danger-soft: #3a1b17;
+    --color-category-blue: #7fb0ff;
+    --color-category-violet: #bfa0ff;
+    --color-category-teal: #7fd8e8;
+    --color-category-amber: #ffbf6b;
+    --color-category-green: #6fd995;
+    --color-category-pink: #ff8fb8;
+    --color-text-on-category: #0b1626;
+    --color-tier-diamante: #7fd8e8;
     --color-tier-platinum: #c5ccd6;
     --color-tier-gold: #ffb85c;
     --color-tier-silver: #a1a8b6;
@@ -150,8 +172,8 @@ html[data-theme="dark"] {
   --color-accent-strong: #9bbfff;
   --color-accent-soft: #11285c;
   --color-national-red: #ff4b5b;
-  --color-national-red-label: #ff7a86;
-  --color-national-red-on-dark: #ff6673;
+  --color-national-red-label: #ff5566;
+  --color-national-red-on-dark: #ff5566;
   --color-surface: #010928;
   --color-surface-muted: #071438;
   --color-surface-elevated: #0d1b46;
@@ -175,13 +197,21 @@ html[data-theme="dark"] {
   --color-border-subtle: #1b2d5b;
   --color-border-strong: #9aa5ca;
   --color-focus: #74a8ff;
-  --color-focus-on-hero: #ff6673;
+  --color-focus-on-hero: #ff5566;
   --color-success: #52c97a;
   --color-success-soft: #14361f;
   --color-warning: #ffb85c;
   --color-warning-soft: #3a2a12;
   --color-danger: #ff7a6e;
   --color-danger-soft: #3a1b17;
+  --color-category-blue: #7fb0ff;
+  --color-category-violet: #bfa0ff;
+  --color-category-teal: #7fd8e8;
+  --color-category-amber: #ffbf6b;
+  --color-category-green: #6fd995;
+  --color-category-pink: #ff8fb8;
+  --color-text-on-category: #0b1626;
+  --color-tier-diamante: #7fd8e8;
   --color-tier-platinum: #c5ccd6;
   --color-tier-gold: #ffb85c;
   --color-tier-silver: #a1a8b6;

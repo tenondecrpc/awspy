@@ -56,7 +56,16 @@ const REQUIRED_TOKENS = [
   "--color-warning-soft",
   "--color-danger",
   "--color-danger-soft",
+  // Decorative categorical ramp
+  "--color-category-blue",
+  "--color-category-violet",
+  "--color-category-teal",
+  "--color-category-amber",
+  "--color-category-green",
+  "--color-category-pink",
+  "--color-text-on-category",
   // Sponsor tier
+  "--color-tier-diamante",
   "--color-tier-platinum",
   "--color-tier-gold",
   "--color-tier-silver",
@@ -181,6 +190,41 @@ const CONTRAST_PAIRS: ContrastPair[] = [
   {
     foreground: "--color-danger",
     background: "--color-danger-soft",
+    minimum: 4.5,
+  },
+  {
+    foreground: "--color-text-on-category",
+    background: "--color-category-blue",
+    minimum: 4.5,
+  },
+  {
+    foreground: "--color-text-on-category",
+    background: "--color-category-violet",
+    minimum: 4.5,
+  },
+  {
+    foreground: "--color-text-on-category",
+    background: "--color-category-teal",
+    minimum: 4.5,
+  },
+  {
+    foreground: "--color-text-on-category",
+    background: "--color-category-amber",
+    minimum: 4.5,
+  },
+  {
+    foreground: "--color-text-on-category",
+    background: "--color-category-green",
+    minimum: 4.5,
+  },
+  {
+    foreground: "--color-text-on-category",
+    background: "--color-category-pink",
+    minimum: 4.5,
+  },
+  {
+    foreground: "--color-text-on-tier",
+    background: "--color-tier-diamante",
     minimum: 4.5,
   },
   {
