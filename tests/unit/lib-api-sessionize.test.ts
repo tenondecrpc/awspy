@@ -43,6 +43,7 @@ function mockFetch(view: string, payload: unknown, status = 200): void {
 
 afterEach(() => {
   vi.unstubAllGlobals();
+  vi.unstubAllEnvs();
 });
 
 describe("buildSessionizeUrl", () => {
@@ -291,12 +292,24 @@ describe("listSpeakers", () => {
     expect(await listSpeakers(null)).toEqual([]);
   });
 
-  it("returns [] when Sessionize 404s", async () => {
+  // An unreachable or broken upstream leaves the view empty, which is the
+  // case the placeholder fixtures cover. These assert the flag-off path, so
+  // the fallback in `withPreviewFallback` stays out of the way.
+  it("returns [] when Sessionize 404s and preview is off", async () => {
+    vi.stubEnv("CONTENT_PREVIEW", "0");
     mockFetch("Speakers", null, 404);
     expect(await listSpeakers("nope")).toEqual([]);
   });
 
-  it("returns [] when Sessionize returns malformed JSON", async () => {
+  it("serves the placeholder speakers when Sessionize 404s", async () => {
+    mockFetch("Speakers", null, 404);
+    const speakers = await listSpeakers("nope");
+    expect(speakers.length).toBeGreaterThan(0);
+    expect(speakers.every((s) => s.slug)).toBe(true);
+  });
+
+  it("returns [] when Sessionize returns malformed JSON and preview is off", async () => {
+    vi.stubEnv("CONTENT_PREVIEW", "0");
     vi.stubGlobal(
       "fetch",
       vi.fn(

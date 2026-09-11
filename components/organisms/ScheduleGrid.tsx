@@ -1,7 +1,22 @@
 // Schedule grid organism. Groups sessions by Asuncion calendar day and
 // sorts by start time, regardless of the room. Sessions that cross midnight
 // appear under their start day only (per data-model and FR-021).
+//
+// With more than one room the day is a merged list, so two tracks running at
+// the same hour sit next to each other and read as a contradiction. The room
+// filter above the list resolves that: pick a room and the day shows only
+// that track. It is the one piece of state on the page, so it lives in the
+// browser rather than in the URL, which keeps the archived editions
+// statically generated.
+//
+// The filter is a set of toggle buttons rather than an ARIA tablist: every
+// button is a normal tab stop, `aria-pressed` says which one is on, and
+// there is no roving-tabindex behaviour to get subtly wrong. The room name
+// is always spelled out, so the choice never rests on the accent color.
 
+"use client";
+
+import { useMemo, useState } from "react";
 import {
   ScheduleSlot,
   type ScheduleSlotData,
@@ -10,6 +25,7 @@ import { Heading } from "@/components/atoms/Heading";
 import { EmptyState } from "@/components/organisms/EmptyState";
 import { LoadingGrid } from "@/components/atoms/LoadingGrid";
 import { formatDate, startOfDayKey } from "@/lib/utils/datetime";
+import { cn } from "@/lib/utils/cn";
 import type { ScheduleGrid } from "@/lib/api/sessionize";
 import type { Speaker } from "@/lib/api/sessionize";
 
@@ -87,14 +103,41 @@ function buildRoomAccents(days: DayGroup[]): Map<string, number> {
   return accents;
 }
 
+/** Every room in the grid, ordered by first appearance. */
+function listRooms(days: DayGroup[]): string[] {
+  const rooms: string[] = [];
+  for (const day of days) {
+    for (const slot of day.slots) {
+      if (!rooms.includes(slot.roomName)) rooms.push(slot.roomName);
+    }
+  }
+  return rooms;
+}
+
+const ALL_ROOMS = "__all__";
+
 export function ScheduleGridOrganism({
   grid,
   speakers,
   speakerBasePath,
   isLoading = false,
 }: ScheduleGridOrganismProps) {
-  const days = groupByStartDay(grid, speakers);
-  const roomAccents = buildRoomAccents(days);
+  const days = useMemo(() => groupByStartDay(grid, speakers), [grid, speakers]);
+  const roomAccents = useMemo(() => buildRoomAccents(days), [days]);
+  const rooms = useMemo(() => listRooms(days), [days]);
+
+  const [room, setRoom] = useState<string>(ALL_ROOMS);
+  // A room that vanishes (new grid, renamed room) must not blank the page.
+  const activeRoom = room !== ALL_ROOMS && rooms.includes(room) ? room : null;
+
+  const visibleDays = activeRoom
+    ? days
+        .map((d) => ({
+          ...d,
+          slots: d.slots.filter((s) => s.roomName === activeRoom),
+        }))
+        .filter((d) => d.slots.length > 0)
+    : days;
 
   if (isLoading && days.length === 0) {
     return (
@@ -119,7 +162,36 @@ export function ScheduleGridOrganism({
 
   return (
     <div className="space-y-12">
-      {days.map((day) => (
+      {rooms.length > 1 ? (
+        <div
+          role="group"
+          aria-label="Filtrar la agenda por sala"
+          className="-mx-1 flex flex-wrap gap-2 overflow-x-auto px-1 pb-1"
+        >
+          {[ALL_ROOMS, ...rooms].map((value) => {
+            const selected =
+              value === ALL_ROOMS ? activeRoom === null : activeRoom === value;
+            return (
+              <button
+                key={value}
+                type="button"
+                aria-pressed={selected}
+                onClick={() => setRoom(value)}
+                className={cn(
+                  "whitespace-nowrap rounded-[var(--radius-pill)] border px-4 py-2 text-sm font-semibold transition",
+                  selected
+                    ? "border-[var(--color-accent)] bg-[var(--color-accent)] text-[var(--color-text-on-accent)]"
+                    : "border-[var(--color-border-subtle)] text-[var(--color-text-secondary)] hover:border-[var(--color-accent)] hover:text-[var(--color-accent)]"
+                )}
+              >
+                {value === ALL_ROOMS ? "Todas las salas" : value}
+              </button>
+            );
+          })}
+        </div>
+      ) : null}
+
+      {visibleDays.map((day) => (
         <section
           key={day.dayKey}
           aria-labelledby={`schedule-day-${day.dayKey}`}

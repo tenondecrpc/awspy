@@ -1,4 +1,4 @@
-import { afterEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { editionFile } from "@/lib/content/_fs";
 import { getSponsors } from "@/lib/content/sponsors";
 import { getOrganizers } from "@/lib/content/organizers";
@@ -70,21 +70,33 @@ describe("content loaders", () => {
     const sponsors = getSponsors("2026");
     expect(sponsors.length).toBeGreaterThan(0);
     expect(sponsors.map((s) => s.tier)).toContain("Platinum");
-
-    const organizers = getOrganizers("2026");
-    expect(organizers.length).toBeGreaterThan(0);
-    expect(organizers[0].role).toBeTruthy();
-
-    // The placeholder venue configures a map embed, which the live one does
-    // not, so the venue page renders the iframe branch too.
-    expect(getVenue("2026").embedMapUrl).toBeTruthy();
   });
 
   it("serves the live records once switched off", () => {
     vi.stubEnv("CONTENT_PREVIEW", "0");
     expect(getSponsors("2026")).toEqual([]);
-    expect(getOrganizers("2026")).toEqual([]);
-    expect(getVenue("2026").embedMapUrl).toBeUndefined();
+  });
+
+  // The committee and the venue are real content now, and their placeholder
+  // siblings are gone, so these sections read the live file whichever way the
+  // flag points. Sponsors is the one section still on placeholder data.
+  describe.each([undefined, "0"])("with CONTENT_PREVIEW=%s", (flag) => {
+    beforeEach(() => {
+      if (flag !== undefined) vi.stubEnv("CONTENT_PREVIEW", flag);
+    });
+
+    it("serves the live organizers", () => {
+      const organizers = getOrganizers("2026");
+      expect(organizers.length).toBeGreaterThan(0);
+      expect(organizers.map((o) => o.name)).toContain("Cristian Paniagua");
+      organizers.forEach((o) => expect(o.role).toBeTruthy());
+    });
+
+    it("serves the confirmed venue", () => {
+      const venue = getVenue("2026");
+      expect(venue.name).toMatch(/UniNorte/i);
+      expect(venue.mapUrl).toBeTruthy();
+    });
   });
 
   it("keeps placeholder records valid against the real schemas", () => {

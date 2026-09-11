@@ -73,7 +73,11 @@ export function ScheduleSlot({
 
       <div className="flex flex-col gap-3 py-5 pl-7 pr-5">
         <div className="flex flex-wrap items-center gap-3">
-          <span className="inline-flex items-center gap-1.5 rounded-[var(--radius-pill)] bg-[var(--color-surface-muted)] px-3 py-1 text-sm font-semibold text-[var(--color-text-primary)]">
+          {/* Tinted rather than neutral so the time leads the card, the way
+              the Community Day family styles it. It uses the accent pair
+              rather than `--card-accent`: the red half of that alternation
+              does not hold white text at AA. */}
+          <span className="inline-flex items-center gap-1.5 rounded-[var(--radius-pill)] bg-[var(--color-accent-soft)] px-3 py-1 text-sm font-semibold text-[var(--color-accent-strong)]">
             <GlyphIcon name="clock" size={15} />
             <time dateTime={slot.startsAt}>
               {formatTimeRange(slot.startsAt, slot.endsAt)}

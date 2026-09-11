@@ -1,5 +1,6 @@
 import { describe, expect, it, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import { ScheduleGridOrganism } from "@/components/organisms/ScheduleGrid";
 import type { ScheduleGrid, Speaker } from "@/lib/api/sessionize";
 
@@ -163,5 +164,87 @@ describe("ScheduleGridOrganism", () => {
     expect(
       screen.queryByRole("link", { name: "Unknown Speaker" })
     ).not.toBeInTheDocument();
+  });
+
+  describe("room filter", () => {
+    const TWO_ROOMS: ScheduleGrid = [
+      {
+        date: "2026-10-17T00:00:00Z",
+        rooms: [
+          {
+            id: "r1",
+            name: "Sala Guaraní",
+            sessions: [
+              {
+                id: "g1",
+                title: "Charla en Guaraní",
+                startsAt: "2026-10-17T14:30:00-03:00",
+                endsAt: "2026-10-17T15:15:00-03:00",
+                isPlenumSession: false,
+                isServiceSession: false,
+                speakers: [],
+              },
+            ],
+          },
+          {
+            id: "r2",
+            name: "Sala Ñandutí",
+            sessions: [
+              {
+                id: "n1",
+                title: "Charla en Ñandutí",
+                startsAt: "2026-10-17T14:30:00-03:00",
+                endsAt: "2026-10-17T15:15:00-03:00",
+                isPlenumSession: false,
+                isServiceSession: false,
+                speakers: [],
+              },
+            ],
+          },
+        ],
+      },
+    ];
+
+    it("shows every room until one is picked", () => {
+      render(<ScheduleGridOrganism grid={TWO_ROOMS} speakers={[]} />);
+      expect(screen.getByText("Charla en Guaraní")).toBeInTheDocument();
+      expect(screen.getByText("Charla en Ñandutí")).toBeInTheDocument();
+      expect(
+        screen.getByRole("button", { name: "Todas las salas", pressed: true })
+      ).toBeInTheDocument();
+    });
+
+    it("narrows the day to the chosen room", async () => {
+      const user = userEvent.setup();
+      render(<ScheduleGridOrganism grid={TWO_ROOMS} speakers={[]} />);
+
+      await user.click(screen.getByRole("button", { name: "Sala Ñandutí" }));
+
+      expect(screen.queryByText("Charla en Guaraní")).not.toBeInTheDocument();
+      expect(screen.getByText("Charla en Ñandutí")).toBeInTheDocument();
+      // The day count follows the filter rather than the whole grid.
+      expect(screen.getByText("1 actividad")).toBeInTheDocument();
+    });
+
+    it("goes back to the whole day", async () => {
+      const user = userEvent.setup();
+      render(<ScheduleGridOrganism grid={TWO_ROOMS} speakers={[]} />);
+
+      await user.click(screen.getByRole("button", { name: "Sala Ñandutí" }));
+      await user.click(screen.getByRole("button", { name: "Todas las salas" }));
+
+      expect(screen.getByText("Charla en Guaraní")).toBeInTheDocument();
+      expect(screen.getByText("2 actividades")).toBeInTheDocument();
+    });
+
+    it("omits the filter when the grid has a single room", () => {
+      const oneRoom: ScheduleGrid = [
+        { ...TWO_ROOMS[0], rooms: [TWO_ROOMS[0].rooms[0]] },
+      ];
+      render(<ScheduleGridOrganism grid={oneRoom} speakers={[]} />);
+      expect(
+        screen.queryByRole("group", { name: /filtrar la agenda/i })
+      ).not.toBeInTheDocument();
+    });
   });
 });

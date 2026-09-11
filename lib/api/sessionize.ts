@@ -11,6 +11,7 @@ import { z } from "zod";
 import { apiFetch } from "@/lib/api/client";
 import { disambiguateSlugs, slugify } from "@/lib/utils/slug";
 import { HttpUrlSchema, RemoteImageUrlSchema } from "@/lib/validation/urls";
+import { readPreviewView } from "@/lib/api/sessionize-preview";
 
 const DEFAULT_SESSIONIZE_BASE_URL = "https://sessionize.com/api/v2";
 
@@ -229,6 +230,33 @@ export function attachSpeakerSlugs(speakers: SessionizeSpeaker[]): Speaker[] {
   return disambiguateSlugs(withBaseSlug) as Speaker[];
 }
 
+/**
+ * Substitutes the placeholder fixture for a view that came back empty, when
+ * preview mode is on. The fixture goes through the same schema as the live
+ * response, so a malformed one fails the render rather than reaching a
+ * visitor. A non-empty live result is always returned untouched.
+ */
+function withPreviewFallback<T>(
+  view: SessionizeView,
+  live: T[],
+  schema: z.ZodType<T[]>
+): T[] {
+  if (live.length > 0) return live;
+
+  const fixture = readPreviewView(view);
+  if (fixture == null) return live;
+
+  const result = schema.safeParse(fixture);
+  if (!result.success) {
+    throw new Error(
+      `Placeholder Sessionize ${view} view does not match the live schema: ${result.error.issues
+        .map((i) => `${i.path.join(".")}: ${i.message}`)
+        .join("; ")}`
+    );
+  }
+  return result.data;
+}
+
 export async function listSpeakers(eventId: string | null): Promise<Speaker[]> {
   if (!eventId) return [];
   const raw = await apiFetch(buildSessionizeUrl(eventId, "Speakers"), {
@@ -238,7 +266,9 @@ export async function listSpeakers(eventId: string | null): Promise<Speaker[]> {
     fallback: [] as SessionizeSpeaker[],
     cache: SESSIONIZE_CACHE_MODE,
   });
-  return attachSpeakerSlugs(raw);
+  return attachSpeakerSlugs(
+    withPreviewFallback("Speakers", raw, SpeakersListSchema)
+  );
 }
 
 export async function getSpeakerBySlug(
@@ -260,31 +290,35 @@ export async function listSessions(
     fallback: [],
     cache: SESSIONIZE_CACHE_MODE,
   });
-  return groups.flatMap((g) => g.sessions);
+  return withPreviewFallback("Sessions", groups, SessionsListSchema).flatMap(
+    (g) => g.sessions
+  );
 }
 
 export async function getScheduleGrid(
   eventId: string | null
 ): Promise<ScheduleGrid> {
   if (!eventId) return [];
-  return apiFetch(buildSessionizeUrl(eventId, "GridSmart"), {
+  const grid = await apiFetch(buildSessionizeUrl(eventId, "GridSmart"), {
     method: "GET",
     schema: ScheduleGridSchema,
     tolerateMissing: true,
     fallback: [] as ScheduleGrid,
     cache: SESSIONIZE_CACHE_MODE,
   });
+  return withPreviewFallback("GridSmart", grid, ScheduleGridSchema);
 }
 
 export async function getSpeakerWall(
   eventId: string | null
 ): Promise<SpeakerWallItem[]> {
   if (!eventId) return [];
-  return apiFetch(buildSessionizeUrl(eventId, "SpeakerWall"), {
+  const wall = await apiFetch(buildSessionizeUrl(eventId, "SpeakerWall"), {
     method: "GET",
     schema: SpeakerWallSchema,
     tolerateMissing: true,
     fallback: [] as SpeakerWallItem[],
     cache: SESSIONIZE_CACHE_MODE,
   });
+  return withPreviewFallback("SpeakerWall", wall, SpeakerWallSchema);
 }

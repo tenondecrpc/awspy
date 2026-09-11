@@ -32,7 +32,7 @@ export function editionDir(year: string): string {
  * environment and redeploy. Removing a `*.example.json` file also drops just
  * that section back to its live content.
  */
-function previewEnabled(): boolean {
+export function previewEnabled(): boolean {
   const flag = process.env.CONTENT_PREVIEW;
   return flag !== "0" && flag !== "false";
 }
