@@ -21,6 +21,11 @@ export const OrganizerSchema = z.object({
   id: z.string().regex(/^[a-z0-9-]+$/),
   name: z.string().min(1),
   role: z.string().min(1),
+  /**
+   * Optional longer profile, one paragraph of plain text. `role` stays the
+   * one-line label the card leads with; this is the detail underneath it.
+   */
+  bio: z.string().min(1).optional(),
   photo: z
     .union([
       RemoteImageUrlSchema,

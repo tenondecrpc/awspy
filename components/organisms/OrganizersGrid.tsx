@@ -21,9 +21,9 @@ export function OrganizersGrid({
   if (isLoading && organizers.length === 0) {
     return (
       <LoadingGrid
-        columns={4}
-        rows={2}
-        itemAspectRatio={1}
+        columns={2}
+        rows={3}
+        itemAspectRatio={2.5}
         gap="lg"
         loadingLabel="Cargando equipo"
       />
@@ -50,7 +50,7 @@ export function OrganizersGrid({
   }
   return (
     <ul
-      className="grid grid-cols-2 gap-4 sm:gap-6 lg:grid-cols-4 lg:gap-8"
+      className="grid grid-cols-1 gap-4 sm:gap-6 lg:grid-cols-2 lg:gap-8"
       aria-label="Equipo organizador"
     >
       {organizers.map((o, index) => (

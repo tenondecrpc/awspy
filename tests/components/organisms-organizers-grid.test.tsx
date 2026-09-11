@@ -32,6 +32,7 @@ const EVENT_INFO: EventInfo = {
   registrationStatus: "upcoming",
   contactEmail: "hola@awscommunitydayparaguay.com",
   social: {},
+  expectedFigures: [],
   previousEditions: [],
 };
 
@@ -40,6 +41,8 @@ const ORGANIZERS: Organizer[] = [
     id: "ana-perez",
     name: "Ana Perez",
     role: "Lead",
+    bio: "Coordina el comité y la relación con la comunidad local.",
+    photo: "/team/ana-perez.jpg",
     links: { linkedin: "https://linkedin.com/in/ana" },
   },
   { id: "beto-lopez", name: "Beto Lopez", role: "Logística", links: {} },
@@ -79,5 +82,35 @@ describe("OrganizersGrid", () => {
     const link = screen.getByRole("link", { name: "LinkedIn" });
     expect(link).toHaveAttribute("href", "https://linkedin.com/in/ana");
     expect(link).toHaveAttribute("rel", "noopener noreferrer");
+  });
+
+  it("renders the bio when the record carries one", () => {
+    render(<OrganizersGrid organizers={ORGANIZERS} eventInfo={EVENT_INFO} />);
+    expect(
+      screen.getByText(/coordina el comité y la relación/i)
+    ).toBeInTheDocument();
+  });
+
+  it("omits the bio paragraph for a record without one", () => {
+    render(
+      <OrganizersGrid organizers={[ORGANIZERS[1]]} eventInfo={EVENT_INFO} />
+    );
+    const card = screen.getByText("Beto Lopez").closest("article");
+    expect(card?.querySelectorAll("p")).toHaveLength(2);
+  });
+
+  it("uses the repo photo as the card image, decoratively", () => {
+    render(<OrganizersGrid organizers={ORGANIZERS} eventInfo={EVENT_INFO} />);
+    const image = document.querySelector('img[src="/team/ana-perez.jpg"]');
+    expect(image).not.toBeNull();
+    // The name sits next to it in text, so the image adds nothing to announce.
+    expect(image).toHaveAttribute("alt", "");
+  });
+
+  it("falls back to initials when there is no photo", () => {
+    render(
+      <OrganizersGrid organizers={[ORGANIZERS[1]]} eventInfo={EVENT_INFO} />
+    );
+    expect(screen.getByText("BL")).toBeInTheDocument();
   });
 });

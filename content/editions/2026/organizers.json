@@ -1,1 +1,42 @@
-[]
+[
+  {
+    "id": "cristian-paniagua",
+    "name": "Cristian Paniagua",
+    "role": "Ingeniero Cloud y AWS Community Builder",
+    "bio": "Ingeniero Cloud especializado en el diseño e implementación de soluciones nativas de AWS. Cuenta con amplia experiencia en arquitecturas serverless, automatización de infraestructura, inteligencia artificial y machine learning, utilizando servicios como AWS Lambda, Amazon ECS, Amazon DynamoDB, Amazon SageMaker, Amazon Bedrock y Terraform/CDK. Es AWS Community Builder y líder activo de comunidades AWS, comprometido con el crecimiento del ecosistema tecnológico y la difusión del conocimiento.",
+    "photo": "/team/cristian-paniagua.jpg",
+    "links": {}
+  },
+  {
+    "id": "esteban-ruiz-diaz",
+    "name": "Esteban Ruiz Díaz",
+    "role": "Ingeniero de Software, SRE y DevSecOps",
+    "bio": "Ingeniero de Software con más de 22 años de experiencia en el desarrollo, estabilización y escalabilidad de sistemas empresariales. Especialista en recuperación de arquitecturas complejas, modernización de aplicaciones, prácticas SRE, DevSecOps e integración de inteligencia artificial en procesos de ingeniería. Actualmente impulsa soluciones de alta disponibilidad y rendimiento para plataformas de misión crítica.",
+    "photo": "/team/esteban-ruiz-diaz.jpg",
+    "links": {}
+  },
+  {
+    "id": "magno-portillo-anzoategui",
+    "name": "Magno Portillo Anzoategui",
+    "role": "Community Leader de AWS User Group Canindeyú",
+    "bio": "Profesional de tecnología con una destacada trayectoria en comunidades técnicas de la región. Es miembro activo del Google Developer Group (GDG) Ciudad del Este y Community Leader de AWS User Group Canindeyú, promoviendo la adopción de tecnologías cloud, el aprendizaje colaborativo y el fortalecimiento del ecosistema tecnológico paraguayo.",
+    "photo": "/team/magno-portillo-anzoategui.jpg",
+    "links": {}
+  },
+  {
+    "id": "derlis-galeano",
+    "name": "Derlis Galeano",
+    "role": "Security Engineer y AWS Certified Solutions Architect",
+    "bio": "Security Engineer dentro del Cloud Center of Excellence (CCoE) de Itaú Unibanco, con experiencia en la administración y operación de plataformas tecnológicas empresariales. Participa activamente en iniciativas de modernización tecnológica y en el fortalecimiento de la comunidad AWS en Paraguay. Certificado como AWS Certified Solutions Architect.",
+    "photo": "/team/derlis-galeano.jpg",
+    "links": {}
+  },
+  {
+    "id": "william-guzman",
+    "name": "William Guzmán",
+    "role": "Arquitecto de Soluciones y Community Leader de AWS User Group Paraguay",
+    "bio": "Arquitecto de Soluciones AWS con más de 20 años de experiencia en desarrollo de software y arquitectura de soluciones. Trabaja con AWS desde 2016, ayudando a organizaciones a diseñar e implementar soluciones escalables, seguras y eficientes en la nube. Es Community Leader de AWS User Group Paraguay, mentor tecnológico y conferencista, apasionado por compartir conocimiento y contribuir al desarrollo del talento cloud en Latinoamérica.",
+    "photo": "/team/william-guzman.jpg",
+    "links": {}
+  }
+]

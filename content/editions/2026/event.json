@@ -5,13 +5,13 @@
   "heroTitle": "AWS Community Day Paraguay 2026",
   "heroSubtitle": "Una jornada gratuita para la comunidad AWS en Paraguay: charlas, talleres y networking organizados por la comunidad, para la comunidad.",
   "dates": {
-    "start": "2026-10-17T13:00:00-03:00",
-    "end": "2026-10-17T22:00:00-03:00"
+    "start": "2026-10-17T08:00:00-03:00",
+    "end": "2026-10-17T17:00:00-03:00"
   },
   "location": {
     "city": "Asunción",
     "country": "Paraguay",
-    "summary": "Asunción, Paraguay - sede por confirmar"
+    "summary": "Universidad del Norte (UniNorte), Asunción, Paraguay"
   },
   "sessionizeEventId": "ybfh8gwn",
   "eventbriteEventUrl": "https://www.eventbrite.com/e/aws-community-day-paraguay-2026-tickets-1999945984276",
@@ -23,5 +23,14 @@
   "registrationStatus": "open",
   "contactEmail": "awscommunitydayparaguay@gmail.com",
   "social": {},
+  "expectedFigures": [
+    { "value": "200+", "label": "Asistentes" },
+    { "value": "20+", "label": "Speakers" },
+    { "value": "5+", "label": "Sponsors" },
+    { "value": "8+", "label": "Horas de contenido" },
+    { "value": "15+", "label": "Sesiones técnicas" },
+    { "value": "3", "label": "Hands-on labs" },
+    { "value": "1", "label": "Keynote" }
+  ],
   "previousEditions": []
 }

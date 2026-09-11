@@ -1,12 +1,8 @@
 {
-  "name": "Sede por confirmar",
-  "address": "Asunción, Paraguay",
-  "mapUrl": "https://www.google.com/maps/place/Asunción,+Paraguay",
-  "transport": [
-    "Acceso en transporte público desde el centro de Asunción",
-    "Estacionamiento limitado en las inmediaciones"
-  ],
-  "accessibility": [
-    "Sede accesible para personas con movilidad reducida (a confirmar con la sede final)"
-  ]
+  "name": "Universidad del Norte (UniNorte)",
+  "address": "Facultad de Ingeniería de UniNorte - MCR4+6MM, Asunción 001421, Paraguay",
+  "mapUrl": "https://maps.app.goo.gl/MgTP5UdkewbgXAik7",
+  "embedMapUrl": "https://www.openstreetmap.org/export/embed.html?bbox=-57.6003%2C-25.3144%2C-57.5864%2C-25.3044&layer=mapnik&marker=-25.3094204%2C-57.5933378",
+  "transport": [],
+  "accessibility": []
 }

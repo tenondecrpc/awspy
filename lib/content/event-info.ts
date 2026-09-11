@@ -20,6 +20,16 @@ const SocialSchema = z
 
 const StatusEnum = z.enum(["open", "upcoming", "closed"]);
 
+// Headline figures the edition expects to reach ("200+ asistentes"). These are
+// projections, not confirmed counts, so the value stays a string: the "+" and
+// the "1" of a single keynote are both part of how the figure reads.
+const ExpectedFigureSchema = z
+  .object({
+    value: z.string().min(1),
+    label: z.string().min(1),
+  })
+  .strict();
+
 export const EventInfoSchema = z
   .object({
     year: z.string().regex(/^\d{4}$/),
@@ -49,6 +59,7 @@ export const EventInfoSchema = z
     registrationStatus: StatusEnum,
     contactEmail: z.string().email(),
     social: SocialSchema.optional().default({}),
+    expectedFigures: z.array(ExpectedFigureSchema).optional().default([]),
     ogImageTitle: z.string().optional(),
     previousEditions: z
       .array(z.string().regex(/^\d{4}$/))

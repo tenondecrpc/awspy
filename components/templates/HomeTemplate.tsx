@@ -1,22 +1,24 @@
-// Home page template. Composes the hero, the "about" band with its feature
-// cards, the speakers preview, the volunteering call to action, and the
-// sponsors preview. The page-level component is responsible for fetching
-// Sessionize/EventInfo and passing it down.
+// Home page template. Composes the hero, the expected-figures band, the
+// "about" band with its feature cards, the speakers preview, the volunteering
+// call to action, and the sponsors preview. The page-level component is
+// responsible for fetching Sessionize/EventInfo and passing it down.
 //
-// Section order follows the AWS Community Day family: pitch -> what it is ->
-// who speaks -> how to take part -> who makes it possible. Backgrounds
-// alternate `surface` / `surface-muted` with one inverse band so the page
-// reads as distinct blocks rather than one continuous column.
+// Section order follows the AWS Community Day family: pitch -> what to expect
+// -> what it is -> who speaks -> how to take part -> who makes it possible.
+// Backgrounds alternate `surface` / `surface-muted` with one inverse band so
+// the page reads as distinct blocks rather than one continuous column.
 //
 // The countdown is part of the hero, not a band of its own.
 
 import NextLink from "next/link";
+import { cn } from "@/lib/utils/cn";
 import { Container } from "@/components/atoms/Container";
 import { Section } from "@/components/atoms/Section";
 import { GlyphIcon, type GlyphName } from "@/components/atoms/GlyphIcon";
 import { Button } from "@/components/atoms/Button";
 import { DecorativePattern } from "@/components/atoms/DecorativePattern";
 import { SectionHeading } from "@/components/molecules/SectionHeading";
+import { StatTile } from "@/components/molecules/StatTile";
 import { Hero } from "@/components/organisms/Hero";
 import { EmptyState } from "@/components/organisms/EmptyState";
 import { SpeakerCard } from "@/components/molecules/SpeakerCard";
@@ -42,27 +44,50 @@ type HomeTemplateProps = {
 /** Two full rows of the four-column grid. */
 const SPEAKERS_PREVIEW_LIMIT = 8;
 
-const FEATURES: { glyph: GlyphName; title: string; description: string }[] = [
+// One hue from the decorative ramp per card, assigned in fixed order. The
+// hue only tells the cards apart; each one carries its own title, so nothing
+// is lost if a reader cannot distinguish them.
+type FeatureTone = "blue" | "violet" | "teal" | "amber";
+
+// Written out rather than interpolated: Tailwind scans for literal class
+// strings, so a template literal would produce no CSS.
+const TILE_CLASS: Record<FeatureTone, string> = {
+  blue: "bg-[var(--color-category-blue)]",
+  violet: "bg-[var(--color-category-violet)]",
+  teal: "bg-[var(--color-category-teal)]",
+  amber: "bg-[var(--color-category-amber)]",
+};
+
+const FEATURES: {
+  glyph: GlyphName;
+  tone: FeatureTone;
+  title: string;
+  description: string;
+}[] = [
   {
     glyph: "target",
+    tone: "blue",
     title: "Objetivo",
     description:
       "Acercar la nube a más personas en Paraguay con contenido técnico gratuito y en español.",
   },
   {
     glyph: "users",
+    tone: "violet",
     title: "Comunidad",
     description:
       "Un evento organizado por voluntarios y voluntarias del user group local, para la comunidad.",
   },
   {
     glyph: "book",
+    tone: "teal",
     title: "Aprendizaje",
     description:
       "Charlas y talleres sobre servicios y buenas prácticas de Amazon Web Services.",
   },
   {
     glyph: "bolt",
+    tone: "amber",
     title: "Innovación",
     description:
       "Casos reales, herramientas nuevas y espacios para intercambiar experiencias.",
@@ -86,6 +111,36 @@ export function HomeTemplate({
         registerHref={registerHref}
         cfpHref={cfpHref}
       />
+
+      {eventInfo.expectedFigures.length > 0 ? (
+        <Section spacing="md" tone="default" aria-labelledby="figures-title">
+          <Container>
+            <h2
+              id="figures-title"
+              className="text-center text-sm font-bold uppercase tracking-[0.18em] text-[var(--color-national-red-label)]"
+            >
+              Esperamos contar con
+            </h2>
+
+            <ul className="mt-8 grid grid-cols-2 gap-3 sm:grid-cols-4 sm:gap-4 lg:grid-cols-7">
+              {eventInfo.expectedFigures.map((figure) => (
+                <li key={figure.label} className="h-full">
+                  <StatTile
+                    value={figure.value}
+                    label={figure.label}
+                    className="h-full"
+                  />
+                </li>
+              ))}
+            </ul>
+
+            <p className="mt-6 text-center text-sm text-[var(--color-text-secondary)]">
+              Cifras proyectadas para esta primera edición, con asistentes de
+              Paraguay y varios países.
+            </p>
+          </Container>
+        </Section>
+      ) : null}
 
       <Section spacing="lg" tone="muted" aria-labelledby="about-title">
         <Container>
@@ -113,7 +168,13 @@ export function HomeTemplate({
                 key={feature.title}
                 className="flex flex-col gap-3 rounded-[var(--radius-lg)] border border-[var(--color-border-subtle)] bg-[var(--color-surface)] p-6"
               >
-                <span className="flex h-12 w-12 items-center justify-center rounded-[var(--radius-md)] bg-[var(--color-accent-soft)] text-[var(--color-accent-strong)]">
+                <span
+                  className={cn(
+                    "flex h-12 w-12 items-center justify-center rounded-[var(--radius-md)]",
+                    "text-[var(--color-text-on-category)]",
+                    TILE_CLASS[feature.tone]
+                  )}
+                >
                   <GlyphIcon name={feature.glyph} size={24} />
                 </span>
                 <h3 className="text-lg font-bold">{feature.title}</h3>

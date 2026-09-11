@@ -1,5 +1,11 @@
-// Organizer card molecule. Portrait card with the photo (or an initials
-// placeholder), the name, the role, and social links rendered as pills.
+// Organizer card molecule. A thumbnail (photo, or an initials placeholder)
+// beside the name, the role, the optional bio paragraph, and social links
+// rendered as pills.
+//
+// The layout is horizontal rather than the portrait shape SpeakerCard uses,
+// because an organizer record carries a paragraph of prose that needs a
+// readable measure, and because the committee photos are small headshots
+// that a full-bleed square would only stretch.
 //
 // Unlike SpeakerCard this one is not a single stretched link: an organizer
 // has no detail page, and the only destinations are the social links, so
@@ -75,49 +81,72 @@ export function OrganizerCard({
         className="h-1 w-full shrink-0 bg-[var(--card-accent)]"
       />
 
-      <div className="relative aspect-square w-full overflow-hidden bg-[var(--color-accent-soft)]">
-        {organizer.photo ? (
-          <Image
-            src={organizer.photo}
-            alt=""
-            fill
-            sizes="(min-width: 1024px) 25vw, (min-width: 640px) 33vw, 50vw"
-            className="object-cover"
-          />
-        ) : (
-          <div
-            aria-hidden="true"
-            className="flex h-full w-full items-center justify-center text-4xl font-bold text-[var(--color-accent-strong)] sm:text-5xl"
-          >
-            {initials(organizer.name)}
+      {/*
+        Two columns: the thumbnail, then the text. The prose sits in its own
+        row so it can span both columns on a phone - beside an 80px photo the
+        measure would be a sliver - and tuck back under the name from `sm` up,
+        where the card is wide enough for the indent to read as alignment.
+        There the photo spans both rows, so the prose follows the role line
+        directly instead of clearing the full height of the photo.
+      */}
+      <div className="grid flex-1 grid-cols-[auto_1fr] items-start gap-x-4 gap-y-3 p-4 sm:gap-x-5 sm:p-5">
+        <div className="relative col-start-1 row-start-1 size-20 shrink-0 overflow-hidden rounded-[var(--radius-md)] bg-[var(--color-accent-soft)] sm:row-span-2 sm:size-24">
+          {organizer.photo ? (
+            <Image
+              src={organizer.photo}
+              alt=""
+              fill
+              sizes="96px"
+              className="object-cover"
+            />
+          ) : (
+            <div
+              aria-hidden="true"
+              className="flex h-full w-full items-center justify-center text-2xl font-bold text-[var(--color-accent-strong)] sm:text-3xl"
+            >
+              {initials(organizer.name)}
+            </div>
+          )}
+        </div>
+
+        <div className="col-start-2 row-start-1 flex min-w-0 flex-col gap-1 self-center sm:self-start">
+          <p className="text-base font-bold sm:text-lg">{organizer.name}</p>
+          <p className="text-sm text-[var(--color-text-secondary)]">
+            {organizer.role}
+          </p>
+        </div>
+
+        {/* Skipped entirely when empty, so the grid gap adds no dead row. */}
+        {organizer.bio || linkEntries.length > 0 ? (
+          <div className="col-span-2 row-start-2 min-w-0 sm:col-span-1 sm:col-start-2">
+            {organizer.bio ? (
+              <p className="text-sm leading-relaxed text-[var(--color-text-secondary)]">
+                {organizer.bio}
+              </p>
+            ) : null}
+
+            {linkEntries.length > 0 ? (
+              <ul
+                className={cn("flex flex-wrap gap-2", organizer.bio && "mt-3")}
+              >
+                {linkEntries.map(([key, url]) => (
+                  <li key={key}>
+                    <Link
+                      href={url as string}
+                      external
+                      className={cn(
+                        "inline-flex items-center rounded-[var(--radius-pill)] px-3 py-1 text-xs font-semibold",
+                        "border border-[var(--color-border-subtle)] text-[var(--color-text-secondary)]",
+                        "hover:border-[var(--card-accent)] hover:text-[var(--color-accent)]"
+                      )}
+                    >
+                      {SOCIAL_LABELS[key]}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            ) : null}
           </div>
-        )}
-      </div>
-
-      <div className="flex flex-1 flex-col gap-1 p-3 sm:p-4">
-        <p className="text-base font-bold sm:text-lg">{organizer.name}</p>
-        <p className="text-sm text-[var(--color-text-secondary)]">
-          {organizer.role}
-        </p>
-
-        {linkEntries.length > 0 ? (
-          <ul className="mt-3 flex flex-wrap gap-2">
-            {linkEntries.map(([key, url]) => (
-              <li key={key}>
-                <Link
-                  href={url as string}
-                  external
-                  className={cn(
-                    "inline-flex items-center rounded-[var(--radius-pill)] px-3 py-1 text-xs font-semibold",
-                    "border border-[var(--color-border-subtle)] text-[var(--color-text-secondary)]",
-                    "hover:border-[var(--card-accent)] hover:text-[var(--color-accent)]"
-                  )}
-                >
-                  {SOCIAL_LABELS[key]}
-                </Link>
-              </li>
-            ))}
-          </ul>
         ) : null}
       </div>
     </article>
