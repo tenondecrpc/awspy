@@ -9,7 +9,16 @@
 // The countdown lives here rather than in its own band so a visitor gets the
 // date, the place and the time remaining in one glance, the way the rest of
 // the AWS Community Day family presents it.
+//
+// The Asuncion skyline sits along the bottom edge, cropped from the event
+// banner. Only the text-free strip of that artwork is used: the banner also
+// carries the title, date and venue baked in, which would collide with the
+// live copy above it and turn illegible on a phone. It is decorative
+// (`aria-hidden`, empty alt) - everything it shows is already written out in
+// the text beside it - and a scrim keeps the city lights from competing with
+// the headline.
 
+import Image from "next/image";
 import { Container } from "@/components/atoms/Container";
 import { Section } from "@/components/atoms/Section";
 import { Heading } from "@/components/atoms/Heading";
@@ -73,6 +82,25 @@ export function Hero({
         opacity={0.08}
         seed={`hero-${eventInfo.year}`}
       />
+      {/* Anchored to the bottom edge, where a skyline belongs. `object-bottom`
+          keeps the waterline in frame as the band gets shorter. */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-x-0 bottom-0 h-48 sm:h-64 lg:h-72"
+      >
+        <Image
+          src="/assets/hero/skyline.jpg"
+          alt=""
+          fill
+          priority
+          sizes="100vw"
+          className="object-cover object-bottom opacity-60"
+        />
+        {/* Top-down scrim: the headline keeps its AA contrast over the city
+            lights, and the image fades in rather than starting as a hard edge. */}
+        <div className="absolute inset-0 bg-gradient-to-b from-[var(--color-surface-hero)] via-[var(--color-overlay)] to-transparent" />
+      </div>
+
       <Container className="relative">
         <div className="grid items-center gap-12 lg:grid-cols-[1.15fr_1fr] lg:gap-16">
           <div className="flex flex-col items-start gap-6">

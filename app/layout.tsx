@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { SiteHeader } from "@/components/organisms/SiteHeader";
 import { SiteFooter } from "@/components/organisms/SiteFooter";
+import { Mascot } from "@/components/atoms/Mascot";
 import { currentEdition } from "@/lib/content/editions";
 import { getEventInfo } from "@/lib/content/event-info";
 import { getSiteUrl } from "@/lib/utils/seo";
@@ -25,9 +26,14 @@ export const metadata: Metadata = {
     "La primera edición del AWS Community Day en Paraguay: charlas, talleres y networking organizados por la comunidad AWS local.",
 };
 
+// Dark is the default look of the event, not a follow-the-OS decision: the
+// vivid red and blue were tuned against the midnight surfaces, and that is
+// the face the Community Day family presents. A stored choice still wins, and
+// the header toggle still switches both ways. Without JavaScript the CSS
+// falls back to `prefers-color-scheme`.
 const themeInitScript = `(()=>{try{const stored=localStorage.getItem(${JSON.stringify(
   THEME_STORAGE_KEY
-)});const theme=stored==="light"||stored==="dark"?stored:(matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light");document.documentElement.dataset.theme=theme;document.documentElement.style.colorScheme=theme}catch{}})();`;
+)});const theme=stored==="light"||stored==="dark"?stored:"dark";document.documentElement.dataset.theme=theme;document.documentElement.style.colorScheme=theme}catch{}})();`;
 
 export default function RootLayout({
   children,
@@ -49,6 +55,7 @@ export default function RootLayout({
         <SiteHeader editionYear={editionYear} />
         <main>{children}</main>
         <SiteFooter eventInfo={eventInfo} />
+        <Mascot />
       </body>
     </html>
   );
