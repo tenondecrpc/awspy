@@ -12,6 +12,7 @@ type Variant =
   | "success"
   | "warning"
   | "danger"
+  | "tier-diamante"
   | "tier-platinum"
   | "tier-gold"
   | "tier-silver"
@@ -30,6 +31,8 @@ const VARIANT_CLASS: Record<Variant, string> = {
   success: "bg-[var(--color-success-soft)] text-[var(--color-success)]",
   warning: "bg-[var(--color-warning-soft)] text-[var(--color-warning)]",
   danger: "bg-[var(--color-danger-soft)] text-[var(--color-danger)]",
+  "tier-diamante":
+    "bg-[var(--color-tier-diamante)] text-[var(--color-text-on-tier)]",
   "tier-platinum":
     "bg-[var(--color-tier-platinum)] text-[var(--color-text-on-tier)]",
   "tier-gold": "bg-[var(--color-tier-gold)] text-[var(--color-text-on-tier)]",

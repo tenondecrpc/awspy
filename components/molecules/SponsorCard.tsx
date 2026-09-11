@@ -25,6 +25,7 @@ const TIER_VARIANT: Record<
   SponsorTier,
   Parameters<typeof Badge>[0]["variant"]
 > = {
+  Diamante: "tier-diamante",
   Platinum: "tier-platinum",
   Gold: "tier-gold",
   Silver: "tier-silver",
@@ -35,6 +36,10 @@ const TIER_VARIANT: Record<
 // Tier tokens are only ever used as a background here, which is the pairing
 // verified in the palette contract.
 const TIER_ACCENT: Record<SponsorTier, { accent: string; glow: string }> = {
+  Diamante: {
+    accent: "var(--color-tier-diamante)",
+    glow: "var(--color-glow-accent)",
+  },
   Platinum: {
     accent: "var(--color-tier-platinum)",
     glow: "var(--color-glow-accent)",

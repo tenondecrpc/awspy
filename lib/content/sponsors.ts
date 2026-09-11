@@ -6,6 +6,7 @@ import { editionFile, readJsonOrThrow } from "@/lib/content/_fs";
 import { HttpUrlSchema, RemoteImageUrlSchema } from "@/lib/validation/urls";
 
 export const SponsorTierEnum = z.enum([
+  "Diamante",
   "Platinum",
   "Gold",
   "Silver",
@@ -64,6 +65,7 @@ export function getSponsors(year: string): Sponsor[] {
 }
 
 const TIER_ORDER: SponsorTier[] = [
+  "Diamante",
   "Platinum",
   "Gold",
   "Silver",

@@ -24,6 +24,7 @@ const BASE: EventInfo = {
   registrationStatus: "upcoming",
   contactEmail: "hola@awscommunitydayparaguay.com",
   social: {},
+  expectedFigures: [],
   previousEditions: [],
 };
 

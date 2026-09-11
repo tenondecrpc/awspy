@@ -169,6 +169,26 @@ describe("groupSponsorsByTier", () => {
     ]);
     expect(groups.map((g) => g.tier)).toEqual(["Platinum", "Silver"]);
   });
+
+  it("ranks Diamante above Platinum", () => {
+    const groups = groupSponsorsByTier([
+      {
+        id: "b",
+        name: "B",
+        tier: "Platinum",
+        logo: { light: "/logos/b.svg" },
+        url: "https://b.example",
+      },
+      {
+        id: "a",
+        name: "A",
+        tier: "Diamante",
+        logo: { light: "/logos/a.svg" },
+        url: "https://a.example",
+      },
+    ]);
+    expect(groups.map((g) => g.tier)).toEqual(["Diamante", "Platinum"]);
+  });
 });
 
 describe("OrganizersListSchema", () => {

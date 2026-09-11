@@ -1,4 +1,4 @@
-// Sponsors board organism. Groups sponsors by tier (Platinum -> Community)
+// Sponsors board organism. Groups sponsors by tier (Diamante -> Community)
 // and renders the SponsorCard molecule. Falls back to a themed empty state
 // when there are no sponsors and to a skeleton when isLoading is true.
 
@@ -32,6 +32,7 @@ type SponsorsBoardProps = {
 // Text keeps its own AA-verified token; these values are only ever used as a
 // background, which is the pairing verified in the palette contract.
 const TIER_RULE: Record<SponsorTier, string> = {
+  Diamante: "var(--color-tier-diamante)",
   Platinum: "var(--color-tier-platinum)",
   Gold: "var(--color-tier-gold)",
   Silver: "var(--color-tier-silver)",

@@ -10,7 +10,15 @@
 import { cn } from "@/lib/utils/cn";
 
 export type GlyphName =
-  "calendar" | "pin" | "clock" | "users" | "mic" | "target" | "book" | "bolt";
+  | "calendar"
+  | "pin"
+  | "clock"
+  | "users"
+  | "mic"
+  | "target"
+  | "book"
+  | "bolt"
+  | "check";
 
 // 24x24 viewBox, 1.75 stroke, round caps. Kept as `d` attributes so the
 // component ships no runtime dependency.
@@ -26,6 +34,7 @@ const PATHS: Record<GlyphName, string> = {
     "M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18Zm0-4.5a4.5 4.5 0 1 0 0-9 4.5 4.5 0 0 0 0 9Zm0-3a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Z",
   book: "M4 5.5A1.5 1.5 0 0 1 5.5 4H10a2 2 0 0 1 2 2v14a2 2 0 0 0-2-2H5.5A1.5 1.5 0 0 1 4 16.5v-11Zm16 0A1.5 1.5 0 0 0 18.5 4H14a2 2 0 0 0-2 2v14a2 2 0 0 1 2-2h4.5a1.5 1.5 0 0 0 1.5-1.5v-11Z",
   bolt: "M13.5 3 5 13.5h5L9.5 21 18 10.5h-5L13.5 3Z",
+  check: "m5 12.5 4.5 4.5L19 7.5",
 };
 
 type GlyphIconProps = {

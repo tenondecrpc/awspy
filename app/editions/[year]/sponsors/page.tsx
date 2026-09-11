@@ -30,6 +30,12 @@ export default async function EditionSponsorsPage({
 }) {
   const { year } = await params;
   if (!editionExists(year)) notFound();
-  const { eventInfo, sponsors } = getEdition(year);
-  return <SponsorsTemplate sponsors={sponsors} eventInfo={eventInfo} />;
+  const { eventInfo, sponsors, sponsorship } = getEdition(year);
+  return (
+    <SponsorsTemplate
+      sponsors={sponsors}
+      eventInfo={eventInfo}
+      sponsorship={sponsorship}
+    />
+  );
 }

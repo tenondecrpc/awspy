@@ -1,0 +1,98 @@
+{
+  "intro": "Patrocinar el AWS Community Day Paraguay 2026 es una oportunidad para posicionar tu organización como un referente en innovación, aumentar el reconocimiento de marca y conectar con una audiencia altamente especializada en tecnologías cloud.",
+  "highlights": [
+    {
+      "title": "Mayor visibilidad de marca",
+      "description": "Tu empresa estará presente en la campaña de difusión del evento, incluyendo el sitio web, redes sociales, material promocional, señalización, pantallas y espacios físicos durante la jornada, alcanzando una audiencia altamente calificada."
+    },
+    {
+      "title": "Acceso a una audiencia especializada",
+      "description": "Interactuá directamente con arquitectos de soluciones, desarrolladores, ingenieros, líderes tecnológicos, estudiantes, emprendedores y tomadores de decisiones interesados en las tecnologías de AWS."
+    },
+    {
+      "title": "Generación de oportunidades de negocio",
+      "description": "Da a conocer tus productos, servicios y casos de éxito, establece relaciones con potenciales clientes y fortalece vínculos con organizaciones que buscan acelerar su transformación digital."
+    },
+    {
+      "title": "Networking de alto valor",
+      "description": "Participá en espacios exclusivos para conectar con otros patrocinadores, líderes de la industria, representantes de AWS y miembros de la comunidad tecnológica, fomentando alianzas estratégicas y nuevas oportunidades de colaboración."
+    },
+    {
+      "title": "Posicionamiento como líder tecnológico",
+      "description": "Asociá tu marca con uno de los eventos tecnológicos más importantes de la comunidad AWS, demostrando tu compromiso con la innovación, la excelencia técnica y el desarrollo del ecosistema cloud en Paraguay."
+    },
+    {
+      "title": "Participación activa en el programa",
+      "description": "Según el nivel de patrocinio, tendrás la posibilidad de presentar conferencias, realizar demostraciones en vivo, impartir talleres técnicos o exhibir tus soluciones ante una audiencia altamente interesada."
+    },
+    {
+      "title": "Atracción y desarrollo de talento",
+      "description": "Conectá con profesionales y estudiantes de alto potencial, fortaleciendo tu estrategia de reclutamiento y posicionando a tu empresa como un lugar atractivo para desarrollar una carrera en tecnología."
+    },
+    {
+      "title": "Contribución al crecimiento de la comunidad",
+      "description": "Tu patrocinio ayudará a fortalecer el ecosistema tecnológico paraguayo, impulsando la formación de talento, la difusión del conocimiento y la adopción de tecnologías cloud de AWS."
+    }
+  ],
+  "packages": [
+    { "tier": "Diamante", "price": "USD 3.000" },
+    { "tier": "Platinum", "price": "USD 2.000" },
+    { "tier": "Gold", "price": "USD 1.000" },
+    { "tier": "Silver", "price": "USD 500" }
+  ],
+  "benefits": [
+    {
+      "label": "Reconocimiento destacado en el programa impreso y digital, así como en el sitio web del evento",
+      "tiers": ["Diamante", "Platinum", "Gold", "Silver"]
+    },
+    {
+      "label": "Presencia en el carrusel de sponsors durante la transmisión en vivo del evento",
+      "tiers": ["Diamante", "Platinum", "Gold", "Silver"]
+    },
+    {
+      "label": "Derecho a entregar material promocional desde el stand",
+      "tiers": ["Diamante", "Platinum", "Gold", "Silver"]
+    },
+    {
+      "label": "Oportunidad de promocionar vacantes laborales del patrocinador en el sitio web del evento y en las redes sociales",
+      "tiers": ["Diamante", "Platinum", "Gold", "Silver"]
+    },
+    {
+      "label": "Mención en las redes sociales oficiales del evento y del user group antes, durante y al cierre del AWS Community Day",
+      "tiers": ["Diamante", "Platinum", "Gold", "Silver"]
+    },
+    {
+      "label": "Mención especial y reconocimiento desde el escenario principal durante el evento",
+      "tiers": ["Diamante", "Platinum", "Gold", "Silver"]
+    },
+    {
+      "label": "Espacio para stand: S mesa de exhibición (1 x 1 m), M mesa/stand (1,5 x 2 m) o L (2 x 2 m), ubicados en zonas de alto tráfico",
+      "tiers": ["Diamante", "Platinum", "Gold", "Silver"]
+    },
+    {
+      "label": "Video promocional del sponsor en las redes sociales del evento (30 seg). El video debe ser enviado por el sponsor en formato mp4",
+      "tiers": ["Diamante", "Platinum"]
+    },
+    {
+      "label": "Derecho a entregar material promocional o regalos desde el stand",
+      "tiers": ["Diamante"]
+    },
+    {
+      "label": "Oportunidad de speaker en el evento (45 min, aplican reglas)",
+      "tiers": ["Diamante"]
+    }
+  ],
+  "funds": [
+    "Alquiler y compra de audiovisuales",
+    "Badges",
+    "Obsequios para asistentes, voluntarios y speakers",
+    "Stands y banners físicos",
+    "Decks de cartas y utensilios para el torneo de Builders Cards",
+    "Comida, snacks y bebidas"
+  ],
+  "contact": {
+    "name": "Cristian Paniagua",
+    "email": "awscommunitydayparaguay@gmail.com",
+    "phone": "+595 973 436966"
+  }
+}

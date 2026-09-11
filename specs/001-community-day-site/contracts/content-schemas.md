@@ -14,6 +14,7 @@ This document defines the JSON/MDX shapes under `content/editions/{year}/`. Each
 content/editions/{year}/
 ├── event.json
 ├── sponsors.json
+├── sponsorship.json   (optional)
 ├── organizers.json
 ├── faq.json
 ├── venue.json
@@ -63,6 +64,11 @@ export const EventInfoSchema = z.object({
   registrationStatus: StatusEnum,
   contactEmail: z.string().email(),
   social: SocialSchema.optional().default({}),
+  // Headline figures the edition expects to reach. Projections, not confirmed
+  // counts, so `value` is a string ("200+", "1").
+  expectedFigures: z.array(
+    z.object({ value: z.string().min(1), label: z.string().min(1) }).strict()
+  ).optional().default([]),
   ogImageTitle: z.string().optional(),
   previousEditions: z.array(z.string().regex(/^\d{4}$/)).optional().default([])
 }).superRefine((value, ctx) => {
@@ -81,7 +87,7 @@ export type EventInfo = z.infer<typeof EventInfoSchema>;
 ## sponsors.json
 
 ```ts
-const SponsorTierEnum = z.enum(["Platinum", "Gold", "Silver", "Bronze", "Community"]);
+const SponsorTierEnum = z.enum(["Diamante", "Platinum", "Gold", "Silver", "Bronze", "Community"]);
 
 const ImageRefSchema = z.union([
   RemoteImageUrlSchema,
@@ -118,6 +124,46 @@ export const SponsorsListSchema = z.array(SponsorSchema)
 export type Sponsor = z.infer<typeof SponsorSchema>;
 ```
 
+## sponsorship.json
+
+Optional. The prospectus rendered by `/sponsors`: why sponsor, what each
+package costs and includes, and what the contribution pays for. An edition
+without this file renders the plain contact callout instead.
+
+```ts
+export const SponsorshipSchema = z.object({
+  intro: z.string().min(1),
+  highlights: z.array(z.object({
+    title: z.string().min(1),
+    description: z.string().min(1)
+  }).strict()).optional().default([]),
+  packages: z.array(z.object({
+    tier: SponsorTierEnum,
+    price: z.string().min(1)   // written as it reads, e.g. "USD 3.000"
+  }).strict()).optional().default([]),
+  benefits: z.array(z.object({
+    label: z.string().min(1),
+    tiers: z.array(SponsorTierEnum).min(1)
+  }).strict()).optional().default([]),
+  funds: z.array(z.string().min(1)).optional().default([]),
+  contact: z.object({
+    name: z.string().min(1),
+    email: z.string().email(),
+    phone: z.string().min(1).optional()
+  }).strict().optional()
+}).strict().superRefine(/* see below */);
+
+export type Sponsorship = z.infer<typeof SponsorshipSchema>;
+```
+
+Two integrity rules fail the build rather than rendering a broken table:
+
+- A `tier` may appear in `packages` at most once.
+- Every tier named in `benefits[].tiers` MUST have a package in `packages`.
+
+`getSponsorship(year)` returns `null` when the file is absent and throws when
+it is present but malformed.
+
 ## organizers.json
 
 ```ts
@@ -132,6 +178,8 @@ const OrganizerSchema = z.object({
   id: z.string().regex(/^[a-z0-9-]+$/),
   name: z.string().min(1),
   role: z.string().min(1),
+  // Optional one-paragraph profile. `role` remains the one-line label.
+  bio: z.string().min(1).optional(),
   photo: z.union([
     RemoteImageUrlSchema,
     z.string().regex(/^\/(team)\//, "Repo paths must live under /team/")

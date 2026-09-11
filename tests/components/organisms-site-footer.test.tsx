@@ -30,6 +30,7 @@ const FAKE_INFO: EventInfo = {
   social: {
     twitter: "https://twitter.com/awspy",
   },
+  expectedFigures: [],
   previousEditions: [],
 };
 

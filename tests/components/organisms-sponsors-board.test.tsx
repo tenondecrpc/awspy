@@ -32,6 +32,7 @@ const EVENT_INFO: EventInfo = {
   registrationStatus: "upcoming",
   contactEmail: "hola@awscommunitydayparaguay.com",
   social: {},
+  expectedFigures: [],
   previousEditions: [],
 };
 

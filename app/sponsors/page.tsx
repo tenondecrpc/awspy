@@ -13,6 +13,12 @@ export async function generateMetadata() {
 
 export default function SponsorsPage() {
   const year = currentEdition();
-  const { eventInfo, sponsors } = getEdition(year);
-  return <SponsorsTemplate sponsors={sponsors} eventInfo={eventInfo} />;
+  const { eventInfo, sponsors, sponsorship } = getEdition(year);
+  return (
+    <SponsorsTemplate
+      sponsors={sponsors}
+      eventInfo={eventInfo}
+      sponsorship={sponsorship}
+    />
+  );
 }
