@@ -107,7 +107,7 @@ export function Hero({
               <br />
               Community&nbsp;Day
               <br />
-              <span className="text-[var(--color-action)]">Paraguay</span>
+              <span className="text-[var(--color-action-label)]">Paraguay</span>
             </Heading>
 
             <p className="mt-6 max-w-[34rem] text-lg text-[var(--color-text-secondary)]">

@@ -14,7 +14,7 @@ import {
   Frame,
   NumberHeading,
   H2,
-  NUM,
+  NUM_ON_DARK,
   RULE,
   WRAP,
 } from "@/components/molecules/SectionPrimitives";
@@ -186,7 +186,9 @@ export function HomeTemplate({
                 <br />
                 Community&nbsp;Day
                 <br />
-                <span className="text-[var(--color-action)]">Paraguay</span>
+                <span className="text-[var(--color-action-label)]">
+                  Paraguay
+                </span>
               </h1>
 
               <p className="m-0 mb-8 max-w-[32rem] text-[18px] leading-[1.55] text-[var(--color-text-secondary)]">
@@ -354,7 +356,7 @@ export function HomeTemplate({
                 photo="/assets/charla.jpg"
                 className="col-span-2"
               />
-              <Frame label="Networking" photo="/assets/networking.JPG" />
+              <Frame label="Networking" photo="/assets/networking.jpg" />
               <Frame label="Taller hands-on" photo="/assets/handson.jpg" />
             </div>
           </div>
@@ -455,7 +457,7 @@ export function HomeTemplate({
           <div className="grid items-stretch [grid-template-columns:repeat(auto-fit,minmax(320px,1fr))]">
             <div className="flex min-w-0 flex-col justify-center py-[72px] pr-0 lg:pr-12">
               <div className="mb-7 flex items-baseline gap-4">
-                <span className={NUM}>04</span>
+                <span className={NUM_ON_DARK}>04</span>
                 <span className="font-mono text-[11.5px] uppercase tracking-[0.14em] text-[var(--color-text-on-inverse-muted)]">
                   La sede
                 </span>

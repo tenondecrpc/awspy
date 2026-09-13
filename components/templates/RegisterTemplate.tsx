@@ -159,7 +159,7 @@ export function RegisterTemplate({
                         key={s.n}
                         className="flex gap-4 border-b border-[var(--color-border-subtle)] py-[18px]"
                       >
-                        <span className="flex-none pt-[3px] font-mono text-[11.5px] text-[var(--color-action)]">
+                        <span className="flex-none pt-[3px] font-mono text-[11.5px] text-[var(--color-action-label)]">
                           {s.n}
                         </span>
                         <div className="min-w-0">

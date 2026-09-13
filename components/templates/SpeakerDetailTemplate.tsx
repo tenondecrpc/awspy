@@ -113,7 +113,7 @@ export function SpeakerDetailTemplate({
             <div className="flex min-w-0 flex-col justify-center py-[52px] lg:pl-12">
               {speaker.isTopSpeaker ? (
                 <div className="mb-4 flex flex-wrap gap-2.5">
-                  <span className="rounded-[3px] bg-[var(--color-text-primary)] px-[9px] py-1 font-mono text-[10px] uppercase tracking-[0.12em] text-[var(--color-text-on-inverse)]">
+                  <span className="rounded-[3px] bg-[var(--color-surface-inverse)] px-[9px] py-1 font-mono text-[10px] uppercase tracking-[0.12em] text-[var(--color-text-on-inverse)]">
                     Top speaker
                   </span>
                 </div>

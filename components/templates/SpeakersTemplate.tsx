@@ -111,7 +111,7 @@ export function SpeakersTemplate({
                             </NextLink>
                           </h2>
                           {sp.isTopSpeaker ? (
-                            <span className="rounded-[3px] bg-[var(--color-text-primary)] px-[7px] py-[3px] font-mono text-[9.5px] uppercase tracking-[0.12em] text-[var(--color-text-on-inverse)]">
+                            <span className="rounded-[3px] bg-[var(--color-surface-inverse)] px-[7px] py-[3px] font-mono text-[9.5px] uppercase tracking-[0.12em] text-[var(--color-text-on-inverse)]">
                               Top speaker
                             </span>
                           ) : null}

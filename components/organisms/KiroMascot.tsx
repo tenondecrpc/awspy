@@ -45,6 +45,7 @@ export function KiroMascot({ faq = [] }: KiroMascotProps) {
   const reactId = useId();
   const panelId = `kiro-chat-${reactId}`;
   const rootRef = useRef<HTMLDivElement>(null);
+  const panelRef = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
   const logRef = useRef<HTMLDivElement>(null);
 
@@ -54,6 +55,40 @@ export function KiroMascot({ faq = [] }: KiroMascotProps) {
       logRef.current.scrollTop = logRef.current.scrollHeight;
     }
   }, [messages, open]);
+
+  // Keep a scroll gesture that starts inside the chat inside the chat.
+  //
+  // The transcript scrolls on its own and `overscroll-behavior: contain` stops
+  // it from chaining at its ends. Everything else in the panel — the header,
+  // the suggestion area, the padding between bubbles — does not scroll at all,
+  // so a wheel or touch gesture there would fall through to the document and
+  // move the page behind the chat. Those regions absorb the gesture instead.
+  //
+  // The page still scrolls normally whenever the pointer is outside the panel:
+  // this is a corner widget, not a modal, so it never locks the whole page.
+  useEffect(() => {
+    if (!open) return;
+    const panel = panelRef.current;
+    if (!panel) return;
+
+    function absorbOutsideTranscript(event: WheelEvent | TouchEvent) {
+      const target = event.target as Node | null;
+      if (logRef.current && target && logRef.current.contains(target)) return;
+      event.preventDefault();
+    }
+
+    // `passive: false` is required: a passive listener may not preventDefault.
+    panel.addEventListener("wheel", absorbOutsideTranscript, {
+      passive: false,
+    });
+    panel.addEventListener("touchmove", absorbOutsideTranscript, {
+      passive: false,
+    });
+    return () => {
+      panel.removeEventListener("wheel", absorbOutsideTranscript);
+      panel.removeEventListener("touchmove", absorbOutsideTranscript);
+    };
+  }, [open]);
 
   // Escape closes the panel and returns focus to the toggle button. A click
   // outside the widget also closes it, matching the usual popover behaviour.
@@ -96,6 +131,7 @@ export function KiroMascot({ faq = [] }: KiroMascotProps) {
     >
       {open && (
         <div
+          ref={panelRef}
           id={panelId}
           role="dialog"
           aria-label="Chat de preguntas frecuentes con Kiro"

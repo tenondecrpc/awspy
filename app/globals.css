@@ -133,7 +133,12 @@ html[data-theme="dark"] {
   --color-national-red-on-dark: #ff5566;
   --color-surface: #010928;
   --color-surface-muted: #071438;
-  --color-surface-warm: #241a08;
+  /* The warm band, dark. The light theme uses a cream tint of the orange
+     accent; a literal dark translation of it lands on brown, which reads as
+     a rendering fault next to the navy surfaces. This keeps the warmer,
+     redder cast that separates the band from `--color-surface` and
+     `--color-surface-muted`, while staying inside the blue family. */
+  --color-surface-warm: #16142e;
   --color-surface-elevated: #0d1b46;
   --color-surface-inverse: #08152f;
   --color-surface-hero: #01051d;
@@ -387,6 +392,10 @@ html[data-theme="dark"] .theme-toggle__moon {
 .kiro-chat-scroll {
   scrollbar-width: thin;
   scrollbar-color: var(--color-border-strong) transparent;
+  /* Reaching the top or bottom of the transcript must not start scrolling the
+     page behind the chat. The panel handles the regions that do not scroll at
+     all; see `components/organisms/KiroMascot.tsx`. */
+  overscroll-behavior: contain;
 }
 
 .kiro-chat-scroll::-webkit-scrollbar {

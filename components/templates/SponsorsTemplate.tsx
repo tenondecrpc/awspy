@@ -303,7 +303,7 @@ export function SponsorsTemplate({
                 >
                   <span
                     aria-hidden="true"
-                    className="flex-none font-mono text-[11px] text-[var(--color-action)]"
+                    className="flex-none font-mono text-[11px] text-[var(--color-action-label)]"
                   >
                     ✓
                   </span>

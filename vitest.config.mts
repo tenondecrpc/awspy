@@ -25,11 +25,14 @@ export default defineConfig({
         "**/*.d.ts",
         "**/*.test.{ts,tsx}",
       ],
+      // Raised once the redesigned templates and the app/ route modules were
+      // covered (from 63/61/57/64). Each sits a few points under the measured
+      // value, so an ordinary change has room but a wholesale drop fails.
       thresholds: {
-        statements: 66,
-        branches: 69,
-        functions: 63,
-        lines: 67,
+        statements: 80,
+        branches: 75,
+        functions: 78,
+        lines: 80,
       },
     },
   },

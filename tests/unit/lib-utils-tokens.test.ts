@@ -102,6 +102,23 @@ const CONTRAST_PAIRS: ContrastPair[] = [
     background: "--color-surface-muted",
     minimum: 4.5,
   },
+  // The warm band carries body copy on the home, sponsors, venue, schedule,
+  // CFP, register and volunteers pages, so it needs the same gate.
+  {
+    foreground: "--color-text-primary",
+    background: "--color-surface-warm",
+    minimum: 4.5,
+  },
+  {
+    foreground: "--color-text-secondary",
+    background: "--color-surface-warm",
+    minimum: 4.5,
+  },
+  {
+    foreground: "--color-text-muted",
+    background: "--color-surface-warm",
+    minimum: 4.5,
+  },
   {
     foreground: "--color-text-on-action",
     background: "--color-action",

@@ -13,7 +13,16 @@ import NextLink from "next/link";
 export const WRAP = "mx-auto max-w-[1240px] px-7";
 
 /** Orange monospace section index ("01".."08"). */
-export const NUM = "font-mono text-xs font-medium text-[var(--color-action)]";
+/** Orange monospace section index on a light surface. `--color-action` is the
+ *  fill orange and only reaches ~1.9:1 as text on white, so the darkened
+ *  `--color-action-label` carries it here. */
+export const NUM =
+  "font-mono text-xs font-medium text-[var(--color-action-label)]";
+
+/** The same index on the navy band, where the darkened orange is instead too
+ *  dark (3.1:1) and the bright fill orange is the readable one. */
+export const NUM_ON_DARK =
+  "font-mono text-xs font-medium text-[var(--color-action)]";
 
 /** Section title scale used across the mockups. */
 export const H2 =
@@ -41,7 +50,7 @@ export function NumberHeading({
 }: NumberHeadingProps) {
   return (
     <div className="mb-9 flex flex-wrap items-baseline gap-4">
-      <span className={NUM}>{n}</span>
+      <span className={onDark ? NUM_ON_DARK : NUM}>{n}</span>
       <h2 className={H2}>{title}</h2>
       <span className={RULE} aria-hidden="true" />
       {action ? (

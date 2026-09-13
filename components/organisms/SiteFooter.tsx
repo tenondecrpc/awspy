@@ -37,6 +37,19 @@ const HEADING_CLASS =
 const EVENT_NAV = FOOTER_NAV.slice(0, 6);
 const PARTICIPATE_NAV = FOOTER_NAV.slice(6);
 
+/** Renders an address with a soft break opportunity after the "@". */
+function emailParts(email: string) {
+  const at = email.indexOf("@");
+  if (at === -1) return email;
+  return (
+    <>
+      {email.slice(0, at + 1)}
+      <wbr />
+      {email.slice(at + 1)}
+    </>
+  );
+}
+
 export function SiteFooter({ eventInfo }: SiteFooterProps) {
   const socialEntries = (
     Object.entries(eventInfo.social ?? {}) as Array<
@@ -103,7 +116,11 @@ export function SiteFooter({ eventInfo }: SiteFooterProps) {
               href={`mailto:${eventInfo.contactEmail}`}
               className="break-words text-sm font-semibold text-[var(--color-action)] transition hover:brightness-95"
             >
-              {eventInfo.contactEmail}
+              {/* The address is one long token, so a narrow footer column broke
+                  it mid-word ("…gmail.co / m"). `<wbr>` offers the break after
+                  the "@" instead; it adds no characters, so the link text and
+                  its accessible name are unchanged. */}
+              {emailParts(eventInfo.contactEmail)}
             </a>
             {socialEntries.length === 0 ? (
               <p className="mt-3 text-sm text-[var(--color-text-on-inverse-muted)]">
