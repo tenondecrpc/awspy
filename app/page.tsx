@@ -4,6 +4,8 @@
 import { HomeTemplate } from "@/components/templates/HomeTemplate";
 import { currentEdition, getEdition } from "@/lib/content/editions";
 import { listSpeakers } from "@/lib/api/sessionize";
+import { getFAQ } from "@/lib/content/faq";
+import { getOrganizers } from "@/lib/content/organizers";
 import {
   buildEventJsonLd,
   buildPageMetadata,
@@ -49,8 +51,10 @@ export default async function HomePage() {
       />
       <HomeTemplate
         eventInfo={edition.eventInfo}
-        speakersPreview={speakers}
-        sponsorsPreview={edition.sponsors}
+        speakers={speakers}
+        sponsors={edition.sponsors}
+        faq={getFAQ(year)}
+        organizers={getOrganizers(year)}
       />
     </>
   );

@@ -9,10 +9,10 @@
 // not resolve CSS custom properties because the output is a PNG, not an HTML
 // document. The palette tokens declared in `app/globals.css` are unreachable
 // at this layer. The hex values below are intentionally synchronized with the
-// image-inspired palette: #000C2F == --color-surface-hero and #F7F8FF ==
-// --color-text-on-hero. The darker #B01A38 red is used only in this generated
-// social card so its white year label remains AA-readable. If the palette
-// changes, update both this file and `app/globals.css`.
+// mockup palette: #01051D == --color-surface-hero (dark navy), #FFFFFF ==
+// --color-text-on-hero, and the #FF9900 Amazon-Orange badge uses navy
+// #01051D text so the year label stays AA-readable. If the palette changes,
+// update both this file and `app/globals.css`.
 
 /* eslint-disable local/no-color-literals */
 import { ImageResponse } from "next/og";
@@ -37,8 +37,8 @@ export default function OpengraphImage() {
         flexDirection: "column",
         justifyContent: "space-between",
         padding: 80,
-        background: "#000C2F",
-        color: "#F7F8FF",
+        background: "#01051D",
+        color: "#FFFFFF",
         fontFamily:
           "system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif",
       }}
@@ -48,8 +48,8 @@ export default function OpengraphImage() {
           style={{
             fontSize: 28,
             fontWeight: 800,
-            background: "#B01A38",
-            color: "#FFFFFF",
+            background: "#FF9900",
+            color: "#01051D",
             padding: "6px 16px",
             borderRadius: 12,
           }}

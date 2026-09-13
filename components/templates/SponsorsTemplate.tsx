@@ -1,16 +1,15 @@
-// Sponsors page template. Composes the sponsors board with the edition
-// prospectus: why sponsor, what each package costs and includes, and what the
-// contribution pays for. When the edition has no prospectus the page falls
-// back to the plain "write to us" callout it had before.
+// Sponsors page, rebuilt from scratch to reproduce the "Sponsors" mockup
+// (`AWS Community Day Paraguay (colored)/Sponsors.dc.html`) 1:1 — same
+// sections, same order, same colors (via exact design tokens), same spacing.
+//
+// The real data is wired through: the confirmed sponsors board, and — when the
+// edition has published a prospectus — the "why sponsor" highlights, the
+// package cards with their benefit comparison table, and the "what your money
+// pays for" list. Editions without a prospectus fall back to the plain contact
+// callout the page had before. Every sponsor logo links to its site.
 
-import { Container } from "@/components/atoms/Container";
-import { Section } from "@/components/atoms/Section";
-import { GlyphIcon } from "@/components/atoms/GlyphIcon";
-import { SectionHeading } from "@/components/molecules/SectionHeading";
-import { Button } from "@/components/atoms/Button";
-import { SponsorsBoard } from "@/components/organisms/SponsorsBoard";
-import { SponsorshipPackages } from "@/components/organisms/SponsorshipPackages";
-import type { Sponsor } from "@/lib/content/sponsors";
+import { NumberHeading, PageHeader, WRAP } from "@/components/site/primitives";
+import type { Sponsor, SponsorTier } from "@/lib/content/sponsors";
 import type { Sponsorship } from "@/lib/content/sponsorship";
 import type { EventInfo } from "@/lib/content/event-info";
 
@@ -21,173 +20,360 @@ type SponsorsTemplateProps = {
   sponsorship?: Sponsorship | null;
 };
 
+const TIER_ES: Record<SponsorTier, string> = {
+  Diamante: "Diamante",
+  Platinum: "Platino",
+  Gold: "Oro",
+  Silver: "Plata",
+  Bronze: "Bronce",
+  Community: "Comunidad",
+};
+
+// Tier tokens are only ever used as a small color chip here, always paired
+// with the written tier name, so the color reinforces rather than carries.
+const TIER_DOT: Record<SponsorTier, string> = {
+  Diamante: "var(--color-tier-diamante)",
+  Platinum: "var(--color-tier-platinum)",
+  Gold: "var(--color-tier-gold)",
+  Silver: "var(--color-tier-silver)",
+  Bronze: "var(--color-tier-bronze)",
+  Community: "var(--color-tier-community)",
+};
+
 export function SponsorsTemplate({
   sponsors,
   eventInfo,
   sponsorship = null,
 }: SponsorsTemplateProps) {
-  const mailto = `mailto:${
-    sponsorship?.contact?.email ?? eventInfo.contactEmail
-  }?subject=Sponsor%20AWS%20Community%20Day%20Paraguay`;
+  const contactEmail = sponsorship?.contact?.email ?? eventInfo.contactEmail;
+  const mailto = `mailto:${contactEmail}?subject=Sponsor%20AWS%20Community%20Day%20Paraguay`;
+
+  const hasHighlights =
+    sponsorship != null && sponsorship.highlights.length > 0;
+  const hasPackages = sponsorship != null && sponsorship.packages.length > 0;
+  const hasFunds = sponsorship != null && sponsorship.funds.length > 0;
 
   return (
     <>
-      <Section spacing="lg">
-        <Container>
-          <SectionHeading
-            level={1}
-            eyebrow="Auspiciantes"
-            title="Sponsors"
-            description={`Las empresas y comunidades que hacen posible ${eventInfo.name}.`}
-            className="mb-14"
-          />
-          <SponsorsBoard sponsors={sponsors} eventInfo={eventInfo} />
-        </Container>
-      </Section>
+      <PageHeader
+        eyebrow="Auspiciantes"
+        title="Sponsors"
+        description={`Las empresas y comunidades que hacen posible ${eventInfo.name}.`}
+      >
+        <div className="flex flex-wrap gap-2.5">
+          {hasPackages ? (
+            <a
+              href="#paquetes"
+              className="inline-flex items-center rounded-[4px] bg-[var(--color-action)] px-[22px] py-[11px] text-[14.5px] font-bold text-[var(--color-text-on-action)] transition hover:brightness-95"
+            >
+              Ver paquetes
+            </a>
+          ) : null}
+          <a
+            href={mailto}
+            className="inline-flex items-center rounded-[4px] border-[1.5px] border-[var(--color-text-primary)] px-[22px] py-[11px] text-[14.5px] font-semibold text-[var(--color-text-primary)] transition-colors hover:bg-[var(--color-text-primary)] hover:text-[var(--color-surface)]"
+          >
+            Escribirnos
+          </a>
+        </div>
+      </PageHeader>
 
-      {sponsorship && sponsorship.highlights.length > 0 ? (
-        <Section spacing="lg" tone="muted" aria-labelledby="why-sponsor-title">
-          <Container>
-            <SectionHeading
-              id="why-sponsor-title"
-              level={2}
-              eyebrow="Beneficios"
-              title="¿Por qué"
-              highlight="patrocinar?"
-              tone="muted"
-              description={sponsorship.intro}
-              className="mb-12"
-            />
-
-            <ul className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-              {sponsorship.highlights.map((highlight) => (
-                <li
-                  key={highlight.title}
-                  className="flex flex-col gap-2 rounded-[var(--radius-lg)] border border-[var(--color-border-subtle)] bg-[var(--color-surface)] p-6"
+      {/* ── 01 · Quiénes nos acompañan ───────────────────────── */}
+      <section className="border-b border-[var(--color-text-primary)] bg-[var(--color-surface)]">
+        <div className={`${WRAP} py-14`}>
+          <NumberHeading n="01" title="Quiénes nos acompañan" />
+          {sponsors.length === 0 ? (
+            <div className="border border-[var(--color-border-subtle)] bg-[var(--color-surface-muted)] px-7 py-14 text-center">
+              <h3 className="m-0 text-[22px] font-bold tracking-[-0.02em]">
+                Sumate como sponsor
+              </h3>
+              <p className="mx-auto mt-3 max-w-[34rem] text-[15px] text-[var(--color-text-secondary)]">
+                Aún no hay sponsors confirmados. Si querés auspiciar el primer
+                Community Day en Paraguay,{" "}
+                <a
+                  href={mailto}
+                  className="font-bold text-[var(--color-accent)]"
                 >
-                  <h3 className="text-base font-bold">{highlight.title}</h3>
-                  <p className="text-sm leading-relaxed text-[var(--color-text-secondary)]">
+                  escribinos
+                </a>
+                .
+              </p>
+            </div>
+          ) : (
+            <div className="grid border-l border-t border-[var(--color-border-subtle)] [grid-template-columns:repeat(auto-fit,minmax(180px,1fr))]">
+              {sponsors.map((sponsor) => (
+                <a
+                  key={sponsor.id}
+                  href={sponsor.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={`${sponsor.name} (sponsor ${TIER_ES[sponsor.tier]})`}
+                  className="flex min-h-[160px] flex-col items-center justify-center gap-3 border-b border-r border-[var(--color-border-subtle)] px-[18px] py-9 text-[var(--color-text-primary)] transition-colors hover:bg-[var(--color-surface-muted)]"
+                >
+                  <span
+                    role="img"
+                    aria-label={sponsor.name}
+                    className="h-[54px] w-[54px] bg-contain bg-center bg-no-repeat"
+                    style={{ backgroundImage: `url(${sponsor.logo.light})` }}
+                  />
+                  <span className="text-[14px] font-bold tracking-[-0.01em]">
+                    {sponsor.name}
+                  </span>
+                  <span className="font-mono text-[10.5px] uppercase tracking-[0.14em] text-[var(--color-text-muted)]">
+                    {TIER_ES[sponsor.tier]}
+                  </span>
+                </a>
+              ))}
+            </div>
+          )}
+          <p className="mt-[18px] text-[13.5px] text-[var(--color-text-muted)]">
+            Los sponsors confirmados se publican a medida que se cierran los
+            acuerdos.
+          </p>
+        </div>
+      </section>
+
+      {/* ── 02 · ¿Por qué patrocinar? ────────────────────────── */}
+      {hasHighlights ? (
+        <section className="border-b border-[var(--color-text-primary)] bg-[var(--color-surface-warm)]">
+          <div className={`${WRAP} py-16`}>
+            <NumberHeading n="02" title="¿Por qué patrocinar?" />
+            <p className="m-0 mb-9 max-w-[46rem] text-[16.5px] text-[var(--color-text-secondary)]">
+              {sponsorship!.intro}
+            </p>
+            <div className="grid border-l border-t border-[var(--color-text-primary)] [grid-template-columns:repeat(auto-fit,minmax(280px,1fr))]">
+              {sponsorship!.highlights.map((highlight, i) => (
+                <div
+                  key={highlight.title}
+                  className="min-w-0 border-b border-r border-[var(--color-border-subtle)] bg-[var(--color-surface)] px-[22px] py-6"
+                >
+                  <span className="font-mono text-[11px] text-[var(--color-text-muted)]">
+                    {String(i + 1).padStart(2, "0")}
+                  </span>
+                  <h3 className="m-0 mb-1.5 mt-2 text-[16px] font-bold tracking-[-0.015em]">
+                    {highlight.title}
+                  </h3>
+                  <p className="m-0 text-[14px] leading-[1.55] text-[var(--color-text-muted)]">
                     {highlight.description}
                   </p>
-                </li>
+                </div>
               ))}
-            </ul>
-          </Container>
-        </Section>
+            </div>
+          </div>
+        </section>
       ) : null}
 
-      {sponsorship && sponsorship.packages.length > 0 ? (
-        <Section spacing="lg" aria-labelledby="packages-title">
-          <Container>
-            <SectionHeading
-              id="packages-title"
-              level={2}
-              eyebrow="Paquetes"
-              title="Paquetes de"
-              highlight="patrocinio"
-              description="Cada nivel combina visibilidad, posicionamiento de marca y oportunidades concretas de negocio. También armamos propuestas a medida."
-              className="mb-12"
-            />
-            <SponsorshipPackages
-              packages={sponsorship.packages}
-              benefits={sponsorship.benefits}
-            />
-          </Container>
-        </Section>
+      {/* ── 03 · Paquetes de patrocinio ──────────────────────── */}
+      {hasPackages ? (
+        <section
+          id="paquetes"
+          className="border-b border-[var(--color-text-primary)] bg-[var(--color-surface)]"
+        >
+          <div className={`${WRAP} py-16`}>
+            <NumberHeading n="03" title="Paquetes de patrocinio" />
+            <p className="m-0 mb-8 max-w-[44rem] text-[16px] text-[var(--color-text-secondary)]">
+              Cada nivel combina visibilidad, posicionamiento de marca y
+              oportunidades concretas de negocio. También armamos propuestas a
+              medida.
+            </p>
+
+            <div className="mb-9 grid border-l border-t border-[var(--color-text-primary)] [grid-template-columns:repeat(auto-fit,minmax(200px,1fr))]">
+              {sponsorship!.packages.map((pkg) => {
+                const count = sponsorship!.benefits.filter((b) =>
+                  b.tiers.includes(pkg.tier)
+                ).length;
+                return (
+                  <div
+                    key={pkg.tier}
+                    className="min-w-0 border-b border-r border-[var(--color-border-subtle)] px-[22px] py-[26px]"
+                  >
+                    <div className="mb-3 flex items-center gap-2.5">
+                      <span
+                        aria-hidden="true"
+                        className="h-2.5 w-2.5 rounded-[2px]"
+                        style={{ background: TIER_DOT[pkg.tier] }}
+                      />
+                      <span className="font-mono text-[11px] uppercase tracking-[0.14em] text-[var(--color-text-muted)]">
+                        {TIER_ES[pkg.tier]}
+                      </span>
+                    </div>
+                    <div className="mb-1 text-[28px] font-extrabold tracking-[-0.035em]">
+                      {pkg.price}
+                    </div>
+                    <div className="text-[13px] text-[var(--color-text-muted)]">
+                      {count} {count === 1 ? "beneficio incluido" : "beneficios incluidos"}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+
+            {sponsorship!.benefits.length > 0 ? (
+              <div className="overflow-x-auto border border-[var(--color-border-subtle)]">
+                <table className="w-full min-w-[720px] border-collapse text-[14px]">
+                  <caption className="sr-only">
+                    Beneficios incluidos en cada paquete de patrocinio
+                  </caption>
+                  <thead>
+                    <tr>
+                      <th
+                        scope="col"
+                        className="bg-[var(--color-surface-inverse)] px-[18px] py-3.5 text-left text-[12px] font-semibold tracking-[0.04em] text-[var(--color-text-on-inverse)]"
+                      >
+                        Beneficio
+                      </th>
+                      {sponsorship!.packages.map((pkg) => (
+                        <th
+                          key={pkg.tier}
+                          scope="col"
+                          className="w-[110px] bg-[var(--color-surface-inverse)] px-3 py-3.5 font-mono text-[11px] uppercase tracking-[0.12em] text-[var(--color-text-on-inverse)]"
+                        >
+                          {TIER_ES[pkg.tier]}
+                        </th>
+                      ))}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {sponsorship!.benefits.map((benefit, i) => (
+                      <tr
+                        key={benefit.label}
+                        className={
+                          "border-t border-[var(--color-border-subtle)] " +
+                          (i % 2 === 1
+                            ? "bg-[var(--color-surface-muted)]"
+                            : "bg-[var(--color-surface)]")
+                        }
+                      >
+                        <td className="px-[18px] py-3.5 leading-[1.5] text-[var(--color-text-secondary)]">
+                          {benefit.label}
+                        </td>
+                        {sponsorship!.packages.map((pkg) => {
+                          const included = benefit.tiers.includes(pkg.tier);
+                          return (
+                            <td
+                              key={pkg.tier}
+                              className={
+                                "px-3 py-3.5 text-center text-[16px] font-bold " +
+                                (included
+                                  ? "text-[var(--color-success)]"
+                                  : "text-[var(--color-text-muted)]")
+                              }
+                            >
+                              <span className="sr-only">
+                                {TIER_ES[pkg.tier]}:{" "}
+                                {included ? "incluido" : "no incluido"}
+                              </span>
+                              <span aria-hidden="true">
+                                {included ? "✓" : "—"}
+                              </span>
+                            </td>
+                          );
+                        })}
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            ) : null}
+          </div>
+        </section>
       ) : null}
 
-      {sponsorship && sponsorship.funds.length > 0 ? (
-        <Section spacing="lg" tone="muted" aria-labelledby="funds-title">
-          <Container>
-            <SectionHeading
-              id="funds-title"
-              level={2}
-              eyebrow="Tu aporte"
-              title="En qué se"
-              highlight="invierte"
-              tone="muted"
-              description="Tu apoyo es un aporte directo a la comunidad técnica paraguaya. Así se usa:"
-              className="mb-12"
-            />
-
-            <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-              {sponsorship.funds.map((item) => (
+      {/* ── 04 · En qué se invierte tu aporte ────────────────── */}
+      {hasFunds ? (
+        <section className="border-b border-[var(--color-text-primary)] bg-[var(--color-surface-muted)]">
+          <div className={`${WRAP} py-16`}>
+            <NumberHeading n="04" title="En qué se invierte tu aporte" />
+            <p className="m-0 mb-7 max-w-[44rem] text-[16px] text-[var(--color-text-secondary)]">
+              Tu apoyo es un aporte directo a la comunidad técnica paraguaya.
+              Así se usa:
+            </p>
+            <ul className="grid list-none border-t border-[var(--color-text-primary)] p-0 [grid-template-columns:repeat(auto-fit,minmax(260px,1fr))]">
+              {sponsorship!.funds.map((item) => (
                 <li
                   key={item}
-                  className="flex items-start gap-3 rounded-[var(--radius-lg)] border border-[var(--color-border-subtle)] bg-[var(--color-surface)] p-5"
+                  className="flex min-w-0 items-baseline gap-3 border-b border-[var(--color-border-subtle)] py-4 pr-[18px]"
                 >
                   <span
                     aria-hidden="true"
-                    className="mt-0.5 shrink-0 text-[var(--color-accent-strong)]"
+                    className="flex-none font-mono text-[11px] text-[var(--color-action)]"
                   >
-                    <GlyphIcon name="check" size={20} />
+                    ✓
                   </span>
-                  <span className="text-sm">{item}</span>
+                  <span className="text-[15px] text-[var(--color-text-primary)]">
+                    {item}
+                  </span>
                 </li>
               ))}
             </ul>
-          </Container>
-        </Section>
+          </div>
+        </section>
       ) : null}
 
-      <Section spacing="md" tone="muted" aria-labelledby="be-a-sponsor-title">
-        <Container>
-          <SectionHeading
-            id="be-a-sponsor-title"
-            level={2}
-            eyebrow="Auspicios"
-            title="¿Querés ser"
-            highlight="sponsor?"
-            tone="muted"
-            description="Si tu empresa quiere apoyar el primer Community Day en Paraguay, escribinos. Compartimos los paquetes de auspicio disponibles y respondemos a la brevedad."
-          >
-            <Button
-              as="a"
-              href={mailto}
-              variant="primary"
-              size="lg"
-              shape="pill"
-            >
-              Escribirnos por sponsoreo
-            </Button>
-          </SectionHeading>
+      {/* ── 05 · ¿Querés ser sponsor? ────────────────────────── */}
+      <section className="bg-[var(--color-surface)]">
+        <div className={`${WRAP} pb-[72px] pt-16`}>
+          <div className="grid items-center gap-10 [grid-template-columns:repeat(auto-fit,minmax(300px,1fr))]">
+            <div className="min-w-0">
+              <h2 className="m-0 mb-3.5 text-[clamp(24px,3vw,36px)] font-extrabold leading-[1.05] tracking-[-0.035em]">
+                ¿Querés ser sponsor?
+              </h2>
+              <p className="m-0 mb-6 max-w-[32rem] text-[16px] text-[var(--color-text-secondary)]">
+                Si tu empresa quiere apoyar el primer Community Day en Paraguay,
+                escribinos. Compartimos los paquetes disponibles y respondemos a
+                la brevedad.
+              </p>
+              <a
+                href={mailto}
+                className="inline-flex items-center rounded-[4px] bg-[var(--color-action)] px-7 py-3.5 text-[15.5px] font-bold text-[var(--color-text-on-action)] transition hover:brightness-95"
+              >
+                Escribirnos por patrocinio
+              </a>
+            </div>
 
-          {sponsorship?.contact ? (
-            <dl className="mt-10 flex flex-wrap justify-center gap-x-10 gap-y-4 text-sm">
-              <div className="flex flex-col items-center gap-1">
-                <dt className="font-bold">Contacto</dt>
-                <dd className="text-[var(--color-text-secondary)]">
-                  {sponsorship.contact.name}
-                </dd>
-              </div>
-              <div className="flex flex-col items-center gap-1">
-                <dt className="font-bold">Correo</dt>
-                <dd>
-                  <a
-                    href={`mailto:${sponsorship.contact.email}`}
-                    className="text-[var(--color-accent)] underline-offset-2 hover:underline"
-                  >
-                    {sponsorship.contact.email}
-                  </a>
-                </dd>
-              </div>
-              {sponsorship.contact.phone ? (
-                <div className="flex flex-col items-center gap-1">
-                  <dt className="font-bold">Teléfono</dt>
-                  <dd>
+            {sponsorship?.contact ? (
+              <dl className="m-0 min-w-0 border-t border-[var(--color-text-primary)]">
+                <div className="flex justify-between gap-4 border-b border-[var(--color-border-subtle)] py-3.5">
+                  <dt className="font-mono text-[11px] uppercase tracking-[0.14em] text-[var(--color-text-muted)]">
+                    Contacto
+                  </dt>
+                  <dd className="m-0 text-[15px] font-semibold">
+                    {sponsorship.contact.name}
+                  </dd>
+                </div>
+                <div className="flex justify-between gap-4 border-b border-[var(--color-border-subtle)] py-3.5">
+                  <dt className="font-mono text-[11px] uppercase tracking-[0.14em] text-[var(--color-text-muted)]">
+                    Correo
+                  </dt>
+                  <dd className="m-0 break-words text-[15px]">
                     <a
-                      href={`tel:${sponsorship.contact.phone.replace(/\s/g, "")}`}
-                      className="text-[var(--color-accent)] underline-offset-2 hover:underline"
+                      href={`mailto:${sponsorship.contact.email}`}
+                      className="text-[var(--color-accent)] hover:underline"
                     >
-                      {sponsorship.contact.phone}
+                      {sponsorship.contact.email}
                     </a>
                   </dd>
                 </div>
-              ) : null}
-            </dl>
-          ) : null}
-        </Container>
-      </Section>
+                {sponsorship.contact.phone ? (
+                  <div className="flex justify-between gap-4 border-b border-[var(--color-border-subtle)] py-3.5">
+                    <dt className="font-mono text-[11px] uppercase tracking-[0.14em] text-[var(--color-text-muted)]">
+                      Teléfono
+                    </dt>
+                    <dd className="m-0 text-[15px]">
+                      <a
+                        href={`tel:${sponsorship.contact.phone.replace(/\s/g, "")}`}
+                        className="text-[var(--color-accent)] hover:underline"
+                      >
+                        {sponsorship.contact.phone}
+                      </a>
+                    </dd>
+                  </div>
+                ) : null}
+              </dl>
+            ) : null}
+          </div>
+        </div>
+      </section>
     </>
   );
 }

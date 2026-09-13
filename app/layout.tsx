@@ -3,11 +3,14 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { SiteHeader } from "@/components/organisms/SiteHeader";
 import { SiteFooter } from "@/components/organisms/SiteFooter";
-import { Mascot } from "@/components/atoms/Mascot";
+import { KiroMascot } from "@/components/organisms/KiroMascot";
+// Disabled: the rectangular photo mascot fought the shaded Kiro ghost for the
+// same bottom-right corner. Keep the import commented so the ghost stands alone.
+// import { Mascot } from "@/components/atoms/Mascot";
 import { currentEdition } from "@/lib/content/editions";
 import { getEventInfo } from "@/lib/content/event-info";
+import { getFAQ } from "@/lib/content/faq";
 import { getSiteUrl } from "@/lib/utils/seo";
-import { THEME_STORAGE_KEY } from "@/lib/theme";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -26,14 +29,11 @@ export const metadata: Metadata = {
     "La primera edición del AWS Community Day en Paraguay: charlas, talleres y networking organizados por la comunidad AWS local.",
 };
 
-// Dark is the default look of the event, not a follow-the-OS decision: the
-// vivid red and blue were tuned against the midnight surfaces, and that is
-// the face the Community Day family presents. A stored choice still wins, and
-// the header toggle still switches both ways. Without JavaScript the CSS
-// falls back to `prefers-color-scheme`.
-const themeInitScript = `(()=>{try{const stored=localStorage.getItem(${JSON.stringify(
-  THEME_STORAGE_KEY
-)});const theme=stored==="light"||stored==="dark"?stored:"dark";document.documentElement.dataset.theme=theme;document.documentElement.style.colorScheme=theme}catch{}})();`;
+// The header theme toggle was removed to match the light-first "colored"
+// mockups, so the site is light-only: `data-theme="light"` is set statically
+// on <html> below. The dark tokens and the ThemeToggle atom remain in the
+// codebase, so re-enabling dual themes later is a small change (re-add the
+// toggle and a localStorage-aware init script).
 
 export default function RootLayout({
   children,
@@ -45,17 +45,17 @@ export default function RootLayout({
   // of which route inside the app loads.
   const editionYear = currentEdition();
   const eventInfo = getEventInfo(editionYear);
+  const faq = getFAQ(editionYear);
 
   return (
-    <html lang="es-PY" suppressHydrationWarning>
-      <head>
-        <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
-      </head>
+    <html lang="es-PY" data-theme="light">
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
-        <SiteHeader editionYear={editionYear} />
+        <SiteHeader />
         <main>{children}</main>
         <SiteFooter eventInfo={eventInfo} />
-        <Mascot />
+        <KiroMascot faq={faq} />
+        {/* Disabled so the shaded Kiro ghost owns the bottom-right corner. */}
+        {/* <Mascot /> */}
       </body>
     </html>
   );

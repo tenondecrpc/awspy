@@ -10,20 +10,38 @@ export type NavEntry = {
   footerOnly?: boolean;
 };
 
+// The primary header navigation follows the "colored" mockup: a condensed set
+// of six destinations. Entries the mockup drops from the top bar (Proponer
+// charla, Voluntarios) are NOT removed from the site — they remain in
+// `FOOTER_NAV` below (and on their own pages), so no navigation is lost.
 export const PRIMARY_NAV: readonly NavEntry[] = [
-  { href: "/speakers", label: "Speakers" },
   { href: "/schedule", label: "Agenda" },
-  { href: "/sponsors", label: "Sponsors" },
+  { href: "/speakers", label: "Speakers" },
   { href: "/venue", label: "Sede" },
+  { href: "/sponsors", label: "Sponsors" },
   { href: "/team", label: "Equipo" },
-  { href: "/volunteers", label: "Voluntarios" },
   { href: "/faq", label: "Preguntas" },
-  { href: "/cfp", label: "Proponer charla" },
-  { href: "/register", label: "Registrarme" },
 ] as const;
 
+// The registration call to action, rendered as the header's primary button
+// (orange fill) rather than a plain nav link, matching the mockup.
+export const REGISTER_CTA: NavEntry = {
+  href: "/register",
+  label: "Registrarme",
+};
+
+// The footer carries the complete set so every destination stays reachable,
+// including the ones the condensed header omits.
 export const FOOTER_NAV: readonly NavEntry[] = [
-  ...PRIMARY_NAV,
+  { href: "/schedule", label: "Agenda" },
+  { href: "/speakers", label: "Speakers" },
+  { href: "/venue", label: "Sede" },
+  { href: "/sponsors", label: "Sponsors" },
+  { href: "/team", label: "Equipo" },
+  { href: "/faq", label: "Preguntas" },
+  { href: "/register", label: "Registro" },
+  { href: "/cfp", label: "Proponer charla" },
+  { href: "/volunteers", label: "Voluntarios" },
   { href: "/code-of-conduct", label: "Código de Conducta", footerOnly: true },
   { href: "/editions", label: "Ediciones anteriores", footerOnly: true },
 ] as const;

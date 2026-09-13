@@ -324,10 +324,6 @@ describe("palette tokens in app/globals.css", () => {
   // query. We grab it by matching the first `@theme {`.
   const lightBlock = extractBlock(css, /@theme\s*\{/);
   const darkBlock = extractBlock(css, /html\[data-theme=["']dark["']\]\s*\{/);
-  const systemDarkBlock = extractBlock(
-    css,
-    /@media\s*\(prefers-color-scheme:\s*dark\)\s*\{/
-  );
   const parsedColors: Record<ColorMode, Record<string, string>> = {
     light: parseColors(lightBlock),
     dark: parseColors(darkBlock),
@@ -348,15 +344,13 @@ describe("palette tokens in app/globals.css", () => {
     expect(lightBlock).toContain(`${token}:`);
   });
 
-  it("uses the OS preference by default and supports explicit theme overrides", () => {
-    expect(css).toMatch(/@media\s*\(prefers-color-scheme:\s*dark\)/);
-    expect(css).toMatch(/html:not\(\[data-theme\]\)/);
+  it("defaults to light and supports explicit theme overrides", () => {
+    // Light is the default: there is no `prefers-color-scheme: dark`
+    // fallback, so a dark OS preference never makes the site default to dark.
+    expect(css).not.toMatch(/@media\s*\(prefers-color-scheme:\s*dark\)/);
+    expect(css).not.toMatch(/html:not\(\[data-theme\]\)/);
     expect(css).toMatch(/html\[data-theme=["']light["']\]/);
     expect(css).toMatch(/html\[data-theme=["']dark["']\]/);
-  });
-
-  it("keeps OS dark values aligned with the explicit dark override", () => {
-    expect(parseColors(systemDarkBlock)).toMatchObject(parsedColors.dark);
   });
 
   it.each(["light", "dark"] as const)(

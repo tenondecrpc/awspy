@@ -1,9 +1,10 @@
-.next
-coverage
-node_modules
-playwright-report
-test-results
-public/assets/icons
-tests/fixtures
-*.md
-*.mdx
+# Design-reference mockups (dc.html export + repo snapshot). Not app source;
+# excluded from formatting, linting, type-checking, and tests.
+AWS Community Day Paraguay (colored)/
+
+# Generated / vendored
+.next/
+out/
+build/
+coverage/
+node_modules/
