@@ -6,6 +6,7 @@ import { currentEdition, getEdition } from "@/lib/content/editions";
 import { listSpeakers } from "@/lib/api/sessionize";
 import { getFAQ } from "@/lib/content/faq";
 import { getOrganizers } from "@/lib/content/organizers";
+import { formatDate } from "@/lib/utils/datetime";
 import {
   buildEventJsonLd,
   buildPageMetadata,
@@ -17,7 +18,7 @@ export async function generateMetadata() {
   const { eventInfo } = getEdition(year);
   return buildPageMetadata({
     title: eventInfo.name,
-    description: eventInfo.tagline,
+    description: `${formatDate(eventInfo.dates.start)} · ${eventInfo.location.summary}. Charlas y talleres AWS. Entrada gratuita.`,
     path: "/",
   });
 }

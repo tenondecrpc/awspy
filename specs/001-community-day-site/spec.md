@@ -81,6 +81,7 @@ An attendee wants to plan their day at the event. They open the schedule page an
 1. **Given** the edition has a published Sessionize schedule, **When** a visitor opens `/schedule`, **Then** they see each day, the rooms or tracks for that day, and the sessions placed in their correct time slots, with times formatted for the Asunción timezone.
 2. **Given** a session links to a speaker on the schedule, **When** the visitor clicks the session, **Then** they navigate to the corresponding speaker detail page.
 3. **Given** the schedule is not yet announced or no sessions exist, **When** a visitor opens `/schedule`, **Then** they see a Spanish empty-state message that the agenda will be announced soon.
+4. **Given** the schedule lists multiple rooms, **When** a visitor selects a room, **Then** only sessions in that room remain visible, the selected room is identifiable, and the visitor can restore all rooms. The selection is reflected in a shareable URL on current and edition schedule routes.
 
 ---
 

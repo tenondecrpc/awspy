@@ -26,10 +26,13 @@ export async function generateMetadata({
 
 export default async function EditionSchedulePage({
   params,
+  searchParams,
 }: {
   params: Promise<EditionRouteParams>;
+  searchParams?: Promise<{ room?: string | string[] }>;
 }) {
   const { year } = await params;
+  const room = (await searchParams)?.room;
   if (!editionExists(year)) notFound();
   const { eventInfo } = getEdition(year);
   const [grid, speakers] = await Promise.all([
@@ -42,6 +45,8 @@ export default async function EditionSchedulePage({
       speakers={speakers}
       eventInfo={eventInfo}
       speakerBasePath={`/editions/${year}/speakers`}
+      schedulePath={`/editions/${year}/schedule`}
+      selectedRoom={typeof room === "string" ? room : null}
     />
   );
 }

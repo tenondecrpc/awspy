@@ -63,7 +63,7 @@ export function SiteFooter({ eventInfo }: SiteFooterProps) {
       role="contentinfo"
     >
       <Container>
-        <div className="grid gap-9 py-14 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="grid gap-9 py-14 sm:grid-cols-2 lg:grid-cols-[minmax(0,1.4fr)_minmax(0,0.65fr)_minmax(0,0.65fr)_minmax(19rem,1.5fr)]">
           <div className="min-w-0 space-y-4">
             <Image
               src="/assets/logo.png"
@@ -114,7 +114,7 @@ export function SiteFooter({ eventInfo }: SiteFooterProps) {
             <p className={HEADING_CLASS}>Contacto</p>
             <a
               href={`mailto:${eventInfo.contactEmail}`}
-              className="break-words text-sm font-semibold text-[var(--color-action)] transition hover:brightness-95"
+              className="break-words text-sm font-semibold text-[var(--color-action)] transition hover:brightness-95 lg:whitespace-nowrap"
             >
               {/* The address is one long token, so a narrow footer column broke
                   it mid-word ("…gmail.co / m"). `<wbr>` offers the break after

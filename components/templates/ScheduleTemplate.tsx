@@ -19,6 +19,8 @@ type ScheduleTemplateProps = {
   speakers: Speaker[];
   eventInfo: EventInfo;
   speakerBasePath?: string;
+  schedulePath?: string;
+  selectedRoom?: string | null;
 };
 
 // A fixed-order set of categorical hues that tells sibling rooms apart. It is
@@ -59,7 +61,7 @@ function listRooms(grid: ScheduleGrid): Array<{ name: string; color: string }> {
   const seen = new Map<string, string>();
   for (const day of grid) {
     for (const room of day.rooms) {
-      if (!seen.has(room.name)) {
+      if (room.sessions.length > 0 && !seen.has(room.name)) {
         seen.set(room.name, ROOM_COLORS[seen.size % ROOM_COLORS.length]);
       }
     }
@@ -129,10 +131,21 @@ export function ScheduleTemplate({
   speakers,
   eventInfo,
   speakerBasePath = "/speakers",
+  schedulePath = "/schedule",
+  selectedRoom,
 }: ScheduleTemplateProps) {
   const rooms = listRooms(grid);
   const days = groupByStartDay(grid, speakers);
-  const multiDay = days.length > 1;
+  const activeRoom = rooms.find((room) => room.name === selectedRoom)?.name;
+  const visibleDays = activeRoom
+    ? days
+        .map((day) => ({
+          ...day,
+          slots: day.slots.filter((slot) => slot.roomName === activeRoom),
+        }))
+        .filter((day) => day.slots.length > 0)
+    : days;
+  const multiDay = visibleDays.length > 1;
 
   return (
     <>
@@ -144,16 +157,38 @@ export function ScheduleTemplate({
 
       {rooms.length > 0 ? (
         <section className="border-b border-[var(--color-border-subtle)] bg-[var(--color-surface-warm)]">
-          <div
+          <nav
+            aria-label="Filtrar agenda por sala"
             className={`${WRAP} flex flex-wrap items-center gap-2.5 py-[22px]`}
           >
             <span className="mr-1.5 font-mono text-[11px] uppercase tracking-[0.14em] text-[var(--color-text-muted)]">
               Salas
             </span>
+            <NextLink
+              href={schedulePath}
+              prefetch={false}
+              scroll={false}
+              aria-current={!activeRoom ? "page" : undefined}
+              className={`inline-flex items-center rounded-[3px] border px-3 py-1.5 text-[13px] font-semibold transition-colors hover:border-[var(--color-accent)] ${
+                !activeRoom
+                  ? "border-[var(--color-accent)] bg-[var(--color-accent-soft)]"
+                  : "border-[var(--color-border-subtle)] bg-[var(--color-surface)]"
+              }`}
+            >
+              Todas las salas
+            </NextLink>
             {rooms.map((room) => (
-              <span
+              <NextLink
                 key={room.name}
-                className="inline-flex items-center gap-2 rounded-[3px] border border-[var(--color-border-subtle)] bg-[var(--color-surface)] px-3 py-1.5 text-[13px] font-semibold"
+                href={{ pathname: schedulePath, query: { room: room.name } }}
+                prefetch={false}
+                scroll={false}
+                aria-current={activeRoom === room.name ? "page" : undefined}
+                className={`inline-flex items-center gap-2 rounded-[3px] border px-3 py-1.5 text-[13px] font-semibold transition-colors hover:border-[var(--color-accent)] ${
+                  activeRoom === room.name
+                    ? "border-[var(--color-accent)] bg-[var(--color-accent-soft)]"
+                    : "border-[var(--color-border-subtle)] bg-[var(--color-surface)]"
+                }`}
               >
                 <span
                   aria-hidden="true"
@@ -161,9 +196,9 @@ export function ScheduleTemplate({
                   style={{ background: room.color }}
                 />
                 {room.name}
-              </span>
+              </NextLink>
             ))}
-          </div>
+          </nav>
         </section>
       ) : null}
 
@@ -180,7 +215,7 @@ export function ScheduleTemplate({
               </p>
             </div>
           ) : (
-            days.map((day) => (
+            visibleDays.map((day) => (
               <div key={day.dayKey} className={multiDay ? "mb-12" : ""}>
                 {multiDay ? (
                   <h2 className="mb-4 text-[20px] font-extrabold tracking-[-0.03em] first-letter:uppercase">

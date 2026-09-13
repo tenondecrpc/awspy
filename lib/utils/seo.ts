@@ -77,10 +77,11 @@ export type PageMetadataInput = {
 export function buildPageMetadata(input: PageMetadataInput): Metadata {
   const url = absolute(input.path);
   const ogImage = absolute(input.ogImage ?? "/opengraph-image");
+  const brand = "AWS Community Day Paraguay";
   const fullTitle =
-    input.title === "AWS Community Day Paraguay"
+    input.title === brand || input.title.startsWith(`${brand} `)
       ? input.title
-      : `${input.title} - AWS Community Day Paraguay`;
+      : `${input.title} - ${brand}`;
 
   return {
     title: fullTitle,
@@ -92,9 +93,9 @@ export function buildPageMetadata(input: PageMetadataInput): Metadata {
       url,
       title: fullTitle,
       description: input.description,
-      siteName: "AWS Community Day Paraguay",
+      siteName: brand,
       locale: "es_PY",
-      images: [{ url: ogImage }],
+      images: [{ url: ogImage, width: 1200, height: 630, alt: fullTitle }],
     },
     twitter: {
       card: "summary_large_image",

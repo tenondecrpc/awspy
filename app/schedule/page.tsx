@@ -14,7 +14,12 @@ export async function generateMetadata() {
   });
 }
 
-export default async function SchedulePage() {
+export default async function SchedulePage({
+  searchParams,
+}: {
+  searchParams?: Promise<{ room?: string | string[] }>;
+}) {
+  const room = (await searchParams)?.room;
   const year = currentEdition();
   const { eventInfo } = getEdition(year);
   const [grid, speakers] = await Promise.all([
@@ -22,6 +27,11 @@ export default async function SchedulePage() {
     listSpeakers(eventInfo.sessionizeEventId),
   ]);
   return (
-    <ScheduleTemplate grid={grid} speakers={speakers} eventInfo={eventInfo} />
+    <ScheduleTemplate
+      grid={grid}
+      speakers={speakers}
+      eventInfo={eventInfo}
+      selectedRoom={typeof room === "string" ? room : null}
+    />
   );
 }

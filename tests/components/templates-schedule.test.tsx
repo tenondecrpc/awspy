@@ -51,6 +51,26 @@ const GRID: ScheduleGrid = [
   },
 ];
 
+const MULTI_ROOM_GRID: ScheduleGrid = [
+  {
+    ...GRID[0],
+    rooms: [
+      ...GRID[0].rooms,
+      {
+        id: "r2",
+        name: "Sala B",
+        sessions: [
+          {
+            ...GRID[0].rooms[0].sessions[0],
+            id: "s3",
+            title: "Observabilidad en producción",
+          },
+        ],
+      },
+    ],
+  },
+];
+
 describe("ScheduleTemplate", () => {
   it("renders the agenda with its rooms, sessions and speaker links", () => {
     render(
@@ -89,6 +109,84 @@ describe("ScheduleTemplate", () => {
       "href",
       "/editions/2026/speakers/ana-perez"
     );
+  });
+
+  it("links room filters and shows only sessions in the selected room", () => {
+    render(
+      <ScheduleTemplate
+        grid={MULTI_ROOM_GRID}
+        speakers={SPEAKERS}
+        eventInfo={EVENT_INFO}
+        selectedRoom="Sala B"
+      />
+    );
+
+    expect(
+      screen.getByRole("link", { name: "Todas las salas" })
+    ).toHaveAttribute("href", "/schedule");
+    expect(screen.getByRole("link", { name: "Sala B" })).toHaveAttribute(
+      "aria-current",
+      "page"
+    );
+    expect(
+      screen.getByRole("heading", { name: "Observabilidad en producción" })
+    ).toBeInTheDocument();
+    expect(
+      screen.queryByRole("heading", {
+        name: "Arquitecturas serverless en producción",
+      })
+    ).not.toBeInTheDocument();
+  });
+
+  it("uses the archived schedule path and ignores an unknown room", () => {
+    render(
+      <ScheduleTemplate
+        grid={MULTI_ROOM_GRID}
+        speakers={SPEAKERS}
+        eventInfo={EVENT_INFO}
+        schedulePath="/editions/2026/schedule"
+        selectedRoom="No existe"
+      />
+    );
+
+    expect(
+      screen.getByRole("link", { name: "Todas las salas" })
+    ).toHaveAttribute("href", "/editions/2026/schedule");
+    expect(screen.getByRole("link", { name: "Sala B" })).toHaveAttribute(
+      "href",
+      "/editions/2026/schedule?room=Sala+B"
+    );
+    expect(
+      screen.getByRole("heading", {
+        name: "Arquitecturas serverless en producción",
+      })
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", { name: "Observabilidad en producción" })
+    ).toBeInTheDocument();
+  });
+
+  it("does not offer empty rooms as filters", () => {
+    const grid: ScheduleGrid = [
+      {
+        ...GRID[0],
+        rooms: [
+          ...GRID[0].rooms,
+          { id: "empty", name: "Sala vacía", sessions: [] },
+        ],
+      },
+    ];
+    render(
+      <ScheduleTemplate
+        grid={grid}
+        speakers={SPEAKERS}
+        eventInfo={EVENT_INFO}
+      />
+    );
+
+    expect(
+      screen.queryByRole("link", { name: "Sala vacía" })
+    ).not.toBeInTheDocument();
   });
 
   it("announces the gap when the grid is still empty", () => {

@@ -39,6 +39,17 @@ describe("buildPageMetadata", () => {
     expect(meta.title).toBe("AWS Community Day Paraguay");
   });
 
+  it("does not repeat the brand in an edition's share title", () => {
+    const meta = buildPageMetadata({
+      title: "AWS Community Day Paraguay 2026",
+      description: "17 de octubre en Asunción",
+      path: "/",
+    });
+    expect(meta.title).toBe("AWS Community Day Paraguay 2026");
+    expect(meta.openGraph?.title).toBe("AWS Community Day Paraguay 2026");
+    expect(meta.twitter?.title).toBe("AWS Community Day Paraguay 2026");
+  });
+
   it("returns canonical and OG URLs against the configured origin", () => {
     const meta = buildPageMetadata({
       title: "Speakers",
