@@ -111,8 +111,6 @@ const eslintConfig = defineConfig([
     "build/**",
     "coverage/**",
     "next-env.d.ts",
-    // Design-reference mockups (dc.html export + repo snapshot); not app code.
-    "AWS Community Day Paraguay (colored)/**",
   ]),
   {
     files: [

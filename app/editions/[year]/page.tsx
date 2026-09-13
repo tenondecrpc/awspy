@@ -59,6 +59,7 @@ export default async function EditionHomePage({
       registerHref={`/editions/${year}/register`}
       cfpHref={`/editions/${year}/cfp`}
       speakersHref={`/editions/${year}/speakers`}
+      sponsorsHref={`/editions/${year}/sponsors`}
       scheduleHref={`/editions/${year}/schedule`}
       teamHref={`/editions/${year}/team`}
       volunteersHref={`/editions/${year}/volunteers`}

@@ -9,7 +9,7 @@
 // `archived` route renders only the finished-edition notice per FR-035.
 
 import NextLink from "next/link";
-import { WRAP, SECTION_BORDER } from "@/components/site/primitives";
+import { WRAP, SECTION_BORDER } from "@/components/molecules/SectionPrimitives";
 import { SessionizeCFPCallout } from "@/components/organisms/SessionizeCFPCallout";
 import type { EventInfo } from "@/lib/content/event-info";
 

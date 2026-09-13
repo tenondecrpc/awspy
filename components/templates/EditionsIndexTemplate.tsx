@@ -7,7 +7,11 @@
 // Colors come exclusively from the design tokens in `app/globals.css`.
 
 import NextLink from "next/link";
-import { PageHeader, SECTION_BORDER, WRAP } from "@/components/site/primitives";
+import {
+  PageHeader,
+  SECTION_BORDER,
+  WRAP,
+} from "@/components/molecules/SectionPrimitives";
 
 type EditionsIndexTemplateProps = {
   pastEditions: string[];

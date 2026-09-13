@@ -8,7 +8,11 @@
 // pays for" list. Editions without a prospectus fall back to the plain contact
 // callout the page had before. Every sponsor logo links to its site.
 
-import { NumberHeading, PageHeader, WRAP } from "@/components/site/primitives";
+import {
+  NumberHeading,
+  PageHeader,
+  WRAP,
+} from "@/components/molecules/SectionPrimitives";
 import type { Sponsor, SponsorTier } from "@/lib/content/sponsors";
 import type { Sponsorship } from "@/lib/content/sponsorship";
 import type { EventInfo } from "@/lib/content/event-info";
@@ -201,7 +205,10 @@ export function SponsorsTemplate({
                       {pkg.price}
                     </div>
                     <div className="text-[13px] text-[var(--color-text-muted)]">
-                      {count} {count === 1 ? "beneficio incluido" : "beneficios incluidos"}
+                      {count}{" "}
+                      {count === 1
+                        ? "beneficio incluido"
+                        : "beneficios incluidos"}
                     </div>
                   </div>
                 );

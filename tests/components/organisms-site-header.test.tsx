@@ -25,9 +25,9 @@ describe("SiteHeader", () => {
       screen.getByRole("navigation", { name: /navegación principal/i })
     ).toBeInTheDocument();
     // Condensed header nav (mockup): the primary destinations are present.
-    expect(
-      screen.getAllByRole("link", { name: "Speakers" })
-    ).not.toHaveLength(0);
+    expect(screen.getAllByRole("link", { name: "Speakers" })).not.toHaveLength(
+      0
+    );
     // The registration CTA is rendered as the header's primary button.
     expect(
       screen.getAllByRole("link", { name: "Registrarme" })

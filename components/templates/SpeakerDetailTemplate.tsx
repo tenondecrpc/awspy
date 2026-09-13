@@ -6,7 +6,12 @@
 // are preserved.
 
 import NextLink from "next/link";
-import { NumberHeading, Frame, WRAP, SECTION_BORDER } from "@/components/site/primitives";
+import {
+  NumberHeading,
+  Frame,
+  WRAP,
+  SECTION_BORDER,
+} from "@/components/molecules/SectionPrimitives";
 import {
   buildBreadcrumbJsonLd,
   buildPersonJsonLd,
@@ -69,7 +74,10 @@ export function SpeakerDetailTemplate({
             aria-label="Migas"
             className="flex items-center gap-2 font-mono text-[11.5px] text-[var(--color-text-muted)]"
           >
-            <NextLink href="/" className="text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)]">
+            <NextLink
+              href="/"
+              className="text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)]"
+            >
               Inicio
             </NextLink>
             <span aria-hidden="true">/</span>
@@ -158,8 +166,8 @@ export function SpeakerDetailTemplate({
           <NumberHeading n="01" title="Sesiones" />
           {ownSessions.length === 0 ? (
             <p className="m-0 text-[15px] text-[var(--color-text-secondary)]">
-              Todavía no hay sesiones publicadas para este speaker. Volvé pronto:
-              la grilla se completa a medida que se confirma la agenda.
+              Todavía no hay sesiones publicadas para este speaker. Volvé
+              pronto: la grilla se completa a medida que se confirma la agenda.
             </p>
           ) : (
             <div className="border-t border-[var(--color-text-primary)]">

@@ -5,7 +5,11 @@
 // CFP status logic are preserved.
 
 import NextLink from "next/link";
-import { PageHeader, Frame, WRAP } from "@/components/site/primitives";
+import {
+  PageHeader,
+  Frame,
+  WRAP,
+} from "@/components/molecules/SectionPrimitives";
 import type { Speaker } from "@/lib/api/sessionize";
 import type { EventInfo } from "@/lib/content/event-info";
 

@@ -14,7 +14,7 @@ import {
   PageHeader,
   SECTION_BORDER,
   WRAP,
-} from "@/components/site/primitives";
+} from "@/components/molecules/SectionPrimitives";
 import type { Venue } from "@/lib/content/venue";
 
 type VenueTemplateProps = {

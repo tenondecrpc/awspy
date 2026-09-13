@@ -9,7 +9,7 @@
 // empty state is preserved for editions whose grid has not been published yet.
 
 import NextLink from "next/link";
-import { PageHeader, WRAP } from "@/components/site/primitives";
+import { PageHeader, WRAP } from "@/components/molecules/SectionPrimitives";
 import { formatDate, formatTime, startOfDayKey } from "@/lib/utils/datetime";
 import type { ScheduleGrid, Speaker } from "@/lib/api/sessionize";
 import type { EventInfo } from "@/lib/content/event-info";
@@ -94,8 +94,7 @@ function groupByStartDay(grid: ScheduleGrid, speakers: Speaker[]): DayGroup[] {
           title: session.title,
           description: session.description,
           roomName: room.name,
-          roomColor:
-            roomColor.get(room.name) ?? ROOM_COLORS[0],
+          roomColor: roomColor.get(room.name) ?? ROOM_COLORS[0],
           isPlenum: session.isPlenumSession,
           isService: session.isServiceSession,
           speakers: session.speakers.map((sp) => ({

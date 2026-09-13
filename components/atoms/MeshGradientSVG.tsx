@@ -2,7 +2,7 @@
 
 // Kiro mascot rendered as an animated mesh-gradient "bichito".
 //
-// The original shader clipped the gradient into a generic blob. Here the clip
+// The upstream shader clipped the gradient into a generic blob. Here the clip
 // shape is Kiro's own body path (from the official mark), and Kiro's two eyes
 // sit on top: they blink on a timer and gently track the pointer, so the whole
 // thing reads as a small living creature.

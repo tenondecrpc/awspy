@@ -11,6 +11,7 @@ import { currentEdition } from "@/lib/content/editions";
 import { getEventInfo } from "@/lib/content/event-info";
 import { getFAQ } from "@/lib/content/faq";
 import { getSiteUrl } from "@/lib/utils/seo";
+import { THEME_STORAGE_KEY } from "@/lib/theme";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -29,11 +30,14 @@ export const metadata: Metadata = {
     "La primera edición del AWS Community Day en Paraguay: charlas, talleres y networking organizados por la comunidad AWS local.",
 };
 
-// The header theme toggle was removed to match the light-first "colored"
-// mockups, so the site is light-only: `data-theme="light"` is set statically
-// on <html> below. The dark tokens and the ThemeToggle atom remain in the
-// codebase, so re-enabling dual themes later is a small change (re-add the
-// toggle and a localStorage-aware init script).
+// Light is the default look of the site: the redesigned pages were tuned
+// against the light surfaces, and a dark OS setting no longer flips the site
+// on its own. A choice stored by the header toggle still wins, and the toggle
+// switches both ways. Without JavaScript the CSS base palette renders light,
+// which is exactly the default, so no fallback media query is needed.
+const themeInitScript = `(()=>{try{const stored=localStorage.getItem(${JSON.stringify(
+  THEME_STORAGE_KEY
+)});const theme=stored==="light"||stored==="dark"?stored:"light";document.documentElement.dataset.theme=theme;document.documentElement.style.colorScheme=theme}catch{document.documentElement.dataset.theme="light"}})();`;
 
 export default function RootLayout({
   children,
@@ -48,7 +52,10 @@ export default function RootLayout({
   const faq = getFAQ(editionYear);
 
   return (
-    <html lang="es-PY" data-theme="light">
+    <html lang="es-PY" data-theme="light" suppressHydrationWarning>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
+      </head>
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
         <SiteHeader />
         <main>{children}</main>

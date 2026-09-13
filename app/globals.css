@@ -14,9 +14,9 @@
   2026 Paraguay event artwork: midnight blue, electric flag blue, Paraguayan
   red, and cool whites. Blue owns navigation and actions; red is reserved for
   national identity and decorative emphasis so it is not confused with error
-  states. Both modes share the same semantic token names. The OS preference is
-  the default and a validated `data-theme` override on `<html>` supports the
-  manual theme control.
+  states. Both modes share the same semantic token names. Light is the default;
+  a validated `data-theme` override on `<html>`, written by the header toggle,
+  selects dark.
 */
 
 @theme {
@@ -230,6 +230,21 @@ body {
   outline-color: var(--color-focus-on-hero);
 }
 
+/* The brand mark ships in two inks: navy for light surfaces, white for dark.
+   Both are rendered and swapped here so the logo never disappears into the
+   header background, and so the swap needs no JavaScript. */
+.brand-logo--dark {
+  display: none;
+}
+
+html[data-theme="dark"] .brand-logo--light {
+  display: none;
+}
+
+html[data-theme="dark"] .brand-logo--dark {
+  display: block;
+}
+
 .theme-toggle__sun {
   display: none;
 }
@@ -365,7 +380,6 @@ html[data-theme="dark"] .theme-toggle__moon {
     opacity: 1;
   }
 }
-
 
 /* Custom scrollbar for the Kiro FAQ chat transcript. Lives here (not as a
    Tailwind utility) because it sets color stops on scrollbar pseudo-elements,

@@ -5,13 +5,11 @@ import { isColorTheme, THEME_STORAGE_KEY, type ColorTheme } from "@/lib/theme";
 
 const THEME_CHANGE_EVENT = "awscdpy:theme-change";
 
+// Light is the site default, so an unset (or invalid) `data-theme` resolves to
+// light rather than to the operating-system preference.
 function getActiveTheme(): ColorTheme {
   const current = document.documentElement.dataset.theme;
-  if (isColorTheme(current)) return current;
-  return typeof window.matchMedia === "function" &&
-    window.matchMedia("(prefers-color-scheme: dark)").matches
-    ? "dark"
-    : "light";
+  return isColorTheme(current) ? current : "light";
 }
 
 export function ThemeToggle() {

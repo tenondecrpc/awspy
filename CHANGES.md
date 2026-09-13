@@ -37,12 +37,14 @@ the AA contrast gate, tests) is preserved unless explicitly listed under
   now the source of truth, so surfaces revert from squid ink to the navy/white
   base and orange is scoped to CTAs/accents. The AA contrast gate
   (`tests/unit/lib-utils-tokens.test.ts`) is kept green.
-- **D2 — Default theme = light (resolved).** The site now defaults to **light**
-  (`app/layout.tsx` init script fallback flipped `dark` → `light`), matching the
-  light-first mockups. Dark styling of the mockup pages is **not implemented yet**
-  per request. The dual-theme tokens and the header ThemeToggle remain, so the
-  dark theme is still reachable and switching still works — it simply isn't
-  styled to the new mockups yet.
+- **D2 — Default theme = light (resolved).** The site defaults to **light**:
+  `app/layout.tsx` sets `data-theme="light"` server-side and its init script
+  falls back to `light` when nothing is stored, so a dark OS setting never
+  flips the site on its own. A choice stored by the header toggle still wins.
+  The dual-theme tokens and the header `ThemeToggle` are in place, so dark is
+  reachable and switching works; the redesigned pages have **not** been visually
+  tuned against the dark palette yet, though every semantic token has a dark
+  value and the AA contrast gate covers both modes.
 
 ## Decisions
 
@@ -57,13 +59,24 @@ the AA contrast gate, tests) is preserved unless explicitly listed under
     `Home Light.dc.html`: hero, AWS-icon marquee, stats, "Qué es el Community
     Day", agenda-at-a-glance, speakers, sede (navy), FAQ, equipo, sponsors, and
     "tres formas" — exact tokens/spacing. Live data wired: countdown, speakers
-    (Sessionize), sponsors + FAQ + organizers (content). Static overview copy
-    (stats, pillars, agenda glance, "tres formas") matches the mockup verbatim.
+    (Sessionize), sponsors + FAQ + organizers (content), and the expected-figures
+    band (`event.json` `expectedFigures`, which the rebuild had briefly
+    hard-coded). The remaining overview copy (pillars, agenda glance, "tres
+    formas") matches the mockup verbatim.
+  - Shared section primitives live in `components/molecules/SectionPrimitives.tsx`
+    and the mascot shader in `components/atoms/MeshGradientSVG.tsx`. They were
+    first added under `components/site/` and `components/ui/`, which sit outside
+    the atomic-design tiers the repository documents in
+    `docs/architecture/COMPONENTS.md`; moving them keeps the dependency
+    direction templates → organisms → molecules → atoms intact. The home page
+    now composes those primitives instead of restating private copies of them.
   - New token `--color-surface-warm` `#fff6e8` (the mockup's cream panels) and
     the `acd-marquee` keyframes were added; marquee icons copied to
     `public/assets/icons/`.
-  - Obsolete tests removed: `templates-home-figures.test.tsx`,
-    `templates-home-links.test.tsx` (asserted the old home structure). The old
+  - `templates-home-figures.test.tsx` and `templates-home-links.test.tsx` were
+    removed during the rebuild and have since been **restored against the new
+    home**: the first covers the expected-figures band, the second asserts that
+    no internal link on an archived edition escapes into the current one. The old
     `Hero`, `SectionHeading`, `StatTile` etc. are no longer used by the home
     (still used by not-yet-rebuilt inner pages).
 
@@ -184,12 +197,12 @@ the AA contrast gate, tests) is preserved unless explicitly listed under
 
 - **FAQ label kept as "Preguntas"** (mockup top bar shows "FAQ"). Keeps the
   existing e2e/label expectations green; same `/faq` destination.
-- **ThemeToggle removed from the header** to match the mockup navbar 1:1 (dark
-  theme is deferred per request). The `navigation.spec` theme e2e was removed
-  accordingly. The `ThemeToggle` atom + its unit test remain (unused) so the
-  control can be reinstated when the dark theme is styled.
-- **Brand is still the text wordmark**, not the mockup's `logo-dark.png` image;
-  bringing the logo asset into `public/` is deferred.
+- **ThemeToggle kept in the header**, one deviation from the mockup navbar.
+  It was dropped during the rebuild, which left the dark palette unreachable
+  and the `ThemeToggle` atom, `lib/theme.ts` and their tests as dead code; the
+  control is back next to the CTA and the `navigation.spec` theme e2e with it,
+  now also asserting that the default is light.
+- **Brand is the `logo-dark.png` image**, replacing the text wordmark.
 - **Hero decoration:** the old dark hero's Asunción skyline photo and dot-grid
   were dropped (the light mockup hero is clean). Both were `aria-hidden`
   decoration, so no information/functionality was lost. The hero headline is

@@ -12,7 +12,7 @@ import {
   PageHeader,
   SECTION_BORDER,
   WRAP,
-} from "@/components/site/primitives";
+} from "@/components/molecules/SectionPrimitives";
 import type { Organizer } from "@/lib/content/organizers";
 import type { EventInfo } from "@/lib/content/event-info";
 

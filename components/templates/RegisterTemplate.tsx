@@ -9,7 +9,7 @@
 // fallback) as the single registration CTA.
 
 import NextLink from "next/link";
-import { WRAP, SECTION_BORDER } from "@/components/site/primitives";
+import { WRAP, SECTION_BORDER } from "@/components/molecules/SectionPrimitives";
 import { EventbriteRegisterButton } from "@/components/organisms/EventbriteRegisterButton";
 import { formatDate } from "@/lib/utils/datetime";
 import type { EventInfo } from "@/lib/content/event-info";
@@ -238,7 +238,9 @@ export function RegisterTemplate({
           </section>
 
           {/* ── Antes de venir ───────────────────────────────── */}
-          <section className={`${SECTION_BORDER} bg-[var(--color-surface-warm)]`}>
+          <section
+            className={`${SECTION_BORDER} bg-[var(--color-surface-warm)]`}
+          >
             <div className={`${WRAP} py-14`}>
               <h2 className="m-0 mb-6 text-[clamp(22px,2.6vw,30px)] font-extrabold leading-[1.05] tracking-[-0.03em] text-[var(--color-text-primary)]">
                 Antes de venir

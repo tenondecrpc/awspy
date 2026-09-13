@@ -10,6 +10,14 @@
 
 import NextLink from "next/link";
 import { Countdown } from "@/components/organisms/Countdown";
+import {
+  Frame,
+  NumberHeading,
+  H2,
+  NUM,
+  RULE,
+  WRAP,
+} from "@/components/molecules/SectionPrimitives";
 import { formatDate } from "@/lib/utils/datetime";
 import type { EventInfo } from "@/lib/content/event-info";
 import type { Speaker } from "@/lib/api/sessionize";
@@ -26,16 +34,11 @@ type HomeTemplateProps = {
   registerHref?: string;
   cfpHref?: string;
   speakersHref?: string;
+  sponsorsHref?: string;
   scheduleHref?: string;
   teamHref?: string;
   volunteersHref?: string;
 };
-
-const WRAP = "mx-auto max-w-[1240px] px-7";
-const NUM = "font-mono text-xs font-medium text-[var(--color-action)]";
-const H2 =
-  "m-0 text-[clamp(26px,3.2vw,38px)] font-extrabold leading-[1.05] tracking-[-0.035em]";
-const RULE = "h-px flex-1 bg-[var(--color-border-subtle)]";
 
 const MARQUEE_ICONS = [
   "compute-ec2",
@@ -50,15 +53,6 @@ const MARQUEE_ICONS = [
   "ai-sagemaker",
   "security-iam",
   "security-cognito",
-];
-
-const STATS = [
-  { value: "200+", label: "Asistentes" },
-  { value: "20+", label: "Speakers" },
-  { value: "15+", label: "Sesiones técnicas" },
-  { value: "3", label: "Hands-on labs" },
-  { value: "8+", label: "Horas de contenido" },
-  { value: "1", label: "Keynote" },
 ];
 
 const PILLARS = [
@@ -85,12 +79,42 @@ const PILLARS = [
 ];
 
 const AGENDA = [
-  { time: "08:00", title: "Acreditación", note: "Café de bienvenida y entrega de credenciales", track: "Hall" },
-  { time: "09:00", title: "Keynote de apertura", note: "La nube que construye la comunidad", track: "Auditorio" },
-  { time: "10:00", title: "Bloque de charlas", note: "Serverless, observabilidad, seguridad", track: "2 salas" },
-  { time: "12:30", title: "Almuerzo y networking", note: "Espacio de sponsors abierto", track: "Hall" },
-  { time: "13:30", title: "Hands-on labs", note: "Bedrock, infraestructura como código, contenedores", track: "3 salas" },
-  { time: "16:00", title: "Panel y cierre", note: "Cómo sigue la comunidad en Paraguay", track: "Auditorio" },
+  {
+    time: "08:00",
+    title: "Acreditación",
+    note: "Café de bienvenida y entrega de credenciales",
+    track: "Hall",
+  },
+  {
+    time: "09:00",
+    title: "Keynote de apertura",
+    note: "La nube que construye la comunidad",
+    track: "Auditorio",
+  },
+  {
+    time: "10:00",
+    title: "Bloque de charlas",
+    note: "Serverless, observabilidad, seguridad",
+    track: "2 salas",
+  },
+  {
+    time: "12:30",
+    title: "Almuerzo y networking",
+    note: "Espacio de sponsors abierto",
+    track: "Hall",
+  },
+  {
+    time: "13:30",
+    title: "Hands-on labs",
+    note: "Bedrock, infraestructura como código, contenedores",
+    track: "3 salas",
+  },
+  {
+    time: "16:00",
+    title: "Panel y cierre",
+    note: "Cómo sigue la comunidad en Paraguay",
+    track: "Auditorio",
+  },
 ];
 
 const TIER_ES: Record<SponsorTier, string> = {
@@ -102,73 +126,6 @@ const TIER_ES: Record<SponsorTier, string> = {
   Community: "Comunidad",
 };
 
-function SectionNumberHeading({
-  n,
-  title,
-  action,
-  onDark = false,
-}: {
-  n: string;
-  title: string;
-  action?: { href: string; label: string };
-  onDark?: boolean;
-}) {
-  return (
-    <div className="mb-9 flex flex-wrap items-baseline gap-4">
-      <span className={NUM}>{n}</span>
-      <h2 className={H2}>{title}</h2>
-      <span className={RULE} aria-hidden="true" />
-      {action ? (
-        <NextLink
-          href={action.href}
-          className={
-            onDark
-              ? "text-sm font-semibold text-[var(--color-text-on-inverse)] hover:text-[var(--color-action)]"
-              : "text-sm font-semibold text-[var(--color-accent)]"
-          }
-        >
-          {action.label} →
-        </NextLink>
-      ) : null}
-    </div>
-  );
-}
-
-/** Empty grayscale image frame used where the mockup shows an `image-slot`. */
-function Frame({
-  label,
-  className,
-  photo,
-  position,
-}: {
-  label: string;
-  className?: string;
-  photo?: string;
-  /** Overrides the default centered background position, e.g. "right". */
-  position?: string;
-}) {
-  return (
-    <div
-      role="img"
-      aria-label={label}
-      className={
-        "flex items-center justify-center border border-[var(--color-border-subtle)] bg-[var(--color-surface-muted)] bg-cover bg-center p-4 text-center font-mono text-[11px] uppercase tracking-[0.14em] text-[var(--color-text-muted)] " +
-        (className ?? "")
-      }
-      style={
-        photo
-          ? {
-              backgroundImage: `url(${photo})`,
-              ...(position ? { backgroundPosition: position } : {}),
-            }
-          : undefined
-      }
-    >
-      {photo ? "" : label}
-    </div>
-  );
-}
-
 export function HomeTemplate({
   eventInfo,
   speakers,
@@ -178,6 +135,7 @@ export function HomeTemplate({
   registerHref = "/register",
   cfpHref = "/cfp",
   speakersHref = "/speakers",
+  sponsorsHref = "/sponsors",
   scheduleHref = "/schedule",
   teamHref = "/team",
   volunteersHref = "/volunteers",
@@ -274,7 +232,10 @@ export function HomeTemplate({
                 >
                   Proponer una charla
                 </NextLink>
-                <Countdown targetDate={eventInfo.dates.start} variant="inline" />
+                <Countdown
+                  targetDate={eventInfo.dates.start}
+                  variant="inline"
+                />
               </div>
             </div>
 
@@ -296,7 +257,11 @@ export function HomeTemplate({
       <div className="overflow-hidden border-b border-[var(--color-text-primary)] bg-[var(--color-surface-inverse)] py-3.5">
         <div className="flex w-max animate-[acd-marquee_40s_linear_infinite] gap-14">
           {[0, 1].map((row) => (
-            <div key={row} className="flex items-center gap-14" aria-hidden="true">
+            <div
+              key={row}
+              className="flex items-center gap-14"
+              aria-hidden="true"
+            >
               {MARQUEE_ICONS.map((icon) => (
                 <span
                   key={icon}
@@ -318,26 +283,31 @@ export function HomeTemplate({
         </div>
       </div>
 
-      {/* ── Stats ────────────────────────────────────────────── */}
-      <section className="border-b border-[var(--color-text-primary)]">
-        <div className={WRAP}>
-          <div className="grid [grid-template-columns:repeat(auto-fit,minmax(160px,1fr))]">
-            {STATS.map((s) => (
-              <div
-                key={s.label}
-                className="min-w-0 border-l border-[var(--color-border-subtle)] px-[18px] pb-[26px] pt-7"
-              >
-                <div className="text-[38px] font-extrabold leading-none tracking-[-0.04em] text-[var(--color-text-primary)]">
-                  {s.value}
-                </div>
-                <div className="mt-[9px] text-[13px] text-[var(--color-text-muted)]">
-                  {s.label}
-                </div>
-              </div>
-            ))}
+      {/* ── Cifras esperadas ─────────────────────────────────── */}
+      {eventInfo.expectedFigures.length > 0 ? (
+        <section
+          aria-label="Esperamos contar con"
+          className="border-b border-[var(--color-text-primary)]"
+        >
+          <div className={WRAP}>
+            <ul className="m-0 grid list-none p-0 [grid-template-columns:repeat(auto-fit,minmax(160px,1fr))]">
+              {eventInfo.expectedFigures.map((figure) => (
+                <li
+                  key={figure.label}
+                  className="min-w-0 border-l border-[var(--color-border-subtle)] px-[18px] pb-[26px] pt-7"
+                >
+                  <div className="text-[38px] font-extrabold leading-none tracking-[-0.04em] text-[var(--color-text-primary)]">
+                    {figure.value}
+                  </div>
+                  <div className="mt-[9px] text-[13px] text-[var(--color-text-muted)]">
+                    {figure.label}
+                  </div>
+                </li>
+              ))}
+            </ul>
           </div>
-        </div>
-      </section>
+        </section>
+      ) : null}
 
       {/* ── 01 · Qué es el Community Day ─────────────────────── */}
       <section
@@ -345,7 +315,7 @@ export function HomeTemplate({
         className="border-b border-[var(--color-text-primary)] bg-[var(--color-surface-warm)]"
       >
         <div className={`${WRAP} py-[72px]`}>
-          <SectionNumberHeading n="01" title="Qué es el Community Day" />
+          <NumberHeading n="01" title="Qué es el Community Day" />
           <div className="grid items-start gap-10 [grid-template-columns:repeat(auto-fit,minmax(300px,1fr))]">
             <div className="min-w-0">
               <p className="m-0 mb-5 max-w-[34rem] text-[20px] font-medium leading-[1.5] text-[var(--color-text-primary)]">
@@ -379,7 +349,11 @@ export function HomeTemplate({
               </div>
             </div>
             <div className="grid min-w-0 grid-cols-2 grid-rows-[190px_130px] gap-2.5">
-              <Frame label="Sala llena durante una charla" photo="/assets/charla.jpg" className="col-span-2" />
+              <Frame
+                label="Sala llena durante una charla"
+                photo="/assets/charla.jpg"
+                className="col-span-2"
+              />
               <Frame label="Networking" photo="/assets/networking.JPG" />
               <Frame label="Taller hands-on" photo="/assets/handson.jpg" />
             </div>
@@ -393,7 +367,7 @@ export function HomeTemplate({
         className="border-b border-[var(--color-text-primary)] bg-[var(--color-surface)]"
       >
         <div className={`${WRAP} py-[72px]`}>
-          <SectionNumberHeading
+          <NumberHeading
             n="02"
             title="Agenda del día"
             action={{ href: scheduleHref, label: "Agenda completa" }}
@@ -428,7 +402,7 @@ export function HomeTemplate({
         className="border-b border-[var(--color-text-primary)] bg-[var(--color-surface-muted)]"
       >
         <div className={`${WRAP} py-[72px]`}>
-          <SectionNumberHeading
+          <NumberHeading
             n="03"
             title="Speakers"
             action={{ href: speakersHref, label: "Ver todos" }}
@@ -523,7 +497,12 @@ export function HomeTemplate({
               </a>
             </div>
             <div className="relative min-h-[440px] min-w-0 border-l border-[var(--color-border-on-inverse)]">
-              <Frame label="Foto de la sede — UniNorte" photo="/assets/venue/cover.jpg" position="right" className="h-full w-full" />
+              <Frame
+                label="Foto de la sede — UniNorte"
+                photo="/assets/venue/cover.jpg"
+                position="right"
+                className="h-full w-full"
+              />
             </div>
           </div>
         </div>
@@ -535,7 +514,7 @@ export function HomeTemplate({
         className="border-b border-[var(--color-text-primary)] bg-[var(--color-surface)]"
       >
         <div className={`${WRAP} py-[72px]`}>
-          <SectionNumberHeading n="05" title="Preguntas frecuentes" />
+          <NumberHeading n="05" title="Preguntas frecuentes" />
           <div className="grid gap-x-14 [grid-template-columns:repeat(auto-fit,minmax(320px,1fr))]">
             {faq.map((f) => (
               <div
@@ -570,7 +549,7 @@ export function HomeTemplate({
         className="border-b border-[var(--color-text-primary)] bg-[var(--color-surface-warm)]"
       >
         <div className={`${WRAP} py-[72px]`}>
-          <SectionNumberHeading
+          <NumberHeading
             n="06"
             title="Quiénes lo organizan"
             action={{ href: teamHref, label: "Ver el equipo" }}
@@ -601,7 +580,11 @@ export function HomeTemplate({
         className="border-b border-[var(--color-text-primary)] bg-[var(--color-surface)]"
       >
         <div className={`${WRAP} py-[72px]`}>
-          <SectionNumberHeading n="07" title="Sponsors" />
+          <NumberHeading
+            n="07"
+            title="Sponsors"
+            action={{ href: sponsorsHref, label: "Ver todos" }}
+          />
           {sponsors.length === 0 ? (
             <p className="text-[15px] text-[var(--color-text-secondary)]">
               Aún no hay sponsors confirmados.
@@ -645,7 +628,7 @@ export function HomeTemplate({
         className="border-b border-[var(--color-text-primary)] bg-[var(--color-surface-muted)]"
       >
         <div className={`${WRAP} py-[72px]`}>
-          <SectionNumberHeading n="08" title="Tres formas de ser parte" />
+          <NumberHeading n="08" title="Tres formas de ser parte" />
           <div className="grid border-l border-t border-[var(--color-text-primary)] [grid-template-columns:repeat(auto-fit,minmax(260px,1fr))]">
             {[
               {

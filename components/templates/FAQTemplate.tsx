@@ -8,7 +8,11 @@
 // (the finished Home rebuild uses the same idiom). Empty content still renders
 // a graceful notice.
 
-import { WRAP, SECTION_BORDER, PageHeader } from "@/components/site/primitives";
+import {
+  WRAP,
+  SECTION_BORDER,
+  PageHeader,
+} from "@/components/molecules/SectionPrimitives";
 import type { FAQItem } from "@/lib/content/faq";
 
 type FAQTemplateProps = {

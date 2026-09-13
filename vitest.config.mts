@@ -11,15 +11,7 @@ export default defineConfig({
     // Bound worker creation so tests stay reliable on constrained CI runners
     // and Docker Desktop bind mounts.
     maxWorkers: 4,
-    exclude: [
-      "e2e/**",
-      "node_modules/**",
-      ".next/**",
-      // Design-reference mockups + repo snapshot; not part of the app under
-      // test. The folder name contains glob-special parens, so match it with a
-      // wildcard instead of the literal "(colored)".
-      "**/AWS Community Day Paraguay*/**",
-    ],
+    exclude: ["e2e/**", "node_modules/**", ".next/**"],
     coverage: {
       provider: "v8",
       reporter: ["text", "text-summary", "lcov"],

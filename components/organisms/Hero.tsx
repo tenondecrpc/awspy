@@ -149,10 +149,7 @@ export function Hero({
                   Escribirnos
                 </Button>
               ) : null}
-              <Countdown
-                targetDate={eventInfo.dates.start}
-                variant="inline"
-              />
+              <Countdown targetDate={eventInfo.dates.start} variant="inline" />
             </div>
           </div>
 

@@ -1,8 +1,7 @@
-// Shared presentational primitives for the mockup rebuild
-// (`AWS Community Day Paraguay (colored)/*.dc.html`). These reproduce the
-// mockup's building blocks so every rebuilt page stays 1:1 and consistent:
-// the 1240px content wrap, the numbered section heading, an inner-page header,
-// and the grayscale image frame used where the mockups show an `image-slot`.
+// Shared presentational primitives for the redesigned pages: the 1240px
+// content wrap, the numbered section heading, an inner-page header, and the
+// image frame used where a page shows a photo slot. Every template composes
+// these so the sections stay consistent instead of restating the same classes.
 //
 // Colors come exclusively from the design tokens in `app/globals.css`
 // (the `local/no-color-literals` rule forbids hex/rgb here).
@@ -34,7 +33,12 @@ type NumberHeadingProps = {
 };
 
 /** "01 · Title ————— action →" heading row. */
-export function NumberHeading({ n, title, action, onDark }: NumberHeadingProps) {
+export function NumberHeading({
+  n,
+  title,
+  action,
+  onDark,
+}: NumberHeadingProps) {
   return (
     <div className="mb-9 flex flex-wrap items-baseline gap-4">
       <span className={NUM}>{n}</span>
@@ -101,11 +105,13 @@ type FrameProps = {
   label: string;
   className?: string;
   photo?: string;
+  /** Overrides the default centered background position, e.g. "right". */
+  position?: string;
 };
 
-/** Grayscale bordered image frame (mockup `image-slot`). Shows the photo when
- *  provided, otherwise a labelled placeholder box. */
-export function Frame({ label, className, photo }: FrameProps) {
+/** Bordered image frame. Shows the photo when provided, otherwise a labelled
+ *  placeholder box. */
+export function Frame({ label, className, photo, position }: FrameProps) {
   return (
     <div
       role="img"
@@ -114,7 +120,14 @@ export function Frame({ label, className, photo }: FrameProps) {
         "flex items-center justify-center border border-[var(--color-border-subtle)] bg-[var(--color-surface-muted)] bg-cover bg-center p-4 text-center font-mono text-[11px] uppercase tracking-[0.14em] text-[var(--color-text-muted)] " +
         (className ?? "")
       }
-      style={photo ? { backgroundImage: `url(${photo})` } : undefined}
+      style={
+        photo
+          ? {
+              backgroundImage: `url(${photo})`,
+              ...(position ? { backgroundPosition: position } : {}),
+            }
+          : undefined
+      }
     >
       {photo ? "" : label}
     </div>

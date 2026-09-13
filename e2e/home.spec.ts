@@ -6,18 +6,20 @@ test.describe("Home page", () => {
   }) => {
     await page.goto("/");
 
-    // Hero
+    // Hero. The headline is broken across lines and keeps "Community Day"
+    // together with a non-breaking space, so match on flexible whitespace.
     await expect(
       page.getByRole("heading", {
         level: 1,
-        name: /AWS Community Day Paraguay/i,
+        name: /AWS\s+Community\s+Day\s+Paraguay/i,
       })
     ).toBeVisible();
 
-    // Countdown
-    await expect(page.getByText("días")).toBeVisible();
-    await expect(page.getByText("hs")).toBeVisible();
-    await expect(page.getByText("min")).toBeVisible();
+    // Countdown. The hero uses the inline variant ("Faltan N días"); the
+    // días/hs/min grid is the other variant of the same organism.
+    await expect(
+      page.getByText(/Faltan \d+ días|El evento ya comenzó/)
+    ).toBeVisible();
 
     // Footer privacy notice
     await expect(page.getByText(/no recopila datos personales/i)).toBeVisible();
@@ -31,14 +33,17 @@ test.describe("Home page", () => {
     await expect(
       main.getByText("Registro abierto", { exact: true })
     ).toBeVisible();
-    const cta = main.getByRole("link", { name: "Registrarme", exact: true });
+    const cta = main.getByRole("link", {
+      name: "Registrarme gratis",
+      exact: true,
+    });
     await expect(cta).toBeVisible();
     await expect(cta).toHaveAttribute("href", "/register");
     await cta.click();
     await expect(
       page
         .locator("main")
-        .getByRole("link", { name: "Registrarme", exact: true })
+        .getByRole("link", { name: /Reservar mi lugar en Eventbrite/i })
     ).toBeVisible();
   });
 
@@ -53,9 +58,11 @@ test.describe("Home page", () => {
   }) => {
     await page.goto("/");
 
-    const invitation = page.getByRole("link", {
-      name: "Quiero ser voluntario/a",
-    });
+    // The invitation is one of the three "formas de ser parte" cards, whose
+    // accessible name concatenates the eyebrow, the title and the blurb.
+    const invitation = page
+      .locator("main")
+      .getByRole("link", { name: /Ser voluntario\/a/ });
     await expect(invitation).toBeVisible();
     await expect(invitation).toHaveAttribute("href", "/volunteers");
   });

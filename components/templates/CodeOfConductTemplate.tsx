@@ -6,7 +6,11 @@
 //
 // Colors come exclusively from the design tokens in `app/globals.css`.
 
-import { PageHeader, SECTION_BORDER, WRAP } from "@/components/site/primitives";
+import {
+  PageHeader,
+  SECTION_BORDER,
+  WRAP,
+} from "@/components/molecules/SectionPrimitives";
 import { RenderMarkdown } from "@/lib/content/markdown";
 import { formatDate } from "@/lib/utils/datetime";
 import type { CodeOfConduct } from "@/lib/content/code-of-conduct";

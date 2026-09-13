@@ -10,7 +10,12 @@
 //
 // Colors come exclusively from the design tokens in `app/globals.css`.
 
-import { NumberHeading, PageHeader, SECTION_BORDER, WRAP } from "@/components/site/primitives";
+import {
+  NumberHeading,
+  PageHeader,
+  SECTION_BORDER,
+  WRAP,
+} from "@/components/molecules/SectionPrimitives";
 import type { EventInfo } from "@/lib/content/event-info";
 
 type VolunteersTemplateProps = {
@@ -65,14 +70,18 @@ export function VolunteersTemplate({
   eventInfo,
   archived = false,
 }: VolunteersTemplateProps) {
-  const { contactEmail, volunteerRegistrationStatus, volunteerRegistrationUrl } =
-    eventInfo;
+  const {
+    contactEmail,
+    volunteerRegistrationStatus,
+    volunteerRegistrationUrl,
+  } = eventInfo;
 
   const effectiveStatus =
     volunteerRegistrationStatus === "open" && !volunteerRegistrationUrl
       ? "upcoming"
       : volunteerRegistrationStatus;
-  const isOpen = effectiveStatus === "open" && Boolean(volunteerRegistrationUrl);
+  const isOpen =
+    effectiveStatus === "open" && Boolean(volunteerRegistrationUrl);
   const showRoles = !archived && effectiveStatus !== "closed";
 
   return (
@@ -160,7 +169,9 @@ export function VolunteersTemplate({
           {showRoles ? (
             <>
               {/* 01 · En qué podés ayudar */}
-              <section className={`${SECTION_BORDER} bg-[var(--color-surface)]`}>
+              <section
+                className={`${SECTION_BORDER} bg-[var(--color-surface)]`}
+              >
                 <div className={`${WRAP} py-[52px]`}>
                   <NumberHeading n="01" title="En qué podés ayudar" />
                   <div className="grid border-l border-t border-[var(--color-border-subtle)] [grid-template-columns:repeat(auto-fit,minmax(280px,1fr))]">

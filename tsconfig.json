@@ -30,5 +30,5 @@
     ".next/dev/types/**/*.ts",
     "**/*.mts"
   ],
-  "exclude": ["node_modules", "AWS Community Day Paraguay (colored)"]
+  "exclude": ["node_modules"]
 }

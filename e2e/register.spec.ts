@@ -13,7 +13,7 @@ test.describe("/register and /cfp", () => {
     ).toBeVisible();
     const registration = page
       .locator("main")
-      .getByRole("link", { name: "Registrarme", exact: true });
+      .getByRole("link", { name: /Reservar mi lugar en Eventbrite/i });
     await expect(registration).toBeVisible();
     await expect(registration).toHaveAttribute(
       "href",

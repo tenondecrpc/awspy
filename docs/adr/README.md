@@ -11,3 +11,4 @@ later decision should supersede, not edit, an accepted ADR.
 | [0006](0006-harden-external-data-boundaries.md) | Harden external data boundaries | Accepted |
 | [0007](0007-select-eventbrite-registration.md) | Select Eventbrite for attendee registration | Accepted |
 | [0008](0008-select-google-forms-for-volunteer-registration.md) | Select Google Forms for volunteer registration | Accepted |
+| [0009](0009-adopt-shader-and-motion-runtime-dependencies.md) | Adopt shader and motion runtime dependencies for the Kiro mascot | Accepted with constraints |

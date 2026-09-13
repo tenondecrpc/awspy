@@ -16,7 +16,7 @@
 // rule in `app/globals.css`.
 
 import { useEffect, useId, useRef, useState } from "react";
-import { MeshGradientSVG } from "@/components/ui/shader-svg";
+import { MeshGradientSVG } from "@/components/atoms/MeshGradientSVG";
 import { cn } from "@/lib/utils/cn";
 import type { FAQItem } from "@/lib/content/faq";
 
@@ -67,10 +67,7 @@ export function KiroMascot({ faq = [] }: KiroMascotProps) {
       }
     }
     function onPointerDown(event: PointerEvent) {
-      if (
-        rootRef.current &&
-        !rootRef.current.contains(event.target as Node)
-      ) {
+      if (rootRef.current && !rootRef.current.contains(event.target as Node)) {
         setOpen(false);
       }
     }

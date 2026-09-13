@@ -13,6 +13,7 @@ import { useEffect, useRef, useState } from "react";
 import NextLink from "next/link";
 import Image from "next/image";
 import { Container } from "@/components/atoms/Container";
+import { ThemeToggle } from "@/components/atoms/ThemeToggle";
 import { NavLink } from "@/components/molecules/NavLink";
 import { PRIMARY_NAV, REGISTER_CTA } from "@/lib/nav";
 import { cn } from "@/lib/utils/cn";
@@ -68,7 +69,18 @@ export function SiteHeader() {
               width={501}
               height={139}
               priority
-              className="h-8 w-auto"
+              className="brand-logo--light h-8 w-auto"
+            />
+            {/* Same alt on both: whichever ink is hidden by `display: none` is
+                also out of the accessibility tree, so the link keeps exactly
+                one accessible name in either theme. */}
+            <Image
+              src="/assets/logo.png"
+              alt="AWS Community Day Paraguay"
+              width={501}
+              height={139}
+              priority
+              className="brand-logo--dark h-8 w-auto"
             />
           </NextLink>
 
@@ -89,6 +101,8 @@ export function SiteHeader() {
             >
               {REGISTER_CTA.label}
             </NextLink>
+
+            <ThemeToggle />
 
             <button
               ref={triggerRef}
