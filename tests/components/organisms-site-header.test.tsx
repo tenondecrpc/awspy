@@ -8,19 +8,19 @@ vi.mock("next/navigation", () => ({
 
 describe("SiteHeader", () => {
   it("renders the skip link as the first focusable element", () => {
-    render(<SiteHeader editionYear="2026" />);
+    render(<SiteHeader />);
     const skip = screen.getByRole("link", { name: /saltar al contenido/i });
     expect(skip).toBeInTheDocument();
     expect(skip).toHaveAttribute("href", "#contenido-principal");
   });
 
-  it("renders the brand mark and the edition pill", () => {
-    render(<SiteHeader editionYear="2026" />);
-    expect(screen.getByLabelText("Edición 2026")).toBeInTheDocument();
+  it("does not render an edition year badge", () => {
+    render(<SiteHeader />);
+    expect(screen.queryByLabelText(/^Edición /)).not.toBeInTheDocument();
   });
 
   it("renders the primary navigation labelled in Spanish", () => {
-    render(<SiteHeader editionYear="2026" />);
+    render(<SiteHeader />);
     expect(
       screen.getByRole("navigation", { name: /navegación principal/i })
     ).toBeInTheDocument();
@@ -37,7 +37,7 @@ describe("SiteHeader", () => {
   });
 
   it("opens the mobile drawer with focus on Cerrar and aria-expanded toggling", () => {
-    render(<SiteHeader editionYear="2026" />);
+    render(<SiteHeader />);
     const trigger = screen.getByRole("button", { name: /abrir menú/i });
     expect(trigger).toHaveAttribute("aria-expanded", "false");
     fireEvent.click(trigger);
@@ -50,7 +50,7 @@ describe("SiteHeader", () => {
   });
 
   it("closes the drawer on Escape", () => {
-    render(<SiteHeader editionYear="2026" />);
+    render(<SiteHeader />);
     const trigger = screen.getByRole("button", { name: /abrir menú/i });
     fireEvent.click(trigger);
     fireEvent.keyDown(window, { key: "Escape" });

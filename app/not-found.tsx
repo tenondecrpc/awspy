@@ -13,8 +13,8 @@ export default function NotFound() {
         <div className="mx-auto flex max-w-xl flex-col items-center gap-4 text-center">
           <Heading level={1}>Página no encontrada</Heading>
           <p className="text-[var(--color-text-secondary)]">
-            La página que buscás no existe o ya no está disponible. Volvé a la
-            home y desde ahí podés navegar a speakers, agenda, sponsors y más.
+            La página que buscás no existe o ya no está disponible. Volvé al
+            inicio y desde ahí podés navegar a speakers, agenda, sponsors y más.
           </p>
           <Button as="a" href="/" variant="primary" size="md">
             Volver al inicio

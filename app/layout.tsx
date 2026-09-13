@@ -50,7 +50,7 @@ export default function RootLayout({
   return (
     <html lang="es-PY" data-theme="light">
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
-        <SiteHeader editionYear={editionYear} />
+        <SiteHeader />
         <main>{children}</main>
         <SiteFooter eventInfo={eventInfo} />
         <KiroMascot faq={faq} />

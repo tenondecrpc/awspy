@@ -30,7 +30,7 @@ const STATUS_COPY: Record<EventInfo["volunteerRegistrationStatus"], string> = {
 const TASKS = [
   {
     title: "Acreditación y bienvenida",
-    body: "Recibir a los asistentes, entregar badges y orientar en el ingreso.",
+    body: "Recibir a los asistentes, entregar credenciales y orientar en el ingreso.",
   },
   {
     title: "Apoyo a speakers",

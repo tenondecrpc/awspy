@@ -58,7 +58,7 @@ export function SponsorsTemplate({
       <PageHeader
         eyebrow="Auspiciantes"
         title="Sponsors"
-        description={`Las empresas y comunidades que hacen posible ${eventInfo.name}. Gracias a ellas la entrada es gratuita.`}
+        description={`Las empresas y comunidades que hacen posible ${eventInfo.name}.`}
       >
         <div className="flex flex-wrap gap-2.5">
           {hasPackages ? (
@@ -327,7 +327,7 @@ export function SponsorsTemplate({
                 href={mailto}
                 className="inline-flex items-center rounded-[4px] bg-[var(--color-action)] px-7 py-3.5 text-[15.5px] font-bold text-[var(--color-text-on-action)] transition hover:brightness-95"
               >
-                Escribirnos por sponsoreo
+                Escribirnos por patrocinio
               </a>
             </div>
 

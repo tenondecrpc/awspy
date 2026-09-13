@@ -198,7 +198,7 @@ export function RegisterTemplate({
                         ["Fecha", formatDate(eventInfo.dates.start)],
                         ["Horario", "08:00 – 17:00"],
                         ["Sede", eventInfo.location.summary],
-                        ["Incluye", "Charlas, labs y coffee"],
+                        ["Incluye", "Charlas, labs y café"],
                       ].map(([k, v]) => (
                         <div
                           key={k}

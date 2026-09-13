@@ -111,7 +111,7 @@ export function Frame({ label, className, photo }: FrameProps) {
       role="img"
       aria-label={label}
       className={
-        "flex items-center justify-center border border-[var(--color-border-subtle)] bg-[var(--color-surface-muted)] bg-cover bg-center p-4 text-center font-mono text-[11px] uppercase tracking-[0.14em] text-[var(--color-text-muted)] grayscale transition-[filter] duration-300 hover:grayscale-0 " +
+        "flex items-center justify-center border border-[var(--color-border-subtle)] bg-[var(--color-surface-muted)] bg-cover bg-center p-4 text-center font-mono text-[11px] uppercase tracking-[0.14em] text-[var(--color-text-muted)] " +
         (className ?? "")
       }
       style={photo ? { backgroundImage: `url(${photo})` } : undefined}

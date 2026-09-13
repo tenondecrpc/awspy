@@ -28,6 +28,10 @@ const DETAILS: Array<[string, string]> = [
   ["Salas", "Guaraní · Ñandútí · Taller"],
 ];
 
+/** Conventional venue photo path (see `public/assets/README.md`). Swapping the
+ *  image is replacing that file; no code change required. */
+const VENUE_PHOTO = "/assets/venue/cover.jpg";
+
 const GALLERY = [
   "Auditorio",
   "Sala de taller",
@@ -48,7 +52,11 @@ export function VenueTemplate({ venue }: VenueTemplateProps) {
       <section className={SECTION_BORDER}>
         <div className="grid items-stretch [grid-template-columns:repeat(auto-fit,minmax(340px,1fr))]">
           <div className="relative min-h-[420px] min-w-0 border-b border-[var(--color-border-subtle)] lg:border-b-0 lg:border-r">
-            <Frame label="Fachada de UniNorte" className="h-full w-full" />
+            <Frame
+              label="Fachada de UniNorte"
+              photo={VENUE_PHOTO}
+              className="h-full w-full"
+            />
           </div>
           <div className="flex min-w-0 flex-col justify-center px-7 py-14 lg:px-10">
             <h2 className="m-0 mb-3 text-[clamp(24px,3vw,34px)] font-extrabold leading-[1.08] tracking-[-0.035em] text-[var(--color-text-primary)]">

@@ -75,7 +75,7 @@ const PILLARS = [
   {
     n: "03",
     title: "Entrada libre",
-    body: "Gratis gracias a los sponsors. Solo hay que registrarse.",
+    body: "Acceso sin costo, con registro previo.",
   },
   {
     n: "04",
@@ -89,7 +89,7 @@ const AGENDA = [
   { time: "09:00", title: "Keynote de apertura", note: "La nube que construye la comunidad", track: "Auditorio" },
   { time: "10:00", title: "Bloque de charlas", note: "Serverless, observabilidad, seguridad", track: "2 salas" },
   { time: "12:30", title: "Almuerzo y networking", note: "Espacio de sponsors abierto", track: "Hall" },
-  { time: "13:30", title: "Hands-on labs", note: "Bedrock, IaC con CDK, contenedores", track: "3 salas" },
+  { time: "13:30", title: "Hands-on labs", note: "Bedrock, infraestructura como código, contenedores", track: "3 salas" },
   { time: "16:00", title: "Panel y cierre", note: "Cómo sigue la comunidad en Paraguay", track: "Auditorio" },
 ];
 
@@ -139,20 +139,30 @@ function Frame({
   label,
   className,
   photo,
+  position,
 }: {
   label: string;
   className?: string;
   photo?: string;
+  /** Overrides the default centered background position, e.g. "right". */
+  position?: string;
 }) {
   return (
     <div
       role="img"
       aria-label={label}
       className={
-        "flex items-center justify-center border border-[var(--color-border-subtle)] bg-[var(--color-surface-muted)] bg-cover bg-center p-4 text-center font-mono text-[11px] uppercase tracking-[0.14em] text-[var(--color-text-muted)] grayscale transition-[filter] duration-300 hover:grayscale-0 " +
+        "flex items-center justify-center border border-[var(--color-border-subtle)] bg-[var(--color-surface-muted)] bg-cover bg-center p-4 text-center font-mono text-[11px] uppercase tracking-[0.14em] text-[var(--color-text-muted)] " +
         (className ?? "")
       }
-      style={photo ? { backgroundImage: `url(${photo})` } : undefined}
+      style={
+        photo
+          ? {
+              backgroundImage: `url(${photo})`,
+              ...(position ? { backgroundPosition: position } : {}),
+            }
+          : undefined
+      }
     >
       {photo ? "" : label}
     </div>
@@ -271,6 +281,7 @@ export function HomeTemplate({
             <div className="relative min-h-[520px] min-w-0 border-l border-[var(--color-text-primary)]">
               <Frame
                 label="Foto principal — comunidad / edición anterior"
+                photo="/assets/anterior.jpg"
                 className="h-full w-full"
               />
               <span className="pointer-events-none absolute bottom-0 left-0 bg-[var(--color-surface-inverse)] px-5 py-3.5 font-mono text-[11.5px] uppercase tracking-[0.14em] text-[var(--color-text-on-inverse)]">
@@ -343,8 +354,8 @@ export function HomeTemplate({
               </p>
               <p className="m-0 mb-7 max-w-[34rem] text-[16px] text-[var(--color-text-secondary)]">
                 Lo organizan voluntarios del AWS User Group Paraguay junto al
-                user group de Canindeyú. La entrada es gratuita gracias a los
-                sponsors; el único requisito es registrarse.
+                user group de Canindeyú. El acceso es sin costo, con registro
+                previo.
               </p>
               <div className="grid max-w-[34rem] border-t border-[var(--color-text-primary)]">
                 {PILLARS.map((p) => (
@@ -368,9 +379,9 @@ export function HomeTemplate({
               </div>
             </div>
             <div className="grid min-w-0 grid-cols-2 grid-rows-[190px_130px] gap-2.5">
-              <Frame label="Sala llena durante una charla" className="col-span-2" />
-              <Frame label="Networking" />
-              <Frame label="Taller hands-on" />
+              <Frame label="Sala llena durante una charla" photo="/assets/charla.jpg" className="col-span-2" />
+              <Frame label="Networking" photo="/assets/networking.JPG" />
+              <Frame label="Taller hands-on" photo="/assets/handson.jpg" />
             </div>
           </div>
         </div>
@@ -512,7 +523,7 @@ export function HomeTemplate({
               </a>
             </div>
             <div className="relative min-h-[440px] min-w-0 border-l border-[var(--color-border-on-inverse)]">
-              <Frame label="Foto de la sede — UniNorte" className="h-full w-full" />
+              <Frame label="Foto de la sede — UniNorte" photo="/assets/venue/cover.jpg" position="right" className="h-full w-full" />
             </div>
           </div>
         </div>
@@ -647,7 +658,7 @@ export function HomeTemplate({
                 href: cfpHref,
                 eyebrow: "Hablar",
                 title: "Proponer una charla",
-                body: "CFP abierto en Sessionize hasta el 30 de septiembre de 2026.",
+                body: "Convocatoria de charlas abierta en Sessionize hasta el 30 de septiembre de 2026.",
               },
               {
                 href: volunteersHref,

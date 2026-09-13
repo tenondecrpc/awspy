@@ -28,7 +28,7 @@ export function SpeakersTemplate({
       <PageHeader
         eyebrow="Comunidad"
         title="Speakers"
-        description={`Las personas que van a compartir charlas y talleres en ${eventInfo.name}. La grilla se completa a medida que se confirman las propuestas del CFP.`}
+        description={`Las personas que van a compartir charlas y talleres en ${eventInfo.name}. La grilla se completa a medida que se confirman las propuestas de la convocatoria.`}
       >
         <div className="flex flex-wrap items-center gap-2.5">
           <NextLink
@@ -65,7 +65,8 @@ export function SpeakersTemplate({
                 </h2>
                 <p className="m-0 text-[14.5px] text-[var(--color-text-secondary)]">
                   Estamos definiendo la grilla de oradores. Si querés
-                  participar, enviá tu propuesta desde el call for papers.
+                  participar, enviá tu propuesta desde la convocatoria de
+                  charlas.
                 </p>
               </div>
               <a
@@ -137,8 +138,8 @@ export function SpeakersTemplate({
                 </h2>
                 <p className="m-0 text-[14.5px] text-[var(--color-text-secondary)]">
                   {cfpOpen
-                    ? "El call for papers sigue abierto. Enviá tu propuesta y sumate a la grilla."
-                    : "El call for papers está cerrado por ahora. Escribinos si querés participar en próximas ediciones."}
+                    ? "La convocatoria de charlas sigue abierta. Enviá tu propuesta y sumate a la grilla."
+                    : "La convocatoria de charlas está cerrada por ahora. Escribinos si querés participar en próximas ediciones."}
                 </p>
               </div>
               <a

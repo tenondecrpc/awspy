@@ -55,7 +55,7 @@ const LOOKING = [
 const DATES: { when: string; title: string; body: string; color: string }[] = [
   {
     when: "30.09.2026",
-    title: "Cierre del CFP",
+    title: "Cierre de la convocatoria",
     body: "Última fecha para enviar propuestas en Sessionize.",
     color: "var(--color-national-red-label)",
   },
