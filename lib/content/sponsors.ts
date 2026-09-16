@@ -73,6 +73,29 @@ const TIER_ORDER: SponsorTier[] = [
   "Community",
 ];
 
+/**
+ * The priced tiers nobody holds yet, in prospectus order and de-duplicated.
+ *
+ * Drives the "DISPONIBLE" slots the sponsor boards render: until a tier is
+ * taken it shows as an open slot, and it drops off the board the moment a
+ * sponsor is confirmed for it. An edition without a prospectus prices no
+ * tiers, so it offers no slots.
+ */
+export function listAvailableTiers(
+  packages: Array<{ tier: SponsorTier }>,
+  sponsors: Sponsor[]
+): SponsorTier[] {
+  const taken = new Set(sponsors.map((s) => s.tier));
+  const seen = new Set<SponsorTier>();
+  return packages
+    .map((p) => p.tier)
+    .filter((tier) => {
+      if (taken.has(tier) || seen.has(tier)) return false;
+      seen.add(tier);
+      return true;
+    });
+}
+
 export function groupSponsorsByTier(
   sponsors: Sponsor[]
 ): Array<{ tier: SponsorTier; sponsors: Sponsor[] }> {

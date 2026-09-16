@@ -55,6 +55,7 @@ export default async function EditionHomePage({
       venue={edition.venue}
       speakers={speakers}
       sponsors={edition.sponsors}
+      sponsorship={edition.sponsorship}
       faq={getFAQ(year)}
       organizers={getOrganizers(year)}
       registerHref={`/editions/${year}/register`}

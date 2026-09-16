@@ -55,6 +55,7 @@ export default async function HomePage() {
         venue={edition.venue}
         speakers={speakers}
         sponsors={edition.sponsors}
+        sponsorship={edition.sponsorship}
         faq={getFAQ(year)}
         organizers={getOrganizers(year)}
       />

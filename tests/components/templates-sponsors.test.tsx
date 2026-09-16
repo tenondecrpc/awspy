@@ -37,7 +37,7 @@ describe("SponsorsTemplate", () => {
     }
   });
 
-  it("invites sponsors instead of showing an empty board", () => {
+  it("offers every open tier instead of an empty board", () => {
     render(
       <SponsorsTemplate
         sponsors={[]}
@@ -47,11 +47,35 @@ describe("SponsorsTemplate", () => {
     );
 
     expect(
+      screen.getByText(/Todavía no hay sponsors confirmados/)
+    ).toBeInTheDocument();
+
+    // One open slot per priced tier, each routed to the package table.
+    const packages = SPONSORSHIP?.packages ?? [];
+    expect(packages.length).toBeGreaterThan(0);
+    const slots = screen.getAllByRole("link", { name: /^Cupo de sponsor / });
+    expect(slots).toHaveLength(packages.length);
+    slots.forEach((slot) => {
+      expect(slot).toHaveAttribute("href", "#paquetes");
+      expect(slot).toHaveTextContent("Disponible");
+    });
+  });
+
+  it("falls back to the invitation when the edition prices no tiers", () => {
+    render(
+      <SponsorsTemplate
+        sponsors={[]}
+        eventInfo={EVENT_INFO}
+        sponsorship={null}
+      />
+    );
+
+    expect(
       screen.getByRole("heading", { name: "Sumate como sponsor" })
     ).toBeInTheDocument();
     expect(
-      screen.getByText(/Aún no hay sponsors confirmados/)
-    ).toBeInTheDocument();
+      screen.queryByRole("link", { name: /^Cupo de sponsor / })
+    ).not.toBeInTheDocument();
   });
 
   it("drops the prospectus sections when the edition published none", () => {

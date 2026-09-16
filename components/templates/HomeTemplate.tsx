@@ -21,7 +21,10 @@ import {
 import { formatDate, formatTime } from "@/lib/utils/datetime";
 import type { EventInfo } from "@/lib/content/event-info";
 import type { Speaker } from "@/lib/api/sessionize";
+import { SponsorSlotCard } from "@/components/molecules/SponsorSlotCard";
+import { listAvailableTiers } from "@/lib/content/sponsors";
 import type { Sponsor, SponsorTier } from "@/lib/content/sponsors";
+import type { Sponsorship } from "@/lib/content/sponsorship";
 import type { FAQItem } from "@/lib/content/faq";
 import type { Organizer } from "@/lib/content/organizers";
 import type { Venue } from "@/lib/content/venue";
@@ -31,6 +34,8 @@ type HomeTemplateProps = {
   venue: Venue;
   speakers: Speaker[];
   sponsors: Sponsor[];
+  /** Edition prospectus. `null` when this edition has not published one. */
+  sponsorship?: Sponsorship | null;
   faq: FAQItem[];
   organizers: Organizer[];
   registerHref?: string;
@@ -133,6 +138,7 @@ export function HomeTemplate({
   venue,
   speakers,
   sponsors,
+  sponsorship = null,
   faq,
   organizers,
   registerHref = "/register",
@@ -150,6 +156,11 @@ export function HomeTemplate({
   const isOpen = eventInfo.registrationStatus === "open";
   const previewSpeakers = speakers.slice(0, 4);
   const previewTeam = organizers.slice(0, 5);
+  // Open tiers fill the sponsor board while the real logos are still being
+  // signed, so it never renders as a bare line of text.
+  const packages = sponsorship?.packages ?? [];
+  const availableTiers = listAvailableTiers(packages, sponsors);
+  const priceByTier = new Map(packages.map((p) => [p.tier, p.price]));
 
   return (
     <>
@@ -591,7 +602,7 @@ export function HomeTemplate({
             title="Sponsors"
             action={{ href: sponsorsHref, label: "Ver todos" }}
           />
-          {sponsors.length === 0 ? (
+          {sponsors.length === 0 && availableTiers.length === 0 ? (
             <p className="text-[15px] text-[var(--color-text-secondary)]">
               Aún no hay sponsors confirmados.
             </p>
@@ -612,6 +623,14 @@ export function HomeTemplate({
                     {TIER_ES[sponsor.tier]}
                   </span>
                 </div>
+              ))}
+              {availableTiers.map((tier) => (
+                <SponsorSlotCard
+                  key={tier}
+                  tier={tier}
+                  price={priceByTier.get(tier)}
+                  href={sponsorsHref}
+                />
               ))}
             </div>
           )}

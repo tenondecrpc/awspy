@@ -13,6 +13,8 @@ import {
   PageHeader,
   WRAP,
 } from "@/components/molecules/SectionPrimitives";
+import { SponsorSlotCard } from "@/components/molecules/SponsorSlotCard";
+import { listAvailableTiers } from "@/lib/content/sponsors";
 import type { Sponsor, SponsorTier } from "@/lib/content/sponsors";
 import type { Sponsorship } from "@/lib/content/sponsorship";
 import type { EventInfo } from "@/lib/content/event-info";
@@ -57,6 +59,13 @@ export function SponsorsTemplate({
   const hasPackages = sponsorship != null && sponsorship.packages.length > 0;
   const hasFunds = sponsorship != null && sponsorship.funds.length > 0;
 
+  // The tiers still for sale. They fill the board while the real logos are
+  // being signed, and each one drops off as its sponsor is confirmed.
+  const packages = sponsorship?.packages ?? [];
+  const availableTiers = listAvailableTiers(packages, sponsors);
+  const priceByTier = new Map(packages.map((p) => [p.tier, p.price]));
+  const slotHref = hasPackages ? "#paquetes" : mailto;
+
   return (
     <>
       <PageHeader
@@ -86,7 +95,13 @@ export function SponsorsTemplate({
       <section className="border-b border-[var(--color-text-primary)] bg-[var(--color-surface)]">
         <div className={`${WRAP} py-14`}>
           <NumberHeading n="01" title="Quiénes nos acompañan" />
-          {sponsors.length === 0 ? (
+          {sponsors.length === 0 && availableTiers.length > 0 ? (
+            <p className="m-0 mb-7 max-w-[44rem] text-[16px] text-[var(--color-text-secondary)]">
+              Todavía no hay sponsors confirmados. Estos son los cupos
+              disponibles para la primera edición:
+            </p>
+          ) : null}
+          {sponsors.length === 0 && availableTiers.length === 0 ? (
             <div className="border border-[var(--color-border-subtle)] bg-[var(--color-surface-muted)] px-7 py-14 text-center">
               <h3 className="m-0 text-[22px] font-bold tracking-[-0.02em]">
                 Sumate como sponsor
@@ -127,6 +142,15 @@ export function SponsorsTemplate({
                     {TIER_ES[sponsor.tier]}
                   </span>
                 </a>
+              ))}
+              {availableTiers.map((tier) => (
+                <SponsorSlotCard
+                  key={tier}
+                  tier={tier}
+                  price={priceByTier.get(tier)}
+                  href={slotHref}
+                  className="min-h-[160px] py-9"
+                />
               ))}
             </div>
           )}
