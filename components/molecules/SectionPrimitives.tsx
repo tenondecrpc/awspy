@@ -7,6 +7,7 @@
 // (the `local/no-color-literals` rule forbids hex/rgb here).
 
 import type { ReactNode } from "react";
+import Image from "next/image";
 import NextLink from "next/link";
 
 /** The mockup content column: centered, 1240px max, 28px gutters. */
@@ -114,31 +115,68 @@ type FrameProps = {
   label: string;
   className?: string;
   photo?: string;
-  /** Overrides the default centered background position, e.g. "right". */
+  /** Overrides the default centered crop, e.g. "right". */
   position?: string;
+  /** How wide the photo is *rendered*, so the browser picks the right entry
+   *  from the generated srcset. Defaults to the card slots (190-320px).
+   *
+   *  Careful: the frame crops with `object-cover`, so a slot that is taller
+   *  than the source's aspect ratio renders the source WIDER than the slot —
+   *  `max(slotWidth, slotHeight * sourceAspect)`. A portrait panel holding a
+   *  4:3 photo renders it at about twice the slot width, and passing the slot
+   *  width there fetches a half-resolution image that visibly softens faces.
+   *  The tall panels below therefore pass the cover-rendered width. */
+  sizes?: string;
+  /** Set on the one above-the-fold photo that is the LCP element, so it is
+   *  preloaded from the head instead of being discovered late. */
+  preload?: boolean;
 };
 
-/** Bordered image frame. Shows the photo when provided, otherwise a labelled
- *  placeholder box. */
-export function Frame({ label, className, photo, position }: FrameProps) {
+/** The box shared by the photo and the placeholder, so both reserve the same
+ *  space and no layout shift happens while the photo decodes. */
+const FRAME_BOX =
+  "border border-[var(--color-border-subtle)] bg-[var(--color-surface-muted)] ";
+
+/** Bordered image frame. A provided photo goes through `next/image` (resized
+ *  per breakpoint, re-encoded to AVIF/WebP, lazy below the fold); without one
+ *  the frame falls back to a labelled placeholder box. */
+export function Frame({
+  label,
+  className,
+  photo,
+  position,
+  sizes,
+  preload,
+}: FrameProps) {
+  if (!photo) {
+    return (
+      <div
+        role="img"
+        aria-label={label}
+        className={
+          FRAME_BOX +
+          "flex items-center justify-center p-4 text-center font-mono text-[11px] uppercase tracking-[0.14em] text-[var(--color-text-muted)] " +
+          (className ?? "")
+        }
+      >
+        {label}
+      </div>
+    );
+  }
+
   return (
     <div
-      role="img"
-      aria-label={label}
-      className={
-        "flex items-center justify-center border border-[var(--color-border-subtle)] bg-[var(--color-surface-muted)] bg-cover bg-center p-4 text-center font-mono text-[11px] uppercase tracking-[0.14em] text-[var(--color-text-muted)] " +
-        (className ?? "")
-      }
-      style={
-        photo
-          ? {
-              backgroundImage: `url(${photo})`,
-              ...(position ? { backgroundPosition: position } : {}),
-            }
-          : undefined
-      }
+      className={FRAME_BOX + "relative overflow-hidden " + (className ?? "")}
     >
-      {photo ? "" : label}
+      <Image
+        src={photo}
+        alt={label}
+        fill
+        sizes={sizes ?? "(min-width: 640px) 320px, 100vw"}
+        preload={preload}
+        className="object-cover"
+        style={position ? { objectPosition: position } : undefined}
+      />
     </div>
   );
 }

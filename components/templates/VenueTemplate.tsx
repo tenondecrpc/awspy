@@ -62,6 +62,8 @@ export function VenueTemplate({ venue, eventInfo }: VenueTemplateProps) {
               label={`Fachada de ${venue.name}`}
               photo={VENUE_PHOTO}
               className="h-full w-full"
+              sizes="(min-width: 768px) 960px, 200vw"
+              preload
             />
           </div>
           <div className="flex min-w-0 flex-col justify-center px-7 py-14 lg:px-10">

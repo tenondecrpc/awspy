@@ -107,6 +107,8 @@ export function SpeakerDetailTemplate({
                 label={`Retrato de ${speaker.fullName}`}
                 photo={speaker.profilePicture ?? undefined}
                 className="h-full w-full"
+                sizes="(min-width: 700px) 800px, 200vw"
+                preload
               />
             </div>
 

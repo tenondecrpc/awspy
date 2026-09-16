@@ -94,6 +94,7 @@ export function SpeakersTemplate({
                         label={sp.fullName}
                         photo={sp.profilePicture ?? undefined}
                         className="mb-3.5 aspect-[3/4] w-full"
+                        sizes="(min-width: 640px) 380px, 100vw"
                       />
                     </NextLink>
                     <div className="flex items-baseline gap-2.5">

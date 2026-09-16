@@ -250,15 +250,14 @@ export function HomeTemplate({
               </div>
             </div>
 
-            <div className="relative min-h-[520px] min-w-0 border-l border-[var(--color-text-primary)]">
+            <div className="min-h-[520px] min-w-0 border-l border-[var(--color-text-primary)]">
               <Frame
                 label="Foto principal — comunidad / edición anterior"
                 photo="/assets/anterior.jpg"
                 className="h-full w-full"
+                sizes="(min-width: 700px) 1200px, 190vw"
+                preload
               />
-              <span className="pointer-events-none absolute bottom-0 left-0 bg-[var(--color-surface-inverse)] px-5 py-3.5 font-mono text-[11.5px] uppercase tracking-[0.14em] text-[var(--color-text-on-inverse)]">
-                {dateLabel} — {eventInfo.location.summary}
-              </span>
             </div>
           </div>
         </div>
@@ -364,9 +363,18 @@ export function HomeTemplate({
                 label="Sala llena durante una charla"
                 photo="/assets/charla.jpg"
                 className="col-span-2"
+                sizes="(min-width: 1024px) 560px, 100vw"
               />
-              <Frame label="Networking" photo="/assets/networking.jpg" />
-              <Frame label="Taller hands-on" photo="/assets/handson.jpg" />
+              <Frame
+                label="Networking"
+                photo="/assets/networking.jpg"
+                sizes="(min-width: 1024px) 280px, 50vw"
+              />
+              <Frame
+                label="Taller hands-on"
+                photo="/assets/handson.jpg"
+                sizes="(min-width: 1024px) 280px, 50vw"
+              />
             </div>
           </div>
         </div>
@@ -432,6 +440,7 @@ export function HomeTemplate({
                       label={sp.fullName}
                       photo={sp.profilePicture ?? undefined}
                       className="mb-3.5 aspect-[3/4] w-full"
+                      sizes="(min-width: 640px) 380px, 100vw"
                     />
                   </NextLink>
                   <div className="flex items-baseline gap-2.5">
@@ -495,6 +504,7 @@ export function HomeTemplate({
                 photo="/assets/venue/cover.jpg"
                 position="right"
                 className="h-full w-full"
+                sizes="(min-width: 700px) 850px, 200vw"
               />
             </div>
           </div>

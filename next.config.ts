@@ -22,6 +22,10 @@ const nextConfig: NextConfig = {
     ];
   },
   images: {
+    // AVIF first (roughly 20% smaller than WebP), WebP for the browsers that
+    // do not take it, original format as the last fallback. Both variants are
+    // cached separately by the optimizer.
+    formats: ["image/avif", "image/webp"],
     remotePatterns: REMOTE_IMAGE_HOSTS.map((hostname) => ({
       protocol: "https" as const,
       hostname,
