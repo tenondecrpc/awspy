@@ -53,7 +53,7 @@ export function VenueTemplate({ venue }: VenueTemplateProps) {
         <div className="grid items-stretch [grid-template-columns:repeat(auto-fit,minmax(340px,1fr))]">
           <div className="relative min-h-[420px] min-w-0 border-b border-[var(--color-border-subtle)] lg:border-b-0 lg:border-r">
             <Frame
-              label="Fachada de UniNorte"
+              label={`Fachada de ${venue.name}`}
               photo={VENUE_PHOTO}
               className="h-full w-full"
             />

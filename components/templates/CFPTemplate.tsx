@@ -74,7 +74,7 @@ const DATES: { when: string; title: string; body: string; color: string }[] = [
   {
     when: "17.10.2026",
     title: "Community Day",
-    body: "Charlas y talleres en UniNorte, Asunción.",
+    body: "Charlas y talleres en el SNPP, San Lorenzo.",
     color: "var(--color-category-green)",
   },
 ];

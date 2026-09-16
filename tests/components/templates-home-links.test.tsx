@@ -2,6 +2,7 @@ import { render, screen } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import { HomeTemplate } from "@/components/templates/HomeTemplate";
 import { getEventInfo } from "@/lib/content/event-info";
+import { getVenue } from "@/lib/content/venue";
 import type { Speaker } from "@/lib/api/sessionize";
 
 vi.mock("next/navigation", () => ({
@@ -22,6 +23,7 @@ function renderArchivedEdition() {
   return render(
     <HomeTemplate
       eventInfo={getEventInfo("2026")}
+      venue={getVenue("2026")}
       speakers={[SPEAKER]}
       sponsors={[]}
       faq={[]}

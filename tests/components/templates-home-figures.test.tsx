@@ -2,18 +2,21 @@ import { render, screen, within } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import { HomeTemplate } from "@/components/templates/HomeTemplate";
 import { getEventInfo } from "@/lib/content/event-info";
+import { getVenue } from "@/lib/content/venue";
 
 vi.mock("next/navigation", () => ({
   usePathname: () => "/",
 }));
 
 const eventInfo = getEventInfo("2026");
+const venue = getVenue("2026");
 
 describe("HomeTemplate expected figures band", () => {
   it("renders one tile per figure from the edition content", () => {
     render(
       <HomeTemplate
         eventInfo={eventInfo}
+        venue={venue}
         speakers={[]}
         sponsors={[]}
         faq={[]}
@@ -34,6 +37,7 @@ describe("HomeTemplate expected figures band", () => {
     render(
       <HomeTemplate
         eventInfo={{ ...eventInfo, expectedFigures: [] }}
+        venue={venue}
         speakers={[]}
         sponsors={[]}
         faq={[]}

@@ -35,7 +35,7 @@ const STEPS = [
   {
     n: "03",
     title: "Acreditate el día del evento",
-    body: "La acreditación abre a las 08:00 en el hall de ingreso de UniNorte.",
+    body: "La acreditación abre a las 08:00 en el hall de ingreso del SNPP.",
   },
   {
     n: "04",

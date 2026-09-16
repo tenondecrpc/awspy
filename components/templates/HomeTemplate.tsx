@@ -24,9 +24,11 @@ import type { Speaker } from "@/lib/api/sessionize";
 import type { Sponsor, SponsorTier } from "@/lib/content/sponsors";
 import type { FAQItem } from "@/lib/content/faq";
 import type { Organizer } from "@/lib/content/organizers";
+import type { Venue } from "@/lib/content/venue";
 
 type HomeTemplateProps = {
   eventInfo: EventInfo;
+  venue: Venue;
   speakers: Speaker[];
   sponsors: Sponsor[];
   faq: FAQItem[];
@@ -128,6 +130,7 @@ const TIER_ES: Record<SponsorTier, string> = {
 
 export function HomeTemplate({
   eventInfo,
+  venue,
   speakers,
   sponsors,
   faq,
@@ -193,8 +196,8 @@ export function HomeTemplate({
 
               <p className="m-0 mb-8 max-w-[32rem] text-[18px] leading-[1.55] text-[var(--color-text-secondary)]">
                 Una jornada gratuita hecha por la comunidad AWS local. Charlas
-                técnicas, talleres hands-on y networking, en español, en
-                Asunción.
+                técnicas, talleres hands-on y networking, en español, en{" "}
+                {eventInfo.location.city}.
               </p>
 
               <dl className="m-0 mb-[34px] grid border-t border-[var(--color-text-primary)] [grid-template-columns:repeat(auto-fit,minmax(150px,1fr))]">
@@ -463,14 +466,13 @@ export function HomeTemplate({
                 </span>
               </div>
               <h2 className={`${H2} mb-4`}>
-                Universidad del Norte
+                {venue.name}
                 <br />
-                Asunción
+                {eventInfo.location.city}
               </h2>
               <p className="m-0 mb-7 max-w-[30rem] text-[16px] text-[var(--color-text-on-inverse-secondary)]">
-                Facultad de Ingeniería de UniNorte — MCR4+6MM, Asunción 001421.
-                Auditorio principal, salas de taller y espacio de networking en
-                el mismo edificio.
+                {venue.address}. Auditorio principal, salas de taller y espacio
+                de networking en el mismo edificio.
               </p>
               <div className="mb-[30px] grid max-w-[30rem] border-t border-[var(--color-border-on-inverse)]">
                 {[
@@ -490,7 +492,7 @@ export function HomeTemplate({
                 ))}
               </div>
               <a
-                href="https://maps.app.goo.gl/MgTP5UdkewbgXAik7"
+                href={venue.mapUrl}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center self-start whitespace-nowrap rounded-[4px] border-[1.5px] border-[var(--color-text-on-inverse)] px-[26px] py-[13px] text-[15px] font-semibold text-[var(--color-text-on-inverse)] transition-colors hover:bg-[var(--color-text-on-inverse)] hover:text-[var(--color-surface-inverse)]"
@@ -500,7 +502,7 @@ export function HomeTemplate({
             </div>
             <div className="relative min-h-[440px] min-w-0 border-l border-[var(--color-border-on-inverse)]">
               <Frame
-                label="Foto de la sede — UniNorte"
+                label={`Foto de la sede — ${venue.name}`}
                 photo="/assets/venue/cover.jpg"
                 position="right"
                 className="h-full w-full"

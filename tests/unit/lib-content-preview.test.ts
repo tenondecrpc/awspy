@@ -94,7 +94,7 @@ describe("content loaders", () => {
 
     it("serves the confirmed venue", () => {
       const venue = getVenue("2026");
-      expect(venue.name).toMatch(/UniNorte/i);
+      expect(venue.name).toMatch(/SNPP/i);
       expect(venue.mapUrl).toBeTruthy();
     });
   });

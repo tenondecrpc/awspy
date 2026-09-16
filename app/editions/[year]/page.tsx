@@ -52,6 +52,7 @@ export default async function EditionHomePage({
   return (
     <HomeTemplate
       eventInfo={edition.eventInfo}
+      venue={edition.venue}
       speakers={speakers}
       sponsors={edition.sponsors}
       faq={getFAQ(year)}

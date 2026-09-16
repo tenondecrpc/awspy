@@ -12,7 +12,7 @@ test("home exposes a concise event card and a reachable image", async ({
   );
   await expect(page.locator('meta[property="og:description"]')).toHaveAttribute(
     "content",
-    /17 de octubre de 2026.*Universidad del Norte/
+    /17 de octubre de 2026.*Servicio Nacional de Promoción Profesional/
   );
 
   const imageUrl = await page

@@ -1,8 +1,8 @@
 {
-  "name": "Universidad del Norte (UniNorte)",
-  "address": "Facultad de Ingeniería de UniNorte - MCR4+6MM, Asunción 001421, Paraguay",
-  "mapUrl": "https://maps.app.goo.gl/MgTP5UdkewbgXAik7",
-  "embedMapUrl": "https://www.openstreetmap.org/export/embed.html?bbox=-57.6003%2C-25.3144%2C-57.5864%2C-25.3044&layer=mapnik&marker=-25.3094204%2C-57.5933378",
+  "name": "Servicio Nacional de Promoción Profesional (SNPP)",
+  "address": "San Lorenzo 111421, Paraguay",
+  "mapUrl": "https://maps.app.goo.gl/B7kS64w3oYkvSpBW9",
+  "embedMapUrl": "https://www.openstreetmap.org/export/embed.html?bbox=-57.5339%2C-25.3398%2C-57.5200%2C-25.3298&layer=mapnik&marker=-25.3347969%2C-57.5269165",
   "transport": [],
   "accessibility": []
 }
