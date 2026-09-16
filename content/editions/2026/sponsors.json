@@ -1,1 +1,18 @@
-[]
+[
+  {
+    "id": "snpp",
+    "name": "SNPP",
+    "tier": "Diamante",
+    "logo": { "light": "/logos/snpp.png" },
+    "url": "https://www.snpp.edu.py/",
+    "description": "Servicio Nacional de Promoción Profesional, sede del AWS Community Day Paraguay 2026."
+  },
+  {
+    "id": "aws",
+    "name": "Amazon Web Services",
+    "tier": "Diamante",
+    "logo": { "light": "/logos/aws.png" },
+    "url": "https://aws.amazon.com/",
+    "description": "Plataforma de nube que da nombre y contenido técnico al Community Day."
+  }
+]

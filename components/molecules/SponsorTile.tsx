@@ -7,6 +7,7 @@
 // geometry with `SponsorSlotCard` so confirmed sponsors and open tiers line up
 // in one grid.
 
+import Image from "next/image";
 import { cn } from "@/lib/utils/cn";
 import { TIER_LABEL_ES } from "@/lib/utils/sponsor-tiers";
 import type { Sponsor } from "@/lib/content/sponsors";
@@ -32,11 +33,20 @@ export function SponsorTile({ sponsor, className }: SponsorTileProps) {
         className
       )}
     >
-      <span
-        aria-hidden="true"
-        className="h-[54px] w-[54px] bg-contain bg-center bg-no-repeat"
-        style={{ backgroundImage: `url(${sponsor.logo.light})` }}
-      />
+      {/* Matches the dashed frame of an open slot, so a signed logo and a
+          free slot occupy the same box. The plate stays light in both themes
+          because the sponsor supplies a single mark drawn for a light
+          background and we do not recolor someone else's brand. */}
+      <span className="relative flex h-[54px] w-full max-w-[140px] items-center justify-center rounded-[3px] bg-[var(--color-surface-logo-plate)] px-2.5 py-1.5">
+        <Image
+          src={sponsor.logo.light}
+          alt=""
+          aria-hidden="true"
+          fill
+          sizes="140px"
+          className="object-contain p-1.5"
+        />
+      </span>
       <span className="text-[14px] font-bold tracking-[-0.01em]">
         {sponsor.name}
       </span>

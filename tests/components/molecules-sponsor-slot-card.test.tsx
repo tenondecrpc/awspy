@@ -57,11 +57,21 @@ describe("listAvailableTiers", () => {
     ]);
   });
 
-  it("drops a tier as soon as a sponsor holds it", () => {
+  it("keeps a tier open once a sponsor holds it, since tiers take several", () => {
     expect(listAvailableTiers(packages, [sponsor({ tier: "Gold" })])).toEqual([
       "Diamante",
       "Platinum",
+      "Gold",
     ]);
+  });
+
+  it("drops a tier once its declared capacity is filled", () => {
+    const capped = [{ tier: "Gold" as const, slots: 2 }];
+    const one = [sponsor({ id: "a", tier: "Gold" })];
+    const two = [...one, sponsor({ id: "b", tier: "Gold" })];
+
+    expect(listAvailableTiers(capped, one)).toEqual(["Gold"]);
+    expect(listAvailableTiers(capped, two)).toEqual([]);
   });
 
   it("offers nothing when the edition prices no packages", () => {

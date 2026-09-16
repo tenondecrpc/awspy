@@ -83,6 +83,13 @@ export function SponsorsTemplate({
               disponibles para la primera edición:
             </p>
           ) : null}
+          {sponsors.length > 0 && availableTiers.length > 0 ? (
+            <p className="m-0 mb-7 max-w-[44rem] text-[16px] text-[var(--color-text-secondary)]">
+              Estas organizaciones ya confirmaron su apoyo. Cada nivel admite
+              varios sponsors, así que los cupos marcados como disponibles
+              siguen abiertos:
+            </p>
+          ) : null}
           {sponsors.length === 0 && availableTiers.length === 0 ? (
             <div className="border border-[var(--color-border-subtle)] bg-[var(--color-surface-muted)] px-7 py-14 text-center">
               <h3 className="m-0 text-[22px] font-bold tracking-[-0.02em]">

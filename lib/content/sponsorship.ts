@@ -17,6 +17,13 @@ const PackageSchema = z
     tier: SponsorTierEnum,
     /** Written as it should read, currency included ("USD 3.000"). */
     price: z.string().min(1),
+    /**
+     * How many sponsors this tier accepts. Omit it while the tier is open
+     * ended: a tier keeps offering an open slot until it declares a capacity
+     * and that many sponsors are confirmed. Several sponsors share a tier, so
+     * confirming one never closes it on its own.
+     */
+    slots: z.number().int().positive().optional(),
   })
   .strict();
 

@@ -24,10 +24,18 @@ describe("SponsorTile", () => {
     expect(tile).toHaveTextContent("Oro");
   });
 
-  it("renders the logo the content declares", () => {
+  it("renders the logo the content declares, decoratively", () => {
     const { container } = render(<SponsorTile sponsor={SPONSOR} />);
 
-    const logo = container.querySelector<HTMLElement>('[aria-hidden="true"]');
-    expect(logo?.style.backgroundImage).toContain("/logos/acme.svg");
+    const logo = container.querySelector<HTMLImageElement>("img");
+    // next/image serves SVG as-is and routes raster logos through the
+    // optimizer, so decode before asserting on the declared path.
+    expect(decodeURIComponent(logo?.getAttribute("src") ?? "")).toContain(
+      "/logos/acme.svg"
+    );
+    // The link already carries the sponsor name, so the logo must not repeat
+    // it to a screen reader.
+    expect(logo).toHaveAttribute("alt", "");
+    expect(logo).toHaveAttribute("aria-hidden", "true");
   });
 });

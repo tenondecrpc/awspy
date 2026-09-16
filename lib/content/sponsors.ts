@@ -74,26 +74,33 @@ const TIER_ORDER: SponsorTier[] = [
 ];
 
 /**
- * The priced tiers nobody holds yet, in prospectus order and de-duplicated.
+ * The priced tiers still taking sponsors, in prospectus order and
+ * de-duplicated.
  *
- * Drives the "DISPONIBLE" slots the sponsor boards render: until a tier is
- * taken it shows as an open slot, and it drops off the board the moment a
- * sponsor is confirmed for it. An edition without a prospectus prices no
+ * Drives the "DISPONIBLE" slots the sponsor boards render. A tier holds
+ * several sponsors, so confirming one does not close it: the slot stays on
+ * the board next to the logos already signed, which is what keeps the board
+ * readable as "these are in, and there is still room". A tier only drops off
+ * once its prospectus package declares a `slots` capacity and that many
+ * sponsors are confirmed for it. An edition without a prospectus prices no
  * tiers, so it offers no slots.
  */
 export function listAvailableTiers(
-  packages: Array<{ tier: SponsorTier }>,
+  packages: Array<{ tier: SponsorTier; slots?: number }>,
   sponsors: Sponsor[]
 ): SponsorTier[] {
-  const taken = new Set(sponsors.map((s) => s.tier));
+  const confirmed = new Map<SponsorTier, number>();
+  for (const s of sponsors) {
+    confirmed.set(s.tier, (confirmed.get(s.tier) ?? 0) + 1);
+  }
   const seen = new Set<SponsorTier>();
   return packages
-    .map((p) => p.tier)
-    .filter((tier) => {
-      if (taken.has(tier) || seen.has(tier)) return false;
-      seen.add(tier);
-      return true;
-    });
+    .filter((p) => {
+      if (seen.has(p.tier)) return false;
+      seen.add(p.tier);
+      return p.slots === undefined || (confirmed.get(p.tier) ?? 0) < p.slots;
+    })
+    .map((p) => p.tier);
 }
 
 export function groupSponsorsByTier(

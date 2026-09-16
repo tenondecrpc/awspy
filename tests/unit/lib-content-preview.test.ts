@@ -99,8 +99,10 @@ describe("content loaders", () => {
       if (flag !== undefined) vi.stubEnv("CONTENT_PREVIEW", flag);
     });
 
-    it("serves no invented sponsors", () => {
-      expect(getSponsors("2026")).toEqual([]);
+    it("serves the confirmed sponsors and invents none", () => {
+      const sponsors = getSponsors("2026");
+      expect(sponsors.map((s) => s.id)).toEqual(["snpp", "aws"]);
+      sponsors.forEach((s) => expect(s.tier).toBe("Diamante"));
     });
 
     it("serves the live organizers", () => {

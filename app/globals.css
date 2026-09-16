@@ -43,6 +43,11 @@
   --color-surface-hero: #000c2f;
   --color-overlay: #000c2fb3;
 
+  /* The plate sponsor logos sit on. Sponsors supply one mark, drawn for a
+     light background, and we may not recolor someone else's brand. So this
+     surface stays light in both themes and the logo keeps its own ink. */
+  --color-surface-logo-plate: #ffffff;
+
   /* Scrims, glass panels, and decorative glow. Always paired with a
      text label; never the only carrier of meaning. */
   --color-scrim-strong: #000c2feb;
@@ -143,6 +148,8 @@ html[data-theme="dark"] {
   --color-surface-inverse: #08152f;
   --color-surface-hero: #01051d;
   --color-overlay: #000c2fb3;
+  /* Deliberately not darkened: see the light theme's note. */
+  --color-surface-logo-plate: #ffffff;
   --color-scrim-strong: #01051deb;
   --color-glass: #ffffff14;
   --color-glass-border: #ffffff33;
