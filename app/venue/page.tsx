@@ -13,6 +13,6 @@ export async function generateMetadata() {
 
 export default function VenuePage() {
   const year = currentEdition();
-  const { venue } = getEdition(year);
-  return <VenueTemplate venue={venue} />;
+  const { venue, eventInfo } = getEdition(year);
+  return <VenueTemplate venue={venue} eventInfo={eventInfo} />;
 }

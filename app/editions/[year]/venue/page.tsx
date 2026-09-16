@@ -30,6 +30,6 @@ export default async function EditionVenuePage({
 }) {
   const { year } = await params;
   if (!editionExists(year)) notFound();
-  const { venue } = getEdition(year);
-  return <VenueTemplate venue={venue} />;
+  const { venue, eventInfo } = getEdition(year);
+  return <VenueTemplate venue={venue} eventInfo={eventInfo} />;
 }

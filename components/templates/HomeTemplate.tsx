@@ -18,7 +18,7 @@ import {
   RULE,
   WRAP,
 } from "@/components/molecules/SectionPrimitives";
-import { formatDate } from "@/lib/utils/datetime";
+import { formatDate, formatTime } from "@/lib/utils/datetime";
 import type { EventInfo } from "@/lib/content/event-info";
 import type { Speaker } from "@/lib/api/sessionize";
 import type { Sponsor, SponsorTier } from "@/lib/content/sponsors";
@@ -144,6 +144,9 @@ export function HomeTemplate({
   volunteersHref = "/volunteers",
 }: HomeTemplateProps) {
   const dateLabel = formatDate(eventInfo.dates.start);
+  const timeLabel = `${formatTime(eventInfo.dates.start)} – ${formatTime(
+    eventInfo.dates.end
+  )}`;
   const isOpen = eventInfo.registrationStatus === "open";
   const previewSpeakers = speakers.slice(0, 4);
   const previewTeam = organizers.slice(0, 5);
@@ -203,7 +206,7 @@ export function HomeTemplate({
               <dl className="m-0 mb-[34px] grid border-t border-[var(--color-text-primary)] [grid-template-columns:repeat(auto-fit,minmax(150px,1fr))]">
                 {[
                   { k: "Fecha", v: dateLabel },
-                  { k: "Horario", v: "08:00 – 17:00" },
+                  { k: "Horario", v: timeLabel },
                   { k: "Sede", v: eventInfo.location.summary },
                   { k: "Entrada", v: "Gratuita" },
                 ].map((d, i) => (

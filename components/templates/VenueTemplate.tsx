@@ -15,18 +15,14 @@ import {
   SECTION_BORDER,
   WRAP,
 } from "@/components/molecules/SectionPrimitives";
+import { formatDate, formatTime } from "@/lib/utils/datetime";
+import type { EventInfo } from "@/lib/content/event-info";
 import type { Venue } from "@/lib/content/venue";
 
 type VenueTemplateProps = {
   venue: Venue;
+  eventInfo: EventInfo;
 };
-
-const DETAILS: Array<[string, string]> = [
-  ["Fecha", "Sábado 17 de octubre de 2026"],
-  ["Horario", "08:00 – 17:00"],
-  ["Acreditación", "Hall de ingreso"],
-  ["Salas", "Guaraní · Ñandútí · Taller"],
-];
 
 /** Conventional venue photo path (see `public/assets/README.md`). Swapping the
  *  image is replacing that file; no code change required. */
@@ -39,7 +35,17 @@ const GALLERY = [
   "Ingreso / acreditación",
 ];
 
-export function VenueTemplate({ venue }: VenueTemplateProps) {
+export function VenueTemplate({ venue, eventInfo }: VenueTemplateProps) {
+  const details: Array<[string, string]> = [
+    ["Fecha", formatDate(eventInfo.dates.start)],
+    [
+      "Horario",
+      `${formatTime(eventInfo.dates.start)} – ${formatTime(eventInfo.dates.end)}`,
+    ],
+    ["Acreditación", "Hall de ingreso"],
+    ["Salas", "Guaraní · Ñandútí · Taller"],
+  ];
+
   return (
     <>
       <PageHeader
@@ -66,7 +72,7 @@ export function VenueTemplate({ venue }: VenueTemplateProps) {
               {venue.address}
             </p>
             <dl className="m-0 mb-7 max-w-[30rem] border-t border-[var(--color-text-primary)]">
-              {DETAILS.map(([k, v]) => (
+              {details.map(([k, v]) => (
                 <div
                   key={k}
                   className="flex justify-between gap-4 border-b border-[var(--color-border-subtle)] py-[13px]"

@@ -11,7 +11,7 @@
 import NextLink from "next/link";
 import { WRAP, SECTION_BORDER } from "@/components/molecules/SectionPrimitives";
 import { EventbriteRegisterButton } from "@/components/organisms/EventbriteRegisterButton";
-import { formatDate } from "@/lib/utils/datetime";
+import { formatDate, formatTime } from "@/lib/utils/datetime";
 import type { EventInfo } from "@/lib/content/event-info";
 
 type RegisterTemplateProps = {
@@ -196,7 +196,12 @@ export function RegisterTemplate({
                     <dl className="m-0 mb-6 border-t border-[var(--color-border-subtle)]">
                       {[
                         ["Fecha", formatDate(eventInfo.dates.start)],
-                        ["Horario", "08:00 – 17:00"],
+                        [
+                          "Horario",
+                          `${formatTime(eventInfo.dates.start)} – ${formatTime(
+                            eventInfo.dates.end
+                          )}`,
+                        ],
                         ["Sede", eventInfo.location.summary],
                         ["Incluye", "Charlas, labs y café"],
                       ].map(([k, v]) => (
