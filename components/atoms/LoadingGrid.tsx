@@ -1,5 +1,5 @@
 // LoadingGrid atom. Skeleton building block used by SpeakersGrid, ScheduleGrid,
-// SponsorsBoard, and OrganizersGrid while their underlying data resolves.
+// sponsor board, and OrganizersGrid while their underlying data resolves.
 //
 // The grid mirrors the populated layout (column count, gap, item aspect
 // ratio) to eliminate CLS when content swaps in. The wrapper exposes

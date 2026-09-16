@@ -14,8 +14,10 @@ import {
   WRAP,
 } from "@/components/molecules/SectionPrimitives";
 import { SponsorSlotCard } from "@/components/molecules/SponsorSlotCard";
+import { SponsorTile } from "@/components/molecules/SponsorTile";
 import { listAvailableTiers } from "@/lib/content/sponsors";
-import type { Sponsor, SponsorTier } from "@/lib/content/sponsors";
+import { TIER_COLOR, TIER_LABEL_ES } from "@/lib/utils/sponsor-tiers";
+import type { Sponsor } from "@/lib/content/sponsors";
 import type { Sponsorship } from "@/lib/content/sponsorship";
 import type { EventInfo } from "@/lib/content/event-info";
 
@@ -24,26 +26,6 @@ type SponsorsTemplateProps = {
   eventInfo: EventInfo;
   /** Edition prospectus. `null` when this edition has not published one. */
   sponsorship?: Sponsorship | null;
-};
-
-const TIER_ES: Record<SponsorTier, string> = {
-  Diamante: "Diamante",
-  Platinum: "Platino",
-  Gold: "Oro",
-  Silver: "Plata",
-  Bronze: "Bronce",
-  Community: "Comunidad",
-};
-
-// Tier tokens are only ever used as a small color chip here, always paired
-// with the written tier name, so the color reinforces rather than carries.
-const TIER_DOT: Record<SponsorTier, string> = {
-  Diamante: "var(--color-tier-diamante)",
-  Platinum: "var(--color-tier-platinum)",
-  Gold: "var(--color-tier-gold)",
-  Silver: "var(--color-tier-silver)",
-  Bronze: "var(--color-tier-bronze)",
-  Community: "var(--color-tier-community)",
 };
 
 export function SponsorsTemplate({
@@ -121,27 +103,11 @@ export function SponsorsTemplate({
           ) : (
             <div className="grid border-l border-t border-[var(--color-border-subtle)] [grid-template-columns:repeat(auto-fit,minmax(180px,1fr))]">
               {sponsors.map((sponsor) => (
-                <a
+                <SponsorTile
                   key={sponsor.id}
-                  href={sponsor.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label={`${sponsor.name} (sponsor ${TIER_ES[sponsor.tier]})`}
-                  className="flex min-h-[160px] flex-col items-center justify-center gap-3 border-b border-r border-[var(--color-border-subtle)] px-[18px] py-9 text-[var(--color-text-primary)] transition-colors hover:bg-[var(--color-surface-muted)]"
-                >
-                  <span
-                    role="img"
-                    aria-label={sponsor.name}
-                    className="h-[54px] w-[54px] bg-contain bg-center bg-no-repeat"
-                    style={{ backgroundImage: `url(${sponsor.logo.light})` }}
-                  />
-                  <span className="text-[14px] font-bold tracking-[-0.01em]">
-                    {sponsor.name}
-                  </span>
-                  <span className="font-mono text-[10.5px] uppercase tracking-[0.14em] text-[var(--color-text-muted)]">
-                    {TIER_ES[sponsor.tier]}
-                  </span>
-                </a>
+                  sponsor={sponsor}
+                  className="min-h-[160px] py-9"
+                />
               ))}
               {availableTiers.map((tier) => (
                 <SponsorSlotCard
@@ -219,10 +185,10 @@ export function SponsorsTemplate({
                       <span
                         aria-hidden="true"
                         className="h-2.5 w-2.5 rounded-[2px]"
-                        style={{ background: TIER_DOT[pkg.tier] }}
+                        style={{ background: TIER_COLOR[pkg.tier] }}
                       />
                       <span className="font-mono text-[11px] uppercase tracking-[0.14em] text-[var(--color-text-muted)]">
-                        {TIER_ES[pkg.tier]}
+                        {TIER_LABEL_ES[pkg.tier]}
                       </span>
                     </div>
                     <div className="mb-1 text-[28px] font-extrabold tracking-[-0.035em]">
@@ -259,7 +225,7 @@ export function SponsorsTemplate({
                           scope="col"
                           className="w-[110px] bg-[var(--color-surface-inverse)] px-3 py-3.5 font-mono text-[11px] uppercase tracking-[0.12em] text-[var(--color-text-on-inverse)]"
                         >
-                          {TIER_ES[pkg.tier]}
+                          {TIER_LABEL_ES[pkg.tier]}
                         </th>
                       ))}
                     </tr>
@@ -291,7 +257,7 @@ export function SponsorsTemplate({
                               }
                             >
                               <span className="sr-only">
-                                {TIER_ES[pkg.tier]}:{" "}
+                                {TIER_LABEL_ES[pkg.tier]}:{" "}
                                 {included ? "incluido" : "no incluido"}
                               </span>
                               <span aria-hidden="true">

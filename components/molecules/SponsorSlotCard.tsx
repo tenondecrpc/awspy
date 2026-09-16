@@ -8,27 +8,8 @@
 // reinforces the tier and never carries it alone (constitution Principle VI).
 
 import { cn } from "@/lib/utils/cn";
+import { TIER_COLOR, TIER_LABEL_ES } from "@/lib/utils/sponsor-tiers";
 import type { SponsorTier } from "@/lib/content/sponsors";
-
-const TIER_ES: Record<SponsorTier, string> = {
-  Diamante: "Diamante",
-  Platinum: "Platino",
-  Gold: "Oro",
-  Silver: "Plata",
-  Bronze: "Bronce",
-  Community: "Comunidad",
-};
-
-// Tier tokens are only ever used as a small color chip here, which is the
-// pairing verified in the palette contract.
-const TIER_DOT: Record<SponsorTier, string> = {
-  Diamante: "var(--color-tier-diamante)",
-  Platinum: "var(--color-tier-platinum)",
-  Gold: "var(--color-tier-gold)",
-  Silver: "var(--color-tier-silver)",
-  Bronze: "var(--color-tier-bronze)",
-  Community: "var(--color-tier-community)",
-};
 
 type SponsorSlotCardProps = {
   tier: SponsorTier;
@@ -45,7 +26,7 @@ export function SponsorSlotCard({
   href,
   className,
 }: SponsorSlotCardProps) {
-  const label = TIER_ES[tier];
+  const label = TIER_LABEL_ES[tier];
 
   return (
     <a
@@ -69,7 +50,7 @@ export function SponsorSlotCard({
         <span
           aria-hidden="true"
           className="h-2 w-2 flex-none rounded-[2px]"
-          style={{ background: TIER_DOT[tier] }}
+          style={{ background: TIER_COLOR[tier] }}
         />
         <span className="font-mono text-[10.5px] uppercase tracking-[0.14em] text-[var(--color-text-muted)]">
           {label}

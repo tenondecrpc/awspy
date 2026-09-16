@@ -22,8 +22,9 @@ import { formatDate, formatTime } from "@/lib/utils/datetime";
 import type { EventInfo } from "@/lib/content/event-info";
 import type { Speaker } from "@/lib/api/sessionize";
 import { SponsorSlotCard } from "@/components/molecules/SponsorSlotCard";
+import { SponsorTile } from "@/components/molecules/SponsorTile";
 import { listAvailableTiers } from "@/lib/content/sponsors";
-import type { Sponsor, SponsorTier } from "@/lib/content/sponsors";
+import type { Sponsor } from "@/lib/content/sponsors";
 import type { Sponsorship } from "@/lib/content/sponsorship";
 import type { FAQItem } from "@/lib/content/faq";
 import type { Organizer } from "@/lib/content/organizers";
@@ -123,15 +124,6 @@ const AGENDA = [
     track: "Auditorio",
   },
 ];
-
-const TIER_ES: Record<SponsorTier, string> = {
-  Diamante: "Diamante",
-  Platinum: "Platino",
-  Gold: "Oro",
-  Silver: "Plata",
-  Bronze: "Bronce",
-  Community: "Comunidad",
-};
 
 export function HomeTemplate({
   eventInfo,
@@ -609,20 +601,7 @@ export function HomeTemplate({
           ) : (
             <div className="grid border-l border-t border-[var(--color-border-subtle)] [grid-template-columns:repeat(auto-fit,minmax(180px,1fr))]">
               {sponsors.map((sponsor) => (
-                <div
-                  key={sponsor.id}
-                  className="flex min-h-[152px] flex-col items-center justify-center gap-3 border-b border-r border-[var(--color-border-subtle)] px-[18px] py-[34px]"
-                >
-                  <div
-                    role="img"
-                    aria-label={sponsor.name}
-                    className="h-[50px] w-[50px] bg-contain bg-center bg-no-repeat"
-                    style={{ backgroundImage: `url(${sponsor.logo.light})` }}
-                  />
-                  <span className="font-mono text-[10.5px] uppercase tracking-[0.14em] text-[var(--color-text-muted)]">
-                    {TIER_ES[sponsor.tier]}
-                  </span>
-                </div>
+                <SponsorTile key={sponsor.id} sponsor={sponsor} />
               ))}
               {availableTiers.map((tier) => (
                 <SponsorSlotCard
