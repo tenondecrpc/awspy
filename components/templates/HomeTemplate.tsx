@@ -476,7 +476,6 @@ export function HomeTemplate({
               </p>
               <div className="mb-[30px] grid max-w-[30rem] border-t border-[var(--color-border-on-inverse)]">
                 {[
-                  ["Estacionamiento", "En el predio"],
                   ["Accesibilidad", "Silla de ruedas"],
                   ["Transporte", "Línea del centro"],
                 ].map(([k, v]) => (
