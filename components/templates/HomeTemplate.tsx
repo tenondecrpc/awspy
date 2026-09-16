@@ -480,22 +480,6 @@ export function HomeTemplate({
                 {venue.address}. Auditorio principal, salas de taller y espacio
                 de networking en el mismo edificio.
               </p>
-              <div className="mb-[30px] grid max-w-[30rem] border-t border-[var(--color-border-on-inverse)]">
-                {[
-                  ["Accesibilidad", "Silla de ruedas"],
-                  ["Transporte", "Línea del centro"],
-                ].map(([k, v]) => (
-                  <div
-                    key={k}
-                    className="flex justify-between gap-4 border-b border-[var(--color-border-on-inverse)] py-3 text-[14px]"
-                  >
-                    <span className="text-[var(--color-text-on-inverse-muted)]">
-                      {k}
-                    </span>
-                    <span className="font-semibold">{v}</span>
-                  </div>
-                ))}
-              </div>
               <a
                 href={venue.mapUrl}
                 target="_blank"
