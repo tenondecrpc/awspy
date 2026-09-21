@@ -12,6 +12,13 @@
 // config change. Setting `CONTENT_PREVIEW=0` turns the placeholder off and
 // restores the empty state.
 //
+// The agenda fixtures read as a real programme rather than announcing
+// themselves as sample text, so the only thing that marks them is the
+// `isMockup: true` flag on every placeholder session. It is a temporary
+// stand-in while the real talks, speakers and rooms are organised. The
+// `Speakers` and `SpeakerWall` fixtures are not part of that and keep their
+// "Demo" names. See `content/preview/README.md`.
+//
 // Server-side only, like the content loaders. Importing this from a client
 // component is a programming error.
 

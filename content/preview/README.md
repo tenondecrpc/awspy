@@ -86,6 +86,32 @@ per-room accents, the plenary badges and the time chips all have something to
 render. Four views are served, matching the real API shape: `GridSmart`,
 `Speakers`, `Sessions`, `SpeakerWall`.
 
+The two agenda views (`Sessions`, `GridSmart`) read as a real programme rather
+than announcing themselves as sample text: the topics a Community Day
+actually runs (serverless, observability, FinOps, identity, data, containers,
+a Bedrock and a CDK workshop), billed to eight invented but plausible names.
+It is deliberate and temporary - it stands in while the real talks, speakers
+and rooms are organised, and Sessionize takes over the day the `GridSmart`
+view has a session.
+
+What marks those records instead is an internal boolean: every placeholder
+session carries `"isMockup": true`, declared on the session schemas in
+`lib/api/sessionize.ts` and left `undefined` otherwise - which is exactly what
+a live Sessionize payload parses to, since the provider never sends the field.
+Anything that has to tell the two apart reads it, and
+`tests/unit/lib-api-sessionize-preview.test.ts` keeps both halves honest: the
+flag on every fixture session, and no "ejemplo" / "mockup" wording in the
+copy. The invented names were checked against this edition's live Sessionize
+roster so none of them collides with a real speaker.
+
+The two people views (`Speakers`, `SpeakerWall`) are **not** part of that and
+keep their obviously-fake "Demo" names. They are also the views least likely
+to be seen: the live roster for this edition is already populated, so the
+fixture only stands in locally and in the e2e run. The visible consequence
+there is that `/speakers` lists Ana Demo while `/schedule` bills Lucía
+Benítez; in a deployed build the two never coexist, because only the empty
+view is ever substituted.
+
 `scripts/preview-sessionize.mjs` answers the same URL shape as Sessionize
 (`/{eventId}/view/{View}`); the event id is ignored. Run it on its own with
 `npm run preview:data` to point something else at it.
@@ -105,12 +131,23 @@ Adding an `*.example.json` sibling for another edition file is enough to make
 it available; the loader has to call `editionFile` rather than building the
 path itself, which `sponsors`, `organizers` and `venue` already do.
 
-## The names are fake on purpose
+## Two different kinds of placeholder
 
-Every placeholder reads as a placeholder ("Demo Cloud", "Ana Demo"). A
+The **content** placeholders read as placeholders. Sponsors, the organising
+team and the venue all carry obviously fake names ("Demo Cloud"), because a
 real-looking sponsor wall or team list would mislead attendees if it ever
-reached production. Replace the placeholders with real records rather than
-editing the fake ones.
+reached production. Replace them with real records rather than editing the
+fake ones.
+
+The **agenda** placeholder under `sessionize/` does the opposite, on purpose,
+so the schedule can be reviewed as a design while the real one is being
+organised. Nothing in its wording says "example"; the `isMockup` flag does.
+The trade is worth stating plainly: a deployed build with `CONTENT_PREVIEW` on
+shows visitors a plausible programme, with plausible speaker names, that
+nobody has confirmed. Three things keep that in check - the flag, the warning
+`lib/api/sessionize-preview.ts` logs on every boot, and the fact that the
+fixture only appears while the live view is empty. `CONTENT_PREVIEW=0`
+restores the empty state.
 
 The sponsor logos they point at live in `public/logos/demo-*.svg` and are
 placeholder marks, not real brand assets.

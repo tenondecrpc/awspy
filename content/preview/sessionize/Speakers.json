@@ -18,7 +18,7 @@
     "sessions": [
       {
         "id": "102",
-        "name": "Keynote de apertura: la nube que construye la comunidad"
+        "name": "Keynote de apertura: la comunidad AWS en Paraguay"
       },
       {
         "id": "111",
@@ -26,7 +26,7 @@
       },
       {
         "id": "114",
-        "name": "Panel de cierre: cómo sigue la comunidad"
+        "name": "Panel de cierre: cómo sigue la comunidad en Paraguay"
       }
     ]
   },
@@ -76,7 +76,7 @@
     "sessions": [
       {
         "id": "104",
-        "name": "Observabilidad en EKS con OpenTelemetry"
+        "name": "Observabilidad en Amazon EKS con OpenTelemetry"
       },
       {
         "id": "112",
@@ -103,11 +103,11 @@
     "sessions": [
       {
         "id": "105",
-        "name": "Taller: tu primera aplicación con Amazon Bedrock"
+        "name": "Taller: tu primera aplicación de IA generativa con Amazon Bedrock"
       },
       {
         "id": "113",
-        "name": "Rendimiento y costos en bases de datos gestionadas"
+        "name": "Bases de datos gestionadas: cuándo Aurora y cuándo DynamoDB"
       }
     ]
   },
@@ -130,7 +130,7 @@
     "sessions": [
       {
         "id": "106",
-        "name": "FinOps: bajar la factura sin frenar al equipo"
+        "name": "FinOps en AWS: bajar la factura sin frenar al equipo"
       },
       {
         "id": "112",
@@ -157,11 +157,11 @@
     "sessions": [
       {
         "id": "107",
-        "name": "Identidades y accesos con IAM Identity Center"
+        "name": "De usuarios IAM a acceso federado con IAM Identity Center"
       },
       {
         "id": "114",
-        "name": "Panel de cierre: cómo sigue la comunidad"
+        "name": "Panel de cierre: cómo sigue la comunidad en Paraguay"
       }
     ]
   },
@@ -184,7 +184,7 @@
     "sessions": [
       {
         "id": "109",
-        "name": "Datos en tiempo real con Kinesis y Athena"
+        "name": "Datos en tiempo real con Kinesis, S3 y Athena"
       }
     ]
   },
@@ -207,11 +207,11 @@
     "sessions": [
       {
         "id": "110",
-        "name": "Del monolito a contenedores: una migración real"
+        "name": "Del monolito a contenedores: una migración real a ECS Fargate"
       },
       {
         "id": "114",
-        "name": "Panel de cierre: cómo sigue la comunidad"
+        "name": "Panel de cierre: cómo sigue la comunidad en Paraguay"
       }
     ]
   }

@@ -14,12 +14,13 @@
             "endsAt": "2026-10-17T08:30:00-03:00",
             "isPlenumSession": true,
             "isServiceSession": true,
-            "speakers": []
+            "speakers": [],
+            "isMockup": true
           },
           {
             "id": "102",
-            "title": "Keynote de apertura: la nube que construye la comunidad",
-            "description": "Datos de ejemplo. Cómo la comunidad AWS de Paraguay llegó a su primera edición y qué viene después.",
+            "title": "Keynote de apertura: la comunidad AWS en Paraguay",
+            "description": "Cómo la comunidad AWS paraguaya llegó a su primera Community Day, qué se está construyendo hoy en la región y de qué formas se puede participar durante el resto del año.",
             "startsAt": "2026-10-17T08:30:00-03:00",
             "endsAt": "2026-10-17T09:15:00-03:00",
             "isPlenumSession": true,
@@ -27,14 +28,15 @@
             "speakers": [
               {
                 "id": "s1",
-                "name": "Ana Demo"
+                "name": "Lucía Benítez"
               }
-            ]
+            ],
+            "isMockup": true
           },
           {
             "id": "103",
             "title": "Arquitecturas serverless que escalan sin sorpresas",
-            "description": "Datos de ejemplo. Patrones de diseño, límites reales y cómo evitar sorpresas en la factura.",
+            "description": "Lambda, API Gateway y EventBridge en un caso de producción: manejo de concurrencia, reintentos idempotentes, colas de mensajes fallidos y los límites del servicio que conviene conocer antes de chocarse con ellos.",
             "startsAt": "2026-10-17T09:30:00-03:00",
             "endsAt": "2026-10-17T10:15:00-03:00",
             "isPlenumSession": false,
@@ -42,14 +44,15 @@
             "speakers": [
               {
                 "id": "s2",
-                "name": "Bruno Demo"
+                "name": "Mateo Villalba"
               }
-            ]
+            ],
+            "isMockup": true
           },
           {
             "id": "106",
-            "title": "FinOps: bajar la factura sin frenar al equipo",
-            "description": "Datos de ejemplo. Etiquetado, presupuestos y las tres decisiones que más mueven el costo.",
+            "title": "FinOps en AWS: bajar la factura sin frenar al equipo",
+            "description": "Etiquetado que el equipo realmente respeta, presupuestos y alertas en AWS Budgets, Savings Plans y las decisiones de arquitectura que más mueven el costo mensual.",
             "startsAt": "2026-10-17T10:30:00-03:00",
             "endsAt": "2026-10-17T11:15:00-03:00",
             "isPlenumSession": false,
@@ -57,14 +60,15 @@
             "speakers": [
               {
                 "id": "s5",
-                "name": "Elena Demo"
+                "name": "Verónica Cáceres"
               }
-            ]
+            ],
+            "isMockup": true
           },
           {
             "id": "109",
-            "title": "Datos en tiempo real con Kinesis y Athena",
-            "description": "Datos de ejemplo. Ingesta, particionado y consultas que no cuestan una fortuna.",
+            "title": "Datos en tiempo real con Kinesis, S3 y Athena",
+            "description": "Ingesta de eventos en streaming, particionado y formatos columnares en el data lake, y consultas SQL que responden en segundos sin que el costo se dispare.",
             "startsAt": "2026-10-17T11:45:00-03:00",
             "endsAt": "2026-10-17T12:30:00-03:00",
             "isPlenumSession": false,
@@ -72,14 +76,15 @@
             "speakers": [
               {
                 "id": "s7",
-                "name": "Gabriela Demo"
+                "name": "Patricia Franco"
               }
-            ]
+            ],
+            "isMockup": true
           },
           {
             "id": "112",
             "title": "Lightning talks de la comunidad",
-            "description": "Datos de ejemplo. Cinco charlas de diez minutos propuestas por la comunidad.",
+            "description": "Cinco charlas de diez minutos propuestas por la comunidad: herramientas, aprendizajes y proyectos personales sobre AWS.",
             "startsAt": "2026-10-17T12:45:00-03:00",
             "endsAt": "2026-10-17T13:30:00-03:00",
             "isPlenumSession": true,
@@ -87,22 +92,23 @@
             "speakers": [
               {
                 "id": "s2",
-                "name": "Bruno Demo"
+                "name": "Mateo Villalba"
               },
               {
                 "id": "s3",
-                "name": "Carla Demo"
+                "name": "Carolina Giménez"
               },
               {
                 "id": "s5",
-                "name": "Elena Demo"
+                "name": "Verónica Cáceres"
               }
-            ]
+            ],
+            "isMockup": true
           },
           {
             "id": "114",
-            "title": "Panel de cierre: cómo sigue la comunidad",
-            "description": "Datos de ejemplo. Panel abierto con preguntas del público.",
+            "title": "Panel de cierre: cómo sigue la comunidad en Paraguay",
+            "description": "Organizadores, speakers y AWS Community Builders conversan sobre meetups, mentorías y el camino hacia la próxima edición, con preguntas abiertas del público.",
             "startsAt": "2026-10-17T13:45:00-03:00",
             "endsAt": "2026-10-17T14:30:00-03:00",
             "isPlenumSession": true,
@@ -110,17 +116,18 @@
             "speakers": [
               {
                 "id": "s1",
-                "name": "Ana Demo"
+                "name": "Lucía Benítez"
               },
               {
                 "id": "s6",
-                "name": "Fabián Demo"
+                "name": "Marcelo Riveros"
               },
               {
                 "id": "s8",
-                "name": "Hugo Demo"
+                "name": "Sebastián Escobar"
               }
-            ]
+            ],
+            "isMockup": true
           },
           {
             "id": "115",
@@ -130,7 +137,8 @@
             "endsAt": "2026-10-17T15:00:00-03:00",
             "isPlenumSession": true,
             "isServiceSession": true,
-            "speakers": []
+            "speakers": [],
+            "isMockup": true
           }
         ]
       },
@@ -140,8 +148,8 @@
         "sessions": [
           {
             "id": "104",
-            "title": "Observabilidad en EKS con OpenTelemetry",
-            "description": "Datos de ejemplo. Instrumentación, trazas distribuidas y alertas que sí sirven.",
+            "title": "Observabilidad en Amazon EKS con OpenTelemetry",
+            "description": "Instrumentar servicios en Kubernetes con OpenTelemetry, enviar métricas y trazas a CloudWatch y Amazon Managed Grafana, y definir alertas accionables en lugar de ruido que nadie mira.",
             "startsAt": "2026-10-17T09:30:00-03:00",
             "endsAt": "2026-10-17T10:15:00-03:00",
             "isPlenumSession": false,
@@ -149,14 +157,15 @@
             "speakers": [
               {
                 "id": "s3",
-                "name": "Carla Demo"
+                "name": "Carolina Giménez"
               }
-            ]
+            ],
+            "isMockup": true
           },
           {
             "id": "107",
-            "title": "Identidades y accesos con IAM Identity Center",
-            "description": "Datos de ejemplo. De usuarios IAM a acceso federado y de mínimo privilegio.",
+            "title": "De usuarios IAM a acceso federado con IAM Identity Center",
+            "description": "Cómo dejar atrás las credenciales de larga duración, diseñar permisos de mínimo privilegio en un entorno multi-cuenta y auditar quién accedió a qué y cuándo.",
             "startsAt": "2026-10-17T10:30:00-03:00",
             "endsAt": "2026-10-17T11:15:00-03:00",
             "isPlenumSession": false,
@@ -164,14 +173,15 @@
             "speakers": [
               {
                 "id": "s6",
-                "name": "Fabián Demo"
+                "name": "Marcelo Riveros"
               }
-            ]
+            ],
+            "isMockup": true
           },
           {
             "id": "110",
-            "title": "Del monolito a contenedores: una migración real",
-            "description": "Datos de ejemplo. Qué funcionó, qué rompí y qué haría distinto.",
+            "title": "Del monolito a contenedores: una migración real a ECS Fargate",
+            "description": "El camino completo de una aplicación monolítica a contenedores: qué se rompió en el intento, cómo quedaron los despliegues y qué decisiones se tomarían distinto hoy.",
             "startsAt": "2026-10-17T11:45:00-03:00",
             "endsAt": "2026-10-17T12:30:00-03:00",
             "isPlenumSession": false,
@@ -179,14 +189,15 @@
             "speakers": [
               {
                 "id": "s8",
-                "name": "Hugo Demo"
+                "name": "Sebastián Escobar"
               }
-            ]
+            ],
+            "isMockup": true
           },
           {
             "id": "113",
-            "title": "Rendimiento y costos en bases de datos gestionadas",
-            "description": "Datos de ejemplo. Aurora, DynamoDB y cómo elegir sin arrepentirse.",
+            "title": "Bases de datos gestionadas: cuándo Aurora y cuándo DynamoDB",
+            "description": "Modelos de datos, patrones de acceso, rendimiento bajo carga y costo real de cada opción, con criterios para decidir sin arrepentirse a los seis meses.",
             "startsAt": "2026-10-17T12:45:00-03:00",
             "endsAt": "2026-10-17T13:30:00-03:00",
             "isPlenumSession": false,
@@ -194,9 +205,10 @@
             "speakers": [
               {
                 "id": "s4",
-                "name": "Diego Demo"
+                "name": "Rodrigo Ortiz"
               }
-            ]
+            ],
+            "isMockup": true
           }
         ]
       },
@@ -206,8 +218,8 @@
         "sessions": [
           {
             "id": "105",
-            "title": "Taller: tu primera aplicación con Amazon Bedrock",
-            "description": "Datos de ejemplo. Taller práctico. Traeé tu notebook con una cuenta de AWS activa.",
+            "title": "Taller: tu primera aplicación de IA generativa con Amazon Bedrock",
+            "description": "Taller práctico: invocar modelos fundacionales desde el SDK, sumar contexto propio con RAG sobre documentos y controlar el costo por request. Traé tu notebook con una cuenta de AWS activa.",
             "startsAt": "2026-10-17T09:30:00-03:00",
             "endsAt": "2026-10-17T11:00:00-03:00",
             "isPlenumSession": false,
@@ -215,14 +227,15 @@
             "speakers": [
               {
                 "id": "s4",
-                "name": "Diego Demo"
+                "name": "Rodrigo Ortiz"
               }
-            ]
+            ],
+            "isMockup": true
           },
           {
             "id": "111",
             "title": "Taller: infraestructura como código con AWS CDK",
-            "description": "Datos de ejemplo. Taller práctico desde cero hasta el primer despliegue.",
+            "description": "Taller práctico: primer stack en TypeScript, constructs reutilizables, despliegue desde cero y un pipeline mínimo de integración continua. Traé tu notebook con una cuenta de AWS activa.",
             "startsAt": "2026-10-17T11:45:00-03:00",
             "endsAt": "2026-10-17T13:15:00-03:00",
             "isPlenumSession": false,
@@ -230,9 +243,10 @@
             "speakers": [
               {
                 "id": "s1",
-                "name": "Ana Demo"
+                "name": "Lucía Benítez"
               }
-            ]
+            ],
+            "isMockup": true
           }
         ]
       },
@@ -248,7 +262,8 @@
             "endsAt": "2026-10-17T11:45:00-03:00",
             "isPlenumSession": true,
             "isServiceSession": true,
-            "speakers": []
+            "speakers": [],
+            "isMockup": true
           }
         ]
       }

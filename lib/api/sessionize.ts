@@ -102,6 +102,12 @@ export const SessionizeSessionSchema = z
     speakers: z.array(SessionizeSpeakerRefSchema).optional().default([]),
     isPlenumSession: z.boolean().optional().default(false),
     isServiceSession: z.boolean().optional().default(false),
+    // Internal marker, never sent by the live Sessionize API: `true` only on
+    // the placeholder records in `content/preview/sessionize/`, so a session
+    // that reads as a real one can still be told apart in code and in tests.
+    // Left `undefined` rather than defaulted, like `isTopSpeaker`: absent is
+    // exactly what a real provider payload looks like.
+    isMockup: z.boolean().optional(),
   })
   .passthrough()
   .superRefine((value, ctx) => {
@@ -141,6 +147,8 @@ const GridSessionSchema = z
     endsAt: z.string().datetime({ offset: true }),
     isPlenumSession: z.boolean().optional().default(false),
     isServiceSession: z.boolean().optional().default(false),
+    // See `SessionizeSessionSchema`: placeholder-only marker.
+    isMockup: z.boolean().optional(),
     speakers: z
       .array(
         z.object({

@@ -14,7 +14,7 @@ test.describe("/schedule", () => {
     ).toBeVisible();
     await expect(page.getByText(/agenda próximamente/i)).toHaveCount(0);
     await expect(
-      page.getByText("Keynote de apertura: la nube que construye la comunidad")
+      page.getByText("Keynote de apertura: la comunidad AWS en Paraguay")
     ).toBeVisible();
   });
 
@@ -35,7 +35,7 @@ test.describe("/schedule", () => {
     await expect(page).toHaveURL(/room=Sala/);
     await expect(
       page.getByRole("heading", {
-        name: "Observabilidad en EKS con OpenTelemetry",
+        name: "Observabilidad en Amazon EKS con OpenTelemetry",
       })
     ).toBeVisible();
     await expect(

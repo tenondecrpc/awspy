@@ -166,6 +166,25 @@ describe("Zod schemas against the captured fixtures", () => {
     }
   });
 
+  it("leaves isMockup unset on a live session payload", () => {
+    // The live Sessionize API never sends the field; only the placeholder
+    // fixtures set it, so anything parsed from the provider reads as real.
+    const session = SessionizeSessionSchema.parse({
+      id: "session-1",
+      title: "Real session",
+      startsAt: "2026-09-12T15:00:00-03:00",
+      endsAt: "2026-09-12T16:00:00-03:00",
+    });
+    expect(session.isMockup).toBeUndefined();
+
+    const mock = SessionizeSessionSchema.parse({
+      id: "session-2",
+      title: "Placeholder session",
+      isMockup: true,
+    });
+    expect(mock.isMockup).toBe(true);
+  });
+
   it("keeps one-sided optional session timestamps compatible", () => {
     expect(
       SessionizeSessionSchema.safeParse({
