@@ -4,8 +4,8 @@ import { SponsorshipPackages } from "@/components/organisms/SponsorshipPackages"
 import type { Sponsorship } from "@/lib/content/sponsorship";
 
 const PACKAGES: Sponsorship["packages"] = [
-  { tier: "Diamante", price: "USD 3.000" },
-  { tier: "Silver", price: "USD 500" },
+  { tier: "Diamante" },
+  { tier: "Silver" },
 ];
 
 const BENEFITS: Sponsorship["benefits"] = [
@@ -14,13 +14,13 @@ const BENEFITS: Sponsorship["benefits"] = [
 ];
 
 describe("SponsorshipPackages", () => {
-  it("renders a column per package with its price", () => {
+  it("renders a column per package, named by its tier alone", () => {
     render(<SponsorshipPackages packages={PACKAGES} benefits={BENEFITS} />);
     const headers = screen.getAllByRole("columnheader");
     expect(headers.map((h) => h.textContent)).toEqual([
       "Beneficio",
-      "DiamanteUSD 3.000",
-      "SilverUSD 500",
+      "Diamante",
+      "Silver",
     ]);
   });
 

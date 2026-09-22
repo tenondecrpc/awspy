@@ -3,10 +3,7 @@ import { SponsorshipSchema, getSponsorship } from "@/lib/content/sponsorship";
 
 const VALID = {
   intro: "Patrocinar es una oportunidad.",
-  packages: [
-    { tier: "Diamante", price: "USD 3.000" },
-    { tier: "Silver", price: "USD 500" },
-  ],
+  packages: [{ tier: "Diamante" }, { tier: "Silver" }],
   benefits: [
     { label: "Logo en el sitio", tiers: ["Diamante", "Silver"] },
     { label: "Charla de 45 min", tiers: ["Diamante"] },
@@ -37,14 +34,20 @@ describe("SponsorshipSchema", () => {
   it("rejects a duplicated package tier", () => {
     const result = SponsorshipSchema.safeParse({
       ...VALID,
-      packages: [
-        { tier: "Gold", price: "USD 1.000" },
-        { tier: "Gold", price: "USD 900" },
-      ],
+      packages: [{ tier: "Gold" }, { tier: "Gold" }],
       benefits: [],
     });
     expect(result.success).toBe(false);
     expect(result.error?.issues[0].message).toMatch(/is duplicated/);
+  });
+
+  it("rejects a package price, so an amount never reaches a page", () => {
+    const result = SponsorshipSchema.safeParse({
+      ...VALID,
+      packages: [{ tier: "Diamante", price: "USD 3.000" }, { tier: "Silver" }],
+    });
+    expect(result.success).toBe(false);
+    expect(result.error?.issues[0].path).toEqual(["packages", 0]);
   });
 
   it("rejects an unknown key", () => {

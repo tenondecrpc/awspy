@@ -1,6 +1,6 @@
 import { render, screen } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
-import { SponsorSlotCard } from "@/components/molecules/SponsorSlotCard";
+import { SponsorLogoSlots } from "@/components/molecules/SponsorLogoSlots";
 import { listAvailableTiers } from "@/lib/content/sponsors";
 import type { Sponsor } from "@/lib/content/sponsors";
 
@@ -15,30 +15,33 @@ function sponsor(overrides: Partial<Sponsor> = {}): Sponsor {
   };
 }
 
-describe("SponsorSlotCard", () => {
-  it("offers the tier as an open slot and links to the packages", () => {
-    render(
-      <SponsorSlotCard tier="Diamante" price="USD 3.000" href="#paquetes" />
-    );
+describe("SponsorLogoSlots", () => {
+  it("draws one empty frame per open slot behind a single link", () => {
+    render(<SponsorLogoSlots count={3} href="#paquetes" />);
 
-    const slot = screen.getByRole("link", {
-      name: "Cupo de sponsor Diamante disponible, USD 3.000",
+    const links = screen.getAllByRole("link");
+    expect(links).toHaveLength(1);
+    const row = screen.getByRole("link", {
+      name: "Tu logo aquí: sumate como sponsor",
     });
-    expect(slot).toHaveAttribute("href", "#paquetes");
-    expect(slot).toHaveTextContent("Disponible");
-    // The tier is spelled out, so the color chip is never the only signal.
-    expect(slot).toHaveTextContent("Diamante");
-    expect(slot).toHaveTextContent("USD 3.000");
+    expect(row).toHaveAttribute("href", "#paquetes");
+    expect(row.children).toHaveLength(3);
+    Array.from(row.children).forEach((frame) => {
+      expect(frame).toHaveTextContent("Tu logo aquí");
+      expect(frame).toHaveAttribute("aria-hidden", "true");
+    });
   });
 
-  it("drops the price when the tier is unpriced", () => {
-    render(<SponsorSlotCard tier="Community" href="mailto:hola@example.com" />);
+  it("names no tier and no amount, so the invitation never quotes a price", () => {
+    render(<SponsorLogoSlots count={4} href="/sponsors" />);
 
-    const slot = screen.getByRole("link", {
-      name: "Cupo de sponsor Comunidad disponible",
-    });
-    expect(slot).toHaveTextContent("Comunidad");
-    expect(slot).not.toHaveTextContent("USD");
+    const row = screen.getByRole("link");
+    expect(row.textContent).toBe("Tu logo aquí".repeat(4));
+  });
+
+  it("renders nothing when there is no room left", () => {
+    const { container } = render(<SponsorLogoSlots count={0} href="#" />);
+    expect(container).toBeEmptyDOMElement();
   });
 });
 

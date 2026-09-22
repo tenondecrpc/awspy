@@ -70,10 +70,7 @@ export function SponsorshipPackages({
                   scope="col"
                   className="p-4 text-center align-bottom"
                 >
-                  <span className="flex flex-col items-center gap-2">
-                    <Badge variant={TIER_VARIANT[pkg.tier]}>{pkg.tier}</Badge>
-                    <span className="text-lg font-bold">{pkg.price}</span>
-                  </span>
+                  <Badge variant={TIER_VARIANT[pkg.tier]}>{pkg.tier}</Badge>
                 </th>
               ))}
             </tr>

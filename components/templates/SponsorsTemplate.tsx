@@ -7,14 +7,17 @@
 // package cards with their benefit comparison table, and the "what your money
 // pays for" list. Editions without a prospectus fall back to the plain contact
 // callout the page had before. Every sponsor logo links to its site.
+//
+// The page names each package and what it includes, never what it costs: an
+// amount on a public page turns companies away before they write, so pricing
+// goes out on request.
 
 import {
   NumberHeading,
   PageHeader,
   WRAP,
 } from "@/components/molecules/SectionPrimitives";
-import { SponsorSlotCard } from "@/components/molecules/SponsorSlotCard";
-import { SponsorTile } from "@/components/molecules/SponsorTile";
+import { SponsorBoard } from "@/components/organisms/SponsorBoard";
 import { listAvailableTiers } from "@/lib/content/sponsors";
 import { TIER_COLOR, TIER_LABEL_ES } from "@/lib/utils/sponsor-tiers";
 import type { Sponsor } from "@/lib/content/sponsors";
@@ -41,11 +44,12 @@ export function SponsorsTemplate({
   const hasPackages = sponsorship != null && sponsorship.packages.length > 0;
   const hasFunds = sponsorship != null && sponsorship.funds.length > 0;
 
-  // The tiers still for sale. They fill the board while the real logos are
-  // being signed, and each one drops off as its sponsor is confirmed.
-  const packages = sponsorship?.packages ?? [];
-  const availableTiers = listAvailableTiers(packages, sponsors);
-  const priceByTier = new Map(packages.map((p) => [p.tier, p.price]));
+  // One empty frame per tier still for sale. They fill the board while the
+  // real logos are being signed, and each drops off once its tier is full.
+  const openSlots = listAvailableTiers(
+    sponsorship?.packages ?? [],
+    sponsors
+  ).length;
   const slotHref = hasPackages ? "#paquetes" : mailto;
 
   return (
@@ -77,20 +81,19 @@ export function SponsorsTemplate({
       <section className="border-b border-[var(--color-text-primary)] bg-[var(--color-surface)]">
         <div className={`${WRAP} py-14`}>
           <NumberHeading n="01" title="Quiénes nos acompañan" />
-          {sponsors.length === 0 && availableTiers.length > 0 ? (
+          {sponsors.length === 0 && openSlots > 0 ? (
             <p className="m-0 mb-7 max-w-[44rem] text-[16px] text-[var(--color-text-secondary)]">
-              Todavía no hay sponsors confirmados. Estos son los cupos
-              disponibles para la primera edición:
+              Todavía no hay sponsors confirmados para la primera edición. Este
+              lugar puede ser para tu marca:
             </p>
           ) : null}
-          {sponsors.length > 0 && availableTiers.length > 0 ? (
+          {sponsors.length > 0 && openSlots > 0 ? (
             <p className="m-0 mb-7 max-w-[44rem] text-[16px] text-[var(--color-text-secondary)]">
               Estas organizaciones ya confirmaron su apoyo. Cada nivel admite
-              varios sponsors, así que los cupos marcados como disponibles
-              siguen abiertos:
+              varios sponsors, así que todavía hay lugar para tu marca:
             </p>
           ) : null}
-          {sponsors.length === 0 && availableTiers.length === 0 ? (
+          {sponsors.length === 0 && openSlots === 0 ? (
             <div className="border border-[var(--color-border-subtle)] bg-[var(--color-surface-muted)] px-7 py-14 text-center">
               <h3 className="m-0 text-[22px] font-bold tracking-[-0.02em]">
                 Sumate como sponsor
@@ -108,24 +111,11 @@ export function SponsorsTemplate({
               </p>
             </div>
           ) : (
-            <div className="grid border-l border-t border-[var(--color-border-subtle)] [grid-template-columns:repeat(auto-fit,minmax(min(180px,100%),1fr))]">
-              {sponsors.map((sponsor) => (
-                <SponsorTile
-                  key={sponsor.id}
-                  sponsor={sponsor}
-                  className="min-h-[160px] py-9"
-                />
-              ))}
-              {availableTiers.map((tier) => (
-                <SponsorSlotCard
-                  key={tier}
-                  tier={tier}
-                  price={priceByTier.get(tier)}
-                  href={slotHref}
-                  className="min-h-[160px] py-9"
-                />
-              ))}
-            </div>
+            <SponsorBoard
+              sponsors={sponsors}
+              openSlots={openSlots}
+              slotHref={slotHref}
+            />
           )}
           <p className="mt-[18px] text-[13.5px] text-[var(--color-text-muted)]">
             Los sponsors confirmados se publican a medida que se cierran los
@@ -188,18 +178,15 @@ export function SponsorsTemplate({
                     key={pkg.tier}
                     className="min-w-0 border-b border-r border-[var(--color-border-subtle)] px-[22px] py-[26px]"
                   >
-                    <div className="mb-3 flex items-center gap-2.5">
+                    <div className="mb-1.5 flex items-center gap-2.5">
                       <span
                         aria-hidden="true"
-                        className="h-2.5 w-2.5 rounded-[2px]"
+                        className="h-2.5 w-2.5 flex-none rounded-[2px]"
                         style={{ background: TIER_COLOR[pkg.tier] }}
                       />
-                      <span className="font-mono text-[11px] uppercase tracking-[0.14em] text-[var(--color-text-muted)]">
+                      <h3 className="m-0 text-[26px] font-extrabold tracking-[-0.035em]">
                         {TIER_LABEL_ES[pkg.tier]}
-                      </span>
-                    </div>
-                    <div className="mb-1 text-[28px] font-extrabold tracking-[-0.035em]">
-                      {pkg.price}
+                      </h3>
                     </div>
                     <div className="text-[13px] text-[var(--color-text-muted)]">
                       {count}{" "}

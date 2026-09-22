@@ -1,11 +1,11 @@
-// A confirmed sponsor, drawn as one tile of the sponsor board: logo, name and
-// tier, linking to the sponsor's own site.
+// A confirmed sponsor, drawn as one tile of the sponsor board: logo and name,
+// linking to the sponsor's own site.
 //
 // The home page and the sponsors page render this same tile, so a sponsor
 // looks and behaves identically on both — before this existed the home copy
-// was a plain div and the logos there were not clickable at all. It shares its
-// geometry with `SponsorSlotCard` so confirmed sponsors and open tiers line up
-// in one grid.
+// was a plain div and the logos there were not clickable at all. The board
+// writes the tier once, as the heading of the group the tile sits in, so the
+// tile only repeats it in its accessible name.
 
 import Image from "next/image";
 import { cn } from "@/lib/utils/cn";
@@ -27,16 +27,15 @@ export function SponsorTile({ sponsor, className }: SponsorTileProps) {
       rel="noopener noreferrer"
       aria-label={`${sponsor.name} (sponsor ${tier})`}
       className={cn(
-        "flex min-h-[152px] flex-col items-center justify-center gap-3",
-        "border-b border-r border-[var(--color-border-subtle)] px-[18px] py-[34px]",
+        "flex min-h-[132px] flex-col items-center justify-center gap-3 rounded-[4px]",
+        "border border-[var(--color-border-subtle)] px-[18px] py-6",
         "text-center text-[var(--color-text-primary)] transition-colors hover:bg-[var(--color-surface-muted)]",
         className
       )}
     >
-      {/* Matches the dashed frame of an open slot, so a signed logo and a
-          free slot occupy the same box. The plate stays light in both themes
-          because the sponsor supplies a single mark drawn for a light
-          background and we do not recolor someone else's brand. */}
+      {/* The plate stays light in both themes because the sponsor supplies a
+          single mark drawn for a light background and we do not recolor
+          someone else's brand. */}
       <span className="relative flex h-[54px] w-full max-w-[140px] items-center justify-center rounded-[3px] bg-[var(--color-surface-logo-plate)] px-2.5 py-1.5">
         <Image
           src={sponsor.logo.light}
@@ -49,9 +48,6 @@ export function SponsorTile({ sponsor, className }: SponsorTileProps) {
       </span>
       <span className="text-[14px] font-bold tracking-[-0.01em]">
         {sponsor.name}
-      </span>
-      <span className="font-mono text-[10.5px] uppercase tracking-[0.14em] text-[var(--color-text-muted)]">
-        {tier}
       </span>
     </a>
   );

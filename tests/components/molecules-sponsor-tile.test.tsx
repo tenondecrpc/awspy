@@ -15,13 +15,13 @@ describe("SponsorTile", () => {
   it("links the sponsor to its own site and names its tier in Spanish", () => {
     render(<SponsorTile sponsor={SPONSOR} />);
 
+    // The board writes the tier as the group heading; the tile carries it in
+    // its accessible name so a link read out of context still says it.
     const tile = screen.getByRole("link", { name: "Acme (sponsor Oro)" });
     expect(tile).toHaveAttribute("href", "https://example.com/acme");
     expect(tile).toHaveAttribute("target", "_blank");
     expect(tile).toHaveAttribute("rel", expect.stringContaining("noopener"));
     expect(tile).toHaveTextContent("Acme");
-    // The tier is written out, never left to the logo or a color alone.
-    expect(tile).toHaveTextContent("Oro");
   });
 
   it("renders the logo the content declares, decoratively", () => {

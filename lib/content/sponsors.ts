@@ -74,16 +74,16 @@ const TIER_ORDER: SponsorTier[] = [
 ];
 
 /**
- * The priced tiers still taking sponsors, in prospectus order and
+ * The packaged tiers still taking sponsors, in prospectus order and
  * de-duplicated.
  *
- * Drives the "DISPONIBLE" slots the sponsor boards render. A tier holds
- * several sponsors, so confirming one does not close it: the slot stays on
- * the board next to the logos already signed, which is what keeps the board
- * readable as "these are in, and there is still room". A tier only drops off
- * once its prospectus package declares a `slots` capacity and that many
- * sponsors are confirmed for it. An edition without a prospectus prices no
- * tiers, so it offers no slots.
+ * Drives the "Tu logo aquí" frames the sponsor boards render, one per tier. A
+ * tier holds several sponsors, so confirming one does not close it: its frame
+ * stays on the board next to the logos already signed, which is what keeps
+ * the board readable as "these are in, and there is still room". A tier only
+ * drops off once its prospectus package declares a `slots` capacity and that
+ * many sponsors are confirmed for it. An edition without a prospectus
+ * packages no tiers, so it offers no frames.
  */
 export function listAvailableTiers(
   packages: Array<{ tier: SponsorTier; slots?: number }>,

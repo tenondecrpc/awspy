@@ -127,8 +127,13 @@ export type Sponsor = z.infer<typeof SponsorSchema>;
 ## sponsorship.json
 
 Optional. The prospectus rendered by `/sponsors`: why sponsor, what each
-package costs and includes, and what the contribution pays for. An edition
-without this file renders the plain contact callout instead.
+package includes, and what the contribution pays for. An edition without this
+file renders the plain contact callout instead.
+
+The prospectus carries no amounts. A price on a public page turns companies
+away before they write, so the site names each package and its benefits and
+pricing goes out on request. `packages[]` is strict, so a `price` key fails
+the build rather than reaching a page.
 
 ```ts
 export const SponsorshipSchema = z.object({
@@ -139,7 +144,7 @@ export const SponsorshipSchema = z.object({
   }).strict()).optional().default([]),
   packages: z.array(z.object({
     tier: SponsorTierEnum,
-    price: z.string().min(1)   // written as it reads, e.g. "USD 3.000"
+    slots: z.number().int().positive().optional()   // tier capacity; omit while open ended
   }).strict()).optional().default([]),
   benefits: z.array(z.object({
     label: z.string().min(1),

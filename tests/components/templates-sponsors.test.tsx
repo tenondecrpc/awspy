@@ -7,6 +7,8 @@ import { getSponsorship } from "@/lib/content/sponsorship";
 
 const EVENT_INFO = getEventInfo("2026");
 const SPONSORSHIP = getSponsorship("2026");
+// A currency code or symbol followed by a figure: "USD 3.000", "$500", "Gs. 1".
+const AMOUNT = /\b(USD|US\$|Gs\.?)\s*\d|\$\s*\d/;
 
 describe("SponsorsTemplate", () => {
   it("renders the confirmed sponsors and the prospectus packages", () => {
@@ -37,7 +39,7 @@ describe("SponsorsTemplate", () => {
     }
   });
 
-  it("offers every open tier instead of an empty board", () => {
+  it("offers an empty frame per open tier instead of an empty board", () => {
     render(
       <SponsorsTemplate
         sponsors={[]}
@@ -50,15 +52,34 @@ describe("SponsorsTemplate", () => {
       screen.getByText(/Todavía no hay sponsors confirmados/)
     ).toBeInTheDocument();
 
-    // One open slot per priced tier, each routed to the package table.
+    // One frame per packaged tier, routed to the package table.
     const packages = SPONSORSHIP?.packages ?? [];
     expect(packages.length).toBeGreaterThan(0);
-    const slots = screen.getAllByRole("link", { name: /^Cupo de sponsor / });
-    expect(slots).toHaveLength(packages.length);
-    slots.forEach((slot) => {
-      expect(slot).toHaveAttribute("href", "#paquetes");
-      expect(slot).toHaveTextContent("Disponible");
-    });
+    const row = screen.getByRole("link", { name: /^Tu logo aquí/ });
+    expect(row).toHaveAttribute("href", "#paquetes");
+    expect(row.children).toHaveLength(packages.length);
+  });
+
+  it("names every package and its benefits but never an amount", () => {
+    const { container } = render(
+      <SponsorsTemplate
+        sponsors={getSponsors("2026")}
+        eventInfo={EVENT_INFO}
+        sponsorship={SPONSORSHIP}
+      />
+    );
+
+    const packages = SPONSORSHIP?.packages ?? [];
+    expect(packages.length).toBeGreaterThan(0);
+    expect(
+      screen.getByRole("heading", { name: "Paquetes de patrocinio" })
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("table", {
+        name: "Beneficios incluidos en cada paquete de patrocinio",
+      })
+    ).toBeInTheDocument();
+    expect(container.textContent).not.toMatch(AMOUNT);
   });
 
   it("falls back to the invitation when the edition prices no tiers", () => {
@@ -74,7 +95,7 @@ describe("SponsorsTemplate", () => {
       screen.getByRole("heading", { name: "Sumate como sponsor" })
     ).toBeInTheDocument();
     expect(
-      screen.queryByRole("link", { name: /^Cupo de sponsor / })
+      screen.queryByRole("link", { name: /^Tu logo aquí/ })
     ).not.toBeInTheDocument();
   });
 

@@ -35,10 +35,10 @@
     }
   ],
   "packages": [
-    { "tier": "Diamante", "price": "USD 3.000" },
-    { "tier": "Platinum", "price": "USD 2.000" },
-    { "tier": "Gold", "price": "USD 1.000" },
-    { "tier": "Silver", "price": "USD 500" }
+    { "tier": "Diamante" },
+    { "tier": "Platinum" },
+    { "tier": "Gold" },
+    { "tier": "Silver" }
   ],
   "benefits": [
     {

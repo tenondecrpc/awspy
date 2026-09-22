@@ -27,8 +27,7 @@ import {
 import { formatDate, formatTime } from "@/lib/utils/datetime";
 import type { EventInfo } from "@/lib/content/event-info";
 import type { Speaker } from "@/lib/api/sessionize";
-import { SponsorSlotCard } from "@/components/molecules/SponsorSlotCard";
-import { SponsorTile } from "@/components/molecules/SponsorTile";
+import { SponsorBoard } from "@/components/organisms/SponsorBoard";
 import { listAvailableTiers } from "@/lib/content/sponsors";
 import type { Sponsor } from "@/lib/content/sponsors";
 import type { Sponsorship } from "@/lib/content/sponsorship";
@@ -154,11 +153,12 @@ export function HomeTemplate({
   const isOpen = eventInfo.registrationStatus === "open";
   const previewSpeakers = speakers.slice(0, 4);
   const previewTeam = organizers.slice(0, 5);
-  // Open tiers fill the sponsor board while the real logos are still being
-  // signed, so it never renders as a bare line of text.
-  const packages = sponsorship?.packages ?? [];
-  const availableTiers = listAvailableTiers(packages, sponsors);
-  const priceByTier = new Map(packages.map((p) => [p.tier, p.price]));
+  // One empty frame per open tier fills the sponsor board while the real
+  // logos are still being signed, so it never renders as a bare line of text.
+  const openSlots = listAvailableTiers(
+    sponsorship?.packages ?? [],
+    sponsors
+  ).length;
 
   return (
     <>
@@ -614,24 +614,16 @@ export function HomeTemplate({
             title="Sponsors"
             action={{ href: sponsorsHref, label: "Ver todos" }}
           />
-          {sponsors.length === 0 && availableTiers.length === 0 ? (
+          {sponsors.length === 0 && openSlots === 0 ? (
             <p className="text-[15px] text-[var(--color-text-secondary)]">
               Aún no hay sponsors confirmados.
             </p>
           ) : (
-            <div className="grid border-l border-t border-[var(--color-border-subtle)] [grid-template-columns:repeat(auto-fit,minmax(min(180px,100%),1fr))]">
-              {sponsors.map((sponsor) => (
-                <SponsorTile key={sponsor.id} sponsor={sponsor} />
-              ))}
-              {availableTiers.map((tier) => (
-                <SponsorSlotCard
-                  key={tier}
-                  tier={tier}
-                  price={priceByTier.get(tier)}
-                  href={sponsorsHref}
-                />
-              ))}
-            </div>
+            <SponsorBoard
+              sponsors={sponsors}
+              openSlots={openSlots}
+              slotHref={sponsorsHref}
+            />
           )}
           <p className="mt-6 text-[15px] text-[var(--color-text-secondary)]">
             ¿Tu organización quiere sumarse?{" "}

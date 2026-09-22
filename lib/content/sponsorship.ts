@@ -1,6 +1,7 @@
 // Loader for `content/editions/{year}/sponsorship.json` - the prospectus the
-// sponsors page renders: why sponsor, what each package costs and includes,
-// and what the money pays for. Schema and contract in
+// sponsors page renders: why sponsor, what each package includes, and what the
+// money pays for. It carries no amounts: the site never publishes prices,
+// which go out on request. Schema and contract in
 // `specs/001-community-day-site/contracts/content-schemas.md`.
 //
 // Unlike the other edition files this one is optional. An edition that has
@@ -15,8 +16,6 @@ import { SponsorTierEnum, type SponsorTier } from "@/lib/content/sponsors";
 const PackageSchema = z
   .object({
     tier: SponsorTierEnum,
-    /** Written as it should read, currency included ("USD 3.000"). */
-    price: z.string().min(1),
     /**
      * How many sponsors this tier accepts. Omit it while the tier is open
      * ended: a tier keeps offering an open slot until it declares a capacity
