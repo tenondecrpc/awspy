@@ -266,7 +266,14 @@ export function HomeTemplate({
                 // from 900px up. Stated in px so the srcset keeps every rung —
                 // the previous `190vw` pruned it to 1920/2048/3840, which is
                 // why phones were downloading the largest entry.
-                sizes="(min-width: 700px) 1200px, 700px"
+                //
+                // The phone figure is deliberately 640 rather than the 692 it
+                // paints. A 3x phone needs 2073px and the declared value picks
+                // its rung: 692 would round up to 2400 (320 kB) where 1920
+                // (225 kB) is a 7% upscale nobody can see, and 3x phones are
+                // the ones least able to afford the difference. The cost is an
+                // 8% upscale on a 1x phone, which is rarer and older.
+                sizes="(min-width: 700px) 1200px, 640px"
                 preload
               />
             </div>
