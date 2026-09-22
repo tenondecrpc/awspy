@@ -8,6 +8,7 @@
 // when empty. The fixed facts panel and photo gallery mirror the mockup's
 // static presentational content.
 
+import venuePhoto from "@/public/assets/venue/cover.jpg";
 import {
   Frame,
   NumberHeading,
@@ -25,8 +26,10 @@ type VenueTemplateProps = {
 };
 
 /** Conventional venue photo path (see `public/assets/README.md`). Swapping the
- *  image is replacing that file; no code change required. */
-const VENUE_PHOTO = "/assets/venue/cover.jpg";
+ *  image is replacing that file; no code change required. The static import
+ *  means the build hashes whatever that file currently holds, so a replacement
+ *  gets a fresh URL instead of waiting out the optimizer's cache TTL. */
+const VENUE_PHOTO = venuePhoto;
 
 const GALLERY = [
   "Auditorio",
@@ -62,7 +65,9 @@ export function VenueTemplate({ venue, eventInfo }: VenueTemplateProps) {
               label={`Fachada de ${venue.name}`}
               photo={VENUE_PHOTO}
               className="h-full w-full"
-              sizes="(min-width: 768px) 960px, 200vw"
+              // Measured cover-rendered widths for this 16:9 photo in a
+              // 420px-tall panel: 741px on a phone, 932-1043px above it.
+              sizes="(min-width: 768px) 1050px, 750px"
               preload
             />
           </div>

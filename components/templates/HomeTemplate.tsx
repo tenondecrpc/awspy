@@ -9,6 +9,12 @@
 // static presentational content, exactly as in the mockup.
 
 import NextLink from "next/link";
+// Imported rather than referenced by path so the optimizer's upstream is the
+// content-hashed `/_next/static/media/` copy: replacing the file changes the
+// URL, which is what makes a long optimizer TTL safe, and the import also
+// carries the blur placeholder for the LCP frame.
+import heroPhoto from "@/public/assets/anterior.jpg";
+import venuePhoto from "@/public/assets/venue/cover.jpg";
 import { Countdown } from "@/components/organisms/Countdown";
 import {
   Frame,
@@ -253,9 +259,14 @@ export function HomeTemplate({
             <div className="min-h-[520px] min-w-0 border-l border-[var(--color-text-primary)]">
               <Frame
                 label="Foto principal — comunidad / edición anterior"
-                photo="/assets/anterior.jpg"
+                photo={heroPhoto}
                 className="h-full w-full"
-                sizes="(min-width: 700px) 1200px, 190vw"
+                // Measured cover-rendered widths: 692px on a 390px phone (the
+                // 520px min-height drives it, not the viewport) and 1128-1172px
+                // from 900px up. Stated in px so the srcset keeps every rung —
+                // the previous `190vw` pruned it to 1920/2048/3840, which is
+                // why phones were downloading the largest entry.
+                sizes="(min-width: 700px) 1200px, 700px"
                 preload
               />
             </div>
@@ -501,10 +512,13 @@ export function HomeTemplate({
             <div className="relative min-h-[440px] min-w-0 border-l border-[var(--color-border-on-inverse)]">
               <Frame
                 label={`Foto de la sede — ${venue.name}`}
-                photo="/assets/venue/cover.jpg"
+                photo={venuePhoto}
                 position="right"
                 className="h-full w-full"
-                sizes="(min-width: 700px) 850px, 200vw"
+                // The 440px min-height drives the cover crop of this 16:9
+                // photo, so the rendered width sits at 780-840px on every
+                // viewport rather than tracking one.
+                sizes="840px"
               />
             </div>
           </div>

@@ -107,7 +107,10 @@ export function SpeakerDetailTemplate({
                 label={`Retrato de ${speaker.fullName}`}
                 photo={speaker.profilePicture ?? undefined}
                 className="h-full w-full"
-                sizes="(min-width: 700px) 800px, 200vw"
+                // Sessionize serves square portraits, so the 460px min-height
+                // sets the cover-rendered width on a phone and the column
+                // width sets it above that.
+                sizes="(min-width: 700px) 620px, 480px"
                 preload
               />
             </div>

@@ -7,7 +7,7 @@
 // (the `local/no-color-literals` rule forbids hex/rgb here).
 
 import type { ReactNode } from "react";
-import Image from "next/image";
+import Image, { type StaticImageData } from "next/image";
 import NextLink from "next/link";
 
 /** The mockup content column: centered, 1240px max, 28px gutters. */
@@ -114,18 +114,29 @@ export function PageHeader({
 type FrameProps = {
   label: string;
   className?: string;
-  photo?: string;
+  /** A static import (hashed URL, blur placeholder, cached as immutable) for a
+   *  photo that ships with the repo, or a path/URL for a provider-supplied one. */
+  photo?: string | StaticImageData;
   /** Overrides the default centered crop, e.g. "right". */
   position?: string;
   /** How wide the photo is *rendered*, so the browser picks the right entry
    *  from the generated srcset. Defaults to the card slots (190-320px).
    *
-   *  Careful: the frame crops with `object-cover`, so a slot that is taller
-   *  than the source's aspect ratio renders the source WIDER than the slot —
-   *  `max(slotWidth, slotHeight * sourceAspect)`. A portrait panel holding a
-   *  4:3 photo renders it at about twice the slot width, and passing the slot
-   *  width there fetches a half-resolution image that visibly softens faces.
-   *  The tall panels below therefore pass the cover-rendered width. */
+   *  Careful, twice over:
+   *
+   *  1. The frame crops with `object-cover`, so a slot that is taller than the
+   *     source's aspect ratio renders the source WIDER than the slot —
+   *     `max(slotWidth, slotHeight * sourceAspect)`. A portrait panel holding a
+   *     4:3 photo renders it at about twice the slot width, and passing the
+   *     slot width there fetches a half-resolution image that visibly softens
+   *     faces. The tall panels therefore pass the cover-rendered width.
+   *  2. A `vw` unit in this string does not just describe the slot, it *prunes*
+   *     the srcset: `next/image` keeps only the widths at or above
+   *     `smallestVw% * 640`. `190vw` left the hero with nothing under 1920px in
+   *     its srcset, so every phone downloaded the largest entry. The
+   *     cover-rendered width of these panels is driven by their fixed
+   *     `min-h-*`, not by the viewport, so they state it in `px` and keep the
+   *     whole ladder available. */
   sizes?: string;
   /** Set on the one above-the-fold photo that is the LCP element, so it is
    *  preloaded from the head instead of being discovered late. */
@@ -174,6 +185,10 @@ export function Frame({
         fill
         sizes={sizes ?? "(min-width: 640px) 320px, 100vw"}
         preload={preload}
+        // A static import carries a generated `blurDataURL`, so the frame can
+        // show the photo's colours while the real bytes arrive instead of an
+        // empty box. A provider URL has none and stays empty.
+        placeholder={typeof photo === "string" ? "empty" : "blur"}
         className="object-cover"
         style={position ? { objectPosition: position } : undefined}
       />
