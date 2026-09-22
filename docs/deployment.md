@@ -122,6 +122,42 @@ curl -sSIL https://awscommunitydayparaguay.com
 curl -sSIL https://www.awscommunitydayparaguay.com
 ```
 
+### Response streaming is not available
+
+Amplify buffers the SSR response. Measured on the deployed site with a real
+browser, against the same build served locally:
+
+| | first byte | last byte | hero image requested |
+|---|---|---|---|
+| local `next start` | 16ms | 1000ms | **20ms**, while the document is still arriving |
+| Amplify | 1014ms | 1015ms | 1017ms |
+
+One millisecond between the first and last byte means the whole document is
+assembled before anything is sent. A `<Suspense>` boundary therefore buys
+nothing here: the shell cannot reach the browser early, so the `<head>` and its
+image preload still wait for the slowest part of the page.
+
+This was tried and reverted (see the revert of `1848d33`). Do not reach for
+streaming, Suspense-for-latency, or Partial Prerendering as a performance tool
+on this host until this table says otherwise. Re-measure with the script shape
+above before assuming it changed.
+
+A related measurement worth keeping: the Sessionize read is *not* what makes the
+dynamic routes slow. From `us-east-1` it is cheap, and the route that no longer
+waited for it measured the same as the two that did.
+
+```text
+/faq       (static)                      ~0.09s
+/          (does not await Sessionize)   ~0.41s
+/speakers  (awaits Sessionize)           ~0.42s
+/schedule  (awaits Sessionize)           ~0.40s
+```
+
+The ~0.32s gap is the compute path itself. The only lever that closes it is
+letting the CDN serve the document, which is what LOGIC-016 currently forbids.
+Measuring Sessionize latency from a developer machine overstates its cost by an
+order of magnitude and has already misled one round of work.
+
 ### Response headers
 
 `next.config.ts` declares the security headers for `/(.*)` and a `Cache-Control`

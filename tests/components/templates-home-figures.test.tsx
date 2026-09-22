@@ -17,7 +17,7 @@ describe("HomeTemplate expected figures band", () => {
       <HomeTemplate
         eventInfo={eventInfo}
         venue={venue}
-        speakers={Promise.resolve([])}
+        speakers={[]}
         sponsors={[]}
         faq={[]}
         organizers={[]}
@@ -38,7 +38,7 @@ describe("HomeTemplate expected figures band", () => {
       <HomeTemplate
         eventInfo={{ ...eventInfo, expectedFigures: [] }}
         venue={venue}
-        speakers={Promise.resolve([])}
+        speakers={[]}
         sponsors={[]}
         faq={[]}
         organizers={[]}

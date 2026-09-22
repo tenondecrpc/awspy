@@ -47,9 +47,7 @@ export default async function EditionHomePage({
   const { year } = await params;
   if (!editionExists(year)) notFound();
   const edition = getEdition(year);
-  // Not awaited, for the same reason as the current-edition home: the
-  // template suspends the one section that needs it.
-  const speakers = listSpeakers(edition.eventInfo.sessionizeEventId);
+  const speakers = await listSpeakers(edition.eventInfo.sessionizeEventId);
 
   return (
     <HomeTemplate

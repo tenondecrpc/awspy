@@ -37,10 +37,6 @@ Sessionize API ------> lib/api + Zod --------+
 - Sessionize reads use `cache: "no-store"` and render dynamically to avoid the
   unqualified Next.js 16 ISR path on Amplify. They still fall back to empty
   states on network or contract failures.
-- The home page does not block on that read. The page starts it and passes the
-  promise down; the one section that consumes it sits behind a `<Suspense>`
-  boundary, so the document shell and the hero image preload flush first. The
-  page still owns the call. See ADR-0010.
 - Local content validation fails loudly during build.
 
 ## Component boundaries

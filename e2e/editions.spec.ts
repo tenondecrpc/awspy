@@ -25,30 +25,6 @@ test.describe("editions", () => {
     ).toBeVisible();
   });
 
-  // The speakers preview streams in behind a Suspense boundary, so the unit
-  // suite cannot see it: React DOM does not resume a `use()` promise under
-  // jsdom. This is the assertion that moved here, and it is the stronger
-  // version of it - a real server, really streaming.
-  test("/editions/2026 keeps the streamed speaker links inside the edition", async ({
-    page,
-  }) => {
-    await page.goto("/editions/2026");
-    const section = page.locator("#speakers");
-    await expect(section.getByRole("link").first()).toBeVisible();
-
-    const hrefs = await section
-      .getByRole("link")
-      .evaluateAll((links) =>
-        links
-          .map((link) => link.getAttribute("href") ?? "")
-          .filter((href) => href.startsWith("/"))
-      );
-    expect(hrefs.length).toBeGreaterThan(0);
-    expect(hrefs.filter((href) => !href.startsWith("/editions/2026"))).toEqual(
-      []
-    );
-  });
-
   test("/editions/2026/cfp shows the archived notice", async ({ page }) => {
     await page.goto("/editions/2026/cfp");
     await expect(page.getByText(/esta edición ya finalizó/i)).toBeVisible();

@@ -24,7 +24,7 @@ function renderArchivedEdition() {
     <HomeTemplate
       eventInfo={getEventInfo("2026")}
       venue={getVenue("2026")}
-      speakers={Promise.resolve([SPEAKER])}
+      speakers={[SPEAKER]}
       sponsors={[]}
       faq={[]}
       organizers={[]}
@@ -54,12 +54,13 @@ describe("HomeTemplate edition links", () => {
     expect(escaped).toEqual([]);
   });
 
-  // The speaker cards are not asserted here. They render behind a Suspense
-  // boundary and React DOM does not resume a `use()` promise under jsdom, so
-  // this sweep only ever sees the fallback. `e2e/editions.spec.ts` carries
-  // that assertion against a real server instead.
-  it("scopes the section actions to the edition", () => {
+  it("scopes the speaker detail and the section actions to the edition", () => {
     renderArchivedEdition();
+
+    expect(screen.getByRole("link", { name: /Ada Lovelace/ })).toHaveAttribute(
+      "href",
+      "/editions/2026/speakers/ada-lovelace"
+    );
 
     const allLinks = screen.getAllByRole("link", { name: "Ver todos →" });
     expect(allLinks.map((link) => link.getAttribute("href"))).toEqual([
