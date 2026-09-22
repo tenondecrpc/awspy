@@ -1,0 +1,50 @@
+# AWS Amplify Hosting custom response headers.
+#
+# Amplify applies the `headers()` block in `next.config.ts` to the responses it
+# renders, but not to the files it serves directly: `public/`, `.next/static/`
+# and the image optimizer all arrive without it. Measured on production before
+# this file existed, `/assets/icons/compute-lambda.svg` came back with only
+# `cache-control: max-age=5, stale-while-revalidate` and none of the four
+# security headers the app declares for every route.
+#
+# This file is the Amplify-specific mirror of that intent. `next.config.ts`
+# keeps its own copy: it is the portable one, and it is what applies on any
+# other host (see `docs/deployment.md`). The two are expected to agree.
+#
+# Reference: https://docs.aws.amazon.com/amplify/latest/userguide/custom-header-YAML-format.html
+customHeaders:
+  # The same four headers `next.config.ts` sets on `/(.*)`. Values are
+  # byte-identical on purpose, so a path covered by both ends up with one
+  # policy rather than two that have to be reconciled.
+  - pattern: "**/*"
+    headers:
+      - key: "X-Content-Type-Options"
+        value: "nosniff"
+      - key: "X-Frame-Options"
+        value: "DENY"
+      - key: "Referrer-Policy"
+        value: "strict-origin-when-cross-origin"
+      - key: "Permissions-Policy"
+        value: "camera=(), microphone=(), geolocation=()"
+
+  # `public/assets` is served with `max-age=5`, so the twelve marquee icons and
+  # the logos are refetched on essentially every navigation. A week of
+  # freshness plus a month of stale-while-revalidate keeps them on the CDN
+  # without making them immutable, because sponsor logos do get replaced in
+  # place and should recover without a rename.
+  #
+  # Deliberately not `**/*`: that would overwrite the `immutable` cache header
+  # that `.next/static` and the optimizer already carry, which is the one thing
+  # worth protecting here.
+  #
+  # Two patterns because the documented recursive form is `**/*`, which may not
+  # match a file sitting directly in the directory. Both carry the same value,
+  # so a file matching both gets one policy either way.
+  - pattern: "/assets/*"
+    headers:
+      - key: "Cache-Control"
+        value: "public, max-age=604800, stale-while-revalidate=2592000"
+  - pattern: "/assets/**/*"
+    headers:
+      - key: "Cache-Control"
+        value: "public, max-age=604800, stale-while-revalidate=2592000"

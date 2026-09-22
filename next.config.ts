@@ -26,6 +26,10 @@ const nextConfig: NextConfig = {
         // stale-while-revalidate keeps them on the CDN without making them
         // immutable: a file replaced in place is picked up on the next
         // revalidation instead of being pinned for a year.
+        //
+        // Amplify ignores this block for the files it serves directly, so
+        // `customHttp.yml` carries the same value for that host. This one is
+        // the portable copy and applies anywhere else.
         source: "/assets/:path*",
         headers: [
           {

@@ -122,6 +122,31 @@ curl -sSIL https://awscommunitydayparaguay.com
 curl -sSIL https://www.awscommunitydayparaguay.com
 ```
 
+### Response headers
+
+`next.config.ts` declares the security headers for `/(.*)` and a `Cache-Control`
+for `/assets/:path*`. Amplify applies that block only to the responses it
+renders: the files it serves directly — `public/`, `.next/static/` and the
+image optimizer — arrive without it. Measured on production, an SVG under
+`/assets/icons/` came back with `cache-control: max-age=5,
+stale-while-revalidate` and none of the four security headers.
+
+`customHttp.yml` in the repository root is the Amplify-specific mirror, and is
+the file to edit for that host. `next.config.ts` keeps the portable copy for
+every other target listed below. The two are expected to agree; if a header
+changes in one, change it in both.
+
+Verify after a deploy:
+
+```sh
+curl -sSI https://www.awscommunitydayparaguay.com/assets/icons/compute-lambda.svg
+curl -sSI https://www.awscommunitydayparaguay.com/_next/static/chunks/<file>.css
+```
+
+The first should carry the week-long `Cache-Control` and the security headers.
+The second must keep `max-age=31536000, immutable` — no `customHttp.yml` pattern
+may overwrite the cache header on content-hashed build output.
+
 ### Lighthouse on the preview
 
 The following is a planned external validation command and was not executed in
