@@ -227,13 +227,18 @@ export function ScheduleTemplate({
                     <div
                       key={slot.id}
                       className={
-                        "grid items-start gap-x-[18px] border-b border-[var(--color-border-subtle)] px-1 py-[18px] [grid-template-columns:minmax(110px,130px)_4px_minmax(0,1fr)_minmax(0,0.75fr)] " +
+                        // Same stacking as the home agenda preview: below `sm`
+                        // the colour bar runs down the left and time, detail
+                        // and room labels stack beside it. The four-column
+                        // layout needs ~470px and was forcing the whole page
+                        // to scroll sideways on every phone.
+                        "grid items-start gap-x-[18px] gap-y-2 border-b border-[var(--color-border-subtle)] px-1 py-[18px] [grid-template-columns:4px_minmax(0,1fr)] sm:gap-y-0 sm:[grid-template-columns:minmax(110px,130px)_4px_minmax(0,1fr)_minmax(0,0.75fr)] " +
                         (slot.isService
                           ? "bg-[var(--color-surface-muted)]"
                           : "transition-colors hover:bg-[var(--color-surface-muted)]")
                       }
                     >
-                      <div className="min-w-0">
+                      <div className="col-start-2 row-start-1 min-w-0 sm:col-start-auto sm:row-start-auto">
                         <div className="font-mono text-[14px] font-medium text-[var(--color-text-primary)]">
                           {formatTime(slot.startsAt)}
                         </div>
@@ -244,11 +249,11 @@ export function ScheduleTemplate({
 
                       <span
                         aria-hidden="true"
-                        className="w-1 self-stretch rounded-[2px]"
+                        className="col-start-1 row-start-1 row-span-3 w-1 self-stretch rounded-[2px] sm:col-start-auto sm:row-start-auto sm:row-span-1"
                         style={{ background: slot.roomColor }}
                       />
 
-                      <div className="min-w-0">
+                      <div className="col-start-2 row-start-2 min-w-0 sm:col-start-auto sm:row-start-auto">
                         <h3 className="m-0 mb-1 text-[17px] font-bold leading-[1.3] tracking-[-0.018em]">
                           {slot.title}
                         </h3>
@@ -278,7 +283,7 @@ export function ScheduleTemplate({
                         ) : null}
                       </div>
 
-                      <div className="flex min-w-0 flex-wrap justify-start gap-1.5 pt-0.5">
+                      <div className="col-start-2 row-start-3 flex min-w-0 flex-wrap justify-start gap-1.5 pt-0.5 sm:col-start-auto sm:row-start-auto">
                         <span className="whitespace-nowrap rounded-[3px] border border-[var(--color-border-subtle)] px-[9px] py-1 font-mono text-[10.5px] uppercase tracking-[0.1em] text-[var(--color-text-secondary)]">
                           {slot.roomName}
                         </span>

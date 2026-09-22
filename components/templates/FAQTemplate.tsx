@@ -38,7 +38,7 @@ export function FAQTemplate({ items }: FAQTemplateProps) {
               publicar las dudas más comunes con sus respuestas.
             </p>
           ) : (
-            <div className="grid gap-x-14 border-t border-[var(--color-text-primary)] [grid-template-columns:repeat(auto-fit,minmax(320px,1fr))]">
+            <div className="grid gap-x-14 border-t border-[var(--color-text-primary)] [grid-template-columns:repeat(auto-fit,minmax(min(320px,100%),1fr))]">
               {items.map((item) => (
                 <div
                   key={item.id}

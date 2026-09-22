@@ -174,7 +174,7 @@ export function VolunteersTemplate({
               >
                 <div className={`${WRAP} py-[52px]`}>
                   <NumberHeading n="01" title="En qué podés ayudar" />
-                  <div className="grid border-l border-t border-[var(--color-border-subtle)] [grid-template-columns:repeat(auto-fit,minmax(280px,1fr))]">
+                  <div className="grid border-l border-t border-[var(--color-border-subtle)] [grid-template-columns:repeat(auto-fit,minmax(min(280px,100%),1fr))]">
                     {TASKS.map((task, i) => (
                       <div
                         key={task.title}

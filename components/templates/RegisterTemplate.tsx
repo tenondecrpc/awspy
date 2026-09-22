@@ -148,7 +148,7 @@ export function RegisterTemplate({
           {/* ── Cómo funciona + ticket ───────────────────────── */}
           <section className={SECTION_BORDER}>
             <div className={WRAP}>
-              <div className="grid [grid-template-columns:repeat(auto-fit,minmax(320px,1fr))]">
+              <div className="grid [grid-template-columns:repeat(auto-fit,minmax(min(320px,100%),1fr))]">
                 <div className="min-w-0 py-14 pr-0 lg:pr-12">
                   <h2 className="m-0 mb-5 text-[24px] font-extrabold tracking-[-0.03em] text-[var(--color-text-primary)]">
                     Cómo funciona
@@ -250,7 +250,7 @@ export function RegisterTemplate({
               <h2 className="m-0 mb-6 text-[clamp(22px,2.6vw,30px)] font-extrabold leading-[1.05] tracking-[-0.03em] text-[var(--color-text-primary)]">
                 Antes de venir
               </h2>
-              <div className="grid border-l border-t border-[var(--color-text-primary)] [grid-template-columns:repeat(auto-fit,minmax(280px,1fr))]">
+              <div className="grid border-l border-t border-[var(--color-text-primary)] [grid-template-columns:repeat(auto-fit,minmax(min(280px,100%),1fr))]">
                 {NOTES.map((n) => (
                   <div
                     key={n.title}

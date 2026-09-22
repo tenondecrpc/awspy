@@ -108,7 +108,7 @@ export function SponsorsTemplate({
               </p>
             </div>
           ) : (
-            <div className="grid border-l border-t border-[var(--color-border-subtle)] [grid-template-columns:repeat(auto-fit,minmax(180px,1fr))]">
+            <div className="grid border-l border-t border-[var(--color-border-subtle)] [grid-template-columns:repeat(auto-fit,minmax(min(180px,100%),1fr))]">
               {sponsors.map((sponsor) => (
                 <SponsorTile
                   key={sponsor.id}
@@ -142,7 +142,7 @@ export function SponsorsTemplate({
             <p className="m-0 mb-9 max-w-[46rem] text-[16.5px] text-[var(--color-text-secondary)]">
               {sponsorship!.intro}
             </p>
-            <div className="grid border-l border-t border-[var(--color-text-primary)] [grid-template-columns:repeat(auto-fit,minmax(280px,1fr))]">
+            <div className="grid border-l border-t border-[var(--color-text-primary)] [grid-template-columns:repeat(auto-fit,minmax(min(280px,100%),1fr))]">
               {sponsorship!.highlights.map((highlight, i) => (
                 <div
                   key={highlight.title}
@@ -178,7 +178,7 @@ export function SponsorsTemplate({
               medida.
             </p>
 
-            <div className="mb-9 grid border-l border-t border-[var(--color-text-primary)] [grid-template-columns:repeat(auto-fit,minmax(200px,1fr))]">
+            <div className="mb-9 grid border-l border-t border-[var(--color-text-primary)] [grid-template-columns:repeat(auto-fit,minmax(min(200px,100%),1fr))]">
               {sponsorship!.packages.map((pkg) => {
                 const count = sponsorship!.benefits.filter((b) =>
                   b.tiers.includes(pkg.tier)
@@ -292,7 +292,7 @@ export function SponsorsTemplate({
               Tu apoyo es un aporte directo a la comunidad técnica paraguaya.
               Así se usa:
             </p>
-            <ul className="grid list-none border-t border-[var(--color-text-primary)] p-0 [grid-template-columns:repeat(auto-fit,minmax(260px,1fr))]">
+            <ul className="grid list-none border-t border-[var(--color-text-primary)] p-0 [grid-template-columns:repeat(auto-fit,minmax(min(260px,100%),1fr))]">
               {sponsorship!.funds.map((item) => (
                 <li
                   key={item}
@@ -317,7 +317,7 @@ export function SponsorsTemplate({
       {/* ── 05 · ¿Querés ser sponsor? ────────────────────────── */}
       <section className="bg-[var(--color-surface)]">
         <div className={`${WRAP} pb-[72px] pt-16`}>
-          <div className="grid items-center gap-10 [grid-template-columns:repeat(auto-fit,minmax(300px,1fr))]">
+          <div className="grid items-center gap-10 [grid-template-columns:repeat(auto-fit,minmax(min(300px,100%),1fr))]">
             <div className="min-w-0">
               <h2 className="m-0 mb-3.5 text-[clamp(24px,3vw,36px)] font-extrabold leading-[1.05] tracking-[-0.035em]">
                 ¿Querés ser sponsor?
@@ -349,7 +349,12 @@ export function SponsorsTemplate({
                   <dt className="font-mono text-[11px] uppercase tracking-[0.14em] text-[var(--color-text-muted)]">
                     Correo
                   </dt>
-                  <dd className="m-0 break-words text-[15px]">
+                  {/* `break-words` alone does not shrink the flex item: it
+                      breaks at paint time but leaves min-content at the full
+                      address, so the row pushed the page sideways at 320px.
+                      `overflow-wrap: anywhere` is the one that also lowers the
+                      intrinsic minimum. */}
+                  <dd className="m-0 min-w-0 text-right text-[15px] [overflow-wrap:anywhere]">
                     <a
                       href={`mailto:${sponsorship.contact.email}`}
                       className="text-[var(--color-accent)] hover:underline"

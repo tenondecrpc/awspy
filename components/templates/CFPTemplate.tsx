@@ -123,7 +123,7 @@ export function CFPTemplate({ eventInfo, archived = false }: CFPTemplateProps) {
       {/* ── Formatos + Qué buscamos ──────────────────────────── */}
       <section className={SECTION_BORDER}>
         <div className={WRAP}>
-          <div className="grid [grid-template-columns:repeat(auto-fit,minmax(300px,1fr))]">
+          <div className="grid [grid-template-columns:repeat(auto-fit,minmax(min(300px,100%),1fr))]">
             <div className="min-w-0 py-[52px] pr-0 lg:pr-12">
               <h2 className="m-0 mb-5 text-[24px] font-extrabold tracking-[-0.03em] text-[var(--color-text-primary)]">
                 Formatos
@@ -183,7 +183,7 @@ export function CFPTemplate({ eventInfo, archived = false }: CFPTemplateProps) {
           <h2 className="m-0 mb-[26px] text-[clamp(22px,2.6vw,30px)] font-extrabold leading-[1.05] tracking-[-0.03em] text-[var(--color-text-primary)]">
             Fechas clave
           </h2>
-          <div className="grid border-l border-t border-[var(--color-text-primary)] [grid-template-columns:repeat(auto-fit,minmax(230px,1fr))]">
+          <div className="grid border-l border-t border-[var(--color-text-primary)] [grid-template-columns:repeat(auto-fit,minmax(min(230px,100%),1fr))]">
             {DATES.map((d) => (
               <div
                 key={d.title}
@@ -210,7 +210,7 @@ export function CFPTemplate({ eventInfo, archived = false }: CFPTemplateProps) {
       {/* ── ¿Es tu primera charla? ───────────────────────────── */}
       <section>
         <div className={`${WRAP} pb-[72px] pt-14`}>
-          <div className="grid items-center gap-10 [grid-template-columns:repeat(auto-fit,minmax(300px,1fr))]">
+          <div className="grid items-center gap-10 [grid-template-columns:repeat(auto-fit,minmax(min(300px,100%),1fr))]">
             <div className="min-w-0">
               <h2 className="m-0 mb-3.5 text-[clamp(24px,3vw,34px)] font-extrabold leading-[1.05] tracking-[-0.035em] text-[var(--color-text-primary)]">
                 ¿Es tu primera charla?

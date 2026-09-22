@@ -168,7 +168,7 @@ export function HomeTemplate({
         className="border-b border-[var(--color-text-primary)] bg-[var(--color-surface-muted)]"
       >
         <div className={WRAP}>
-          <div className="grid items-stretch gap-0 [grid-template-columns:repeat(auto-fit,minmax(320px,1fr))]">
+          <div className="grid items-stretch gap-0 [grid-template-columns:repeat(auto-fit,minmax(min(320px,100%),1fr))]">
             <div className="flex min-w-0 flex-col justify-center py-14 pr-0 lg:pr-12">
               <div className="mb-7 flex items-center gap-3">
                 <span className="font-mono text-[11.5px] uppercase tracking-[0.14em] text-[var(--color-text-muted)]">
@@ -212,7 +212,7 @@ export function HomeTemplate({
                 {eventInfo.location.city}.
               </p>
 
-              <dl className="m-0 mb-[34px] grid border-t border-[var(--color-text-primary)] [grid-template-columns:repeat(auto-fit,minmax(150px,1fr))]">
+              <dl className="m-0 mb-[34px] grid border-t border-[var(--color-text-primary)] [grid-template-columns:repeat(auto-fit,minmax(min(150px,100%),1fr))]">
                 {[
                   { k: "Fecha", v: dateLabel },
                   { k: "Horario", v: timeLabel },
@@ -311,7 +311,7 @@ export function HomeTemplate({
           className="border-b border-[var(--color-text-primary)]"
         >
           <div className={WRAP}>
-            <ul className="m-0 grid list-none p-0 [grid-template-columns:repeat(auto-fit,minmax(160px,1fr))]">
+            <ul className="m-0 grid list-none p-0 [grid-template-columns:repeat(auto-fit,minmax(min(160px,100%),1fr))]">
               {eventInfo.expectedFigures.map((figure) => (
                 <li
                   key={figure.label}
@@ -337,7 +337,7 @@ export function HomeTemplate({
       >
         <div className={`${WRAP} py-[72px]`}>
           <NumberHeading n="01" title="Qué es el Community Day" />
-          <div className="grid items-start gap-10 [grid-template-columns:repeat(auto-fit,minmax(300px,1fr))]">
+          <div className="grid items-start gap-10 [grid-template-columns:repeat(auto-fit,minmax(min(300px,100%),1fr))]">
             <div className="min-w-0">
               <p className="m-0 mb-5 max-w-[34rem] text-[20px] font-medium leading-[1.5] text-[var(--color-text-primary)]">
                 Un evento de la comunidad, para la comunidad. Sin filtro
@@ -404,20 +404,25 @@ export function HomeTemplate({
           />
           <div className="border-t border-[var(--color-text-primary)]">
             {AGENDA.map((a) => (
+              // Four fixed columns only fit from `sm` up. Below it the row
+              // stacks: time and room share the first line, then the title,
+              // then the note. Placement is explicit rather than left to
+              // auto-flow, so the source order still reads time-title-note-room
+              // and the `sm` reset is a plain `auto` on every child.
               <div
                 key={a.time}
-                className="grid items-baseline gap-5 border-b border-[var(--color-border-subtle)] px-1 py-[18px] [grid-template-columns:minmax(86px,110px)_minmax(0,1fr)_minmax(0,1.1fr)_minmax(90px,130px)]"
+                className="grid items-baseline gap-x-5 gap-y-1.5 border-b border-[var(--color-border-subtle)] px-1 py-[18px] [grid-template-columns:minmax(0,1fr)_auto] sm:gap-y-0 sm:[grid-template-columns:minmax(86px,110px)_minmax(0,1fr)_minmax(0,1.1fr)_minmax(90px,130px)]"
               >
-                <span className="font-mono text-[14px] font-medium text-[var(--color-text-primary)]">
+                <span className="col-start-1 row-start-1 font-mono text-[14px] font-medium text-[var(--color-text-primary)] sm:col-start-auto sm:row-start-auto">
                   {a.time}
                 </span>
-                <span className="min-w-0 text-[16.5px] font-bold tracking-[-0.015em]">
+                <span className="col-span-2 col-start-1 row-start-2 min-w-0 text-[16.5px] font-bold tracking-[-0.015em] sm:col-span-1 sm:col-start-auto sm:row-start-auto">
                   {a.title}
                 </span>
-                <span className="min-w-0 text-[14px] text-[var(--color-text-muted)]">
+                <span className="col-span-2 col-start-1 row-start-3 min-w-0 text-[14px] text-[var(--color-text-muted)] sm:col-span-1 sm:col-start-auto sm:row-start-auto">
                   {a.note}
                 </span>
-                <span className="justify-self-start whitespace-nowrap rounded-[3px] border border-[var(--color-border-subtle)] px-[9px] py-1 font-mono text-[10.5px] uppercase tracking-[0.1em] text-[var(--color-text-secondary)]">
+                <span className="col-start-2 row-start-1 justify-self-end whitespace-nowrap rounded-[3px] border border-[var(--color-border-subtle)] px-[9px] py-1 font-mono text-[10.5px] uppercase tracking-[0.1em] text-[var(--color-text-secondary)] sm:col-start-auto sm:row-start-auto sm:justify-self-start">
                   {a.track}
                 </span>
               </div>
@@ -443,7 +448,7 @@ export function HomeTemplate({
               conocer al elenco.
             </p>
           ) : (
-            <div className="grid gap-6 [grid-template-columns:repeat(auto-fit,minmax(220px,1fr))]">
+            <div className="grid gap-6 [grid-template-columns:repeat(auto-fit,minmax(min(220px,100%),1fr))]">
               {previewSpeakers.map((sp, i) => (
                 <article key={sp.id} className="min-w-0">
                   <NextLink href={`${speakersHref}/${sp.slug}`}>
@@ -483,7 +488,7 @@ export function HomeTemplate({
         className="border-b border-[var(--color-text-primary)] bg-[var(--color-surface-inverse)] text-[var(--color-text-on-inverse)]"
       >
         <div className={WRAP}>
-          <div className="grid items-stretch [grid-template-columns:repeat(auto-fit,minmax(320px,1fr))]">
+          <div className="grid items-stretch [grid-template-columns:repeat(auto-fit,minmax(min(320px,100%),1fr))]">
             <div className="flex min-w-0 flex-col justify-center py-[72px] pr-0 lg:pr-12">
               <div className="mb-7 flex items-baseline gap-4">
                 <span className={NUM_ON_DARK}>04</span>
@@ -532,7 +537,7 @@ export function HomeTemplate({
       >
         <div className={`${WRAP} py-[72px]`}>
           <NumberHeading n="05" title="Preguntas frecuentes" />
-          <div className="grid gap-x-14 [grid-template-columns:repeat(auto-fit,minmax(320px,1fr))]">
+          <div className="grid gap-x-14 [grid-template-columns:repeat(auto-fit,minmax(min(320px,100%),1fr))]">
             {faq.map((f) => (
               <div
                 key={f.id}
@@ -571,7 +576,7 @@ export function HomeTemplate({
             title="Quiénes lo organizan"
             action={{ href: teamHref, label: "Ver el equipo" }}
           />
-          <div className="grid gap-5 [grid-template-columns:repeat(auto-fit,minmax(190px,1fr))]">
+          <div className="grid gap-5 [grid-template-columns:repeat(auto-fit,minmax(min(190px,100%),1fr))]">
             {previewTeam.map((tm) => (
               <div key={tm.id} className="min-w-0">
                 <Frame
@@ -607,7 +612,7 @@ export function HomeTemplate({
               Aún no hay sponsors confirmados.
             </p>
           ) : (
-            <div className="grid border-l border-t border-[var(--color-border-subtle)] [grid-template-columns:repeat(auto-fit,minmax(180px,1fr))]">
+            <div className="grid border-l border-t border-[var(--color-border-subtle)] [grid-template-columns:repeat(auto-fit,minmax(min(180px,100%),1fr))]">
               {sponsors.map((sponsor) => (
                 <SponsorTile key={sponsor.id} sponsor={sponsor} />
               ))}
@@ -641,7 +646,7 @@ export function HomeTemplate({
       >
         <div className={`${WRAP} py-[72px]`}>
           <NumberHeading n="08" title="Tres formas de ser parte" />
-          <div className="grid border-l border-t border-[var(--color-text-primary)] [grid-template-columns:repeat(auto-fit,minmax(260px,1fr))]">
+          <div className="grid border-l border-t border-[var(--color-text-primary)] [grid-template-columns:repeat(auto-fit,minmax(min(260px,100%),1fr))]">
             {[
               {
                 href: registerHref,

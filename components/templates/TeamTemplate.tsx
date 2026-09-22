@@ -82,14 +82,18 @@ export function TeamTemplate({
                 const links = o.links ?? {};
                 const linkEntries = LINK_LABELS.filter(([key]) => links[key]);
                 return (
+                  // The 180px portrait column plus the 28px gap left about
+                  // 126px for the bio on a 390px phone, so it came out two
+                  // words per line. Below `sm` the card is one column with the
+                  // portrait capped, and the text gets the full width.
                   <article
                     key={o.id}
-                    className="grid items-start gap-7 border-b border-[var(--color-border-subtle)] py-7 [grid-template-columns:minmax(140px,180px)_minmax(0,1fr)]"
+                    className="grid items-start gap-x-7 gap-y-4 border-b border-[var(--color-border-subtle)] py-7 [grid-template-columns:minmax(0,1fr)] sm:gap-y-0 sm:[grid-template-columns:minmax(140px,180px)_minmax(0,1fr)]"
                   >
                     <Frame
                       label={o.name}
                       photo={o.photo}
-                      className="aspect-square w-full"
+                      className="aspect-square w-full max-w-[160px] sm:max-w-none"
                     />
                     <div className="min-w-0">
                       <div className="mb-1 flex flex-wrap items-baseline gap-3">
@@ -138,7 +142,7 @@ export function TeamTemplate({
         className={`${SECTION_BORDER} bg-[var(--color-surface-inverse)] text-[var(--color-text-on-inverse)]`}
       >
         <div className={`${WRAP} py-16`}>
-          <div className="grid items-center gap-10 [grid-template-columns:repeat(auto-fit,minmax(300px,1fr))]">
+          <div className="grid items-center gap-10 [grid-template-columns:repeat(auto-fit,minmax(min(300px,100%),1fr))]">
             <div className="min-w-0">
               <p className="m-0 mb-3 font-mono text-[11.5px] uppercase tracking-[0.14em] text-[var(--color-action)]">
                 Sumate

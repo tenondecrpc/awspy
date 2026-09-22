@@ -13,6 +13,14 @@ import NextLink from "next/link";
 /** The mockup content column: centered, 1240px max, 28px gutters. */
 export const WRAP = "mx-auto max-w-[1240px] px-7";
 
+/* Layout note, because it recurs across every template: the responsive grids
+ * are written `repeat(auto-fit, minmax(min(<N>px, 100%), 1fr))`, never
+ * `minmax(<N>px, 1fr)`. A bare px minimum is a floor the track cannot go under,
+ * so on a 320px phone the 28px gutters leave 264px of column and any grid
+ * asking for 280px or more pushes the whole page sideways. Wrapping the minimum
+ * in `min(..., 100%)` caps it at the container, which changes nothing wherever
+ * there is room and collapses cleanly where there is not. */
+
 /** Orange monospace section index ("01".."08"). */
 /** Orange monospace section index on a light surface. `--color-action` is the
  *  fill orange and only reaches ~1.9:1 as text on white, so the darkened

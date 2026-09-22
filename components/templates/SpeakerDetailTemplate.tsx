@@ -101,7 +101,7 @@ export function SpeakerDetailTemplate({
         className={`${SECTION_BORDER} bg-[var(--color-surface)]`}
       >
         <div className={WRAP}>
-          <div className="grid items-stretch [grid-template-columns:repeat(auto-fit,minmax(300px,1fr))]">
+          <div className="grid items-stretch [grid-template-columns:repeat(auto-fit,minmax(min(300px,100%),1fr))]">
             <div className="relative min-h-[460px] min-w-0 border-b border-[var(--color-border-subtle)] lg:border-b-0 lg:border-r">
               <Frame
                 label={`Retrato de ${speaker.fullName}`}

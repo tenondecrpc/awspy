@@ -81,7 +81,7 @@ export function SpeakersTemplate({
               </a>
             </div>
           ) : (
-            <div className="grid gap-7 [grid-template-columns:repeat(auto-fit,minmax(220px,1fr))]">
+            <div className="grid gap-7 [grid-template-columns:repeat(auto-fit,minmax(min(220px,100%),1fr))]">
               {speakers.map((sp, i) => {
                 const talk = sp.sessions?.find((s) => s.name)?.name;
                 return (

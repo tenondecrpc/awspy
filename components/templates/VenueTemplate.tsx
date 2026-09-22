@@ -59,7 +59,7 @@ export function VenueTemplate({ venue, eventInfo }: VenueTemplateProps) {
 
       {/* ── Venue detail: photo + facts ──────────────────────── */}
       <section className={SECTION_BORDER}>
-        <div className="grid items-stretch [grid-template-columns:repeat(auto-fit,minmax(340px,1fr))]">
+        <div className="grid items-stretch [grid-template-columns:repeat(auto-fit,minmax(min(340px,100%),1fr))]">
           <div className="relative min-h-[420px] min-w-0 border-b border-[var(--color-border-subtle)] lg:border-b-0 lg:border-r">
             <Frame
               label={`Fachada de ${venue.name}`}
@@ -131,7 +131,7 @@ export function VenueTemplate({ venue, eventInfo }: VenueTemplateProps) {
             )}
           </div>
           {venue.transport.length > 0 ? (
-            <div className="mt-7 grid border-l border-t border-[var(--color-border-subtle)] [grid-template-columns:repeat(auto-fit,minmax(260px,1fr))]">
+            <div className="mt-7 grid border-l border-t border-[var(--color-border-subtle)] [grid-template-columns:repeat(auto-fit,minmax(min(260px,100%),1fr))]">
               {venue.transport.map((t, i) => (
                 <div
                   key={i}
@@ -155,7 +155,7 @@ export function VenueTemplate({ venue, eventInfo }: VenueTemplateProps) {
         <section className={`${SECTION_BORDER} bg-[var(--color-surface-warm)]`}>
           <div className={`${WRAP} py-14`}>
             <NumberHeading n="02" title="Accesibilidad" />
-            <div className="grid border-t border-[var(--color-text-primary)] [grid-template-columns:repeat(auto-fit,minmax(280px,1fr))]">
+            <div className="grid border-t border-[var(--color-text-primary)] [grid-template-columns:repeat(auto-fit,minmax(min(280px,100%),1fr))]">
               {venue.accessibility.map((a, i) => (
                 <div
                   key={i}
@@ -190,7 +190,7 @@ export function VenueTemplate({ venue, eventInfo }: VenueTemplateProps) {
       {/* ── Gallery ──────────────────────────────────────────── */}
       <section>
         <div className={`${WRAP} pb-[72px] pt-14`}>
-          <div className="grid gap-3.5 [grid-template-columns:repeat(auto-fit,minmax(220px,1fr))]">
+          <div className="grid gap-3.5 [grid-template-columns:repeat(auto-fit,minmax(min(220px,100%),1fr))]">
             {GALLERY.map((g) => (
               <Frame key={g} label={g} className="aspect-[4/3] w-full" />
             ))}
