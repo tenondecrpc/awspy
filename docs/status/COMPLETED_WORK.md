@@ -35,5 +35,9 @@ The following items met their local acceptance criteria against baseline `1043a4
 | CI-001 | Added hosted quality, security, provenance, and SBOM gates | `2b26a27` | `verify` passed in 2m56s with retained evidence |
 | CI-002 | Added hosted production browser validation | `05c70f0` | `e2e` passed in 2m47s with 84 tests |
 | OPS-004 | Normalized Git index metadata and Sessionize fixture line endings | `d95b0f1` | CR-only diff verified; Git status, content, staged, and untracked counts are zero |
+| PERF-002 | Right-sized image delivery with cacheable optimizer output | `0484256`, `6844db5`, this change | Production headers, full srcset from 96 to 2400, desktop 1x down from 228 kB to 74 kB, retina 1:1 at 202 kB |
+| SEC-010 | Declared response headers restored on Amplify-served files | `530e8ff` | 4 of 4 security headers on static files; `immutable` preserved on hashed output; no duplicate on the rendered document |
+| ARCH-102 | Phone layouts fitted and guarded | `02f0d82` | Production audit clean on 19 routes at 320, 390 and 430; guard confirmed to fail on each reintroduced defect |
+| OPS-005 | Static image module types declared in a versioned file | `6844db5` | Full verify passes with `next-env.d.ts` removed; hosted CI green |
 
-Blocked and deferred items remain in `WORK_ITEMS.md`.
+Blocked and deferred items remain in `WORK_ITEMS.md`. `PERF-003` was measured and rejected; it is recorded there, not here.

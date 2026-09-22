@@ -45,13 +45,13 @@ const nextConfig: NextConfig = {
     // do not take it, original format as the last fallback. Both variants are
     // cached separately by the optimizer.
     formats: ["image/avif", "image/webp"],
-    // No source in `public/assets` is wider than 1920 and the remote Sessionize
-    // portraits are 400px, so the default 2048 and 3840 rungs only ever return
-    // byte-identical output — for ~6s of optimizer time on a cold CDN entry
-    // against ~1.3s for the smaller widths. Capping the ladder at the widest
-    // source keeps retina screens on 1920 and concentrates CDN hits on six
-    // widths instead of eight.
-    deviceSizes: [640, 828, 1080, 1200, 1440, 1920],
+    // Capped at the widest source in `public/assets`, so no rung re-encodes the
+    // same pixels: the default 3840 spent about 6s of optimizer time on a cold
+    // CDN entry to hand back output identical to a smaller width. 2400 is the
+    // top rung because the hero paints 1172 CSS px on a desktop, which is 2344
+    // device pixels at 2x; below it the ladder stays coarse so CDN hits
+    // concentrate instead of fragmenting.
+    deviceSizes: [640, 828, 1080, 1200, 1440, 1920, 2400],
     // `imageSizes` is appended to every srcset that carries a `sizes` prop.
     // The smallest slot in the UI is the 96px avatar, so the 32/48/64 rungs
     // only ever pad the markup.
