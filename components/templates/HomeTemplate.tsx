@@ -8,6 +8,7 @@
 // pillars, the agenda-at-a-glance, and the "tres formas" cards) is kept as
 // static presentational content, exactly as in the mockup.
 
+import { Suspense, use } from "react";
 import NextLink from "next/link";
 // Imported rather than referenced by path so the optimizer's upstream is the
 // content-hashed `/_next/static/media/` copy: replacing the file changes the
@@ -39,7 +40,12 @@ import type { Venue } from "@/lib/content/venue";
 type HomeTemplateProps = {
   eventInfo: EventInfo;
   venue: Venue;
-  speakers: Speaker[];
+  /** Deliberately unresolved. The template hands it to the one section that
+   *  needs it, behind a Suspense boundary, so the document shell — headers,
+   *  hero, and the hero image preload in `<head>` — flushes without waiting on
+   *  Sessionize, which costs about 250ms warm and a second on a cold
+   *  connection. */
+  speakers: Promise<Speaker[]>;
   sponsors: Sponsor[];
   /** Edition prospectus. `null` when this edition has not published one. */
   sponsorship?: Sponsorship | null;
@@ -152,7 +158,6 @@ export function HomeTemplate({
     eventInfo.dates.end
   )}`;
   const isOpen = eventInfo.registrationStatus === "open";
-  const previewSpeakers = speakers.slice(0, 4);
   const previewTeam = organizers.slice(0, 5);
   // Open tiers fill the sponsor board while the real logos are still being
   // signed, so it never renders as a bare line of text.
@@ -442,43 +447,9 @@ export function HomeTemplate({
             title="Speakers"
             action={{ href: speakersHref, label: "Ver todos" }}
           />
-          {previewSpeakers.length === 0 ? (
-            <p className="text-[15px] text-[var(--color-text-secondary)]">
-              Estamos definiendo la grilla de oradores. Volvé pronto para
-              conocer al elenco.
-            </p>
-          ) : (
-            <div className="grid gap-6 [grid-template-columns:repeat(auto-fit,minmax(min(220px,100%),1fr))]">
-              {previewSpeakers.map((sp, i) => (
-                <article key={sp.id} className="min-w-0">
-                  <NextLink href={`${speakersHref}/${sp.slug}`}>
-                    <Frame
-                      label={sp.fullName}
-                      photo={sp.profilePicture ?? undefined}
-                      className="mb-3.5 aspect-[3/4] w-full"
-                      sizes="(min-width: 640px) 380px, 100vw"
-                    />
-                  </NextLink>
-                  <div className="flex items-baseline gap-2.5">
-                    <span className="font-mono text-[11px] text-[var(--color-text-muted)]">
-                      {String(i + 1).padStart(2, "0")}
-                    </span>
-                    <div className="min-w-0">
-                      <h3 className="m-0 mb-0.5 text-[17px] font-bold tracking-[-0.02em]">
-                        {sp.fullName}
-                      </h3>
-                      <p className="m-0 mb-2 text-[13px] text-[var(--color-text-muted)]">
-                        {sp.tagLine ?? ""}
-                      </p>
-                      <p className="m-0 text-[13.5px] font-semibold leading-[1.4] text-[var(--color-accent)]">
-                        {sp.sessions[0]?.name ?? ""}
-                      </p>
-                    </div>
-                  </div>
-                </article>
-              ))}
-            </div>
-          )}
+          <Suspense fallback={<SpeakersPreviewFallback />}>
+            <SpeakersPreview speakers={speakers} speakersHref={speakersHref} />
+          </Suspense>
         </div>
       </section>
 
@@ -690,5 +661,84 @@ export function HomeTemplate({
         </div>
       </section>
     </>
+  );
+}
+
+/**
+ * Speakers preview, resolved from the promise the page started. Kept behind a
+ * Suspense boundary so it is the only part of the document that waits on
+ * Sessionize; `use` rather than `await` so the component renders the same way
+ * under React DOM in the unit tests as it does on the server.
+ */
+function SpeakersPreview({
+  speakers,
+  speakersHref,
+}: {
+  speakers: Promise<Speaker[]>;
+  speakersHref: string;
+}) {
+  const preview = use(speakers).slice(0, 4);
+
+  if (preview.length === 0) {
+    return (
+      <p className="text-[15px] text-[var(--color-text-secondary)]">
+        Estamos definiendo la grilla de oradores. Volvé pronto para conocer al
+        elenco.
+      </p>
+    );
+  }
+
+  return (
+    <div className="grid gap-6 [grid-template-columns:repeat(auto-fit,minmax(min(220px,100%),1fr))]">
+      {preview.map((sp, i) => (
+        <article key={sp.id} className="min-w-0">
+          <NextLink href={`${speakersHref}/${sp.slug}`}>
+            <Frame
+              label={sp.fullName}
+              photo={sp.profilePicture ?? undefined}
+              className="mb-3.5 aspect-[3/4] w-full"
+              sizes="(min-width: 640px) 380px, 100vw"
+            />
+          </NextLink>
+          <div className="flex items-baseline gap-2.5">
+            <span className="font-mono text-[11px] text-[var(--color-text-muted)]">
+              {String(i + 1).padStart(2, "0")}
+            </span>
+            <div className="min-w-0">
+              <h3 className="m-0 mb-0.5 text-[17px] font-bold tracking-[-0.02em]">
+                {sp.fullName}
+              </h3>
+              <p className="m-0 mb-2 text-[13px] text-[var(--color-text-muted)]">
+                {sp.tagLine ?? ""}
+              </p>
+              <p className="m-0 text-[13.5px] font-semibold leading-[1.4] text-[var(--color-accent)]">
+                {sp.sessions[0]?.name ?? ""}
+              </p>
+            </div>
+          </div>
+        </article>
+      ))}
+    </div>
+  );
+}
+
+/**
+ * Holds the preview's footprint while it streams in. Four cards in the same
+ * grid, so the section does not resize under the reader when Sessionize
+ * answers.
+ */
+function SpeakersPreviewFallback() {
+  return (
+    <div
+      aria-hidden="true"
+      className="grid gap-6 [grid-template-columns:repeat(auto-fit,minmax(min(220px,100%),1fr))]"
+    >
+      {[0, 1, 2, 3].map((i) => (
+        <div key={i} className="min-w-0">
+          <div className="mb-3.5 aspect-[3/4] w-full border border-[var(--color-border-subtle)] bg-[var(--color-surface-muted)]" />
+          <div className="h-[17px] w-3/4 bg-[var(--color-surface-muted)]" />
+        </div>
+      ))}
+    </div>
   );
 }

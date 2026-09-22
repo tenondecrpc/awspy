@@ -26,7 +26,10 @@ export async function generateMetadata() {
 export default async function HomePage() {
   const year = currentEdition();
   const edition = getEdition(year);
-  const speakers = await listSpeakers(edition.eventInfo.sessionizeEventId);
+  // Started, not awaited: the template renders it inside a Suspense
+  // boundary so the shell does not block on Sessionize. The page still owns
+  // the call.
+  const speakers = listSpeakers(edition.eventInfo.sessionizeEventId);
 
   const eventLd = buildEventJsonLd({
     name: edition.eventInfo.name,
