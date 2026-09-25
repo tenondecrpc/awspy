@@ -3,6 +3,10 @@
 // band, same confirmed-count row, same portrait grid, and the same closing CFP
 // banner. Real Sessionize data drives the grid; the empty-state branch and the
 // CFP status logic are preserved.
+//
+// Each card identifies the person only: portrait, name and tagline. The talk
+// belongs to the agenda, which credits every session to its speakers, and to
+// the speaker's own page.
 
 import NextLink from "next/link";
 import {
@@ -82,56 +86,48 @@ export function SpeakersTemplate({
             </div>
           ) : (
             <div className="grid gap-7 [grid-template-columns:repeat(auto-fit,minmax(min(220px,100%),1fr))]">
-              {speakers.map((sp, i) => {
-                const talk = sp.sessions?.find((s) => s.name)?.name;
-                return (
-                  <article key={sp.id} className="min-w-0">
-                    <NextLink
-                      href={`${basePath}/${sp.slug}`}
-                      className="block text-[var(--color-text-primary)]"
-                    >
-                      <Frame
-                        label={sp.fullName}
-                        photo={sp.profilePicture ?? undefined}
-                        className="mb-3.5 aspect-[3/4] w-full"
-                        sizes="(min-width: 640px) 380px, 100vw"
-                      />
-                    </NextLink>
-                    <div className="flex items-baseline gap-2.5">
-                      <span className="flex-none font-mono text-[11px] text-[var(--color-text-muted)]">
-                        {String(i + 1).padStart(2, "0")}
-                      </span>
-                      <div className="min-w-0">
-                        <div className="flex flex-wrap items-center gap-2">
-                          <h2 className="m-0 text-[17px] font-bold tracking-[-0.02em]">
-                            <NextLink
-                              href={`${basePath}/${sp.slug}`}
-                              className="text-[var(--color-text-primary)] hover:text-[var(--color-accent)]"
-                            >
-                              {sp.fullName}
-                            </NextLink>
-                          </h2>
-                          {sp.isTopSpeaker ? (
-                            <span className="rounded-[3px] bg-[var(--color-surface-inverse)] px-[7px] py-[3px] font-mono text-[9.5px] uppercase tracking-[0.12em] text-[var(--color-text-on-inverse)]">
-                              Top speaker
-                            </span>
-                          ) : null}
-                        </div>
-                        {sp.tagLine ? (
-                          <p className="m-0 mb-2 mt-[3px] text-[13px] text-[var(--color-text-muted)]">
-                            {sp.tagLine}
-                          </p>
-                        ) : null}
-                        {talk ? (
-                          <p className="m-0 text-[13.5px] font-semibold leading-[1.4] text-[var(--color-accent)]">
-                            {talk}
-                          </p>
+              {speakers.map((sp, i) => (
+                <article key={sp.id} className="min-w-0">
+                  <NextLink
+                    href={`${basePath}/${sp.slug}`}
+                    className="block text-[var(--color-text-primary)]"
+                  >
+                    <Frame
+                      label={sp.fullName}
+                      photo={sp.profilePicture ?? undefined}
+                      className="mb-3.5 aspect-[3/4] w-full"
+                      sizes="(min-width: 640px) 380px, 100vw"
+                    />
+                  </NextLink>
+                  <div className="flex items-baseline gap-2.5">
+                    <span className="flex-none font-mono text-[11px] text-[var(--color-text-muted)]">
+                      {String(i + 1).padStart(2, "0")}
+                    </span>
+                    <div className="min-w-0">
+                      <div className="flex flex-wrap items-center gap-2">
+                        <h2 className="m-0 text-[17px] font-bold tracking-[-0.02em]">
+                          <NextLink
+                            href={`${basePath}/${sp.slug}`}
+                            className="text-[var(--color-text-primary)] hover:text-[var(--color-accent)]"
+                          >
+                            {sp.fullName}
+                          </NextLink>
+                        </h2>
+                        {sp.isTopSpeaker ? (
+                          <span className="rounded-[3px] bg-[var(--color-surface-inverse)] px-[7px] py-[3px] font-mono text-[9.5px] uppercase tracking-[0.12em] text-[var(--color-text-on-inverse)]">
+                            Top speaker
+                          </span>
                         ) : null}
                       </div>
+                      {sp.tagLine ? (
+                        <p className="m-0 mt-[3px] text-[13px] text-[var(--color-text-muted)]">
+                          {sp.tagLine}
+                        </p>
+                      ) : null}
                     </div>
-                  </article>
-                );
-              })}
+                  </div>
+                </article>
+              ))}
             </div>
           )}
 

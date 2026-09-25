@@ -5,11 +5,21 @@
 // The real data is wired through: the Sessionize GridSmart response is grouped
 // by its Asunción start day (kept from the previous grid logic) and rendered as
 // the mockup's dense session rows. Each room keeps a stable accent from the
-// categorical token ramp, shown both as a legend and as the row stripe. The
-// empty state is preserved for editions whose grid has not been published yet.
+// categorical token ramp, shown both as a legend and as the row stripe. Every
+// row credits its speakers with portrait and name, so the speakers list can
+// stay identity-only.
+//
+// Sessionize accepts talks well before it publishes the grid. In that window
+// the page lists the confirmed talks, built from the sessions each speaker
+// already carries, instead of an empty agenda: the talks stay findable without
+// an extra provider request. The empty state is kept for when neither exists.
 
 import NextLink from "next/link";
 import { PageHeader, WRAP } from "@/components/molecules/SectionPrimitives";
+import {
+  SessionSpeakers,
+  type SessionSpeakerRef,
+} from "@/components/molecules/SessionSpeakers";
 import { formatDate, formatTime, startOfDayKey } from "@/lib/utils/datetime";
 import type { ScheduleGrid, Speaker } from "@/lib/api/sessionize";
 import type { EventInfo } from "@/lib/content/event-info";
@@ -35,8 +45,6 @@ const ROOM_COLORS = [
   "var(--color-category-pink)",
 ] as const;
 
-type SlotSpeaker = { id: string; name: string; slug?: string };
-
 type Slot = {
   id: string;
   startsAt: string;
@@ -47,7 +55,13 @@ type Slot = {
   roomColor: string;
   isPlenum: boolean;
   isService: boolean;
-  speakers: SlotSpeaker[];
+  speakers: SessionSpeakerRef[];
+};
+
+type Talk = {
+  id: string;
+  title: string;
+  speakers: SessionSpeakerRef[];
 };
 
 type DayGroup = {
@@ -75,8 +89,7 @@ function listRooms(grid: ScheduleGrid): Array<{ name: string; color: string }> {
  */
 function groupByStartDay(grid: ScheduleGrid, speakers: Speaker[]): DayGroup[] {
   const roomColor = new Map(listRooms(grid).map((r) => [r.name, r.color]));
-  const slugById = new Map<string, string>();
-  for (const sp of speakers) slugById.set(sp.id, sp.slug);
+  const speakerById = new Map(speakers.map((sp) => [sp.id, sp]));
 
   const map = new Map<string, DayGroup>();
   for (const day of grid) {
@@ -102,7 +115,8 @@ function groupByStartDay(grid: ScheduleGrid, speakers: Speaker[]): DayGroup[] {
           speakers: session.speakers.map((sp) => ({
             id: sp.id,
             name: sp.name,
-            slug: slugById.get(sp.id),
+            slug: speakerById.get(sp.id)?.slug,
+            photo: speakerById.get(sp.id)?.profilePicture,
           })),
         });
       }
@@ -117,6 +131,33 @@ function groupByStartDay(grid: ScheduleGrid, speakers: Speaker[]): DayGroup[] {
     );
   }
   return days;
+}
+
+/**
+ * The accepted talks, one entry per session id with all of its speakers, sorted
+ * by title. Only used while the grid is unpublished, so it needs no times.
+ */
+function listConfirmedTalks(speakers: Speaker[]): Talk[] {
+  const talks = new Map<string, Talk>();
+  for (const sp of speakers) {
+    for (const session of sp.sessions) {
+      if (!session.name) continue;
+      let talk = talks.get(session.id);
+      if (!talk) {
+        talk = { id: session.id, title: session.name, speakers: [] };
+        talks.set(session.id, talk);
+      }
+      talk.speakers.push({
+        id: sp.id,
+        name: sp.fullName,
+        slug: sp.slug,
+        photo: sp.profilePicture,
+      });
+    }
+  }
+  return Array.from(talks.values()).sort((a, b) =>
+    a.title.localeCompare(b.title, "es")
+  );
 }
 
 function durationLabel(startsAt: string, endsAt: string): string {
@@ -146,6 +187,7 @@ export function ScheduleTemplate({
         .filter((day) => day.slots.length > 0)
     : days;
   const multiDay = visibleDays.length > 1;
+  const talks = days.length === 0 ? listConfirmedTalks(speakers) : [];
 
   return (
     <>
@@ -204,7 +246,44 @@ export function ScheduleTemplate({
 
       <section className="bg-[var(--color-surface)]">
         <div className={`${WRAP} pb-[72px] pt-11`}>
-          {days.length === 0 ? (
+          {days.length === 0 && talks.length > 0 ? (
+            <div>
+              <div className="mb-2 flex flex-wrap items-baseline justify-between gap-4">
+                <h2 className="m-0 text-[20px] font-extrabold tracking-[-0.03em]">
+                  Charlas confirmadas
+                </h2>
+                <p className="m-0 font-mono text-[12px] text-[var(--color-text-muted)]">
+                  {talks.length} {talks.length === 1 ? "charla" : "charlas"}
+                </p>
+              </div>
+              <p className="m-0 mb-6 max-w-[44rem] text-[14.5px] text-[var(--color-text-secondary)]">
+                Todavía estamos armando la grilla. Estas son las charlas ya
+                aceptadas; los horarios y las salas se publican acá apenas estén
+                definidos.
+              </p>
+              <div className="border-t border-[var(--color-text-primary)]">
+                {talks.map((talk, i) => (
+                  <article
+                    key={talk.id}
+                    className="grid items-start gap-x-[18px] border-b border-[var(--color-border-subtle)] px-1 py-[18px] transition-colors [grid-template-columns:22px_minmax(0,1fr)] hover:bg-[var(--color-surface-muted)]"
+                  >
+                    <span className="pt-[3px] font-mono text-[11px] text-[var(--color-text-muted)]">
+                      {String(i + 1).padStart(2, "0")}
+                    </span>
+                    <div className="min-w-0">
+                      <h3 className="m-0 mb-2.5 text-[17px] font-bold leading-[1.3] tracking-[-0.018em]">
+                        {talk.title}
+                      </h3>
+                      <SessionSpeakers
+                        speakers={talk.speakers}
+                        basePath={speakerBasePath}
+                      />
+                    </div>
+                  </article>
+                ))}
+              </div>
+            </div>
+          ) : days.length === 0 ? (
             <div className="border border-[var(--color-border-subtle)] bg-[var(--color-surface-muted)] px-7 py-14 text-center">
               <h2 className="m-0 text-[22px] font-bold tracking-[-0.02em]">
                 Agenda próximamente
@@ -262,25 +341,11 @@ export function ScheduleTemplate({
                             {slot.description}
                           </p>
                         ) : null}
-                        {slot.speakers.length > 0 ? (
-                          <p className="m-0 text-[13.5px] font-semibold text-[var(--color-accent)]">
-                            {slot.speakers.map((sp, i) => (
-                              <span key={sp.id}>
-                                {i > 0 ? " · " : ""}
-                                {sp.slug ? (
-                                  <NextLink
-                                    href={`${speakerBasePath}/${sp.slug}`}
-                                    className="hover:underline"
-                                  >
-                                    {sp.name}
-                                  </NextLink>
-                                ) : (
-                                  sp.name
-                                )}
-                              </span>
-                            ))}
-                          </p>
-                        ) : null}
+                        <SessionSpeakers
+                          speakers={slot.speakers}
+                          basePath={speakerBasePath}
+                          className="mt-2"
+                        />
                       </div>
 
                       <div className="col-start-2 row-start-3 flex min-w-0 flex-wrap justify-start gap-1.5 pt-0.5 sm:col-start-auto sm:row-start-auto">

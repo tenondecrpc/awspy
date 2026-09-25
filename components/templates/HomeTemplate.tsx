@@ -474,11 +474,9 @@ export function HomeTemplate({
                       <h3 className="m-0 mb-0.5 text-[17px] font-bold tracking-[-0.02em]">
                         {sp.fullName}
                       </h3>
-                      <p className="m-0 mb-2 text-[13px] text-[var(--color-text-muted)]">
+                      {/* Identity only: the talk is credited in the agenda. */}
+                      <p className="m-0 text-[13px] text-[var(--color-text-muted)]">
                         {sp.tagLine ?? ""}
-                      </p>
-                      <p className="m-0 text-[13.5px] font-semibold leading-[1.4] text-[var(--color-accent)]">
-                        {sp.sessions[0]?.name ?? ""}
                       </p>
                     </div>
                   </div>

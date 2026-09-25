@@ -55,6 +55,28 @@ describe("SpeakersTemplate", () => {
       );
   });
 
+  it("identifies each speaker and leaves the talk to the agenda", () => {
+    render(
+      <SpeakersTemplate
+        speakers={[
+          {
+            ...SPEAKERS[0],
+            sessions: [{ id: "s1", name: "Arquitecturas serverless" }],
+          },
+        ]}
+        eventInfo={EVENT_INFO}
+      />
+    );
+
+    expect(
+      screen.getByRole("heading", { level: 2, name: "Ana Perez" })
+    ).toBeInTheDocument();
+    expect(screen.getByText("Cloud Engineer")).toBeInTheDocument();
+    expect(
+      screen.queryByText("Arquitecturas serverless")
+    ).not.toBeInTheDocument();
+  });
+
   it("uses the plural count and stays usable with no speakers yet", () => {
     render(<SpeakersTemplate speakers={[]} eventInfo={EVENT_INFO} />);
 
