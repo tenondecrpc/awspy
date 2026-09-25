@@ -16,8 +16,10 @@
 // themselves as sample text, so the only thing that marks them is the
 // `isMockup: true` flag on every placeholder session. It is a temporary
 // stand-in while the real talks, speakers and rooms are organised. The
-// `Speakers` and `SpeakerWall` fixtures are not part of that and keep their
-// "Demo" names. See `content/preview/README.md`.
+// `Speakers` and `SpeakerWall` fixtures keep their "Demo" names; the
+// `Speakers` records carry `isMockup: true` too, so `getProgramme` can keep
+// the placeholder agenda from standing in next to real speakers. See
+// `content/preview/README.md`.
 //
 // Server-side only, like the content loaders. Importing this from a client
 // component is a programming error.

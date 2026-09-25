@@ -69,6 +69,9 @@ export const SessionizeSpeakerSchema = z
     links: z.array(SpeakerLinkSchema).optional().default([]),
     sessions: z.array(SpeakerSessionRefSchema).optional().default([]),
     isTopSpeaker: z.boolean().optional(),
+    // See `SessionizeSessionSchema`: placeholder-only marker. It lets the
+    // schedule tell a placeholder cast from a real one.
+    isMockup: z.boolean().optional(),
   })
   .passthrough();
 
@@ -314,18 +317,49 @@ export async function listSessions(
   );
 }
 
-export async function getScheduleGrid(
-  eventId: string | null
-): Promise<ScheduleGrid> {
-  if (!eventId) return [];
-  const grid = await apiFetch(buildSessionizeUrl(eventId, "GridSmart"), {
+function fetchLiveGrid(eventId: string): Promise<ScheduleGrid> {
+  return apiFetch(buildSessionizeUrl(eventId, "GridSmart"), {
     method: "GET",
     schema: ScheduleGridSchema,
     tolerateMissing: true,
     fallback: [] as ScheduleGrid,
     cache: SESSIONIZE_CACHE_MODE,
   });
+}
+
+export async function getScheduleGrid(
+  eventId: string | null
+): Promise<ScheduleGrid> {
+  if (!eventId) return [];
+  const grid = await fetchLiveGrid(eventId);
   return withPreviewFallback("GridSmart", grid, ScheduleGridSchema);
+}
+
+/**
+ * The agenda together with the speakers it credits, read in parallel.
+ *
+ * The placeholder agenda stands in only for an event with no programme at
+ * all. Once a real speaker has an accepted talk, an empty live grid means the
+ * talks are not scheduled yet, and the schedule page lists them as they are;
+ * substituting the placeholder there would bill invented speakers next to
+ * real ones. The choice is made before the substitution, so the placeholder
+ * warning is only logged when the placeholder is actually served.
+ */
+export async function getProgramme(
+  eventId: string | null
+): Promise<{ grid: ScheduleGrid; speakers: Speaker[] }> {
+  if (!eventId) return { grid: [], speakers: [] };
+  const [liveGrid, speakers] = await Promise.all([
+    fetchLiveGrid(eventId),
+    listSpeakers(eventId),
+  ]);
+  const hasRealTalks = speakers.some(
+    (sp) => !sp.isMockup && sp.sessions.some((s) => s.name)
+  );
+  const grid = hasRealTalks
+    ? liveGrid
+    : withPreviewFallback("GridSmart", liveGrid, ScheduleGridSchema);
+  return { grid, speakers };
 }
 
 export async function getSpeakerWall(

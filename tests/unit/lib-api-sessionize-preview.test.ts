@@ -38,6 +38,16 @@ describe("readPreviewView", () => {
     expect(sessions.every((s) => s.isMockup === true)).toBe(true);
   });
 
+  it("flags every placeholder speaker with isMockup", () => {
+    // Lets the schedule tell a placeholder cast from a real one, so the
+    // placeholder agenda never stands in next to real speakers.
+    const speakers = readPreviewView("Speakers") as Array<{
+      isMockup?: boolean;
+    }>;
+    expect(speakers.length).toBeGreaterThan(0);
+    expect(speakers.every((s) => s.isMockup === true)).toBe(true);
+  });
+
   it("bills the agenda with names of its own, not the Demo speakers", () => {
     // The `Speakers` view fixture keeps its obviously-fake names; the agenda
     // grid does not, because it is the one section a visitor sees while the

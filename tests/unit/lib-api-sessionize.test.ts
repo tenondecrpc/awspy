@@ -9,6 +9,7 @@ import {
   SpeakersListSchema,
   attachSpeakerSlugs,
   buildSessionizeUrl,
+  getProgramme,
   getScheduleGrid,
   getSpeakerWall,
   getSpeakerBySlug,
@@ -462,5 +463,89 @@ describe("getScheduleGrid", () => {
 
   it("returns [] when eventId is null", async () => {
     expect(await getScheduleGrid(null)).toEqual([]);
+  });
+});
+
+describe("getProgramme", () => {
+  // Answers each Sessionize view from its own payload, so the grid and the
+  // speakers can be set independently of each other.
+  function mockViews(payloads: Record<string, unknown>): void {
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(async (input: RequestInfo | URL) => {
+        const url = typeof input === "string" ? input : input.toString();
+        const view = url.split("/view/")[1];
+        if (!(view in payloads)) throw new Error(`unexpected URL ${url}`);
+        return new Response(JSON.stringify(payloads[view]), {
+          status: 200,
+          headers: { "content-type": "application/json" },
+        });
+      })
+    );
+  }
+
+  const LIVE_SPEAKER = {
+    id: "live-1",
+    firstName: "Cecilia",
+    lastName: "Neira",
+    fullName: "Cecilia Neira",
+    sessions: [
+      { id: 1305534, name: "Patrones avanzados de despliegue en EKS" },
+    ],
+  };
+
+  function isPlaceholder(grid: Awaited<ReturnType<typeof getScheduleGrid>>) {
+    return grid.some((day) =>
+      day.rooms.some((room) => room.sessions.some((s) => s.isMockup))
+    );
+  }
+
+  it("keeps the placeholder agenda away from real speakers", async () => {
+    // Talks accepted, grid not published yet: the page lists the real talks,
+    // so an invented programme must not stand in next to them.
+    mockViews({ Speakers: [LIVE_SPEAKER], GridSmart: [] });
+
+    const { grid, speakers } = await getProgramme("test-event");
+
+    expect(grid).toEqual([]);
+    expect(speakers.map((s) => s.fullName)).toEqual(["Cecilia Neira"]);
+    expect(speakers[0].isMockup).toBeUndefined();
+  });
+
+  it("serves the placeholder agenda while the event has no talks at all", async () => {
+    mockViews({ Speakers: [], GridSmart: [] });
+
+    const { grid, speakers } = await getProgramme("test-event");
+
+    expect(grid.length).toBeGreaterThan(0);
+    expect(isPlaceholder(grid)).toBe(true);
+    expect(speakers.length).toBeGreaterThan(0);
+    expect(speakers.every((s) => s.isMockup === true)).toBe(true);
+  });
+
+  it("serves the published grid whatever the speakers are", async () => {
+    mockViews({
+      Speakers: [LIVE_SPEAKER],
+      GridSmart: loadFixture("GridSmart"),
+    });
+
+    const { grid } = await getProgramme("test-event");
+
+    expect(grid.length).toBeGreaterThan(0);
+    expect(isPlaceholder(grid)).toBe(false);
+  });
+
+  it("shows the empty state with preview off", async () => {
+    vi.stubEnv("CONTENT_PREVIEW", "0");
+    mockViews({ Speakers: [], GridSmart: [] });
+
+    expect(await getProgramme("test-event")).toEqual({
+      grid: [],
+      speakers: [],
+    });
+  });
+
+  it("returns an empty programme when eventId is null", async () => {
+    expect(await getProgramme(null)).toEqual({ grid: [], speakers: [] });
   });
 });

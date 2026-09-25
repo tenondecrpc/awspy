@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import { ScheduleTemplate } from "@/components/templates/ScheduleTemplate";
 import { editionExists, getEdition } from "@/lib/content/editions";
-import { getScheduleGrid, listSpeakers } from "@/lib/api/sessionize";
+import { getProgramme } from "@/lib/api/sessionize";
 import { buildPageMetadata } from "@/lib/utils/seo";
 import { listEditionParams, type EditionRouteParams } from "../_shared";
 
@@ -35,10 +35,7 @@ export default async function EditionSchedulePage({
   const room = (await searchParams)?.room;
   if (!editionExists(year)) notFound();
   const { eventInfo } = getEdition(year);
-  const [grid, speakers] = await Promise.all([
-    getScheduleGrid(eventInfo.sessionizeEventId),
-    listSpeakers(eventInfo.sessionizeEventId),
-  ]);
+  const { grid, speakers } = await getProgramme(eventInfo.sessionizeEventId);
   return (
     <ScheduleTemplate
       grid={grid}

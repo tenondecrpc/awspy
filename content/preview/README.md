@@ -104,13 +104,18 @@ flag on every fixture session, and no "ejemplo" / "mockup" wording in the
 copy. The invented names were checked against this edition's live Sessionize
 roster so none of them collides with a real speaker.
 
-The two people views (`Speakers`, `SpeakerWall`) are **not** part of that and
-keep their obviously-fake "Demo" names. They are also the views least likely
-to be seen: the live roster for this edition is already populated, so the
-fixture only stands in locally and in the e2e run. The visible consequence
-there is that `/speakers` lists Ana Demo while `/schedule` bills Lucía
-Benítez; in a deployed build the two never coexist, because only the empty
-view is ever substituted.
+The two people views (`Speakers`, `SpeakerWall`) keep their obviously-fake
+"Demo" names. They are also the views least likely to be seen: the live
+roster for this edition is already populated, so the fixture only stands in
+locally and in the e2e run, where `/speakers` lists Ana Demo while
+`/schedule` bills Lucía Benítez.
+
+The `Speakers` records also carry `"isMockup": true`, because the agenda
+placeholder depends on them. `getProgramme` in `lib/api/sessionize.ts`
+substitutes the placeholder grid only when no real speaker has a talk: once
+Sessionize has accepted talks, an empty grid means they are not scheduled
+yet, and `/schedule` lists those real talks instead of billing invented
+speakers next to real ones.
 
 `scripts/preview-sessionize.mjs` answers the same URL shape as Sessionize
 (`/{eventId}/view/{View}`); the event id is ignored. Run it on its own with
@@ -146,8 +151,9 @@ The trade is worth stating plainly: a deployed build with `CONTENT_PREVIEW` on
 shows visitors a plausible programme, with plausible speaker names, that
 nobody has confirmed. Three things keep that in check - the flag, the warning
 `lib/api/sessionize-preview.ts` logs on every boot, and the fact that the
-fixture only appears while the live view is empty. `CONTENT_PREVIEW=0`
-restores the empty state.
+fixture only appears while the event has no real talks at all. As soon as a
+real speaker has an accepted talk, the placeholder steps aside even with
+`CONTENT_PREVIEW` on. `CONTENT_PREVIEW=0` restores the empty state.
 
 The sponsor logos they point at live in `public/logos/demo-*.svg` and are
 placeholder marks, not real brand assets.

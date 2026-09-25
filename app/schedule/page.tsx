@@ -2,7 +2,7 @@
 
 import { ScheduleTemplate } from "@/components/templates/ScheduleTemplate";
 import { currentEdition, getEdition } from "@/lib/content/editions";
-import { getScheduleGrid, listSpeakers } from "@/lib/api/sessionize";
+import { getProgramme } from "@/lib/api/sessionize";
 import { buildPageMetadata } from "@/lib/utils/seo";
 
 export async function generateMetadata() {
@@ -22,10 +22,7 @@ export default async function SchedulePage({
   const room = (await searchParams)?.room;
   const year = currentEdition();
   const { eventInfo } = getEdition(year);
-  const [grid, speakers] = await Promise.all([
-    getScheduleGrid(eventInfo.sessionizeEventId),
-    listSpeakers(eventInfo.sessionizeEventId),
-  ]);
+  const { grid, speakers } = await getProgramme(eventInfo.sessionizeEventId);
   return (
     <ScheduleTemplate
       grid={grid}
