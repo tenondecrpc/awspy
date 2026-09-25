@@ -23,6 +23,57 @@ function isValid(date: Date): boolean {
   return !Number.isNaN(date.getTime());
 }
 
+const WALL_TIME =
+  /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})(?::(\d{2})(\.\d+)?)?$/;
+
+/** Minutes east of UTC that Asunción observes at the given instant. */
+function asuncionOffsetAt(ms: number): number {
+  const name = new Intl.DateTimeFormat("en-US", {
+    timeZone: TIME_ZONE,
+    timeZoneName: "longOffset",
+  })
+    .formatToParts(new Date(ms))
+    .find((part) => part.type === "timeZoneName")?.value;
+  const match = /GMT([+-])(\d{2}):(\d{2})/.exec(name ?? "");
+  if (!match) return 0;
+  const minutes = Number(match[2]) * 60 + Number(match[3]);
+  return match[1] === "-" ? -minutes : minutes;
+}
+
+/**
+ * Pins a zone-less wall-clock time to Asunción, returning it with the offset
+ * that zone observed at that moment (`2026-10-17T09:00:00` becomes
+ * `2026-10-17T09:00:00-03:00`). A value that already names its zone is
+ * returned untouched.
+ *
+ * Sessionize sends announced schedule times in the event's zone with no
+ * designator. `new Date()` reads such a string in the server's zone, which is
+ * UTC on Amplify, so without this every session would render three hours
+ * early.
+ */
+export function wallTimeToInstant(value: string): string {
+  const match = WALL_TIME.exec(value);
+  if (!match) return value;
+  const [, year, month, day, hour, minute, second = "00", fraction = ""] =
+    match;
+  const asUtc = Date.UTC(
+    Number(year),
+    Number(month) - 1,
+    Number(day),
+    Number(hour),
+    Number(minute),
+    Number(second)
+  );
+  // Read the offset at the guessed instant, then again once corrected, so a
+  // time next to a daylight-saving change resolves to the right side of it.
+  const offset = asuncionOffsetAt(asUtc - asuncionOffsetAt(asUtc) * 60_000);
+  const sign = offset < 0 ? "-" : "+";
+  const abs = Math.abs(offset);
+  const hh = String(Math.floor(abs / 60)).padStart(2, "0");
+  const mm = String(abs % 60).padStart(2, "0");
+  return `${year}-${month}-${day}T${hour}:${minute}:${second}${fraction}${sign}${hh}:${mm}`;
+}
+
 /**
  * Formats a date as a long Spanish weekday + day + month + year. Example:
  *   "sábado, 23 de mayo de 2026"

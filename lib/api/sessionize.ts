@@ -9,6 +9,7 @@
 
 import { z } from "zod";
 import { apiFetch } from "@/lib/api/client";
+import { wallTimeToInstant } from "@/lib/utils/datetime";
 import { disambiguateSlugs, slugify } from "@/lib/utils/slug";
 import { HttpUrlSchema, RemoteImageUrlSchema } from "@/lib/validation/urls";
 import { readPreviewView } from "@/lib/api/sessionize-preview";
@@ -82,6 +83,16 @@ export type Speaker = SessionizeSpeaker & {
 
 // ---------- Sessions view (grouped) ----------
 
+// Announced schedule times arrive as the event's wall-clock time with no zone
+// ("2026-10-17T09:00:00"); the captured demo fixtures carry `Z` instead. Both
+// are accepted, and a zone-less one is pinned to Asunción so every later
+// `new Date()` reads the instant the organizers scheduled, whatever zone the
+// server runs in.
+const SessionTimestampSchema = z
+  .string()
+  .datetime({ offset: true, local: true })
+  .transform(wallTimeToInstant);
+
 const SessionizeSpeakerRefSchema = z.object({
   id: z.string().min(1),
   name: z.string().min(1),
@@ -92,8 +103,8 @@ export const SessionizeSessionSchema = z
     id: z.union([z.string(), z.number()]).transform(String),
     title: z.string().min(1),
     description: z.string().optional().nullable(),
-    startsAt: z.string().datetime({ offset: true }).optional().nullable(),
-    endsAt: z.string().datetime({ offset: true }).optional().nullable(),
+    startsAt: SessionTimestampSchema.optional().nullable(),
+    endsAt: SessionTimestampSchema.optional().nullable(),
     roomId: z
       .union([z.string(), z.number()])
       .optional()
@@ -143,8 +154,8 @@ const GridSessionSchema = z
     id: z.union([z.string(), z.number()]).transform(String),
     title: z.string().min(1),
     description: z.string().optional().nullable(),
-    startsAt: z.string().datetime({ offset: true }),
-    endsAt: z.string().datetime({ offset: true }),
+    startsAt: SessionTimestampSchema,
+    endsAt: SessionTimestampSchema,
     isPlenumSession: z.boolean().optional().default(false),
     isServiceSession: z.boolean().optional().default(false),
     // See `SessionizeSessionSchema`: placeholder-only marker.

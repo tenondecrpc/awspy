@@ -196,6 +196,56 @@ describe("Zod schemas against the captured fixtures", () => {
   });
 });
 
+describe("schedule times as Sessionize sends them", () => {
+  // Once the schedule is announced, Sessionize sends the event's wall-clock
+  // time with no zone. Rejecting it emptied the grid and every speaker's
+  // session list; reading it in the server's zone (UTC on Amplify) would
+  // shift every session by three hours.
+  const LOCAL_SESSION = {
+    id: "1305534",
+    title: "Patrones avanzados de despliegue en EKS",
+    startsAt: "2026-10-17T11:00:00",
+    endsAt: "2026-10-17T12:00:00",
+    speakers: [{ id: "live-1", name: "Cecilia Neira" }],
+  };
+
+  it("accepts the GridSmart view and pins its times to Asunción", () => {
+    const grid = ScheduleGridSchema.parse([
+      {
+        date: "2026-10-17T00:00:00",
+        rooms: [
+          {
+            id: 1,
+            name: "Pedro Juan Caballero (Charla Técnica)",
+            sessions: [LOCAL_SESSION],
+          },
+        ],
+      },
+    ]);
+
+    const session = grid[0].rooms[0].sessions[0];
+    expect(session.startsAt).toBe("2026-10-17T11:00:00-03:00");
+    expect(session.endsAt).toBe("2026-10-17T12:00:00-03:00");
+  });
+
+  it("accepts the Sessions view with the same times", () => {
+    const groups = SessionsListSchema.parse([
+      { groupId: null, groupName: "All", sessions: [LOCAL_SESSION] },
+    ]);
+
+    expect(groups[0].sessions[0].startsAt).toBe("2026-10-17T11:00:00-03:00");
+  });
+
+  it("still rejects a local session that ends before it starts", () => {
+    const result = SessionizeSessionSchema.safeParse({
+      ...LOCAL_SESSION,
+      endsAt: "2026-10-17T10:00:00",
+    });
+
+    expect(result.success).toBe(false);
+  });
+});
+
 describe("attachSpeakerSlugs", () => {
   it("derives a full name when only first and last are present", () => {
     const out = attachSpeakerSlugs([
