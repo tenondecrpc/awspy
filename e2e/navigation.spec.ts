@@ -86,4 +86,28 @@ test.describe("Site navigation", () => {
       page.getByRole("dialog", { name: /navegación principal/i })
     ).toBeHidden();
   });
+
+  // Reported from a Galaxy S22 (360x780). `toBeVisible` passed while the
+  // drawer was broken: the header's `backdrop-filter` made it the containing
+  // block of the drawer's `position: fixed`, so the panel was 64px tall and
+  // its links spilled, unbacked, over the hero. Only geometry catches that.
+  test("mobile: the open drawer covers the full viewport height", async ({
+    page,
+  }) => {
+    const viewport = { width: 360, height: 780 };
+    await page.setViewportSize(viewport);
+    await page.goto("/");
+    await page.getByRole("button", { name: /abrir menú/i }).click();
+
+    const drawer = page.getByRole("dialog", { name: /navegación principal/i });
+    await expect(drawer).toBeVisible();
+    const box = await drawer.boundingBox();
+    expect(box).toMatchObject({ y: 0, height: viewport.height });
+    expect(box!.x + box!.width).toBe(viewport.width);
+
+    // The last entry must sit on the panel, not below it.
+    const cta = drawer.getByRole("link", { name: "Registrarme" });
+    const ctaBox = await cta.boundingBox();
+    expect(ctaBox!.y + ctaBox!.height).toBeLessThanOrEqual(box!.height);
+  });
 });

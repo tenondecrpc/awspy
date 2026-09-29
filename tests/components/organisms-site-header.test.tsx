@@ -49,6 +49,18 @@ describe("SiteHeader", () => {
     expect(closeBtn).toBeInTheDocument();
   });
 
+  it("renders the open drawer outside the banner", () => {
+    // The header carries `backdrop-filter`, which makes it the containing
+    // block of any `position: fixed` descendant in Chromium. A drawer inside
+    // it collapses to the header's 64px height on Android phones.
+    render(<SiteHeader />);
+    fireEvent.click(screen.getByRole("button", { name: /abrir menú/i }));
+    const drawer = screen.getByRole("dialog", {
+      name: /navegación principal/i,
+    });
+    expect(screen.getByRole("banner")).not.toContainElement(drawer);
+  });
+
   it("closes the drawer on Escape", () => {
     render(<SiteHeader />);
     const trigger = screen.getByRole("button", { name: /abrir menú/i });

@@ -50,79 +50,87 @@ export function SiteHeader() {
   }, [isDrawerOpen]);
 
   return (
-    <header
-      className="sticky top-0 z-40 border-b border-[var(--color-text-primary)] bg-[var(--color-surface)] backdrop-blur"
-      role="banner"
-    >
-      <a href="#contenido-principal" className="skip-link">
-        Saltar al contenido
-      </a>
-      <Container>
-        <div className="flex h-16 items-center justify-between gap-4">
-          <NextLink
-            href="/"
-            className="flex items-center gap-3 whitespace-nowrap"
-          >
-            <Image
-              src="/assets/logo-dark.png"
-              alt="AWS Community Day Paraguay"
-              width={501}
-              height={139}
-              priority
-              className="brand-logo--light h-8 w-auto"
-            />
-            {/* Same alt on both: whichever ink is hidden by `display: none` is
-                also out of the accessibility tree, so the link keeps exactly
-                one accessible name in either theme. */}
-            <Image
-              src="/assets/logo.png"
-              alt="AWS Community Day Paraguay"
-              width={501}
-              height={139}
-              priority
-              className="brand-logo--dark h-8 w-auto"
-            />
-          </NextLink>
-
-          <div className="flex items-center gap-3">
-            <nav aria-label="Navegación principal" className="hidden xl:block">
-              <ul className="flex items-center gap-1">
-                {PRIMARY_NAV.map((entry) => (
-                  <li key={entry.href}>
-                    <NavLink href={entry.href}>{entry.label}</NavLink>
-                  </li>
-                ))}
-              </ul>
-            </nav>
-
+    <>
+      <header
+        className="sticky top-0 z-40 border-b border-[var(--color-text-primary)] bg-[var(--color-surface)] backdrop-blur"
+        role="banner"
+      >
+        <a href="#contenido-principal" className="skip-link">
+          Saltar al contenido
+        </a>
+        <Container>
+          <div className="flex h-16 items-center justify-between gap-4">
             <NextLink
-              href={REGISTER_CTA.href}
-              className={cn(CTA_CLASS, "hidden xl:inline-flex")}
+              href="/"
+              className="flex items-center gap-3 whitespace-nowrap"
             >
-              {REGISTER_CTA.label}
+              <Image
+                src="/assets/logo-dark.png"
+                alt="AWS Community Day Paraguay"
+                width={501}
+                height={139}
+                priority
+                className="brand-logo--light h-8 w-auto"
+              />
+              {/* Same alt on both: whichever ink is hidden by `display: none` is
+                  also out of the accessibility tree, so the link keeps exactly
+                  one accessible name in either theme. */}
+              <Image
+                src="/assets/logo.png"
+                alt="AWS Community Day Paraguay"
+                width={501}
+                height={139}
+                priority
+                className="brand-logo--dark h-8 w-auto"
+              />
             </NextLink>
 
-            <ThemeToggle />
+            <div className="flex items-center gap-3">
+              <nav
+                aria-label="Navegación principal"
+                className="hidden xl:block"
+              >
+                <ul className="flex items-center gap-1">
+                  {PRIMARY_NAV.map((entry) => (
+                    <li key={entry.href}>
+                      <NavLink href={entry.href}>{entry.label}</NavLink>
+                    </li>
+                  ))}
+                </ul>
+              </nav>
 
-            <button
-              ref={triggerRef}
-              type="button"
-              className={cn(
-                "xl:hidden inline-flex min-h-11 items-center justify-center rounded-[var(--radius-sm)] px-3 py-2 text-sm font-semibold",
-                "border border-[var(--color-border-strong)]"
-              )}
-              aria-label="Abrir menú"
-              aria-expanded={isDrawerOpen}
-              aria-controls="mobile-nav-drawer"
-              onClick={() => setDrawerOpen(true)}
-            >
-              Menú
-            </button>
+              <NextLink
+                href={REGISTER_CTA.href}
+                className={cn(CTA_CLASS, "hidden xl:inline-flex")}
+              >
+                {REGISTER_CTA.label}
+              </NextLink>
+
+              <ThemeToggle />
+
+              <button
+                ref={triggerRef}
+                type="button"
+                className={cn(
+                  "xl:hidden inline-flex min-h-11 items-center justify-center rounded-[var(--radius-sm)] px-3 py-2 text-sm font-semibold",
+                  "border border-[var(--color-border-strong)]"
+                )}
+                aria-label="Abrir menú"
+                aria-expanded={isDrawerOpen}
+                aria-controls="mobile-nav-drawer"
+                onClick={() => setDrawerOpen(true)}
+              >
+                Menú
+              </button>
+            </div>
           </div>
-        </div>
-      </Container>
+        </Container>
+      </header>
 
-      {/* Mobile drawer */}
+      {/* Mobile drawer. It stays outside <header> on purpose: the header's
+          `backdrop-filter` makes it the containing block of any fixed
+          descendant, which shrank this full-screen drawer to the header's
+          64px on Chromium (reported from a Galaxy S22). */}
       {isDrawerOpen ? (
         <div
           className="fixed inset-0 z-50 bg-[var(--color-overlay)]"
@@ -176,6 +184,6 @@ export function SiteHeader() {
           </div>
         </div>
       ) : null}
-    </header>
+    </>
   );
 }
