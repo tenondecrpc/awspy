@@ -253,6 +253,17 @@ export function attachSpeakerSlugs(speakers: SessionizeSpeaker[]): Speaker[] {
 }
 
 /**
+ * Leads with the speakers the organizers mark as Top Speaker in Sessionize,
+ * so the home preview and the speakers page open with them. The sort is
+ * stable: each group keeps the order Sessionize sent.
+ */
+function topSpeakersFirst(speakers: Speaker[]): Speaker[] {
+  return [...speakers].sort(
+    (a, b) => Number(b.isTopSpeaker === true) - Number(a.isTopSpeaker === true)
+  );
+}
+
+/**
  * Substitutes the placeholder fixture for a view that came back empty, when
  * preview mode is on. The fixture goes through the same schema as the live
  * response, so a malformed one fails the render rather than reaching a
@@ -288,8 +299,8 @@ export async function listSpeakers(eventId: string | null): Promise<Speaker[]> {
     fallback: [] as SessionizeSpeaker[],
     cache: SESSIONIZE_CACHE_MODE,
   });
-  return attachSpeakerSlugs(
-    withPreviewFallback("Speakers", raw, SpeakersListSchema)
+  return topSpeakersFirst(
+    attachSpeakerSlugs(withPreviewFallback("Speakers", raw, SpeakersListSchema))
   );
 }
 

@@ -71,6 +71,8 @@ const SessionizeSpeakerSchema = z.object({
 const SpeakersListSchema = z.array(SessionizeSpeakerSchema);
 ```
 
+`listSpeakers` returns the speakers marked `isTopSpeaker: true` first, then the rest. The sort is stable, so each group keeps the order Sessionize sent (alphabetical by first name for the 2026 event). Organizers set the flag with the Top Speaker toggle in Sessionize; the site has no ordering of its own.
+
 ### `Sessions` view
 
 Returns an array of groups. Each group contains a `sessions` array; the adapter

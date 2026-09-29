@@ -351,6 +351,32 @@ describe("listSpeakers", () => {
     });
   });
 
+  it("lists top speakers first and keeps the Sessionize order otherwise", async () => {
+    const speaker = (id: string, isTopSpeaker?: boolean) => ({
+      id,
+      firstName: id,
+      lastName: "Test",
+      isTopSpeaker,
+    });
+    mockFetch("Speakers", [
+      speaker("abel", false),
+      speaker("karla", true),
+      speaker("matias"),
+      speaker("rossana", true),
+      speaker("zoe", false),
+    ]);
+
+    const speakers = await listSpeakers("test-event");
+
+    expect(speakers.map((s) => s.id)).toEqual([
+      "karla",
+      "rossana",
+      "abel",
+      "matias",
+      "zoe",
+    ]);
+  });
+
   it("returns the parsed speakers from the demo fixture", async () => {
     mockFetch("Speakers", loadFixture("Speakers"));
     const speakers = await listSpeakers("jl4ktls0");
