@@ -14,7 +14,7 @@
 
 import { MeshGradient } from "@paper-design/shaders-react";
 import { motion } from "framer-motion";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type CSSProperties } from "react";
 
 // Kiro mark geometry (viewBox 0 0 256 256).
 const KIRO_BODY =
@@ -23,6 +23,23 @@ const KIRO_EYE_LEFT =
   "m135.1 90.55c-7.28-0.54-7.85 8.36-7.85 14.05 0 6.08 1.6 13.14 7.96 13.14 6.6 0 8.92-8.08 8.92-13.14 0-5.56-1.59-14.05-9.03-14.05z";
 const KIRO_EYE_RIGHT =
   "m164.4 90.55c-7.27-0.54-8.66 7.59-8.66 14.05 0 5.82 1.51 13.14 8.07 13.14 7.38 0 8.83-9.57 8.83-13.14 0-5.89-2.01-14.05-8.24-14.05z";
+
+// The body path as a CSS mask over the shader. It replaces an SVG clipPath
+// around a <foreignObject>: WebKit ignores both the clip and the viewBox scale
+// on the composited WebGL canvas inside one, so every iPhone browser painted
+// an unclipped 256px square over the eyes. A mask reads alpha only, so the
+// path needs no fill: SVG's default black is fully opaque.
+const KIRO_BODY_MASK = `url("data:image/svg+xml,${encodeURIComponent(
+  `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256"><path d="${KIRO_BODY}"/></svg>`
+)}")`;
+const KIRO_BODY_MASK_STYLE: CSSProperties = {
+  WebkitMaskImage: KIRO_BODY_MASK,
+  maskImage: KIRO_BODY_MASK,
+  WebkitMaskSize: "100% 100%",
+  maskSize: "100% 100%",
+  WebkitMaskRepeat: "no-repeat",
+  maskRepeat: "no-repeat",
+};
 
 type MeshGradientSVGProps = {
   /** Optional extra classes for the wrapper (sizing, etc.). */
@@ -82,39 +99,33 @@ export function MeshGradientSVG({
       }}
       style={{ transformOrigin: "top center" }}
     >
-      <svg
-        ref={svgRef}
-        xmlns="http://www.w3.org/2000/svg"
-        viewBox="0 0 256 256"
-        className="h-auto w-full drop-shadow-lg"
-        role="img"
-        aria-label="Kiro"
-      >
-        <defs>
-          <clipPath id="kiroBodyClip">
-            <path d={KIRO_BODY} />
-          </clipPath>
-        </defs>
+      <div className="relative aspect-square w-full drop-shadow-lg">
+        <div className="absolute inset-0" style={KIRO_BODY_MASK_STYLE}>
+          <MeshGradient
+            colors={colors}
+            className="h-full w-full"
+            speed={speed}
+          />
+        </div>
 
-        <foreignObject width="256" height="256" clipPath="url(#kiroBodyClip)">
-          <div className="h-full w-full">
-            <MeshGradient
-              colors={colors}
-              className="h-full w-full"
-              speed={speed}
-            />
-          </div>
-        </foreignObject>
-
-        {/* Kiro's eyes: blink on a timer, drift toward the pointer. */}
-        <motion.g
-          animate={{ x: eyeOffset.x, y: eyeOffset.y }}
-          transition={{ type: "spring", stiffness: 150, damping: 15 }}
+        <svg
+          ref={svgRef}
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 256 256"
+          className="absolute inset-0 h-full w-full"
+          role="img"
+          aria-label="Kiro"
         >
-          <path d={KIRO_EYE_LEFT} fill="currentColor" className="kiro-eye" />
-          <path d={KIRO_EYE_RIGHT} fill="currentColor" className="kiro-eye" />
-        </motion.g>
-      </svg>
+          {/* Kiro's eyes: blink on a timer, drift toward the pointer. */}
+          <motion.g
+            animate={{ x: eyeOffset.x, y: eyeOffset.y }}
+            transition={{ type: "spring", stiffness: 150, damping: 15 }}
+          >
+            <path d={KIRO_EYE_LEFT} fill="currentColor" className="kiro-eye" />
+            <path d={KIRO_EYE_RIGHT} fill="currentColor" className="kiro-eye" />
+          </motion.g>
+        </svg>
+      </div>
 
       <style jsx>{`
         .kiro-eye {
