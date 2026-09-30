@@ -76,13 +76,27 @@ describe("getSponsorship", () => {
     ]);
   });
 
-  it("reserves the speaker slot and the gifts for Diamante", () => {
+  it("reserves only the speaker slot for Diamante", () => {
     const sponsorship = getSponsorship("2026");
     const diamanteOnly = sponsorship?.benefits.filter(
       (b) => b.tiers.length === 1 && b.tiers[0] === "Diamante"
     );
-    expect(diamanteOnly).toHaveLength(2);
-    expect(diamanteOnly?.map((b) => b.label).join(" ")).toMatch(/speaker/i);
+    expect(diamanteOnly).toHaveLength(1);
+    expect(diamanteOnly?.[0]?.label).toMatch(/speaker/i);
+  });
+
+  it("offers promotional material from the stand once, to every tier", () => {
+    const sponsorship = getSponsorship("2026");
+    const promotional = sponsorship?.benefits.filter((b) =>
+      /material promocional/i.test(b.label)
+    );
+    expect(promotional).toHaveLength(1);
+    expect(promotional?.[0]?.tiers).toEqual([
+      "Diamante",
+      "Platinum",
+      "Gold",
+      "Silver",
+    ]);
   });
 
   it("returns null for an edition with no prospectus", () => {
