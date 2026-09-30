@@ -19,7 +19,7 @@ describe("SponsorBoard", () => {
     render(
       <SponsorBoard
         sponsors={[
-          sponsor({ id: "oro", name: "Oro SA", tier: "Gold" }),
+          sponsor({ id: "gold", name: "Gold SA", tier: "Gold" }),
           sponsor({ id: "d1", name: "Diamante Uno", tier: "Diamante" }),
           sponsor({ id: "d2", name: "Diamante Dos", tier: "Diamante" }),
         ]}
@@ -31,7 +31,7 @@ describe("SponsorBoard", () => {
     const headings = screen.getAllByRole("heading", { level: 3 });
     expect(headings.map((h) => h.textContent)).toEqual([
       "Sponsor Diamante",
-      "Sponsor Oro",
+      "Sponsor Gold",
     ]);
 
     const diamante = headings[0].parentElement as HTMLElement;

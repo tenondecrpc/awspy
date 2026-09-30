@@ -1,5 +1,7 @@
-// Display data for a sponsorship tier: the Spanish label attendees read and
-// the palette token that tints its chip.
+// Display data for a sponsorship tier: the label attendees read and the
+// palette token that tints its chip. The sold tiers read as the sponsorship
+// deck names them (Diamante, Platinum, Gold, Silver), so a sponsor finds the
+// same package on the site as in the deck.
 //
 // Shared by every surface that names a tier — the sponsor tiles, the open
 // slots, the package cards and the benefit table — so a tier reads the same
@@ -9,11 +11,11 @@
 
 import type { SponsorTier } from "@/lib/content/sponsors";
 
-export const TIER_LABEL_ES: Record<SponsorTier, string> = {
+export const TIER_LABEL: Record<SponsorTier, string> = {
   Diamante: "Diamante",
-  Platinum: "Platino",
-  Gold: "Oro",
-  Silver: "Plata",
+  Platinum: "Platinum",
+  Gold: "Gold",
+  Silver: "Silver",
   Bronze: "Bronce",
   Community: "Comunidad",
 };

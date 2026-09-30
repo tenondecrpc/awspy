@@ -5,7 +5,7 @@ import { getEventInfo } from "@/lib/content/event-info";
 import { getSponsors } from "@/lib/content/sponsors";
 import { getSponsorship } from "@/lib/content/sponsorship";
 import { getVenue } from "@/lib/content/venue";
-import { TIER_LABEL_ES } from "@/lib/utils/sponsor-tiers";
+import { TIER_LABEL } from "@/lib/utils/sponsor-tiers";
 
 vi.mock("next/navigation", () => ({
   usePathname: () => "/",
@@ -38,7 +38,7 @@ describe("HomeTemplate sponsors board", () => {
     const section = renderHome();
 
     expect(sponsors.length).toBeGreaterThan(0);
-    new Set(sponsors.map((s) => TIER_LABEL_ES[s.tier])).forEach((label) => {
+    new Set(sponsors.map((s) => TIER_LABEL[s.tier])).forEach((label) => {
       expect(
         within(section).getByRole("heading", {
           level: 3,

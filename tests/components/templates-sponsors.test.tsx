@@ -82,6 +82,20 @@ describe("SponsorsTemplate", () => {
     expect(container.textContent).not.toMatch(AMOUNT);
   });
 
+  it("names the packages as the sponsorship deck does", () => {
+    render(
+      <SponsorsTemplate
+        sponsors={[]}
+        eventInfo={EVENT_INFO}
+        sponsorship={SPONSORSHIP}
+      />
+    );
+
+    expect(
+      screen.getAllByRole("columnheader").map((h) => h.textContent)
+    ).toEqual(["Beneficio", "Diamante", "Platinum", "Gold", "Silver"]);
+  });
+
   it("prints the package conditions under the benefit table", () => {
     render(
       <SponsorsTemplate

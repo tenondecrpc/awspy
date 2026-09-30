@@ -9,7 +9,7 @@
 import { SponsorLogoSlots } from "@/components/molecules/SponsorLogoSlots";
 import { SponsorTile } from "@/components/molecules/SponsorTile";
 import { groupSponsorsByTier } from "@/lib/content/sponsors";
-import { TIER_COLOR, TIER_LABEL_ES } from "@/lib/utils/sponsor-tiers";
+import { TIER_COLOR, TIER_LABEL } from "@/lib/utils/sponsor-tiers";
 import type { Sponsor } from "@/lib/content/sponsors";
 
 type SponsorBoardProps = {
@@ -35,7 +35,7 @@ export function SponsorBoard({
               className="h-2 w-2 flex-none rounded-[2px]"
               style={{ background: TIER_COLOR[group.tier] }}
             />
-            Sponsor {TIER_LABEL_ES[group.tier]}
+            Sponsor {TIER_LABEL[group.tier]}
           </h3>
           <ul className="m-0 grid list-none gap-3 p-0 [grid-template-columns:repeat(auto-fill,minmax(min(160px,100%),1fr))]">
             {group.sponsors.map((sponsor) => (

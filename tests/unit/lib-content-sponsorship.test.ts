@@ -107,6 +107,13 @@ describe("getSponsorship", () => {
     expect(silver).toEqual(benefits.slice(0, 2));
   });
 
+  it("names the user group as the deck does", () => {
+    const labels = getSponsorship("2026")?.benefits.map((b) => b.label) ?? [];
+    expect(
+      labels.some((l) => l.includes("del UG antes, durante y al cierre"))
+    ).toBe(true);
+  });
+
   it("keeps the main-stage mention for Gold and up", () => {
     const sponsorship = getSponsorship("2026");
     const stage = sponsorship?.benefits.find((b) =>

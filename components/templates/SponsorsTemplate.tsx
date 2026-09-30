@@ -19,7 +19,7 @@ import {
 } from "@/components/molecules/SectionPrimitives";
 import { SponsorBoard } from "@/components/organisms/SponsorBoard";
 import { listAvailableTiers } from "@/lib/content/sponsors";
-import { TIER_COLOR, TIER_LABEL_ES } from "@/lib/utils/sponsor-tiers";
+import { TIER_COLOR, TIER_LABEL } from "@/lib/utils/sponsor-tiers";
 import type { Sponsor } from "@/lib/content/sponsors";
 import type { Sponsorship } from "@/lib/content/sponsorship";
 import type { EventInfo } from "@/lib/content/event-info";
@@ -185,7 +185,7 @@ export function SponsorsTemplate({
                         style={{ background: TIER_COLOR[pkg.tier] }}
                       />
                       <h3 className="m-0 text-[26px] font-extrabold tracking-[-0.035em]">
-                        {TIER_LABEL_ES[pkg.tier]}
+                        {TIER_LABEL[pkg.tier]}
                       </h3>
                     </div>
                     <div className="text-[13px] text-[var(--color-text-muted)]">
@@ -219,7 +219,7 @@ export function SponsorsTemplate({
                           scope="col"
                           className="w-[110px] bg-[var(--color-surface-inverse)] px-3 py-3.5 font-mono text-[11px] uppercase tracking-[0.12em] text-[var(--color-text-on-inverse)]"
                         >
-                          {TIER_LABEL_ES[pkg.tier]}
+                          {TIER_LABEL[pkg.tier]}
                         </th>
                       ))}
                     </tr>
@@ -251,7 +251,7 @@ export function SponsorsTemplate({
                               }
                             >
                               <span className="sr-only">
-                                {TIER_LABEL_ES[pkg.tier]}:{" "}
+                                {TIER_LABEL[pkg.tier]}:{" "}
                                 {included ? "incluido" : "no incluido"}
                               </span>
                               <span aria-hidden="true">

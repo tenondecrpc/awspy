@@ -9,7 +9,7 @@
 
 import Image from "next/image";
 import { cn } from "@/lib/utils/cn";
-import { TIER_LABEL_ES } from "@/lib/utils/sponsor-tiers";
+import { TIER_LABEL } from "@/lib/utils/sponsor-tiers";
 import type { Sponsor } from "@/lib/content/sponsors";
 
 type SponsorTileProps = {
@@ -18,7 +18,7 @@ type SponsorTileProps = {
 };
 
 export function SponsorTile({ sponsor, className }: SponsorTileProps) {
-  const tier = TIER_LABEL_ES[sponsor.tier];
+  const tier = TIER_LABEL[sponsor.tier];
 
   return (
     <a
