@@ -38,8 +38,8 @@ Verified on 2026-09-09 and updated on 2026-09-29 (DEP-103) with npm registry dat
 - Locked package nodes: 646 excluding the root, reduced from 747.
 - Final clean installation target: 544 packages audited, reduced from 645 at baseline.
 - npm audit: zero vulnerabilities in production and development graphs.
-- Provenance: 542 verified registry signatures and 144 verified attestations.
-- Security patches: `next` and `eslint-config-next` 16.3.4, transitive `sharp` 0.35.4, transitive `js-yaml` 4.3.2, and transitive `undici` 8.11.2 (eleven high-severity advisories on 8.0.0 - 8.10.1, reached through `jsdom`).
+- Provenance: 546 verified registry signatures and 146 verified attestations (2026-09-30).
+- Security patches: `next` and `eslint-config-next` 16.3.4, transitive `sharp` 0.35.4, transitive `js-yaml` 4.3.2, transitive `undici` 8.11.2 (eleven high-severity advisories on 8.0.0 - 8.10.1, reached through `jsdom`), and transitive `brace-expansion` 1.1.21 and 5.0.12 (three high-severity denial-of-service advisories, GHSA-q2hr-2g5m-vwhr, GHSA-qhr7-859c-m2p7 and GHSA-6j4f-fj2g-mc7p, reached through `minimatch` under ESLint and `typescript-eslint`; dev-only).
 - CycloneDX SBOM generation: passed; generated artifact size was 631,811 bytes and was not committed.
 - Deprecated packages: none marked during the audit.
 - License metadata exists in the lock graph, but full legal compatibility is `NOT VERIFIED`.
