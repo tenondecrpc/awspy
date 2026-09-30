@@ -1,5 +1,11 @@
 version: 2
 updates:
+  # Version updates are limited to patch releases, so a routine PR never
+  # carries a migration (TypeScript 7, ESLint 10 and Vitest 5 broke the
+  # 2026-09-26 group). `update-types` in `ignore` only applies to version
+  # updates, so Dependabot security updates, once enabled in the repository
+  # settings, still propose a fix at whatever level it needs. Minor and major
+  # upgrades are otherwise taken deliberately, by hand.
   - package-ecosystem: npm
     directory: /
     schedule:
@@ -8,9 +14,19 @@ updates:
     groups:
       development-dependencies:
         dependency-type: development
+    ignore:
+      - dependency-name: "*"
+        update-types:
+          - version-update:semver-major
+          - version-update:semver-minor
 
   - package-ecosystem: github-actions
     directory: /
     schedule:
       interval: weekly
     open-pull-requests-limit: 5
+    ignore:
+      - dependency-name: "*"
+        update-types:
+          - version-update:semver-major
+          - version-update:semver-minor
