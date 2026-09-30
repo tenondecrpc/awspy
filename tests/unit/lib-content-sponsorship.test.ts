@@ -92,24 +92,33 @@ describe("getSponsorship", () => {
     expect(diamanteOnly?.[0]?.label).toMatch(/speaker/i);
   });
 
-  it("offers promotional material from the stand once, to every tier", () => {
+  it("offers promotional material from the stand once, from Gold up", () => {
     const sponsorship = getSponsorship("2026");
     const promotional = sponsorship?.benefits.filter((b) =>
       /material promocional/i.test(b.label)
     );
     expect(promotional).toHaveLength(1);
-    expect(promotional?.[0]?.tiers).toEqual([
-      "Diamante",
-      "Platinum",
-      "Gold",
-      "Silver",
-    ]);
+    expect(promotional?.[0]?.tiers).toEqual(["Diamante", "Platinum", "Gold"]);
+  });
+
+  it("limits Silver to the first two benefits", () => {
+    const benefits = getSponsorship("2026")?.benefits ?? [];
+    const silver = benefits.filter((b) => b.tiers.includes("Silver"));
+    expect(silver).toEqual(benefits.slice(0, 2));
+  });
+
+  it("keeps the main-stage mention for Gold and up", () => {
+    const sponsorship = getSponsorship("2026");
+    const stage = sponsorship?.benefits.find((b) =>
+      /escenario principal/i.test(b.label)
+    );
+    expect(stage?.tiers).toEqual(["Diamante", "Platinum", "Gold"]);
   });
 
   it("leaves building the stand to the sponsor", () => {
     const sponsorship = getSponsorship("2026");
     expect(sponsorship?.notes.join(" ")).toMatch(
-      /estructura y el armado .* a cargo de cada patrocinador/
+      /^Los paquetes con stand incluyen solo el espacio: la estructura y el armado .* a cargo de cada patrocinador/
     );
   });
 

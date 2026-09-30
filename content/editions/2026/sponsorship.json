@@ -51,26 +51,26 @@
     },
     {
       "label": "Derecho a entregar material promocional desde el stand",
-      "tiers": ["Diamante", "Platinum", "Gold", "Silver"]
+      "tiers": ["Diamante", "Platinum", "Gold"]
     },
     {
       "label": "Oportunidad de promocionar vacantes laborales del patrocinador en el sitio web del evento y en las redes sociales",
-      "tiers": ["Diamante", "Platinum", "Gold", "Silver"]
+      "tiers": ["Diamante", "Platinum", "Gold"]
     },
     {
       "label": "Mención en las redes sociales oficiales del evento y del user group antes, durante y al cierre del AWS Community Day",
-      "tiers": ["Diamante", "Platinum", "Gold", "Silver"]
+      "tiers": ["Diamante", "Platinum", "Gold"]
     },
     {
       "label": "Mención especial y reconocimiento desde el escenario principal durante el evento",
-      "tiers": ["Diamante", "Platinum", "Gold", "Silver"]
+      "tiers": ["Diamante", "Platinum", "Gold"]
     },
     {
       "label": "Espacio para stand: S mesa de exhibición (1 x 1 m), M mesa/stand (1,5 x 2 m) o L (2 x 2 m), ubicados en zonas de alto tráfico",
-      "tiers": ["Diamante", "Platinum", "Gold", "Silver"]
+      "tiers": ["Diamante", "Platinum", "Gold"]
     },
     {
-      "label": "Video promocional del sponsor en las redes sociales del evento (30 seg). El video debe ser enviado por el sponsor en formato mp4",
+      "label": "Video promocional del sponsor en las redes sociales del evento (30 seg, en formato mp4 enviado por el sponsor)",
       "tiers": ["Diamante", "Platinum"]
     },
     {
@@ -79,7 +79,7 @@
     }
   ],
   "notes": [
-    "El patrocinio incluye solo el espacio para el stand: la estructura y el armado quedan enteramente a cargo de cada patrocinador."
+    "Los paquetes con stand incluyen solo el espacio: la estructura y el armado quedan enteramente a cargo de cada patrocinador."
   ],
   "funds": [
     "Alquiler y compra de audiovisuales",
