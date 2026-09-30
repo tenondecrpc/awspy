@@ -11,6 +11,7 @@
 import NextLink from "next/link";
 import { WRAP, SECTION_BORDER } from "@/components/molecules/SectionPrimitives";
 import { SessionizeCFPCallout } from "@/components/organisms/SessionizeCFPCallout";
+import { startOfDayKey } from "@/lib/utils/datetime";
 import type { EventInfo } from "@/lib/content/event-info";
 
 type CFPTemplateProps = {
@@ -52,32 +53,48 @@ const LOOKING = [
   "Voces nuevas de la comunidad paraguaya y de la región",
 ];
 
-const DATES: { when: string; title: string; body: string; color: string }[] = [
-  {
-    when: "30.09.2026",
-    title: "Cierre de la convocatoria",
-    body: "Última fecha para enviar propuestas en Sessionize.",
-    color: "var(--color-national-red-label)",
-  },
-  {
-    when: "07.10.2026",
-    title: "Notificación",
-    body: "El comité responde a todas las propuestas recibidas.",
-    color: "var(--color-accent)",
-  },
-  {
-    when: "12.10.2026",
-    title: "Confirmación",
-    body: "Speakers seleccionados confirman y envían su perfil.",
-    color: "var(--color-accent)",
-  },
-  {
-    when: "17.10.2026",
-    title: "Community Day",
-    body: "Charlas y talleres en el SNPP, San Lorenzo.",
-    color: "var(--color-category-green)",
-  },
-];
+type KeyDate = { when: string; title: string; body: string; color: string };
+
+/** `10.10.2026`, read on the Asunción calendar like the rest of the site. */
+function dotDate(input: string): string {
+  return startOfDayKey(input).split("-").reverse().join(".");
+}
+
+// The close and the event day come from event.json, so they follow an
+// extended call or a moved date. The committee's notification and
+// confirmation dates have no field there and are set here.
+function keyDates(eventInfo: EventInfo): KeyDate[] {
+  const dates: KeyDate[] = [
+    {
+      when: "12.10.2026",
+      title: "Notificación",
+      body: "El comité responde a todas las propuestas recibidas.",
+      color: "var(--color-accent)",
+    },
+    {
+      when: "14.10.2026",
+      title: "Confirmación",
+      body: "Speakers seleccionados confirman y envían su perfil.",
+      color: "var(--color-accent)",
+    },
+    {
+      when: dotDate(eventInfo.dates.start),
+      title: "Community Day",
+      body: "Charlas y talleres en el SNPP, San Lorenzo.",
+      color: "var(--color-category-green)",
+    },
+  ];
+  if (!eventInfo.cfpDeadline) return dates;
+  return [
+    {
+      when: dotDate(eventInfo.cfpDeadline),
+      title: "Cierre de la convocatoria",
+      body: "Última fecha para enviar propuestas en Sessionize.",
+      color: "var(--color-national-red-label)",
+    },
+    ...dates,
+  ];
+}
 
 const H1 =
   "m-0 text-[clamp(34px,5vw,58px)] font-extrabold leading-[0.98] tracking-[-0.04em] text-[var(--color-text-primary)]";
@@ -184,7 +201,7 @@ export function CFPTemplate({ eventInfo, archived = false }: CFPTemplateProps) {
             Fechas clave
           </h2>
           <div className="grid border-l border-t border-[var(--color-text-primary)] [grid-template-columns:repeat(auto-fit,minmax(min(230px,100%),1fr))]">
-            {DATES.map((d) => (
+            {keyDates(eventInfo).map((d) => (
               <div
                 key={d.title}
                 className="min-w-0 border-b border-r border-[var(--color-border-subtle)] bg-[var(--color-surface)] p-[22px]"
