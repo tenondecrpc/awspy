@@ -655,7 +655,9 @@ export function HomeTemplate({
                 href: cfpHref,
                 eyebrow: "Hablar",
                 title: "Proponer una charla",
-                body: "Convocatoria de charlas abierta en Sessionize hasta el 30 de septiembre de 2026.",
+                body: eventInfo.cfpDeadline
+                  ? `Convocatoria de charlas abierta en Sessionize hasta el ${formatDate(eventInfo.cfpDeadline)}.`
+                  : "Convocatoria de charlas abierta en Sessionize.",
               },
               {
                 href: volunteersHref,

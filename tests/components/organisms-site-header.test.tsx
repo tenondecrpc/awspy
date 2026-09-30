@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
-import { fireEvent, render, screen } from "@testing-library/react";
+import { fireEvent, render, screen, within } from "@testing-library/react";
 import { SiteHeader } from "@/components/organisms/SiteHeader";
 
 vi.mock("next/navigation", () => ({
@@ -34,6 +34,16 @@ describe("SiteHeader", () => {
     ).not.toHaveLength(0);
     // "Proponer charla" moved to the footer; it must never appear as "CFP".
     expect(screen.queryByRole("link", { name: "CFP" })).not.toBeInTheDocument();
+  });
+
+  it("links the volunteer call from the primary navigation", () => {
+    render(<SiteHeader />);
+    const nav = screen.getByRole("navigation", {
+      name: /navegación principal/i,
+    });
+    expect(
+      within(nav).getByRole("link", { name: "Voluntarios" })
+    ).toHaveAttribute("href", "/volunteers");
   });
 
   it("opens the mobile drawer with focus on Cerrar and aria-expanded toggling", () => {

@@ -6,7 +6,7 @@
 // with focus management, Escape-to-close, and click-outside-to-close.
 //
 // The primary nav is intentionally condensed (see lib/nav PRIMARY_NAV); the
-// destinations it omits (Proponer charla, Voluntarios, …) remain reachable in
+// destinations it omits (Proponer charla, …) remain reachable in
 // the footer and on their own pages, so no navigation is lost.
 
 import { useEffect, useRef, useState } from "react";

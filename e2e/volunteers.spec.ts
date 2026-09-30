@@ -15,7 +15,7 @@ test.describe("/volunteers", () => {
     await expect(registration).toBeVisible();
     await expect(registration).toHaveAttribute(
       "href",
-      "https://docs.google.com/forms/d/1GIKrU2urGvaUg-CixQY3PknkdhSIZo2hSKm3PQZhlEc/viewform"
+      "https://docs.google.com/forms/d/e/1FAIpQLScyfD8tgZVkwUXG_GxqzOWPEd3a26w8DP_0il4GprjYaqgfwA/viewform"
     );
     await expect(registration).toHaveAttribute("target", "_blank");
     await expect(registration).toHaveAttribute("rel", "noopener noreferrer");

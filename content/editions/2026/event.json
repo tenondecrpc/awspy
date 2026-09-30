@@ -15,14 +15,17 @@
   },
   "sessionizeEventId": "ybfh8gwn",
   "eventbriteEventUrl": "https://www.eventbrite.com/e/aws-community-day-paraguay-2026-tickets-1999945984276",
-  "volunteerRegistrationUrl": "https://docs.google.com/forms/d/1GIKrU2urGvaUg-CixQY3PknkdhSIZo2hSKm3PQZhlEc/viewform",
+  "volunteerRegistrationUrl": "https://docs.google.com/forms/d/e/1FAIpQLScyfD8tgZVkwUXG_GxqzOWPEd3a26w8DP_0il4GprjYaqgfwA/viewform",
   "volunteerRegistrationStatus": "open",
   "cfpSubmissionUrl": "https://sessionize.com/aws-community-day-paraguay-2026",
   "cfpStatus": "open",
-  "cfpDeadline": "2026-09-30T23:59:00-03:00",
+  "cfpDeadline": "2026-10-10T23:59:00-03:00",
   "registrationStatus": "open",
   "contactEmail": "awscommunitydayparaguay@gmail.com",
-  "social": {},
+  "social": {
+    "instagram": "https://www.instagram.com/awscommunitydaypy/",
+    "linkedin": "https://www.linkedin.com/company/aws-community-day-paraguay"
+  },
   "expectedFigures": [
     { "value": "400+", "label": "Asistentes" },
     { "value": "20+", "label": "Speakers" },

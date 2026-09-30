@@ -76,7 +76,11 @@ describe("getEdition", () => {
     expect(edition.eventInfo.contactEmail).toBe(
       "awscommunitydayparaguay@gmail.com"
     );
-    expect(edition.eventInfo.cfpDeadline).toBe("2026-09-30T23:59:00-03:00");
+    expect(edition.eventInfo.cfpDeadline).toBe("2026-10-10T23:59:00-03:00");
+    expect(edition.eventInfo.social).toEqual({
+      instagram: "https://www.instagram.com/awscommunitydaypy/",
+      linkedin: "https://www.linkedin.com/company/aws-community-day-paraguay",
+    });
     expect(Array.isArray(edition.sponsors)).toBe(true);
     expect(Array.isArray(edition.organizers)).toBe(true);
     expect(Array.isArray(edition.faq)).toBe(true);

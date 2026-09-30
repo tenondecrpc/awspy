@@ -9,9 +9,10 @@ const HEADER_NAV = [
   "Sede",
   "Sponsors",
   "Equipo",
+  "Voluntarios",
   "Preguntas",
 ];
-const FOOTER_ONLY_NAV = ["Proponer charla", "Voluntarios"];
+const FOOTER_ONLY_NAV = ["Proponer charla"];
 
 test.describe("Site navigation", () => {
   test("desktop: every primary nav entry is visible", async ({ page }) => {
@@ -41,6 +42,27 @@ test.describe("Site navigation", () => {
         footer.getByRole("link", { name, exact: true })
       ).toBeVisible();
     }
+  });
+
+  test("footer links the official social accounts in a new tab", async ({
+    page,
+  }) => {
+    await page.goto("/");
+
+    const footer = page.getByRole("contentinfo");
+    for (const [name, href] of [
+      ["Instagram", "https://www.instagram.com/awscommunitydaypy/"],
+      [
+        "LinkedIn",
+        "https://www.linkedin.com/company/aws-community-day-paraguay",
+      ],
+    ]) {
+      const link = footer.getByRole("link", { name, exact: true });
+      await expect(link).toHaveAttribute("href", href);
+      await expect(link).toHaveAttribute("target", "_blank");
+      await expect(link).toHaveAttribute("rel", "noopener noreferrer");
+    }
+    await expect(footer.getByText("Próximamente en redes")).toHaveCount(0);
   });
 
   test("defaults to light and persists a manual color theme across reloads", async ({

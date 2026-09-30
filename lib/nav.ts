@@ -11,15 +11,17 @@ export type NavEntry = {
 };
 
 // The primary header navigation follows the "colored" mockup: a condensed set
-// of six destinations. Entries the mockup drops from the top bar (Proponer
-// charla, Voluntarios) are NOT removed from the site — they remain in
-// `FOOTER_NAV` below (and on their own pages), so no navigation is lost.
+// of destinations, plus Voluntarios, which the organizers asked to surface
+// while the volunteer call is open. Entries the header drops (Proponer charla)
+// are NOT removed from the site — they remain in `FOOTER_NAV` below (and on
+// their own pages), so no navigation is lost.
 export const PRIMARY_NAV: readonly NavEntry[] = [
   { href: "/schedule", label: "Agenda" },
   { href: "/speakers", label: "Speakers" },
   { href: "/venue", label: "Sede" },
   { href: "/sponsors", label: "Sponsors" },
   { href: "/team", label: "Equipo" },
+  { href: "/volunteers", label: "Voluntarios" },
   { href: "/faq", label: "Preguntas" },
 ] as const;
 
