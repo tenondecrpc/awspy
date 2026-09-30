@@ -58,6 +58,8 @@ export const SponsorshipSchema = z
     packages: z.array(PackageSchema).optional().default([]),
     /** Comparison rows, in the order they should be displayed. */
     benefits: z.array(BenefitSchema).optional().default([]),
+    /** Conditions that apply to every package, printed under the table. */
+    notes: z.array(z.string().min(1)).optional().default([]),
     /** What the sponsorship money is spent on. */
     funds: z.array(z.string().min(1)).optional().default([]),
     contact: ContactSchema.optional(),

@@ -150,6 +150,7 @@ export const SponsorshipSchema = z.object({
     label: z.string().min(1),
     tiers: z.array(SponsorTierEnum).min(1)
   }).strict()).optional().default([]),
+  notes: z.array(z.string().min(1)).optional().default([]),   // conditions for every package, printed under the table
   funds: z.array(z.string().min(1)).optional().default([]),
   contact: z.object({
     name: z.string().min(1),

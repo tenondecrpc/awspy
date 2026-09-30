@@ -82,6 +82,44 @@ describe("SponsorsTemplate", () => {
     expect(container.textContent).not.toMatch(AMOUNT);
   });
 
+  it("prints the package conditions under the benefit table", () => {
+    render(
+      <SponsorsTemplate
+        sponsors={[]}
+        eventInfo={EVENT_INFO}
+        sponsorship={{
+          ...SPONSORSHIP!,
+          notes: ["El stand lo arma el sponsor."],
+        }}
+      />
+    );
+
+    const table = screen.getByRole("table", {
+      name: "Beneficios incluidos en cada paquete de patrocinio",
+    });
+    const note = screen.getByText("El stand lo arma el sponsor.");
+    expect(
+      screen.getByRole("list", { name: "Condiciones de los paquetes" })
+    ).toContainElement(note);
+    expect(
+      table.compareDocumentPosition(note) & Node.DOCUMENT_POSITION_FOLLOWING
+    ).toBeTruthy();
+  });
+
+  it("prints no conditions list when the prospectus has none", () => {
+    render(
+      <SponsorsTemplate
+        sponsors={[]}
+        eventInfo={EVENT_INFO}
+        sponsorship={{ ...SPONSORSHIP!, notes: [] }}
+      />
+    );
+
+    expect(
+      screen.queryByRole("list", { name: "Condiciones de los paquetes" })
+    ).not.toBeInTheDocument();
+  });
+
   it("falls back to the invitation when the edition prices no tiers", () => {
     render(
       <SponsorsTemplate

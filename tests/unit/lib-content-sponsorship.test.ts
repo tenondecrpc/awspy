@@ -17,7 +17,14 @@ describe("SponsorshipSchema", () => {
     expect(parsed.packages).toEqual([]);
     expect(parsed.benefits).toEqual([]);
     expect(parsed.funds).toEqual([]);
+    expect(parsed.notes).toEqual([]);
     expect(parsed.contact).toBeUndefined();
+  });
+
+  it("rejects an empty package note", () => {
+    const result = SponsorshipSchema.safeParse({ ...VALID, notes: [""] });
+    expect(result.success).toBe(false);
+    expect(result.error?.issues[0].path).toEqual(["notes", 0]);
   });
 
   it("rejects a benefit pointing at a tier with no package", () => {
@@ -97,6 +104,13 @@ describe("getSponsorship", () => {
       "Gold",
       "Silver",
     ]);
+  });
+
+  it("leaves building the stand to the sponsor", () => {
+    const sponsorship = getSponsorship("2026");
+    expect(sponsorship?.notes.join(" ")).toMatch(
+      /estructura y el armado .* a cargo de cada patrocinador/
+    );
   });
 
   it("returns null for an edition with no prospectus", () => {

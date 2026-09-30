@@ -4,8 +4,8 @@
 //
 // The real data is wired through: the confirmed sponsors board, and — when the
 // edition has published a prospectus — the "why sponsor" highlights, the
-// package cards with their benefit comparison table, and the "what your money
-// pays for" list. Editions without a prospectus fall back to the plain contact
+// package cards with their benefit comparison table and the conditions under
+// it, and the "what your money pays for" list. Editions without a prospectus fall back to the plain contact
 // callout the page had before. Every sponsor logo links to its site.
 //
 // The page names each package and what it includes, never what it costs: an
@@ -265,6 +265,22 @@ export function SponsorsTemplate({
                   </tbody>
                 </table>
               </div>
+            ) : null}
+
+            {sponsorship!.notes.length > 0 ? (
+              <ul
+                aria-label="Condiciones de los paquetes"
+                className="m-0 mt-4 list-none p-0"
+              >
+                {sponsorship!.notes.map((note) => (
+                  <li
+                    key={note}
+                    className="max-w-[44rem] text-[14px] leading-[1.55] text-[var(--color-text-secondary)]"
+                  >
+                    {note}
+                  </li>
+                ))}
+              </ul>
             ) : null}
           </div>
         </section>
