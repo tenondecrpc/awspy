@@ -65,6 +65,30 @@ describe("SiteFooter", () => {
     expect(link).toHaveAttribute("rel", "noopener noreferrer");
   });
 
+  it("states that the site collects no personal data while analytics is off", () => {
+    render(<SiteFooter eventInfo={FAKE_INFO} />);
+    expect(
+      screen.getByText(/este sitio no recopila datos personales/i)
+    ).toBeInTheDocument();
+    expect(screen.queryByText(/google analytics/i)).not.toBeInTheDocument();
+  });
+
+  it("discloses Google Analytics cookies when analytics is on", () => {
+    render(<SiteFooter eventInfo={FAKE_INFO} analyticsEnabled />);
+    const notice = screen.getByText(/usa google analytics/i);
+    expect(notice).toHaveTextContent(/guarda cookies en el navegador/i);
+    expect(notice).toHaveTextContent(
+      /google analytics y google forms están sujetos a la política de privacidad de google/i
+    );
+    expect(notice).not.toHaveTextContent(/no recopila datos personales/i);
+    expect(
+      screen.getByRole("link", { name: "Política de Privacidad de Google" })
+    ).toHaveAttribute("href", "https://policies.google.com/privacy?hl=es-419");
+    expect(
+      screen.getByRole("link", { name: "Eventbrite" })
+    ).toBeInTheDocument();
+  });
+
   it("renders configured social links with safe attributes", () => {
     render(<SiteFooter eventInfo={FAKE_INFO} />);
     const twitter = screen.getByRole("link", { name: "Twitter" });

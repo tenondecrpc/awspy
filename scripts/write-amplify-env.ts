@@ -8,6 +8,7 @@ export const REQUIRED_PUBLIC_BUILD_ENV = [
 
 export const OPTIONAL_PUBLIC_BUILD_ENV = [
   "NEXT_PUBLIC_SESSIONIZE_BASE_URL",
+  "NEXT_PUBLIC_GA_MEASUREMENT_ID",
 ] as const;
 
 export function serializePublicBuildEnv(

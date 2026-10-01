@@ -21,8 +21,12 @@ test.describe("Home page", () => {
       page.getByText(/Faltan \d+ días|El evento ya comenzó/)
     ).toBeVisible();
 
-    // Footer privacy notice
-    await expect(page.getByText(/no recopila datos personales/i)).toBeVisible();
+    // Footer privacy notice. Its first sentence depends on whether the build
+    // carries a Google Analytics measurement ID (ADR 0010); this suite also
+    // runs against the deployed site, so accept both forms.
+    await expect(
+      page.getByText(/no (recopila|solicita) datos personales/i)
+    ).toBeVisible();
   });
 
   test("offers a primary register CTA pointing to /register", async ({

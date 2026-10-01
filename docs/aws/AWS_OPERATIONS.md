@@ -9,6 +9,7 @@ Amplify installs Node.js 24.15.0, performs `npm ci`, persists only allowlisted p
 - `CURRENT_EDITION`
 - `NEXT_PUBLIC_SITE_URL`
 - optional `NEXT_PUBLIC_SESSIONIZE_BASE_URL`
+- optional `NEXT_PUBLIC_GA_MEASUREMENT_ID` (production branch only)
 
 These are public configuration, not secrets. The build must not copy the full environment into artifacts.
 

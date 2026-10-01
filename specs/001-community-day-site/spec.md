@@ -7,6 +7,11 @@
 
 ## Clarifications
 
+### Session 2026-10-01
+
+- Q: Should the site measure traffic now that the edition is live? → A: Yes, with Google Analytics 4 configured through `NEXT_PUBLIC_GA_MEASUREMENT_ID` (ADR 0010). FR-037 is amended accordingly.
+- Q: Does Google Analytics require a cookie banner? → A: No banner. The footer notice discloses Google Analytics and its cookies instead (FR-036 amended). A consent banner is deferred until the audience or applicable law requires prior consent.
+
 ### Session 2026-05-23
 
 - Coverage scan summary across the standard taxonomy (Functional, Domain, UX, Non-Functional, Integration, Edge Cases, Constraints, Terminology, Completion Signals, Misc):
@@ -264,8 +269,8 @@ The site is published and reachable at its public domain on AWS Amplify Hosting,
 #### Privacy, observability, and past-edition behavior (clarifications applied 2026-05-23)
 
 - **FR-035**: Past-edition pages under `/editions/{year}/register`, `/editions/{year}/volunteers`, and `/editions/{year}/cfp` MUST render a single Spanish "Esta edición ya finalizó" message regardless of the historical status flags; only the current edition's pages read the dynamic registration, volunteer, and CFP statuses from its event metadata.
-- **FR-036**: The site MUST include a Spanish privacy footer noting that no personal data is collected by this site, attendee registration is delegated to Eventbrite, and volunteer applications are delegated to Google Forms. The notice MUST link to both providers' privacy policies. No cookie banner is shown because no first-party tracking is installed.
-- **FR-037**: No analytics tooling MUST be added for the first edition; the decision is deferred to a follow-up feature if traffic insights are later needed.
+- **FR-036**: The site MUST include a Spanish privacy footer noting that attendee registration is delegated to Eventbrite and volunteer applications are delegated to Google Forms, linking to both providers' privacy policies. When the build loads no analytics, the notice MUST state that no personal data is collected by this site. When Google Analytics is loaded (FR-037), the notice MUST instead disclose Google Analytics and its cookies and place it under Google's privacy policy. No cookie banner is shown (amended 2026-10-01, ADR 0010).
+- **FR-037**: Google Analytics 4 is the only analytics tooling allowed. It MUST load only when `NEXT_PUBLIC_GA_MEASUREMENT_ID` is configured, MUST follow FR-033, and MUST run with Google signals and ad personalization disabled (amended 2026-10-01, ADR 0010; the first-edition decision was no analytics).
 - **FR-038**: No custom logging, metrics, or tracing infrastructure MUST be added for the first edition; the hosting platform's built-in deployment and runtime logs are the sole observability surface. On AWS Amplify Hosting (primary target) this is the Amplify Console for build logs and AWS CloudWatch for SSR runtime logs.
 - **FR-039**: Volunteer applications MUST be delegated to the public Google Form configured per edition. `/volunteers` MUST expose a descriptive external link with `target="_blank"` and `rel="noopener noreferrer"`, and the home page plus team empty state MUST link to that section. The site MUST NOT embed the form, load Google Forms scripts, or submit application data itself.
 - **FR-040**: When volunteer registration is marked open but its URL is missing, `/volunteers` MUST render the Spanish upcoming-state alternative with a mailto contact CTA.

@@ -99,6 +99,7 @@ Open <http://localhost:3000>.
 | `CURRENT_EDITION` | yes | Four-digit edition served from the top-level routes. |
 | `NEXT_PUBLIC_SITE_URL` | yes in production | Absolute public origin used by canonical URLs, sitemap, robots, Open Graph, and JSON-LD. |
 | `NEXT_PUBLIC_SESSIONIZE_BASE_URL` | no | Sessionize API override for tests or local fixtures. |
+| `NEXT_PUBLIC_GA_MEASUREMENT_ID` | no | Google Analytics 4 measurement ID. Unset loads no analytics. Set it on the production branch only (ADR 0010). |
 
 Use `http://localhost:3000` for local development and
 `https://awscommunitydayparaguay.com` in production.

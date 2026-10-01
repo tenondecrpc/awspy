@@ -4,6 +4,7 @@ import "./globals.css";
 import { SiteHeader } from "@/components/organisms/SiteHeader";
 import { SiteFooter } from "@/components/organisms/SiteFooter";
 import { KiroMascot } from "@/components/organisms/KiroMascot";
+import { GoogleAnalytics } from "@/components/atoms/GoogleAnalytics";
 // Disabled: the rectangular photo mascot fought the shaded Kiro ghost for the
 // same bottom-right corner. Keep the import commented so the ghost stands alone.
 // import { Mascot } from "@/components/atoms/Mascot";
@@ -11,6 +12,7 @@ import { currentEdition } from "@/lib/content/editions";
 import { getEventInfo } from "@/lib/content/event-info";
 import { getFAQ } from "@/lib/content/faq";
 import { getSiteUrl } from "@/lib/utils/seo";
+import { getGaMeasurementId } from "@/lib/config/analytics";
 import { THEME_STORAGE_KEY } from "@/lib/theme";
 
 const geistSans = Geist({
@@ -50,6 +52,8 @@ export default function RootLayout({
   const editionYear = currentEdition();
   const eventInfo = getEventInfo(editionYear);
   const faq = getFAQ(editionYear);
+  // Unset outside production, so local and E2E builds load no analytics.
+  const gaMeasurementId = getGaMeasurementId();
 
   return (
     <html lang="es-PY" data-theme="light" suppressHydrationWarning>
@@ -59,10 +63,14 @@ export default function RootLayout({
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
         <SiteHeader />
         <main>{children}</main>
-        <SiteFooter eventInfo={eventInfo} />
+        <SiteFooter
+          eventInfo={eventInfo}
+          analyticsEnabled={gaMeasurementId !== null}
+        />
         <KiroMascot faq={faq} />
         {/* Disabled so the shaded Kiro ghost owns the bottom-right corner. */}
         {/* <Mascot /> */}
+        {gaMeasurementId && <GoogleAnalytics measurementId={gaMeasurementId} />}
       </body>
     </html>
   );

@@ -7,12 +7,14 @@ describe("serializePublicBuildEnv", () => {
       CURRENT_EDITION: "2026",
       NEXT_PUBLIC_SITE_URL: "https://example.test",
       NEXT_PUBLIC_SESSIONIZE_BASE_URL: "https://sessionize.example/api/v2",
+      NEXT_PUBLIC_GA_MEASUREMENT_ID: "G-AB12CD34EF",
       AWS_SECRET_ACCESS_KEY: "must-not-be-copied",
     });
 
     expect(output).toContain('CURRENT_EDITION="2026"');
     expect(output).toContain('NEXT_PUBLIC_SITE_URL="https://example.test"');
     expect(output).toContain("NEXT_PUBLIC_SESSIONIZE_BASE_URL");
+    expect(output).toContain('NEXT_PUBLIC_GA_MEASUREMENT_ID="G-AB12CD34EF"');
     expect(output).not.toContain("AWS_SECRET_ACCESS_KEY");
     expect(output).not.toContain("must-not-be-copied");
   });

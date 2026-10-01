@@ -9,6 +9,7 @@
 #   - NEXT_PUBLIC_SITE_URL  (https://awscommunitydayparaguay.com in production)
 # Optional:
 #   - NEXT_PUBLIC_SESSIONIZE_BASE_URL (overrides https://sessionize.com/api/v2)
+#   - NEXT_PUBLIC_GA_MEASUREMENT_ID   (GA4 ID, production branch only; ADR 0010)
 #
 # The site is cloud-agnostic. To deploy somewhere else (Vercel, OpenNext on
 # raw AWS, Netlify, self-hosted Node), follow the platform's Next.js guide.

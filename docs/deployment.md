@@ -45,6 +45,7 @@ Next.js compute platform to retain current behavior.
 | `CURRENT_EDITION` | yes | `2026` | Year served at the bare URL (e.g. `/`, `/speakers`). Past editions are always available under `/editions/{year}`. |
 | `NEXT_PUBLIC_SITE_URL` | yes (prod) | `http://localhost:3000` | Public origin used for canonical URLs, sitemap, OG image, and JSON-LD. Production value: `https://www.awscommunitydayparaguay.com`. Use the `www` form: the apex answers `302` to it, so the apex would make every canonical point at a redirect. |
 | `NEXT_PUBLIC_SESSIONIZE_BASE_URL` | no | `https://sessionize.com/api/v2` | Override for offline tests or staging. |
+| `NEXT_PUBLIC_GA_MEASUREMENT_ID` | no | unset | Google Analytics 4 measurement ID (`G-` plus uppercase letters and digits; anything else fails the build). Unset loads no analytics and keeps the original privacy notice. Set it on the production branch only, so previews send no hits. Inlined at build time, so a change needs a redeploy. See ADR 0010. |
 | `CONTENT_PREVIEW` | no | **on** | While the real records are not ready, the sponsors, organizers and venue loaders read their `*.example.json` siblings, so a deployed build serves placeholder data to visitors. Set it to `0` and redeploy to serve the real content. Each substitution logs a warning naming the file. See `editionFile` in `lib/content/_fs.ts`. |
 
 No secrets are read by this app. Sessionize is consumed through its public API
@@ -52,13 +53,14 @@ without authentication. Eventbrite is the attendee registration provider. The
 2026 edition links to its official public event page without loading an
 Eventbrite widget or calling its API. Google Forms receives volunteer
 applications through a plain external link; the site does not embed the form
-or load Google Forms scripts.
+or load Google Forms scripts. Google Analytics 4 is the only third-party
+script, and it loads only when `NEXT_PUBLIC_GA_MEASUREMENT_ID` is set.
 
 ## AWS Amplify Hosting (primary target)
 
 1. **Create the app**: AWS Amplify Console -> Host web app -> Connect GitHub repo -> select branch (e.g. `main`).
 2. **Framework qualification**: use a non-production preview branch. The committed `amplify.yml` installs Node.js 24.15.0 and runs the repository verification gate, but repository configuration does not prove service support.
-3. **Environment variables**: in App settings -> Environment variables, add `CURRENT_EDITION` and `NEXT_PUBLIC_SITE_URL` for each branch. `scripts/write-amplify-env.ts` writes only these allowlisted public values and the optional Sessionize base URL to `.env.production`; it never copies the full environment.
+3. **Environment variables**: in App settings -> Environment variables, add `CURRENT_EDITION` and `NEXT_PUBLIC_SITE_URL` for each branch. `scripts/write-amplify-env.ts` writes only these allowlisted public values, the optional Sessionize base URL and the optional Google Analytics measurement ID to `.env.production`; it never copies the full environment.
 4. **Build**: Amplify builds with the values from `amplify.yml`. The compute split (static vs SSR/ISR) is read from `.next/required-server-files.json`.
 5. **Custom domain**: App settings -> Domain management -> add `awscommunitydayparaguay.com`. Amplify provisions an ACM certificate via DNS validation. Verify both the apex domain and `www`, then confirm the configured redirect: the apex redirects to `www`, which is why `NEXT_PUBLIC_SITE_URL` carries the `www` form. If that redirect is ever flipped, change the variable to match and redeploy.
 6. **Preview branches**: enable preview deploys for non-main branches. The deploy URL is what `BASE_URL` should point at when running `e2e/deploy-smoke.spec.ts` against a preview.

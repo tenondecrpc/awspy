@@ -18,6 +18,8 @@ import type { EventInfo } from "@/lib/content/event-info";
 
 type SiteFooterProps = {
   eventInfo: EventInfo;
+  /** Whether Google Analytics loads on this build; selects the privacy copy. */
+  analyticsEnabled?: boolean;
 };
 
 const SOCIAL_LABELS: Record<keyof NonNullable<EventInfo["social"]>, string> = {
@@ -50,7 +52,10 @@ function emailParts(email: string) {
   );
 }
 
-export function SiteFooter({ eventInfo }: SiteFooterProps) {
+export function SiteFooter({
+  eventInfo,
+  analyticsEnabled = false,
+}: SiteFooterProps) {
   const socialEntries = (
     Object.entries(eventInfo.social ?? {}) as Array<
       [keyof typeof SOCIAL_LABELS, string | undefined]
@@ -146,7 +151,7 @@ export function SiteFooter({ eventInfo }: SiteFooterProps) {
         </div>
 
         <div className="border-t border-[var(--color-border-on-inverse)] py-6">
-          <PrivacyFooterNote tone="inverse" />
+          <PrivacyFooterNote tone="inverse" analytics={analyticsEnabled} />
           <p className="mt-3 text-xs text-[var(--color-text-on-inverse-muted)]">
             AWS Community Day Paraguay es un evento organizado por la comunidad
             local. No es un evento oficial de Amazon Web Services.
