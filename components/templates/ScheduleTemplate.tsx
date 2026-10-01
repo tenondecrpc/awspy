@@ -211,7 +211,7 @@ export function ScheduleTemplate({
               prefetch={false}
               scroll={false}
               aria-current={!activeRoom ? "page" : undefined}
-              className={`inline-flex items-center rounded-[3px] border px-3 py-1.5 text-[13px] font-semibold transition-colors hover:border-[var(--color-accent)] ${
+              className={`inline-flex min-h-11 max-w-full items-center rounded-[3px] border px-3 py-1.5 text-[13px] font-semibold leading-tight transition-colors hover:border-[var(--color-accent)] ${
                 !activeRoom
                   ? "border-[var(--color-accent)] bg-[var(--color-accent-soft)]"
                   : "border-[var(--color-border-subtle)] bg-[var(--color-surface)]"
@@ -226,7 +226,7 @@ export function ScheduleTemplate({
                 prefetch={false}
                 scroll={false}
                 aria-current={activeRoom === room.name ? "page" : undefined}
-                className={`inline-flex items-center gap-2 rounded-[3px] border px-3 py-1.5 text-[13px] font-semibold transition-colors hover:border-[var(--color-accent)] ${
+                className={`inline-flex min-h-11 max-w-full items-center gap-2 rounded-[3px] border px-3 py-1.5 text-left text-[13px] font-semibold leading-tight transition-colors hover:border-[var(--color-accent)] ${
                   activeRoom === room.name
                     ? "border-[var(--color-accent)] bg-[var(--color-accent-soft)]"
                     : "border-[var(--color-border-subtle)] bg-[var(--color-surface)]"
@@ -234,7 +234,7 @@ export function ScheduleTemplate({
               >
                 <span
                   aria-hidden="true"
-                  className="h-[9px] w-[9px] rounded-[2px]"
+                  className="h-[9px] w-[9px] shrink-0 rounded-[2px]"
                   style={{ background: room.color }}
                 />
                 {room.name}
@@ -337,7 +337,7 @@ export function ScheduleTemplate({
                           {slot.title}
                         </h3>
                         {slot.description ? (
-                          <p className="m-0 mb-1.5 max-w-[44rem] text-[14px] text-[var(--color-text-muted)]">
+                          <p className="m-0 mb-1.5 max-w-[44rem] break-words text-[14px] text-[var(--color-text-muted)]">
                             {slot.description}
                           </p>
                         ) : null}
@@ -349,7 +349,7 @@ export function ScheduleTemplate({
                       </div>
 
                       <div className="col-start-2 row-start-3 flex min-w-0 flex-wrap justify-start gap-1.5 pt-0.5 sm:col-start-auto sm:row-start-auto">
-                        <span className="whitespace-nowrap rounded-[3px] border border-[var(--color-border-subtle)] px-[9px] py-1 font-mono text-[10.5px] uppercase tracking-[0.1em] text-[var(--color-text-secondary)]">
+                        <span className="max-w-full break-words rounded-[3px] border border-[var(--color-border-subtle)] px-[9px] py-1 font-mono text-[10.5px] uppercase tracking-[0.1em] text-[var(--color-text-secondary)]">
                           {slot.roomName}
                         </span>
                         {slot.isPlenum ? (

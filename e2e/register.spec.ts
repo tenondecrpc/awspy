@@ -13,7 +13,7 @@ test.describe("/register and /cfp", () => {
     ).toBeVisible();
     const registration = page
       .locator("main")
-      .getByRole("link", { name: /Reservar mi lugar en Eventbrite/i });
+      .getByRole("link", { name: /Reservar en Eventbrite/i });
     await expect(registration).toBeVisible();
     await expect(registration).toHaveAttribute(
       "href",
@@ -41,6 +41,36 @@ test.describe("/register and /cfp", () => {
       .locator('script[src*="eb_widgets.js"]')
       .count();
     expect(widgetScripts).toBe(0);
+  });
+
+  test("ticket action fills the card and stays compact on a narrow phone", async ({
+    page,
+  }) => {
+    for (const width of [1440, 320]) {
+      await page.setViewportSize({ width, height: 900 });
+      await page.goto("/register");
+
+      const action = page.getByRole("link", {
+        name: /reservar en eventbrite/i,
+      });
+      const helper = page.getByText("Se abre en una pestaña nueva");
+      const card = action.locator("xpath=..");
+      const [actionBox, helperBox, cardBox] = await Promise.all([
+        action.boundingBox(),
+        helper.boundingBox(),
+        card.boundingBox(),
+      ]);
+
+      expect(actionBox).not.toBeNull();
+      expect(helperBox).not.toBeNull();
+      expect(cardBox).not.toBeNull();
+      expect(actionBox!.width).toBeCloseTo(cardBox!.width - 66, 0);
+      expect(actionBox!.x + actionBox!.width / 2).toBeCloseTo(
+        helperBox!.x + helperBox!.width / 2,
+        0
+      );
+      if (width === 320) expect(actionBox!.height).toBeLessThanOrEqual(80);
+    }
   });
 
   test("/cfp shows the open callout with the official Sessionize URL", async ({

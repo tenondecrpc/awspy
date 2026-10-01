@@ -17,12 +17,14 @@ type EventbriteRegisterButtonProps = {
   contactEmail: string;
   /** Visible label for the button. */
   label?: string;
+  className?: string;
 };
 
 export function EventbriteRegisterButton({
   eventbriteEventUrl,
   contactEmail,
   label = "Registrarme",
+  className,
 }: EventbriteRegisterButtonProps) {
   if (!eventbriteEventUrl) {
     return (
@@ -35,6 +37,7 @@ export function EventbriteRegisterButton({
           href={`mailto:${contactEmail}?subject=Avisame%20cuando%20abra%20el%20registro`}
           variant="secondary"
           size="md"
+          className={className}
         >
           Avisame por mail
         </Button>
@@ -50,6 +53,7 @@ export function EventbriteRegisterButton({
       rel="noopener noreferrer"
       variant="primary"
       size="lg"
+      className={className}
     >
       {label}
     </Button>

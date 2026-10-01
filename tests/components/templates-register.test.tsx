@@ -22,7 +22,7 @@ describe("RegisterTemplate", () => {
     expect(screen.getByText("Registro abierto")).toBeInTheDocument();
 
     const cta = screen.getByRole("link", {
-      name: /Reservar mi lugar en Eventbrite/i,
+      name: /Reservar en Eventbrite/i,
     });
     expect(cta).toHaveAttribute("href", BASE.eventbriteEventUrl);
     expect(cta).toHaveAttribute("target", "_blank");
@@ -35,7 +35,7 @@ describe("RegisterTemplate", () => {
     expect(screen.getByText("Registro próximamente")).toBeInTheDocument();
     expect(screen.getByText(/Aún no abrimos el registro/)).toBeInTheDocument();
     expect(
-      screen.queryByRole("link", { name: /Reservar mi lugar en Eventbrite/i })
+      screen.queryByRole("link", { name: /Reservar en Eventbrite/i })
     ).not.toBeInTheDocument();
   });
 
@@ -56,7 +56,7 @@ describe("RegisterTemplate", () => {
     expect(screen.getByText("Edición finalizada")).toBeInTheDocument();
     expect(screen.getByText(/Esta edición ya finalizó/)).toBeInTheDocument();
     expect(
-      screen.queryByRole("link", { name: /Reservar mi lugar en Eventbrite/i })
+      screen.queryByRole("link", { name: /Reservar en Eventbrite/i })
     ).not.toBeInTheDocument();
   });
 });

@@ -368,7 +368,7 @@ export function HomeTemplate({
             action={{ href: scheduleHref, label: "Agenda completa" }}
           />
           <div className="border-t border-[var(--color-text-primary)] py-6">
-            <p className="m-0 max-w-[44rem] text-[16px] text-[var(--color-text-secondary)]">
+            <p className="m-0 max-w-[44rem] pl-[30px] text-[16px] text-[var(--color-text-secondary)]">
               Charlas, talleres y espacios para conectar. Consultá la agenda
               para ver los horarios, salas y sesiones confirmadas.
             </p>

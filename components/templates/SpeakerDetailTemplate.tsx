@@ -180,7 +180,7 @@ export function SpeakerDetailTemplate({
               {ownSessions.map((s) => (
                 <div
                   key={s.id}
-                  className="grid items-baseline gap-[18px] border-b border-[var(--color-border-subtle)] px-1 py-[18px] [grid-template-columns:minmax(110px,130px)_minmax(0,1fr)]"
+                  className="grid grid-cols-1 items-baseline gap-x-[18px] gap-y-2 border-b border-[var(--color-border-subtle)] px-1 py-[18px] sm:[grid-template-columns:minmax(110px,130px)_minmax(0,1fr)]"
                 >
                   <span className="font-mono text-[14px] text-[var(--color-text-primary)]">
                     {s.startsAt && s.endsAt
@@ -192,7 +192,7 @@ export function SpeakerDetailTemplate({
                       {s.title}
                     </h3>
                     {s.description ? (
-                      <p className="m-0 text-[14px] text-[var(--color-text-muted)]">
+                      <p className="m-0 break-words text-[14px] text-[var(--color-text-muted)]">
                         {s.description}
                       </p>
                     ) : null}

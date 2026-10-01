@@ -47,7 +47,7 @@ test.describe("Home page", () => {
     await expect(
       page
         .locator("main")
-        .getByRole("link", { name: /Reservar mi lugar en Eventbrite/i })
+        .getByRole("link", { name: /Reservar en Eventbrite/i })
     ).toBeVisible();
   });
 

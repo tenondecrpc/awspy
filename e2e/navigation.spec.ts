@@ -109,6 +109,24 @@ test.describe("Site navigation", () => {
     ).toBeHidden();
   });
 
+  test("mobile: registration action stays inside the drawer", async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width: 320, height: 720 });
+    await page.goto("/");
+
+    const header = page.getByRole("banner");
+    await expect(
+      header.getByRole("link", { name: "Registrarme", exact: true })
+    ).toBeHidden();
+    await page.getByRole("button", { name: "Abrir menú" }).click();
+    await expect(
+      page
+        .getByRole("dialog", { name: "Navegación principal" })
+        .getByRole("link", { name: "Registrarme" })
+    ).toBeVisible();
+  });
+
   // Reported from a Galaxy S22 (360x780). `toBeVisible` passed while the
   // drawer was broken: the header's `backdrop-filter` made it the containing
   // block of the drawer's `position: fixed`, so the panel was 64px tall and

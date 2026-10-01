@@ -200,71 +200,121 @@ export function SponsorsTemplate({
             </div>
 
             {sponsorship!.benefits.length > 0 ? (
-              <div className="overflow-x-auto border border-[var(--color-border-subtle)]">
-                <table className="w-full min-w-[720px] border-collapse text-[14px]">
-                  <caption className="sr-only">
-                    Beneficios incluidos en cada paquete de patrocinio
-                  </caption>
-                  <thead>
-                    <tr>
-                      <th
-                        scope="col"
-                        className="bg-[var(--color-surface-inverse)] px-[18px] py-3.5 text-left text-[12px] font-semibold tracking-[0.04em] text-[var(--color-text-on-inverse)]"
-                      >
-                        Beneficio
-                      </th>
-                      {sponsorship!.packages.map((pkg) => (
-                        <th
-                          key={pkg.tier}
-                          scope="col"
-                          className="w-[110px] bg-[var(--color-surface-inverse)] px-3 py-3.5 font-mono text-[11px] uppercase tracking-[0.12em] text-[var(--color-text-on-inverse)]"
-                        >
-                          {TIER_LABEL[pkg.tier]}
-                        </th>
-                      ))}
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {sponsorship!.benefits.map((benefit, i) => (
-                      <tr
-                        key={benefit.label}
-                        className={
-                          "border-t border-[var(--color-border-subtle)] " +
-                          (i % 2 === 1
-                            ? "bg-[var(--color-surface-muted)]"
-                            : "bg-[var(--color-surface)]")
-                        }
-                      >
-                        <td className="px-[18px] py-3.5 leading-[1.5] text-[var(--color-text-secondary)]">
-                          {benefit.label}
-                        </td>
+              <>
+                <ul
+                  className="m-0 grid list-none gap-3 p-0 md:hidden"
+                  aria-label="Comparación de beneficios de patrocinio"
+                >
+                  {sponsorship!.benefits.map((benefit) => (
+                    <li
+                      key={benefit.label}
+                      className="min-w-0 border border-[var(--color-border-subtle)] bg-[var(--color-surface)] p-4"
+                    >
+                      <p className="m-0 mb-3 text-[14px] font-semibold text-[var(--color-text-primary)]">
+                        {benefit.label}
+                      </p>
+                      <ul className="m-0 grid list-none grid-cols-2 gap-2 p-0">
                         {sponsorship!.packages.map((pkg) => {
                           const included = benefit.tiers.includes(pkg.tier);
                           return (
-                            <td
+                            <li
                               key={pkg.tier}
-                              className={
-                                "px-3 py-3.5 text-center text-[16px] font-bold " +
-                                (included
-                                  ? "text-[var(--color-success)]"
-                                  : "text-[var(--color-text-muted)]")
-                              }
+                              className="flex min-w-0 items-center gap-1.5 rounded-[3px] bg-[var(--color-surface-muted)] px-2 py-2 text-[12px] text-[var(--color-text-secondary)]"
                             >
-                              <span className="sr-only">
-                                {TIER_LABEL[pkg.tier]}:{" "}
-                                {included ? "incluido" : "no incluido"}
-                              </span>
-                              <span aria-hidden="true">
+                              <span
+                                aria-hidden="true"
+                                className={
+                                  included
+                                    ? "font-bold text-[var(--color-success)]"
+                                    : "text-[var(--color-text-muted)]"
+                                }
+                              >
                                 {included ? "✓" : "—"}
                               </span>
-                            </td>
+                              <span className="min-w-0 break-words">
+                                {TIER_LABEL[pkg.tier]}
+                              </span>
+                              <span className="sr-only">
+                                {included ? "incluido" : "no incluido"}
+                              </span>
+                            </li>
                           );
                         })}
+                      </ul>
+                    </li>
+                  ))}
+                </ul>
+                <div
+                  className="hidden max-w-full overflow-x-auto border border-[var(--color-border-subtle)] md:block"
+                  role="region"
+                  aria-label="Comparación de beneficios de patrocinio"
+                  tabIndex={0}
+                >
+                  <table className="w-full min-w-[720px] border-collapse text-[14px]">
+                    <caption className="sr-only">
+                      Beneficios incluidos en cada paquete de patrocinio
+                    </caption>
+                    <thead>
+                      <tr>
+                        <th
+                          scope="col"
+                          className="bg-[var(--color-surface-inverse)] px-[18px] py-3.5 text-left text-[12px] font-semibold tracking-[0.04em] text-[var(--color-text-on-inverse)]"
+                        >
+                          Beneficio
+                        </th>
+                        {sponsorship!.packages.map((pkg) => (
+                          <th
+                            key={pkg.tier}
+                            scope="col"
+                            className="w-[110px] bg-[var(--color-surface-inverse)] px-3 py-3.5 font-mono text-[11px] uppercase tracking-[0.12em] text-[var(--color-text-on-inverse)]"
+                          >
+                            {TIER_LABEL[pkg.tier]}
+                          </th>
+                        ))}
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
+                    </thead>
+                    <tbody>
+                      {sponsorship!.benefits.map((benefit, i) => (
+                        <tr
+                          key={benefit.label}
+                          className={
+                            "border-t border-[var(--color-border-subtle)] " +
+                            (i % 2 === 1
+                              ? "bg-[var(--color-surface-muted)]"
+                              : "bg-[var(--color-surface)]")
+                          }
+                        >
+                          <td className="px-[18px] py-3.5 leading-[1.5] text-[var(--color-text-secondary)]">
+                            {benefit.label}
+                          </td>
+                          {sponsorship!.packages.map((pkg) => {
+                            const included = benefit.tiers.includes(pkg.tier);
+                            return (
+                              <td
+                                key={pkg.tier}
+                                className={
+                                  "px-3 py-3.5 text-center text-[16px] font-bold " +
+                                  (included
+                                    ? "text-[var(--color-success)]"
+                                    : "text-[var(--color-text-muted)]")
+                                }
+                              >
+                                <span className="sr-only">
+                                  {TIER_LABEL[pkg.tier]}:{" "}
+                                  {included ? "incluido" : "no incluido"}
+                                </span>
+                                <span aria-hidden="true">
+                                  {included ? "✓" : "—"}
+                                </span>
+                              </td>
+                            );
+                          })}
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </>
             ) : null}
 
             {sponsorship!.notes.length > 0 ? (

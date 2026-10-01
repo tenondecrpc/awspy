@@ -19,7 +19,7 @@ import { PRIMARY_NAV, REGISTER_CTA } from "@/lib/nav";
 import { cn } from "@/lib/utils/cn";
 
 const CTA_CLASS =
-  "inline-flex items-center justify-center whitespace-nowrap rounded-[var(--radius-sm)] bg-[var(--color-surface-inverse)] px-4 py-2 text-[13.5px] font-bold text-[var(--color-text-on-inverse)] transition-colors hover:bg-[var(--color-action)] hover:text-[var(--color-text-on-action)]";
+  "items-center justify-center whitespace-nowrap rounded-[var(--radius-sm)] bg-[var(--color-surface-inverse)] px-4 py-2 text-[13.5px] font-bold text-[var(--color-text-on-inverse)] transition-colors hover:bg-[var(--color-action)] hover:text-[var(--color-text-on-action)]";
 
 export function SiteHeader() {
   const [isDrawerOpen, setDrawerOpen] = useState(false);
@@ -62,7 +62,7 @@ export function SiteHeader() {
           <div className="flex h-16 items-center justify-between gap-4">
             <NextLink
               href="/"
-              className="flex items-center gap-3 whitespace-nowrap"
+              className="flex shrink-0 items-center gap-3 whitespace-nowrap"
             >
               <Image
                 src="/assets/logo-dark.png"
@@ -177,7 +177,7 @@ export function SiteHeader() {
             <NextLink
               href={REGISTER_CTA.href}
               onClick={() => setDrawerOpen(false)}
-              className={cn(CTA_CLASS, "mt-4 w-full")}
+              className={cn(CTA_CLASS, "mt-4 inline-flex min-h-11 w-full")}
             >
               {REGISTER_CTA.label}
             </NextLink>

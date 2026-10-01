@@ -185,7 +185,7 @@ export function RegisterTemplate({
                     <p className="m-0 mb-1.5 font-mono text-[11px] uppercase tracking-[0.14em] text-[var(--color-text-muted)]">
                       Entrada general
                     </p>
-                    <div className="mb-[18px] flex items-baseline gap-2.5">
+                    <div className="mb-[18px] flex flex-wrap items-baseline gap-x-2.5 gap-y-1">
                       <span className="text-[46px] font-extrabold leading-none tracking-[-0.04em] text-[var(--color-text-primary)]">
                         Gratis
                       </span>
@@ -207,12 +207,12 @@ export function RegisterTemplate({
                       ].map(([k, v]) => (
                         <div
                           key={k}
-                          className="flex justify-between gap-3.5 border-b border-[var(--color-border-subtle)] py-[11px]"
+                          className="grid grid-cols-[4rem_minmax(0,1fr)] gap-3 border-b border-[var(--color-border-subtle)] py-[11px] sm:grid-cols-[5rem_minmax(0,1fr)]"
                         >
                           <dt className="text-[14px] text-[var(--color-text-muted)]">
                             {k}
                           </dt>
-                          <dd className="m-0 text-[14px] font-semibold text-[var(--color-text-primary)]">
+                          <dd className="m-0 min-w-0 text-[14px] font-semibold text-[var(--color-text-primary)]">
                             {v}
                           </dd>
                         </div>
@@ -221,7 +221,8 @@ export function RegisterTemplate({
                     <EventbriteRegisterButton
                       eventbriteEventUrl={eventInfo.eventbriteEventUrl}
                       contactEmail={eventInfo.contactEmail}
-                      label="Reservar mi lugar en Eventbrite"
+                      label="Reservar en Eventbrite"
+                      className="w-full text-center"
                     />
                     <p className="mt-3 text-center text-[12.5px] text-[var(--color-text-muted)]">
                       Se abre en una pestaña nueva

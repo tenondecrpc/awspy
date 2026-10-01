@@ -91,3 +91,25 @@ test.describe("Kiro chat scroll containment", () => {
     expect(await page.evaluate(() => window.scrollY)).toBeGreaterThan(0);
   });
 });
+
+test("mobile: Kiro launcher sits after the reading content and chat controls are easy to tap", async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto("/faq");
+
+  const launcher = page.getByRole("button", { name: "Abrir chat de Kiro" });
+  const footer = page.getByRole("contentinfo");
+  const [launcherBox, footerBox] = await Promise.all([
+    launcher.boundingBox(),
+    footer.boundingBox(),
+  ]);
+  expect(launcherBox!.y).toBeGreaterThanOrEqual(footerBox!.y);
+
+  await launcher.click();
+  const chat = page.getByRole("dialog", { name: /chat de preguntas/i });
+  const controls = chat.getByRole("button");
+  for (const button of await controls.all()) {
+    expect((await button.boundingBox())!.height).toBeGreaterThanOrEqual(44);
+  }
+});

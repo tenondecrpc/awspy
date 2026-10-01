@@ -1,8 +1,8 @@
 "use client";
 
-// Floating Kiro mascot — a WhatsApp-style bubble pinned to the bottom-right
-// corner on every page. It hosts the animated mesh-gradient creature (the
-// "bichito") and, when clicked, opens a small chat panel.
+// Kiro sits after the footer on phones so it cannot cover reading content.
+// On larger screens it floats at the bottom-right. Clicking it opens a small
+// chat panel with the animated mesh-gradient creature (the "bichito").
 //
 // The chat is deliberately NOT a live agent: there is no backend on this site.
 // It is a preselected FAQ dressed as a conversation. The visitor taps one of
@@ -127,7 +127,7 @@ export function KiroMascot({ faq = [] }: KiroMascotProps) {
   return (
     <div
       ref={rootRef}
-      className="group/kiro fixed bottom-5 right-5 z-50 flex flex-col items-end gap-3 sm:bottom-6 sm:right-6"
+      className="group/kiro relative z-10 flex w-full flex-col items-end gap-3 bg-[var(--color-surface-inverse)] px-7 pb-5 pt-4 sm:fixed sm:bottom-6 sm:right-6 sm:z-[45] sm:w-auto sm:bg-transparent sm:p-0"
     >
       {open && (
         <div
@@ -135,7 +135,7 @@ export function KiroMascot({ faq = [] }: KiroMascotProps) {
           id={panelId}
           role="dialog"
           aria-label="Chat de preguntas frecuentes con Kiro"
-          className="flex w-[min(20rem,calc(100vw-2.5rem))] flex-col overflow-hidden rounded-[var(--radius-lg)] bg-[var(--color-surface-elevated)] shadow-xl ring-1 ring-[var(--color-border-subtle)]"
+          className="fixed bottom-4 right-4 flex max-h-[calc(100dvh-2rem)] w-[min(20rem,calc(100vw-2rem))] flex-col overflow-hidden rounded-[var(--radius-lg)] bg-[var(--color-surface-elevated)] shadow-xl ring-1 ring-[var(--color-border-subtle)] sm:static sm:max-h-none"
         >
           {/* Header: small mesh-gradient avatar + name + close control. */}
           <div className="flex items-center gap-3 border-b border-[var(--color-border-subtle)] px-4 py-3">
@@ -160,7 +160,7 @@ export function KiroMascot({ faq = [] }: KiroMascotProps) {
                 buttonRef.current?.focus();
               }}
               aria-label="Cerrar chat"
-              className="ml-auto rounded-[var(--radius-pill)] p-1 text-[var(--color-text-secondary)] transition-colors hover:text-[var(--color-text-primary)]"
+              className="ml-auto inline-flex min-h-11 min-w-11 items-center justify-center rounded-[var(--radius-pill)] p-1 text-[var(--color-text-secondary)] transition-colors hover:text-[var(--color-text-primary)]"
             >
               <span aria-hidden="true" className="block text-lg leading-none">
                 ×
@@ -199,7 +199,7 @@ export function KiroMascot({ faq = [] }: KiroMascotProps) {
                   key={item.id}
                   type="button"
                   onClick={() => handleAsk(item)}
-                  className="rounded-[var(--radius-pill)] border border-[var(--color-border-subtle)] px-3 py-1.5 text-left text-sm text-[var(--color-text-primary)] transition-colors hover:border-[var(--color-accent)] hover:text-[var(--color-accent)]"
+                  className="min-h-11 rounded-[var(--radius-pill)] border border-[var(--color-border-subtle)] px-3 py-1.5 text-left text-sm text-[var(--color-text-primary)] transition-colors hover:border-[var(--color-accent)] hover:text-[var(--color-accent)]"
                 >
                   {item.question}
                 </button>

@@ -11,10 +11,9 @@ import { test, expect } from "@playwright/test";
 //      overlapping words rather than as a scrollbar.
 //
 // The first shows up as horizontal page scroll, the second as a box narrower
-// than the content it holds, so both checks are needed — neither catches the
-// other. `document.body.scrollWidth` is the reading that matters:
-// `documentElement.scrollWidth` is inflated by any `overflow-x: auto`
-// descendant, such as the sponsor benefits table, which scrolls by design.
+// than the content it holds, so both checks are needed. The root scroll offset
+// catches overflow that body.scrollWidth misses when a nested scroller widens
+// the document, as the sponsor benefits table once did.
 
 const ROUTES = [
   "/",
@@ -94,13 +93,23 @@ for (const viewport of VIEWPORTS) {
             });
           }
         }
-        return { bodyWidth: document.body.scrollWidth, overflowing };
+        window.scrollTo(1000, 0);
+        return {
+          bodyWidth: document.body.scrollWidth,
+          rootScrollX: window.scrollX,
+          overflowing,
+        };
       });
 
       expect(
         result.bodyWidth,
         `${path} scrolls sideways at ${viewport.width}px`
       ).toBeLessThanOrEqual(viewport.width + 1);
+
+      expect(
+        result.rootScrollX,
+        `${path} allows horizontal document scrolling at ${viewport.width}px`
+      ).toBe(0);
 
       expect(
         result.overflowing,
