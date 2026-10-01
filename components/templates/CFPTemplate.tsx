@@ -26,22 +26,18 @@ const FORMATS = [
   {
     name: "Charla técnica",
     body: "Un tema, un caso, una arquitectura. El formato principal del día.",
-    length: "45 min",
   },
   {
     name: "Taller hands-on",
     body: "Práctico, con cupo limitado. La gente trae su notebook.",
-    length: "90 min",
   },
   {
     name: "Lightning talk",
     body: "Una idea, sin rodeos. Ideal si nunca presentaste.",
-    length: "10 min",
   },
   {
     name: "Panel",
     body: "Propuesta de tema y personas; el comité arma la mesa.",
-    length: "45 min",
   },
 ];
 
@@ -55,28 +51,15 @@ const LOOKING = [
 
 type KeyDate = { when: string; title: string; body: string; color: string };
 
-/** `10.10.2026`, read on the Asunción calendar like the rest of the site. */
+/** Formats a configured date for the Asunción calendar. */
 function dotDate(input: string): string {
   return startOfDayKey(input).split("-").reverse().join(".");
 }
 
-// The close and the event day come from event.json, so they follow an
-// extended call or a moved date. The committee's notification and
-// confirmation dates have no field there and are set here.
+// Only configured dates are shown, so changes to the CFP deadline or event
+// date cannot leave stale committee milestones on the page.
 function keyDates(eventInfo: EventInfo): KeyDate[] {
   const dates: KeyDate[] = [
-    {
-      when: "12.10.2026",
-      title: "Notificación",
-      body: "El comité responde a todas las propuestas recibidas.",
-      color: "var(--color-accent)",
-    },
-    {
-      when: "14.10.2026",
-      title: "Confirmación",
-      body: "Speakers seleccionados confirman y envían su perfil.",
-      color: "var(--color-accent)",
-    },
     {
       when: dotDate(eventInfo.dates.start),
       title: "Community Day",
@@ -149,7 +132,7 @@ export function CFPTemplate({ eventInfo, archived = false }: CFPTemplateProps) {
                 {FORMATS.map((f) => (
                   <div
                     key={f.name}
-                    className="flex items-baseline justify-between gap-[18px] border-b border-[var(--color-border-subtle)] py-4"
+                    className="border-b border-[var(--color-border-subtle)] py-4"
                   >
                     <div className="min-w-0">
                       <h3 className="m-0 mb-[3px] text-[16px] font-bold text-[var(--color-text-primary)]">
@@ -159,9 +142,6 @@ export function CFPTemplate({ eventInfo, archived = false }: CFPTemplateProps) {
                         {f.body}
                       </p>
                     </div>
-                    <span className="flex-none font-mono text-[12.5px] text-[var(--color-text-primary)]">
-                      {f.length}
-                    </span>
                   </div>
                 ))}
               </div>

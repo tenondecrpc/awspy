@@ -1,12 +1,9 @@
-// Home page, rebuilt from scratch to reproduce the "Home Light" mockup
-// (`AWS Community Day Paraguay (colored)/Home Light.dc.html`) 1:1 — same
-// sections, same order, same colors (via exact design tokens), same spacing.
+// Home page based on the "Home Light" mockup
+// (`AWS Community Day Paraguay (colored)/Home Light.dc.html`).
 //
-// Only the data/functionality is wired to the real app: the countdown (live),
-// and the speakers / sponsors / FAQ / organizers sections (from Sessionize and
-// versioned content). The overview copy that the mockup hard-codes (stats,
-// pillars, the agenda-at-a-glance, and the "tres formas" cards) is kept as
-// static presentational content, exactly as in the mockup.
+// The countdown, speakers, sponsors, FAQ, and organizers use edition content
+// and Sessionize data. The overview keeps only stable, qualitative copy;
+// changing schedule details belong on the agenda page.
 
 import NextLink from "next/link";
 // Imported rather than referenced by path so the optimizer's upstream is the
@@ -87,46 +84,7 @@ const PILLARS = [
   {
     n: "04",
     title: "Talleres hands-on",
-    body: "Traé tu notebook: tres labs guiados durante la jornada.",
-  },
-];
-
-const AGENDA = [
-  {
-    time: "08:00",
-    title: "Acreditación",
-    note: "Café de bienvenida y entrega de credenciales",
-    track: "Hall",
-  },
-  {
-    time: "09:00",
-    title: "Keynote de apertura",
-    note: "La nube que construye la comunidad",
-    track: "Auditorio",
-  },
-  {
-    time: "10:00",
-    title: "Bloque de charlas",
-    note: "Serverless, observabilidad, seguridad",
-    track: "2 salas",
-  },
-  {
-    time: "12:30",
-    title: "Almuerzo y networking",
-    note: "Espacio de sponsors abierto",
-    track: "Hall",
-  },
-  {
-    time: "13:30",
-    title: "Hands-on labs",
-    note: "Bedrock, infraestructura como código, contenedores",
-    track: "3 salas",
-  },
-  {
-    time: "16:00",
-    title: "Panel y cierre",
-    note: "Cómo sigue la comunidad en Paraguay",
-    track: "Auditorio",
+    body: "Actividades prácticas para quienes quieran participar.",
   },
 ];
 
@@ -409,31 +367,11 @@ export function HomeTemplate({
             title="Agenda del día"
             action={{ href: scheduleHref, label: "Agenda completa" }}
           />
-          <div className="border-t border-[var(--color-text-primary)]">
-            {AGENDA.map((a) => (
-              // Four fixed columns only fit from `sm` up. Below it the row
-              // stacks: time and room share the first line, then the title,
-              // then the note. Placement is explicit rather than left to
-              // auto-flow, so the source order still reads time-title-note-room
-              // and the `sm` reset is a plain `auto` on every child.
-              <div
-                key={a.time}
-                className="grid items-baseline gap-x-5 gap-y-1.5 border-b border-[var(--color-border-subtle)] px-1 py-[18px] [grid-template-columns:minmax(0,1fr)_auto] sm:gap-y-0 sm:[grid-template-columns:minmax(86px,110px)_minmax(0,1fr)_minmax(0,1.1fr)_minmax(90px,130px)]"
-              >
-                <span className="col-start-1 row-start-1 font-mono text-[14px] font-medium text-[var(--color-text-primary)] sm:col-start-auto sm:row-start-auto">
-                  {a.time}
-                </span>
-                <span className="col-span-2 col-start-1 row-start-2 min-w-0 text-[16.5px] font-bold tracking-[-0.015em] sm:col-span-1 sm:col-start-auto sm:row-start-auto">
-                  {a.title}
-                </span>
-                <span className="col-span-2 col-start-1 row-start-3 min-w-0 text-[14px] text-[var(--color-text-muted)] sm:col-span-1 sm:col-start-auto sm:row-start-auto">
-                  {a.note}
-                </span>
-                <span className="col-start-2 row-start-1 justify-self-end whitespace-nowrap rounded-[3px] border border-[var(--color-border-subtle)] px-[9px] py-1 font-mono text-[10.5px] uppercase tracking-[0.1em] text-[var(--color-text-secondary)] sm:col-start-auto sm:row-start-auto sm:justify-self-start">
-                  {a.track}
-                </span>
-              </div>
-            ))}
+          <div className="border-t border-[var(--color-text-primary)] py-6">
+            <p className="m-0 max-w-[44rem] text-[16px] text-[var(--color-text-secondary)]">
+              Charlas, talleres y espacios para conectar. Consultá la agenda
+              para ver los horarios, salas y sesiones confirmadas.
+            </p>
           </div>
         </div>
       </section>

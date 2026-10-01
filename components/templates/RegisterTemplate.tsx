@@ -35,7 +35,7 @@ const STEPS = [
   {
     n: "03",
     title: "Acreditate el día del evento",
-    body: "La acreditación abre a las 08:00 en el hall de ingreso del SNPP.",
+    body: "Presentá tu ticket en el hall de ingreso del SNPP.",
   },
   {
     n: "04",
@@ -46,8 +46,8 @@ const STEPS = [
 
 const NOTES = [
   {
-    title: "Llevá tu notebook",
-    body: "Solo si vas a participar de los talleres hands-on. Conviene tener una cuenta de AWS activa.",
+    title: "Talleres prácticos",
+    body: "Si querés participar, revisá los requisitos de cada taller en la agenda. Para asistir al evento no necesitás notebook ni cuenta de AWS.",
   },
   {
     title: "Aceptás el código de conducta",

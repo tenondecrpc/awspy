@@ -367,8 +367,7 @@ export function ScheduleTemplate({
 
           {days.length > 0 ? (
             <p className="mt-[22px] text-[13.5px] text-[var(--color-text-muted)]">
-              Los horarios pueden ajustarse hasta la semana del evento. La
-              grilla definitiva se publica desde Sessionize.
+              Los horarios pueden ajustarse hasta la semana del evento.
             </p>
           ) : null}
 
@@ -378,8 +377,8 @@ export function ScheduleTemplate({
                 Los talleres tienen cupo limitado
               </h2>
               <p className="m-0 text-[14.5px] text-[var(--color-text-secondary)]">
-                Traé tu notebook y una cuenta de AWS activa. Se anota en el
-                mostrador de acreditación.
+                Si querés participar, revisá los requisitos de cada taller en la
+                agenda. La inscripción se hace en el mostrador de acreditación.
               </p>
             </div>
             <NextLink

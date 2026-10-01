@@ -60,7 +60,7 @@ const TASKS = [
 ];
 
 const EXPECTATIONS = [
-  { k: "Compromiso", v: "Un turno de 3 a 4 horas" },
+  { k: "Compromiso", v: "Un turno durante el evento" },
   { k: "Cuándo", v: "El día del evento" },
   { k: "Incluye", v: "Remera oficial y almuerzo" },
   { k: "Requisitos", v: "Ninguno, solo ganas" },

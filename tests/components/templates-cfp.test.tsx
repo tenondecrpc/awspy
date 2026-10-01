@@ -39,8 +39,6 @@ describe("CFPTemplate", () => {
 
     expect(keyDates()).toEqual([
       ["10.10.2026", "Cierre de la convocatoria"],
-      ["12.10.2026", "Notificación"],
-      ["14.10.2026", "Confirmación"],
       ["17.10.2026", "Community Day"],
     ]);
   });
