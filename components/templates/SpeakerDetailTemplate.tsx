@@ -55,6 +55,7 @@ export function SpeakerDetailTemplate({
   const ownSessions = sessions.filter((s) =>
     s.speakers?.some((sp) => sp.id === speaker.id)
   );
+  const hasTimes = ownSessions.some((s) => s.startsAt && s.endsAt);
 
   return (
     <>
@@ -200,6 +201,11 @@ export function SpeakerDetailTemplate({
               ))}
             </div>
           )}
+          {hasTimes ? (
+            <p className="mt-[22px] text-[13.5px] text-[var(--color-text-muted)]">
+              Los horarios están sujetos a cambios.
+            </p>
+          ) : null}
         </div>
       </section>
 
