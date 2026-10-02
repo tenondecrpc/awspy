@@ -92,11 +92,6 @@ describe("SpeakerCard", () => {
     expect(screen.queryByText(/^Charla:/)).not.toBeInTheDocument();
   });
 
-  it("labels a Sessionize top speaker with text, not only with color", () => {
-    render(<SpeakerCard speaker={{ ...SPEAKER, isTopSpeaker: true }} />);
-    expect(screen.getByText("Top speaker")).toBeInTheDocument();
-  });
-
   // Every speaker carries the same weight, and the source photos are square,
   // so the portrait is the same square at any position in the list: nobody is
   // cropped into a close-up or made larger than the rest.

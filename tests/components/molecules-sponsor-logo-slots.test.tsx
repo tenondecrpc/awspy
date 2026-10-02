@@ -20,7 +20,9 @@ describe("SponsorLogoSlots", () => {
     render(<SponsorLogoSlots count={3} href="#paquetes" />);
 
     expect(screen.getAllByRole("link")).toHaveLength(1);
-    expect(screen.getByText(/Quedan 3 niveles de patrocinio abiertos/)).toBeInTheDocument();
+    expect(
+      screen.getByText(/Quedan 3 niveles de patrocinio abiertos/)
+    ).toBeInTheDocument();
     expect(
       screen.getByRole("link", { name: "Sumá tu organización" })
     ).toHaveAttribute("href", "#paquetes");
@@ -36,7 +38,9 @@ describe("SponsorLogoSlots", () => {
   });
 
   it("names no tier and no amount, so the invitation never quotes a price", () => {
-    const { container } = render(<SponsorLogoSlots count={4} href="/sponsors" />);
+    const { container } = render(
+      <SponsorLogoSlots count={4} href="/sponsors" />
+    );
 
     expect(container.textContent).toBe(
       "Quedan 4 niveles de patrocinio abiertos. Sumá tu organización"

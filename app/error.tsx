@@ -6,10 +6,7 @@
 
 import NextLink from "next/link";
 import { IconBadge } from "@/components/atoms/IconBadge";
-import {
-  BTN_OUTLINE,
-  WRAP,
-} from "@/components/molecules/SectionPrimitives";
+import { BTN_OUTLINE, WRAP } from "@/components/molecules/SectionPrimitives";
 
 export default function ErrorPage({
   retry,
@@ -31,11 +28,7 @@ export default function ErrorPage({
           problema persiste, escribinos para que lo revisemos.
         </p>
         <div className="flex flex-wrap gap-3 pt-2">
-          <button
-            type="button"
-            onClick={() => retry()}
-            className={BTN_OUTLINE}
-          >
+          <button type="button" onClick={() => retry()} className={BTN_OUTLINE}>
             Reintentar
           </button>
           <NextLink href="/" className={BTN_OUTLINE}>

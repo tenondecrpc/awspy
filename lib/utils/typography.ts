@@ -15,10 +15,7 @@ const NBSP = " ";
  * Returns the text unchanged for `null`, `undefined` or short strings, so it is
  * safe to call on optional fields.
  */
-export function tieLast(
-  text: string | null | undefined,
-  maxTail = 24
-): string {
+export function tieLast(text: string | null | undefined, maxTail = 24): string {
   if (!text) return "";
   const trimmed = text.trimEnd();
   const words = trimmed.split(/\s+/);

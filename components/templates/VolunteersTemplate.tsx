@@ -206,7 +206,12 @@ export function VolunteersTemplate({
             <ul className="m-0 grid list-none gap-6 p-0 [grid-template-columns:repeat(auto-fit,minmax(min(14rem,100%),1fr))]">
               {GAINS.map((g) => (
                 <li key={g.title} className="min-w-0">
-                  <IconBadge name={g.icon} size="lg" tone="solid" className="mb-4" />
+                  <IconBadge
+                    name={g.icon}
+                    size="lg"
+                    tone="solid"
+                    className="mb-4"
+                  />
                   <h3 className="m-0 mb-1 text-step-0 leading-tight text-[var(--color-text-primary)]">
                     {g.title}
                   </h3>

@@ -57,7 +57,7 @@ export function Lace({ size = "32rem", rings = 6, className }: LaceProps) {
           <g key={ring.radius}>
             <circle r={ring.radius} vectorEffect="non-scaling-stroke" />
             {centers.map(([x, y], i) => {
-              const angle = ((i / ring.petals) * 360 + (tilt * 180) / Math.PI);
+              const angle = (i / ring.petals) * 360 + (tilt * 180) / Math.PI;
               return (
                 <ellipse
                   key={i}
@@ -72,8 +72,15 @@ export function Lace({ size = "32rem", rings = 6, className }: LaceProps) {
             })}
             {ringPoints(ring.radius + ring.length * 0.9, ring.petals, tilt).map(
               ([x, y], i) => (
-                <circle key={i} cx={x} cy={y} r="0.9" fill="currentColor" stroke="none" />
-              ),
+                <circle
+                  key={i}
+                  cx={x}
+                  cy={y}
+                  r="0.9"
+                  fill="currentColor"
+                  stroke="none"
+                />
+              )
             )}
           </g>
         );

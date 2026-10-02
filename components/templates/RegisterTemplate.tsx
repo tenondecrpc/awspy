@@ -89,7 +89,10 @@ function Fact({
 }) {
   return (
     <li
-      className={(wide ? "sm:col-span-2 " : "") + "flex items-center gap-3 text-base font-semibold text-[var(--color-text-primary)]"}
+      className={
+        (wide ? "sm:col-span-2 " : "") +
+        "flex items-center gap-3 text-base font-semibold text-[var(--color-text-primary)]"
+      }
     >
       <IconBadge name={icon} size="sm" />
       <span className="min-w-0">{children}</span>
@@ -162,13 +165,17 @@ export function RegisterTemplate({
                   cupo es limitado.
                 </p>
                 <ul className="m-0 mb-7 grid list-none gap-3 p-0 sm:grid-cols-2">
-                  <Fact icon="calendar">{formatDate(eventInfo.dates.start)}</Fact>
+                  <Fact icon="calendar">
+                    {formatDate(eventInfo.dates.start)}
+                  </Fact>
                   <Fact icon="clock">
                     {`${formatTime(eventInfo.dates.start)} – ${formatTime(
                       eventInfo.dates.end
                     )}`}
                   </Fact>
-                  <Fact icon="pin" wide>{eventInfo.location.summary}</Fact>
+                  <Fact icon="pin" wide>
+                    {eventInfo.location.summary}
+                  </Fact>
                   <Fact icon="ticket">Cupo limitado</Fact>
                 </ul>
                 <EventbriteRegisterButton

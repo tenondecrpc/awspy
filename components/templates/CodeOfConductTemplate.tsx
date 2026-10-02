@@ -18,9 +18,7 @@ type CodeOfConductTemplateProps = {
 /** The text of a `## ` section, matched by a word in its heading. */
 function sectionLines(body: string, headingWord: RegExp): string[] {
   const lines = body.replace(/\r\n/g, "\n").split("\n");
-  const start = lines.findIndex(
-    (l) => /^## /.test(l) && headingWord.test(l)
-  );
+  const start = lines.findIndex((l) => /^## /.test(l) && headingWord.test(l));
   if (start < 0) return [];
   const rest = lines.slice(start + 1);
   const end = rest.findIndex((l) => /^#{1,3} /.test(l));
@@ -95,8 +93,8 @@ export function CodeOfConductTemplate({
             Código de conducta
           </h1>
           <p className="m-0 mt-3 max-w-[40rem] text-step-0 leading-[1.5] text-[var(--color-text-secondary)]">
-            Un espacio seguro, inclusivo y respetuoso para toda la comunidad
-            AWS local, sin importar quién seas ni tu nivel técnico.
+            Un espacio seguro, inclusivo y respetuoso para toda la comunidad AWS
+            local, sin importar quién seas ni tu nivel técnico.
           </p>
           {meta ? (
             <p className="m-0 mt-2 text-sm text-[var(--color-text-muted)]">
@@ -117,9 +115,7 @@ export function CodeOfConductTemplate({
                 >
                   <div className="mb-4 flex items-center gap-3">
                     <IconBadge name={card.icon} />
-                    <h3 className="m-0 text-step-1">
-                      {card.title}
-                    </h3>
+                    <h3 className="m-0 text-step-1">{card.title}</h3>
                   </div>
                   {card.items.length > 0 ? (
                     <ul className="m-0 flex list-none flex-col gap-2 p-0 text-base leading-[1.5] text-[var(--color-text-secondary)]">

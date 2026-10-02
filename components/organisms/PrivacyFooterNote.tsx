@@ -99,7 +99,8 @@ export function PrivacyFooterNote({
         compra de entradas se hacen a través de <EventbriteLink tone={tone} />{" "}
         según su política de privacidad. Las postulaciones de voluntariado se
         realizan mediante Google Forms. Google Analytics y Google Forms están
-        sujetos a la <GoogleLink tone={tone} />. <PrivacyPageLink tone={tone} />.
+        sujetos a la <GoogleLink tone={tone} />. <PrivacyPageLink tone={tone} />
+        .
       </p>
     );
   }
@@ -109,7 +110,8 @@ export function PrivacyFooterNote({
       Este sitio no recopila datos personales. El registro y la compra de
       entradas se hacen a través de <EventbriteLink tone={tone} /> según su
       política de privacidad. Las postulaciones de voluntariado se realizan
-      mediante Google Forms y están sujetas a la <GoogleLink tone={tone} />. <PrivacyPageLink tone={tone} />.
+      mediante Google Forms y están sujetas a la <GoogleLink tone={tone} />.{" "}
+      <PrivacyPageLink tone={tone} />.
     </p>
   );
 }

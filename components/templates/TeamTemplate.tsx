@@ -4,10 +4,7 @@
 
 import NextLink from "next/link";
 import { OrganizersGrid } from "@/components/organisms/OrganizersGrid";
-import {
-  BTN_OUTLINE,
-  WRAP,
-} from "@/components/molecules/SectionPrimitives";
+import { BTN_OUTLINE, WRAP } from "@/components/molecules/SectionPrimitives";
 import type { Organizer } from "@/lib/content/organizers";
 import type { EventInfo } from "@/lib/content/event-info";
 

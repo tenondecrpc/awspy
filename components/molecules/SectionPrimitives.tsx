@@ -88,7 +88,9 @@ export function SectionTitle({
   return (
     <div
       className={`flex flex-wrap items-end justify-between gap-x-8 gap-y-3 ${
-        large ? "mb-[clamp(1.25rem,4svh,2.5rem)]" : "mb-[clamp(0.75rem,2.5svh,1.5rem)]"
+        large
+          ? "mb-[clamp(1.25rem,4svh,2.5rem)]"
+          : "mb-[clamp(0.75rem,2.5svh,1.5rem)]"
       }`}
     >
       <FlagRule weight="bold" className="mb-1" />
@@ -134,10 +136,7 @@ export function PageHeader({
   children,
 }: PageHeaderProps) {
   return (
-    <section
-      id="contenido-principal"
-      className=""
-    >
+    <section id="contenido-principal" className="">
       <div
         className={`${WRAP} flex flex-wrap items-end justify-between gap-x-10 gap-y-3 py-[clamp(1rem,3.5svh,2rem)]`}
       >

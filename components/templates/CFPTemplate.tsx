@@ -152,7 +152,12 @@ export function CFPTemplate({ eventInfo, archived = false }: CFPTemplateProps) {
                 key={f.name}
                 className="min-w-0 bg-[var(--color-surface-elevated)] p-6"
               >
-                <IconBadge name={f.icon} size="lg" tone="solid" className="mb-4" />
+                <IconBadge
+                  name={f.icon}
+                  size="lg"
+                  tone="solid"
+                  className="mb-4"
+                />
                 <h3 className="m-0 mb-1 text-step-0 leading-tight text-[var(--color-text-primary)]">
                   {f.name}
                 </h3>

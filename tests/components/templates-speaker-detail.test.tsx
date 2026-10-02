@@ -67,9 +67,8 @@ function renderSessions(sessions: SessionizeSession[]) {
       detailPath="/speakers/ada-lovelace"
     />
   );
-  return screen
-    .getByRole("heading", { level: 2, name: "Sesiones" })
-    .closest("section");
+  return screen.getByRole("heading", { level: 2, name: "Sus charlas" })
+    .parentElement;
 }
 
 describe("SpeakerDetailTemplate sessions", () => {
@@ -87,7 +86,7 @@ describe("SpeakerDetailTemplate sessions", () => {
   it("omits the warning while no session has a time", () => {
     const section = renderSessions([session()]);
 
-    expect(section).toHaveTextContent("Por confirmar");
+    expect(section).toHaveTextContent("Horario por confirmar");
     expect(section).not.toHaveTextContent("sujetos a cambios");
   });
 

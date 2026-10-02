@@ -414,7 +414,9 @@ export function ScheduleTemplate({
                         </div>
                         <div
                           className={
-                            onlyBreaks ? "flex min-w-0 flex-col gap-3" : CARD_GRID
+                            onlyBreaks
+                              ? "flex min-w-0 flex-col gap-3"
+                              : CARD_GRID
                           }
                         >
                           {block.sessions.map((s) => (

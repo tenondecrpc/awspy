@@ -31,8 +31,11 @@ const LINK_CLASS =
   "inline-flex min-h-[var(--size-touch)] items-center self-start text-base font-semibold text-[var(--color-text-on-inverse)] underline decoration-[var(--color-national-red-on-dark)] decoration-2 underline-offset-4 hover:decoration-[var(--color-text-on-inverse)]";
 
 export function VolunteerCallout({ eventInfo }: VolunteerCalloutProps) {
-  const { contactEmail, volunteerRegistrationStatus, volunteerRegistrationUrl } =
-    eventInfo;
+  const {
+    contactEmail,
+    volunteerRegistrationStatus,
+    volunteerRegistrationUrl,
+  } = eventInfo;
   const effectiveStatus =
     volunteerRegistrationStatus === "open" && !volunteerRegistrationUrl
       ? "upcoming"

@@ -84,15 +84,16 @@ describe("OrganizersGrid", () => {
       <OrganizersGrid organizers={[ORGANIZERS[1]]} eventInfo={EVENT_INFO} />
     );
     const card = screen.getByText("Beto Lopez").closest("article");
-    expect(card?.querySelectorAll("p")).toHaveLength(2);
+    // Only the role line remains: no bio paragraph.
+    expect(card?.querySelectorAll("p")).toHaveLength(1);
+    expect(card?.querySelector("p")).toHaveTextContent("Logística");
   });
 
-  it("uses the repo photo as the card image, decoratively", () => {
+  it("uses the repo photo as the card image, named after the organizer", () => {
     render(<OrganizersGrid organizers={ORGANIZERS} eventInfo={EVENT_INFO} />);
     const image = document.querySelector('img[src="/team/ana-perez.jpg"]');
     expect(image).not.toBeNull();
-    // The name sits next to it in text, so the image adds nothing to announce.
-    expect(image).toHaveAttribute("alt", "");
+    expect(image).toHaveAttribute("alt", "Ana Perez");
   });
 
   it("falls back to initials when there is no photo", () => {

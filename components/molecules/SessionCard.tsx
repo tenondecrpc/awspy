@@ -63,10 +63,7 @@ export function SessionCard({ session, speakerBasePath }: SessionCardProps) {
         {session.title}
       </h3>
 
-      <SessionSpeakers
-        speakers={session.speakers}
-        basePath={speakerBasePath}
-      />
+      <SessionSpeakers speakers={session.speakers} basePath={speakerBasePath} />
 
       <div className="mt-auto flex flex-wrap items-center justify-between gap-x-4 gap-y-1 pt-1">
         <span className={CHIP}>

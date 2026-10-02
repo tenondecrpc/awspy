@@ -34,12 +34,12 @@ describe("SponsorsTemplate", () => {
 
     if (SPONSORSHIP && SPONSORSHIP.packages.length > 0) {
       expect(
-        screen.getByRole("link", { name: "Ver paquetes" })
+        screen.getByRole("link", { name: "Ver los paquetes" })
       ).toHaveAttribute("href", "#paquetes");
     }
   });
 
-  it("offers an empty frame per open tier instead of an empty board", () => {
+  it("explains the empty board and routes companies to the packages", () => {
     render(
       <SponsorsTemplate
         sponsors={[]}
@@ -52,17 +52,15 @@ describe("SponsorsTemplate", () => {
       screen.getByText(/Todavía no hay sponsors confirmados/)
     ).toBeInTheDocument();
 
-    // One open tier per packaged tier, routed to the package table.
-    const packages = SPONSORSHIP?.packages ?? [];
-    expect(packages.length).toBeGreaterThan(0);
+    // No empty board: the page says so and points a company to the packages
+    // and to a person it can write to.
+    expect(SPONSORSHIP?.packages.length).toBeGreaterThan(0);
     expect(
-      screen.getByText(
-        new RegExp(`Quedan ${packages.length} niveles de patrocinio abiertos`)
-      )
-    ).toBeInTheDocument();
-    expect(
-      screen.getByRole("link", { name: "Sumá tu organización" })
+      screen.getByRole("link", { name: "Ver los paquetes" })
     ).toHaveAttribute("href", "#paquetes");
+    expect(
+      screen.getByRole("link", { name: "Quiero ser sponsor" })
+    ).toHaveAttribute("href", expect.stringContaining("mailto:"));
   });
 
   it("names every package and its benefits but never an amount", () => {
@@ -96,12 +94,22 @@ describe("SponsorsTemplate", () => {
       />
     );
 
-    expect(
-      screen.getAllByRole("columnheader").map((h) => h.textContent)
-    ).toEqual(["Beneficio", "Diamante", "Platinum", "Gold", "Silver"]);
+    // The comparison table is always visible, one column per package.
+    const headers = screen.getAllByRole("columnheader");
+    ["Beneficio", "Diamante", "Platinum", "Gold", "Silver"].forEach((name, i) =>
+      expect(headers[i].textContent).toMatch(new RegExp(`^${name}`))
+    );
+    expect(headers).toHaveLength(5);
+
+    // The ladder names the same packages, one row per level.
+    ["Diamante", "Platinum", "Gold", "Silver"].forEach((tier) =>
+      expect(
+        screen.getByRole("heading", { level: 3, name: tier })
+      ).toBeInTheDocument()
+    );
   });
 
-  it("prints the package conditions under the benefit table", () => {
+  it("prints the package conditions right under the package ladder", () => {
     render(
       <SponsorsTemplate
         sponsors={[]}
@@ -113,15 +121,19 @@ describe("SponsorsTemplate", () => {
       />
     );
 
-    const table = screen.getByRole("table", {
-      name: "Beneficios incluidos en cada paquete de patrocinio",
-    });
     const note = screen.getByText("El stand lo arma el sponsor.");
+    const conditions = screen.getByRole("list", {
+      name: "Condiciones de los paquetes",
+    });
+    expect(conditions).toContainElement(note);
+    // They sit in the packages section, after its heading.
+    const heading = screen.getByRole("heading", {
+      name: "Paquetes de patrocinio",
+    });
+    expect(heading.closest("section")).toContainElement(conditions);
     expect(
-      screen.getByRole("list", { name: "Condiciones de los paquetes" })
-    ).toContainElement(note);
-    expect(
-      table.compareDocumentPosition(note) & Node.DOCUMENT_POSITION_FOLLOWING
+      heading.compareDocumentPosition(conditions) &
+        Node.DOCUMENT_POSITION_FOLLOWING
     ).toBeTruthy();
   });
 
@@ -149,7 +161,7 @@ describe("SponsorsTemplate", () => {
     );
 
     expect(
-      screen.getByRole("heading", { name: "¿Querés ser sponsor?" })
+      screen.getByRole("heading", { name: /¿Querés\s+ser\s+sponsor\?/ })
     ).toBeInTheDocument();
     expect(
       screen.queryByRole("link", { name: "Sumá tu organización" })
@@ -166,15 +178,14 @@ describe("SponsorsTemplate", () => {
     );
 
     expect(
-      screen.queryByRole("link", { name: "Ver paquetes" })
+      screen.queryByRole("link", { name: "Ver los paquetes" })
     ).not.toBeInTheDocument();
     expect(
       screen.queryByRole("heading", { name: "Paquetes de patrocinio" })
     ).not.toBeInTheDocument();
     // The contact route must survive: without a prospectus, mail is the path.
-    expect(screen.getByRole("link", { name: "Escribirnos" })).toHaveAttribute(
-      "href",
-      expect.stringContaining("mailto:")
-    );
+    expect(
+      screen.getByRole("link", { name: "Quiero ser sponsor" })
+    ).toHaveAttribute("href", expect.stringContaining("mailto:"));
   });
 });

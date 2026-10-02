@@ -17,7 +17,6 @@ import venuePhoto from "@/public/assets/venue/cover.jpg";
 import { Countdown } from "@/components/organisms/Countdown";
 import { Lace } from "@/components/atoms/Lace";
 import {
-  BTN_OUTLINE,
   BTN_OUTLINE_ON_DARK,
   BTN_PRIMARY,
   Frame,
@@ -214,7 +213,8 @@ export function HomeTemplate({
         className={`${SECTION_FIT} bg-[var(--color-surface-muted)]`}
       >
         <div className={WRAP}>
-          <SectionTitle size="lg"
+          <SectionTitle
+            size="lg"
             title="Agenda del día"
             action={{ href: scheduleHref, label: "Agenda completa" }}
           />
@@ -271,7 +271,8 @@ export function HomeTemplate({
         className={`${SECTION_FIT} bg-[var(--color-surface)]`}
       >
         <div className={WRAP}>
-          <SectionTitle size="lg"
+          <SectionTitle
+            size="lg"
             title="Speakers"
             action={{ href: speakersHref, label: "Ver todos" }}
           />
@@ -321,9 +322,7 @@ export function HomeTemplate({
         className="fit-screen relative overflow-hidden bg-[var(--color-surface-inverse)] text-[var(--color-text-on-inverse)]"
       >
         <div className="grid w-full lg:grid-cols-[1fr_1.1fr]">
-          <div
-            className="flex min-w-0 flex-col justify-center px-5 py-[clamp(2.5rem,6svh,5rem)] sm:px-7 lg:pl-[max(1.75rem,calc((100vw-1240px)/2+1.75rem))] lg:pr-14"
-          >
+          <div className="flex min-w-0 flex-col justify-center px-5 py-[clamp(2.5rem,6svh,5rem)] sm:px-7 lg:pl-[max(1.75rem,calc((100vw-1240px)/2+1.75rem))] lg:pr-14">
             <p className="m-0 mb-3 text-base font-semibold text-[var(--color-text-on-inverse-secondary)]">
               La sede
             </p>
@@ -374,10 +373,7 @@ export function HomeTemplate({
             </div>
             <dl className="m-0">
               {faq.map((f) => (
-                <div
-                  key={f.id}
-                  className=" py-[clamp(0.875rem,2.6svh,1.5rem)]"
-                >
+                <div key={f.id} className=" py-[clamp(0.875rem,2.6svh,1.5rem)]">
                   <dt className="m-0 mb-2 font-semibold text-step-1 leading-[1.2]">
                     {tieLast(f.question)}
                   </dt>
@@ -397,7 +393,8 @@ export function HomeTemplate({
         className={`${SECTION_FIT} bg-[var(--color-surface-muted)]`}
       >
         <div className={WRAP}>
-          <SectionTitle size="lg"
+          <SectionTitle
+            size="lg"
             title="Quiénes lo organizan"
             action={{ href: teamHref, label: "Ver el equipo" }}
           />

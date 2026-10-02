@@ -27,7 +27,8 @@ function initials(name: string): string {
   return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
 }
 
-const NAME = "text-step--1 font-semibold leading-tight text-[var(--color-text-primary)]";
+const NAME =
+  "text-step--1 font-semibold leading-tight text-[var(--color-text-primary)]";
 
 export function SessionSpeakers({
   speakers,
@@ -39,7 +40,10 @@ export function SessionSpeakers({
   return (
     <ul
       aria-label={speakers.length === 1 ? "Speaker" : "Speakers"}
-      className={cn("m-0 flex list-none flex-wrap gap-x-4 gap-y-2 p-0", className)}
+      className={cn(
+        "m-0 flex list-none flex-wrap gap-x-4 gap-y-2 p-0",
+        className
+      )}
     >
       {speakers.map((sp) => (
         <li key={sp.id} className="flex min-w-0 items-center gap-2.5">

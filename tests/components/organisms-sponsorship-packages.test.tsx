@@ -14,14 +14,16 @@ const BENEFITS: Sponsorship["benefits"] = [
 ];
 
 describe("SponsorshipPackages", () => {
-  it("renders a column per package, named by its tier alone", () => {
+  it("renders a column per package, named by its tier", () => {
     render(<SponsorshipPackages packages={PACKAGES} benefits={BENEFITS} />);
     const headers = screen.getAllByRole("columnheader");
-    expect(headers.map((h) => h.textContent)).toEqual([
-      "Beneficio",
-      "Diamante",
-      "Silver",
-    ]);
+    expect(headers).toHaveLength(3);
+    expect(headers[0]).toHaveTextContent("Beneficio");
+    // Each column is headed by its tier, plus how many benefits it carries.
+    expect(headers[1]).toHaveTextContent("Diamante");
+    expect(headers[1]).toHaveTextContent("2 de 2 beneficios");
+    expect(headers[2]).toHaveTextContent("Silver");
+    expect(headers[2]).toHaveTextContent("1 de 2 beneficios");
   });
 
   it("renders a row header per benefit", () => {

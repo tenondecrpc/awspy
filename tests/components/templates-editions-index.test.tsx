@@ -6,7 +6,9 @@ describe("EditionsIndexTemplate", () => {
   it("renders the empty state when there are no past editions", () => {
     render(<EditionsIndexTemplate pastEditions={[]} />);
     expect(
-      screen.getByRole("heading", { name: /aún no hay ediciones anteriores/i })
+      screen.getByRole("heading", {
+        name: /aún\s+no\s+hay\s+ediciones\s+anteriores/i,
+      })
     ).toBeInTheDocument();
     expect(
       screen.getByRole("link", { name: /volver al inicio/i })

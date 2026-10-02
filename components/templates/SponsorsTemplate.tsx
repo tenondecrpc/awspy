@@ -47,7 +47,12 @@ const HIGHLIGHT_ICONS: { match: RegExp; icon: GlyphName }[] = [
 ];
 
 /** The figures worth putting in front of a sponsor, in this order. */
-const FIGURE_LABELS = ["Asistentes", "Speakers", "Sesiones técnicas", "Horas de contenido"];
+const FIGURE_LABELS = [
+  "Asistentes",
+  "Speakers",
+  "Sesiones técnicas",
+  "Horas de contenido",
+];
 
 const LINK =
   "font-semibold text-[var(--color-text-primary)] underline decoration-[var(--color-national-red)] decoration-2 underline-offset-4 [overflow-wrap:anywhere]";
@@ -281,14 +286,16 @@ export function SponsorsTemplate({
                     >
                       {/* More gems the higher the level: the badge itself says it. */}
                       <span className="flex items-center">
-                        {Array.from({ length: ladder.length - i }).map((_, g) => (
-                          <GlyphIcon
-                            key={g}
-                            name="gem"
-                            size={ladder.length - i > 2 ? 14 : 20}
-                            className={g > 0 ? "-ml-1" : ""}
-                          />
-                        ))}
+                        {Array.from({ length: ladder.length - i }).map(
+                          (_, g) => (
+                            <GlyphIcon
+                              key={g}
+                              name="gem"
+                              size={ladder.length - i > 2 ? 14 : 20}
+                              className={g > 0 ? "-ml-1" : ""}
+                            />
+                          )
+                        )}
                       </span>
                     </span>
                     <div className="min-w-0">

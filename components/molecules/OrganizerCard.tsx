@@ -41,7 +41,9 @@ export function OrganizerCard({ organizer, className }: OrganizerCardProps) {
   const [expanded, setExpanded] = useState(false);
   const bioId = useId();
   const linkEntries = (
-    Object.entries(organizer.links ?? {}) as Array<[LinkKey, string | undefined]>
+    Object.entries(organizer.links ?? {}) as Array<
+      [LinkKey, string | undefined]
+    >
   ).filter(([, url]) => Boolean(url));
   const canExpand = (organizer.bio?.length ?? 0) > CLAMP_THRESHOLD;
 
@@ -69,7 +71,9 @@ export function OrganizerCard({ organizer, className }: OrganizerCardProps) {
       )}
 
       <div className="flex flex-1 flex-col p-5">
-        <h3 className="m-0 text-step-1 leading-tight">{tieLast(organizer.name)}</h3>
+        <h3 className="m-0 text-step-1 leading-tight">
+          {tieLast(organizer.name)}
+        </h3>
         <p className="m-0 mt-1 text-base font-semibold text-[var(--color-accent)]">
           {tieLast(organizer.role)}
         </p>

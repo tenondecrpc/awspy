@@ -42,42 +42,43 @@ export function SponsorBoard({
   return (
     <div className="flex flex-col gap-8">
       {groups.map((group) => {
-          const lower = LOWER_TIERS.includes(group.tier);
-          return (
-            <div key={group.tier}>
-              {showTier ? (
-                <h3 className="m-0 mb-3 flex items-center gap-2 pt-3 font-sans text-base font-semibold text-[var(--color-text-primary)]">
-                  <span
-                    aria-hidden="true"
-                    className="h-2.5 w-2.5 flex-none"
-                    style={{ background: TIER_COLOR[group.tier] }}
-                  />
-                  Sponsor {TIER_LABEL[group.tier]}
-                </h3>
-              ) : (
-                <div
+        const lower = LOWER_TIERS.includes(group.tier);
+        return (
+          <div key={group.tier}>
+            {showTier ? (
+              <h3 className="m-0 mb-3 flex items-center gap-2 pt-3 font-sans text-base font-semibold text-[var(--color-text-primary)]">
+                <span
                   aria-hidden="true"
-                  className="mb-4"
+                  className="h-2.5 w-2.5 flex-none"
+                  style={{ background: TIER_COLOR[group.tier] }}
                 />
-              )}
-              <ul
-                className={
-                  "m-0 grid list-none gap-x-3 gap-y-5 p-0 " +
-                  (size === "lg"
-                    ? "grid-cols-2"
-                    : lower
-                      ? "grid-cols-3 sm:grid-cols-4 lg:grid-cols-6"
-                      : "grid-cols-2 sm:grid-cols-3 lg:grid-cols-4")
-                }
-              >
-                {group.sponsors.map((sponsor) => (
-                  <li key={sponsor.id} className="min-w-0">
-                    <SponsorTile sponsor={sponsor} size={size} className="h-full" />
-                  </li>
-                ))}
-              </ul>
-            </div>
-          );
+                Sponsor {TIER_LABEL[group.tier]}
+              </h3>
+            ) : (
+              <div aria-hidden="true" className="mb-4" />
+            )}
+            <ul
+              className={
+                "m-0 grid list-none gap-x-3 gap-y-5 p-0 " +
+                (size === "lg"
+                  ? "grid-cols-2"
+                  : lower
+                    ? "grid-cols-3 sm:grid-cols-4 lg:grid-cols-6"
+                    : "grid-cols-2 sm:grid-cols-3 lg:grid-cols-4")
+              }
+            >
+              {group.sponsors.map((sponsor) => (
+                <li key={sponsor.id} className="min-w-0">
+                  <SponsorTile
+                    sponsor={sponsor}
+                    size={size}
+                    className="h-full"
+                  />
+                </li>
+              ))}
+            </ul>
+          </div>
+        );
       })}
       <SponsorLogoSlots count={openSlots} href={slotHref} />
     </div>

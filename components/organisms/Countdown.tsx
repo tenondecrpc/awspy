@@ -125,10 +125,7 @@ export function Countdown({
   if (variant === "inline") {
     return (
       <p
-        className={cn(
-          "text-sm text-[var(--color-text-muted)]",
-          className
-        )}
+        className={cn("text-sm text-[var(--color-text-muted)]", className)}
         role="status"
         aria-live="polite"
       >

@@ -90,7 +90,7 @@ for (const [label, fg, bg, min] of checks) {
   const ok = r >= min;
   if (!ok) failed++;
   console.log(
-    `${ok ? "PASS" : "FAIL"}  ${r.toFixed(2).padStart(5)}:1  (min ${min})  ${label}  ${fg} on ${bg}`,
+    `${ok ? "PASS" : "FAIL"}  ${r.toFixed(2).padStart(5)}:1  (min ${min})  ${label}  ${fg} on ${bg}`
   );
 }
 console.log(failed ? `\n${failed} failing pair(s)` : "\nAll pairs pass");

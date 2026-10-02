@@ -2,6 +2,7 @@
 // huge number on a navy panel, the full date, the status, and the single
 // submission button. Adapts to the three CFP states: open / upcoming / closed.
 
+import NextLink from "next/link";
 import { GlyphIcon } from "@/components/atoms/GlyphIcon";
 import {
   BTN_OUTLINE,
@@ -100,9 +101,9 @@ export function SessionizeCFPCallout({ eventInfo }: SessionizeCFPCalloutProps) {
             Avisame de la convocatoria
           </a>
         ) : (
-          <a href="/speakers" className={BTN_OUTLINE}>
+          <NextLink href="/speakers" className={BTN_OUTLINE}>
             Ver speakers confirmados
-          </a>
+          </NextLink>
         )}
       </div>
     </div>
