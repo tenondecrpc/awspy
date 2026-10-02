@@ -1,135 +1,151 @@
 # Fundamentos
 
-Todos los valores de color son los tokens que ya existen en `app/globals.css`.
-Se listan aquí para documentar su **rol**, no para redefinirlos.
+Valores vigentes en `app/globals.css`. Si este documento y el CSS difieren,
+manda el CSS.
 
-## 1. Color
+## Color
 
-### Roles
+Paleta muestreada del arte oficial 2026: azul medianoche, azul bandera y rojo
+paraguayo, sobre papel cálido.
 
-| Rol                      | Token                                           | Claro     | Oscuro    | Uso                                                      |
-| ------------------------ | ----------------------------------------------- | --------- | --------- | -------------------------------------------------------- |
-| Marca / fondo hero       | `brand-primary`, `surface-hero`                 | `#041a53` | `#041a53` | Hero, footer, bandas de impacto                          |
-| **Acción (AWS Smile)**   | `action` / `action-strong`                      | `#ff9900` | `#ff9900` | **Un** botón primario por vista. Texto siempre navy      |
-| Navegación y enlaces     | `accent` / `accent-strong`                      | `#0038a8` | `#74a8ff` | Enlaces, botón secundario, foco, estados activos         |
-| Identidad nacional       | `national-red`                                  | `#f02f3b` | `#ff4b5b` | Detalles decorativos y acentos de título. Nunca error    |
-| Superficie base          | `surface`                                       | `#ffffff` | `#010928` | Fondo de página                                          |
-| Superficie fría          | `surface-muted`                                 | `#eef2fd` | `#071438` | Bandas alternas (speakers, hero de páginas)              |
-| Superficie cálida        | `surface-warm`                                  | `#fff6e8` | `#16142e` | Bandas de "qué es", CTA suaves                           |
-| Texto                    | `text-primary` / `secondary` / `muted`          | ver CSS   | ver CSS   | Cuerpo, apoyo, metadatos                                 |
-| Estado                   | `success`, `warning`, `danger` (+ `-soft`)      | ver CSS   | ver CSS   | Mensajes del sistema                                     |
-| Categórica               | `category-{blue,violet,teal,amber,green,pink}`  | ver CSS   | ver CSS   | Salas/tracks. Siempre con etiqueta de texto               |
-| Nivel de sponsor         | `tier-*`                                        | ver CSS   | ver CSS   | Siempre con etiqueta de texto                            |
+| Rol | Token | Claro | Uso |
+| --- | --- | --- | --- |
+| Papel (fondo de página) | `surface` | `#f7f2e8` | Base de todas las páginas |
+| Papel profundo | `surface-muted` | `#ece3d0` | Cabeceras de página, bandas alternas |
+| Papel cálido | `surface-warm` | `#f4e6d2` | Equipo |
+| Tarjeta blanca | `surface-elevated` | `#ffffff` | Superficies sobre el papel |
+| Tinta | `text-primary` | `#08152f` | Texto y líneas de énfasis |
+| Azul bandera | `accent` | `#0038a8` | Enlaces y foco |
+| Rojo paraguayo | `national-red` / `-label` / `-on-dark` | `#f02f3b` / `#c4152f` / `#ff5566` | Franja y subrayado de enlaces; el `-label` para texto |
+| Acción | `action` | `#ff9900` | **Solo** el botón de registro |
+| Bandas oscuras | `surface-inverse`, `surface-hero` | `#08152f`, `#000c2f` | Sede, cierre, bloque del hero, pie |
 
-### Reglas de uso
-
-- **60 / 30 / 10.** 60 % superficies (`surface`, `surface-muted`), 30 % navy
-  y texto, 10 % color de acción y acentos. Si un viewport muestra más de dos
-  elementos naranjas, sobra uno.
-- **El naranja nunca es texto sobre claro.** `#ff9900` sobre blanco da
-  ~2:1. Para texto naranja usa `action-label` (`#9a5200`, AA). El naranja de
-  relleno siempre lleva texto navy (`text-on-action`, ~9:1).
-- **El rojo nacional no es error.** El estado de error usa `danger`.
-- **El color nunca va solo.** Salas, niveles y estados llevan texto o icono.
-- **Un acento por sección.** No mezclar azul, naranja y rojo en el mismo
-  componente salvo el hero.
-
-### Contraste (mínimos del proyecto)
-
-| Par                              | Mínimo |
-| -------------------------------- | ------ |
-| Texto normal (< 24px / < 19px b) | 4.5:1  |
-| Texto grande y UI (bordes, íconos) | 3:1  |
-| Foco visible                     | 3:1 contra ambos vecinos |
-
-Verificar con la matriz de `specs/002-visual-refresh/data-model.md`. Cualquier
-token nuevo debe sumarse a esa matriz.
-
-## 2. Tipografía
-
-**Familias:** Geist (títulos y cuerpo) y Geist Mono (etiquetas, horas,
-metadatos). Se mantienen. No se carga una tercera familia.
-
-### Escala fluida (`tokens.css`)
-
-| Token       | Rango (375 → 1280px) | Uso                              | Interlineado | Peso    |
-| ----------- | -------------------- | -------------------------------- | ------------ | ------- |
-| `step-4`    | 36 → 64px            | H1 / hero                        | 1.08         | 700     |
-| `step-3`    | 30 → 48px            | H2 de sección                    | 1.1          | 700     |
-| `step-2`    | 24 → 32px            | H3, título de tarjeta grande     | 1.2          | 600     |
-| `step-1`    | 20 → 24px            | H4, lead de párrafo              | 1.3          | 600     |
-| `step-0`    | 16 → 18px            | Cuerpo                           | 1.55         | 400     |
-| `step--1`   | 14 → 15px            | Metadatos, pies de tarjeta       | 1.45         | 400/500 |
-| `step--2`   | 12px                 | Etiqueta mono en mayúsculas      | 1.3          | 500     |
+El modo oscuro conserva los fondos azul medianoche y cambia tinta, enlaces y
+estados (ver bloque `html[data-theme="dark"]`).
 
 ### Reglas
 
-- **Mínimo 12px**, nunca menos. Hoy hay etiquetas de 10.5, 11 y 11.5px
-  (`StatTile`, `SponsorTile`, `SessionSpeakers`, hero). Pasan a `step--2`.
-- **Etiquetas mono:** mayúsculas, `tracking-label` (0.12em), color
-  `text-muted`. Solo para metadato corto (≤ 3 palabras).
-- **Cuerpo con medida:** `max-w-[65ch]` en párrafos largos.
-- **Títulos con `tracking-display`** (−0.025em) y `text-balance`.
-- **Números** de estadísticas y horas: `tabular-nums` para alinear.
-- Un solo `h1` por página; el nivel visual se desacopla con `Heading`
-  (`visualLevel`), como ya hace el atom.
+- Un único botón naranja por vista: el de registro.
+- El rojo es identidad y subrayado, nunca estado de error (`danger`).
+- El color nunca va solo: salas, niveles y estados llevan texto.
+- Texto naranja sobre claro: solo `action-label` (`#9a5200`).
+- Verificar con `node design-system/scripts/check-contrast.mjs`.
 
-## 3. Espaciado y layout
+## Tipografía
 
-- **Base 4px** (`space-1` … `space-8`).
-- **Contenedor:** `max-width 1200px`, gutter fluido `1rem → 1.5rem`
-  (`--container-gutter`). A 375px el contenido mide 343px.
-- **Ritmo vertical de sección:** `--space-section-y` (48 → 96px).
-  `--space-section-y-tight` para bandas secundarias (estadísticas, CTA).
-  Hoy el aire entre secciones en mobile es excesivo.
-- **Rejilla:** 4 col mobile (2 con tarjetas), 8 tablet, 12 escritorio.
-- **Breakpoints:** 360 (mínimo soportado), 640 (`sm`), 768 (`md`), 1024
-  (`lg`), 1280 (`xl`).
+| Rol | Familia | Notas |
+| --- | --- | --- |
+| Titulares (`h1`–`h4`) | **Young Serif** | Un solo peso (400). `font-synthesis: none`: no se simula negrita |
+| Cuerpo y UI | **Atkinson Hyperlegible Next** | Diseñada para legibilidad; números tabulares activados |
 
-### Radio
+Las variables de `next/font` se declaran en `<html>` (no en `<body>`): los
+tokens `--font-sans` y `--font-display` viven en `:root` y las referencian.
 
-`sm 6px` (chips, inputs) · `md 10px` (botones, tarjetas) · `lg 16px`
-(paneles, medios) · `pill` (CTA del hero, etiquetas de estado).
+### Escala fluida (375 → 1280px)
 
-## 4. Elevación
+| Utilidad | Rango | Uso |
+| --- | --- | --- |
+| `text-step-4` | 40 → 84px | `h1` y título del hero |
+| `text-step-3` | 32 → 52px | Títulos de sección |
+| `text-step-2` | 26 → 36px | Declaración, horas de la agenda, nombre destacado |
+| `text-step-1` | 20 → 24px | Subtítulos, preguntas, títulos de charla |
+| `text-step-0` | 16 → 18px | Cuerpo |
+| `text-step--1` | 14 → 15px | Metadatos |
 
-| Nivel     | Token              | Uso                                      |
-| --------- | ------------------ | ---------------------------------------- |
-| 0 plano   | —                  | Contenido en bandas, con borde `subtle`  |
-| 1 elevado | `shadow-raised`    | Tarjetas en reposo                       |
-| 2 flotante| `shadow-floating`  | Tarjetas hover, menús                    |
-| 3 overlay | `shadow-overlay`   | Drawer, diálogos                         |
+Mínimo absoluto: 12px. Ya no hay etiquetas monoespaciadas ni en mayúsculas.
 
-El sitio es principalmente plano con bordes; la sombra se reserva para
-interacción y capas.
+## Espaciado y forma
 
-## 5. Movimiento
+- Contenedor `WRAP`: 1240px máximo, márgenes fluidos (`px-5 sm:px-7`).
+- Ritmo vertical de sección: `--space-section-y` (56 → 112px).
+- Radios casi rectos (`2–4px`); el "pill" solo existe como token, sin uso.
+- Líneas en vez de sombras: `border-t-2` de tinta para listas, hairline
+  `border-subtle` entre filas.
 
-- **Propósito:** orientar (entrada de contenido, estado de un control).
-  Nada decorativo en bucle salvo el marquee de servicios.
-- **Duraciones:** `fast 120ms` (press, color), `base 200ms` (hover, chips),
-  `slow 360ms` (drawer, aparición de sección).
-- **Curva:** `ease-out-quint` para entradas, `ease-in-out-soft` para
-  cambios de estado.
-- **Solo `transform` y `opacity`.** No animar `width`, `height` ni `top`.
-- **Hover solo en puntero fino:** envolver en `@media (hover: hover)`. El
-  `translateY(-6px)` de `media-card` hoy se queda "pegado" en touch.
-- **Movimiento reducido:** ya cubierto por la regla global de
-  `prefers-reduced-motion`. Mantenerla.
+## Movimiento
 
-## 6. Accesibilidad
+Sin gradientes, vidrio ni brillos. El hover cambia tinta o subrayado; el
+botón baja 1px al presionarse (`active:translate-y-px`). Nada se levanta.
+`prefers-reduced-motion` se respeta globalmente.
 
-- **Objetivos táctiles:** 44×44px (`--size-touch`) para controles
-  principales; 40px en enlaces densos; 24px es el piso absoluto (WCAG 2.2
-  SC 2.5.8). Los enlaces "Ver todos →", "Agenda completa →" y los del footer
-  miden hoy 18-20px de alto: usar `.hit-area` o `py-3`.
-- **Foco:** anillo de 2px (`--color-focus`) con offset 2px, ya global.
-  Mantener `focus-on-hero` sobre superficies oscuras.
-- **Saltar al contenido:** existe; conservar como primer elemento.
-- **Orden y semántica:** un `h1`, niveles sin saltos, listas reales,
-  `nav` con `aria-label` cuando haya más de uno.
-- **Filtros y pestañas:** patrón `role=tablist` o grupo de botones con
-  `aria-pressed`; el estado activo no depende solo del color.
-- **Imágenes:** `alt` descriptivo en fotos de personas (nombre + rol);
-  `alt=""` en decorativas.
-- **Texto:** el usuario puede ampliar al 200 % sin pérdida (usar `rem`).
+## Secciones a pantalla completa (home)
+
+Cada sección de la home ocupa la altura visible bajo el header y su contenido
+cabe sin desbordar, en laptops y escritorio (probado en 1280×720, 1366×768,
+1440×900, 1536×864 y 1920×1080).
+
+| Pieza | Regla |
+| --- | --- |
+| `.fit-screen` (`globals.css`) | `min-height: calc(100svh - var(--header-h))`, contenido centrado en columna |
+| Unidad | `svh` (altura de viewport pequeña): nunca excede el área visible. No se usa `dvh`: cambia al hacer scroll y provoca saltos |
+| `min-height`, no `height` | Si el contenido no cabe (zoom de texto, ventana baja), la sección crece en vez de pisar la siguiente |
+| Snap | `scroll-snap-type: y proximity` en `html` con `scroll-padding-top: var(--header-h)`. Nunca `mandatory`: atrapa si una sección es más alta que la pantalla |
+| Alcance | Solo `min-width: 64rem` y `min-height: 37.5rem`. En móvil, tablet vertical y ventanas bajas el flujo es natural |
+| Unidades | Todo en `rem`, `vw` y `svh`; nada se fija en `px` ni se ajusta midiendo. Los umbrales de las media queries también van en `rem` |
+| Tipografía ligada a ancho y alto | Cada `--text-step-*` es `clamp(piso rem, min(fórmula en vw, tope en svh), techo rem)`: en una ventana ancha pero baja la letra se reduce sola |
+| Contenido ligado a la altura | Paddings `clamp(2.5rem, 6svh, 5rem)`, fotos con `h-[min(Nrem, Msvh)]`, escalonados en `svh`; el hero limita su foto a `calc(100svh - var(--header-h) - 0.375rem)` |
+| `.hide-on-short` / `.hide-on-shorter` | Quitan la 5.ª y la 4.ª charla de la agenda en ventanas de hasta 55rem y 44rem de alto |
+| `SECTION_FIT` | Constante en `SectionPrimitives.tsx` que une `.fit-screen` y el padding |
+
+Móvil: solo el hero cabe en una pantalla (771px en 390×844). Las demás
+secciones fluyen con su altura natural (1.000–1.400px), porque speakers,
+agenda y equipo no caben en ~770px sin recortar contenido.
+
+## Imágenes
+
+- **El marco sigue la proporción de la foto, nunca al revés.** Los retratos
+  (Sessionize 400×400, equipo 200–800px) son cuadrados: se muestran en
+  `aspect-square`, completos, sin recorte ni deformación, con
+  `object-position: 50% 20%` por si el marco cambia. Las fotos del evento
+  conservan su proporción real (charla 1600×1027, `aspect-video` para las
+  16:9, hero 4:3).
+- **Mismo peso para todos.** Speakers y equipo: mismo tamaño, misma línea
+  base, nadie destacado ni escalonado.
+- **Cuando una foto sí necesita recortarse** (la sede, que ocupa media
+  pantalla), el recorte es en el eje que sobra y con `position` elegido a
+  mano hacia lo importante.
+- **Logos:** siempre `object-contain` sobre la placa blanca; un logo jamás se
+  recorta.
+- **No ampliar de más.** Mostrar una foto a más de ~1,2× su tamaño real la
+  vuelve borrosa y "cabezona". Hoy el caso es `public/team/william-guzman.jpg`
+  (200×200 mostrada a ~220px): conviene pedir una foto más grande.
+- **Alturas por `svh` solo para fotos apaisadas**; los retratos se ajustan por
+  ancho de columna.
+
+## Acciones
+
+Lo que la persona debe hacer pesa más que lo que lee:
+
+| Nivel | Clase (`SectionPrimitives.tsx`) | Uso |
+| --- | --- | --- |
+| Primario | `BTN_PRIMARY` (relleno naranja, 52px) | **Un** botón por pantalla: registrarse / reservar lugar |
+| Secundario | `BTN_OUTLINE` (borde de tinta de 2px, 44px) | Proponer una charla, "Ver todos →", "Ver el equipo →" |
+| Secundario sobre oscuro | `BTN_OUTLINE_ON_DARK` | Lo mismo sobre azul medianoche (hero, sede, cierre) |
+| Enlace en frase | `TEXT_LINK` (subrayado rojo) | Solo dentro de una oración ("Escribinos") |
+
+`SectionTitle` pinta su acción como botón secundario con flecha.
+
+## Contador
+
+El **número** es el dato: el hero lo muestra en el serif display, naranja de
+acción, hasta 7,5rem (limitado por `12svh` y `18vw`), con una barra gruesa a la
+izquierda y "Faltan"/"días" pequeños en la misma línea base. Las piezas son
+`aria-hidden` y la frase completa se escribe una vez para lectores de pantalla.
+`Countdown` tiene tres variantes: `grid`, `inline` y `display`.
+
+## Palabras sueltas (huérfanas)
+
+Ninguna palabra queda sola en la última línea de un bloque. Tres capas:
+
+1. **`text-wrap: balance`** en `body` (se hereda): reparte las líneas de forma pareja en los bloques cortos.
+2. **`.prose-flow`** (`text-wrap: pretty`) para textos largos, donde `balance` no aplica.
+3. **`tieLast()`** (`lib/utils/typography.ts`): ata las dos últimas palabras con un espacio duro en los textos que vienen de datos (cargos, charlas, preguntas, descripciones). Solo si las dos palabras juntas suman 24 caracteres o menos: atar palabras largas cambia una huérfana por un desborde horizontal. No usarla en un título que comparte fila con un ícono en una columna angosta.
+
+Los teléfonos, fechas y horas no se parten (`a[href^="tel:"]` y `time` en `nowrap`; el teléfono usa espacios duros). Comprobación: un escáner por Playwright recorre todas las páginas a 1366, 1024, 768, 390 y 320px.
+## Accesibilidad
+
+- Objetivos táctiles: 44px (`--size-touch`).
+- Foco: anillo de 2px (`--color-focus`), invertido sobre superficies oscuras.
+- Un `h1` por página; "Saltar al contenido" es el primer enlace.
+- Fotos con `alt` descriptivo; el motivo `Lace` es
+  `aria-hidden`.

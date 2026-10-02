@@ -3,6 +3,15 @@
 Referencia: viewport de 375×812. Cada patrón cita el problema medido en la
 revisión del sitio y el criterio de éxito.
 
+> **Estado (v0.2).** Hero, estadísticas (eliminadas), agenda, sponsors,
+> registro y navegación ya siguen estos patrones; los componentes mencionados
+> como `FilterRail` y `TimeJump` viven dentro de `ScheduleTemplate`, y
+> `StickyCTA` y `AgendaPreview` como componentes aparte no se crearon (la home
+> usa su propia sección de agenda). Las alturas actuales están en
+> [roadmap.md](roadmap.md). Donde este documento menciona etiquetas mono,
+> chips redondeados o "Eyebrow", el criterio vigente es el de
+> [foundations.md](foundations.md).
+
 ## 1. Hero
 
 **Problema:** el botón de registro queda debajo del primer pliegue (el bloque
