@@ -39,8 +39,9 @@ export default function PrivacyPage() {
           <div className="max-w-[42rem]">
             <h2 className={`${H3} mt-0`}>Este sitio</h2>
             <p className={P}>
-              Este sitio no recopila datos personales: no tiene cuentas ni
-              formularios propios.
+              {analyticsOn
+                ? "Este sitio no tiene cuentas ni formularios propios."
+                : "Este sitio no recopila datos personales: no tiene cuentas ni formularios propios."}
             </p>
 
             <h2 className={H3}>Analítica</h2>

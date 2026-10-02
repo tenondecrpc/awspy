@@ -40,7 +40,7 @@ function EventbriteLink({ tone }: { tone: "default" | "inverse" }) {
     );
   }
   return (
-    <Link href={href} external>
+    <Link href={href} external className="underline">
       Eventbrite
     </Link>
   );
@@ -61,7 +61,7 @@ function GoogleLink({ tone }: { tone: "default" | "inverse" }) {
     );
   }
   return (
-    <Link href={href} external>
+    <Link href={href} external className="underline">
       Política de Privacidad de Google
     </Link>
   );

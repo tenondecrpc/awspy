@@ -18,6 +18,7 @@ const ROUTES: Array<{ path: string; heading: RegExp }> = [
   { path: "/cfp", heading: /proponé una charla/i },
   { path: "/register", heading: /^registro$/i },
   { path: "/editions", heading: /ediciones anteriores/i },
+  { path: "/privacy", heading: /^privacidad$/i },
 ];
 
 for (const route of ROUTES) {

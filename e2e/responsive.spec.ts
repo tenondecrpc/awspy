@@ -28,6 +28,7 @@ const ROUTES = [
   "/volunteers",
   "/code-of-conduct",
   "/editions",
+  "/privacy",
 ];
 
 // 320 is the narrowest viewport worth supporting (iPhone SE, a folded Galaxy
