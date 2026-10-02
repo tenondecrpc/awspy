@@ -3,9 +3,11 @@ import { Atkinson_Hyperlegible_Next, Young_Serif } from "next/font/google";
 import "./globals.css";
 import { SiteHeader } from "@/components/organisms/SiteHeader";
 import { SiteFooter } from "@/components/organisms/SiteFooter";
+import { KiroMascot } from "@/components/organisms/KiroMascot";
 import { GoogleAnalytics } from "@/components/atoms/GoogleAnalytics";
 import { currentEdition } from "@/lib/content/editions";
 import { getEventInfo } from "@/lib/content/event-info";
+import { getFAQ } from "@/lib/content/faq";
 import { getSiteUrl } from "@/lib/utils/seo";
 import { getGaMeasurementId } from "@/lib/config/analytics";
 import { THEME_STORAGE_KEY } from "@/lib/theme";
@@ -21,6 +23,8 @@ const displayFont = Young_Serif({
 const bodyFont = Atkinson_Hyperlegible_Next({
   variable: "--font-body-next",
   subsets: ["latin"],
+  fallback: ["Arial", "sans-serif"],
+  adjustFontFallback: false,
 });
 
 export const metadata: Metadata = {
@@ -49,6 +53,7 @@ export default function RootLayout({
   // of which route inside the app loads.
   const editionYear = currentEdition();
   const eventInfo = getEventInfo(editionYear);
+  const faq = getFAQ(editionYear);
   // Unset outside production, so local and E2E builds load no analytics.
   const gaMeasurementId = getGaMeasurementId();
 
@@ -76,6 +81,7 @@ export default function RootLayout({
           eventInfo={eventInfo}
           analyticsEnabled={gaMeasurementId !== null}
         />
+        <KiroMascot faq={faq} />
         {gaMeasurementId && <GoogleAnalytics measurementId={gaMeasurementId} />}
       </body>
     </html>
