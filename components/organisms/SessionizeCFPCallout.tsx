@@ -1,9 +1,13 @@
-// Sessionize CFP callout. Displays the CFP description, the deadline (when
-// known), and a primary CTA that points at the public Sessionize submission
-// URL. Adapts to the three CFP states: open / upcoming / closed.
+// Sessionize CFP callout. The deadline is the hero fact: the days left as one
+// huge number on a navy panel, the full date, the status, and the single
+// submission button. Adapts to the three CFP states: open / upcoming / closed.
 
-import { Badge } from "@/components/atoms/Badge";
-import { Button } from "@/components/atoms/Button";
+import { GlyphIcon } from "@/components/atoms/GlyphIcon";
+import {
+  BTN_OUTLINE,
+  BTN_PRIMARY,
+} from "@/components/molecules/SectionPrimitives";
+import { Countdown } from "@/components/organisms/Countdown";
 import { formatDate } from "@/lib/utils/datetime";
 import type { EventInfo } from "@/lib/content/event-info";
 
@@ -20,71 +24,85 @@ const STATUS_COPY: Record<EventInfo["cfpStatus"], string> = {
 export function SessionizeCFPCallout({ eventInfo }: SessionizeCFPCalloutProps) {
   const { cfpStatus, cfpDeadline, cfpSubmissionUrl, contactEmail } = eventInfo;
   const isOpen = cfpStatus === "open" && Boolean(cfpSubmissionUrl);
+  const showCountdown = cfpStatus !== "closed" && Boolean(cfpDeadline);
 
   return (
-    <div className="space-y-4 rounded-[var(--radius-lg)] bg-[var(--color-surface-muted)] p-6">
-      <div className="flex flex-wrap items-center gap-2">
-        <Badge
-          variant={
-            cfpStatus === "open"
-              ? "info"
-              : cfpStatus === "closed"
-                ? "neutral"
-                : "warning"
+    <div
+      data-tone="inverse"
+      className="flex h-full flex-col gap-6 bg-[var(--color-surface-elevated)] p-8 text-[var(--color-text-primary)]"
+    >
+      <p className="m-0 flex items-center gap-2.5 text-base font-semibold">
+        <span
+          aria-hidden="true"
+          className={
+            "size-2.5 flex-none " +
+            (cfpStatus === "open"
+              ? "bg-[var(--color-success)]"
+              : "border-2 border-[var(--color-text-primary)]")
           }
-        >
-          {STATUS_COPY[cfpStatus]}
-        </Badge>
-        {cfpDeadline ? (
-          <p className="text-sm text-[var(--color-text-secondary)]">
-            {cfpStatus === "closed" ? "Cerró el " : "Hasta "}
-            {formatDate(cfpDeadline)}
-          </p>
-        ) : null}
-      </div>
+        />
+        {STATUS_COPY[cfpStatus]}
+      </p>
 
-      {cfpStatus === "open" ? (
-        <p className="text-[var(--color-text-primary)]">
-          Estamos recibiendo propuestas de charlas, talleres y lightning talks.
-          Las charlas son en español. Animate a presentar la tuya.
-        </p>
-      ) : cfpStatus === "upcoming" ? (
-        <p className="text-[var(--color-text-primary)]">
+      {cfpDeadline ? (
+        <div>
+          {showCountdown ? (
+            <>
+              <Countdown
+                targetDate={cfpDeadline}
+                variant="display"
+                className="text-[var(--color-text-primary)]"
+              />
+              <p className="m-0 mt-3 text-step-0">
+                para que cierre la convocatoria
+              </p>
+            </>
+          ) : null}
+          <p className="m-0 mt-3 flex items-center gap-2 text-base text-[var(--color-text-secondary)]">
+            <GlyphIcon name="calendar" size={20} />
+            <span>
+              {cfpStatus === "closed" ? "Cerró el " : "Cierra el "}
+              {formatDate(cfpDeadline)}
+            </span>
+          </p>
+        </div>
+      ) : null}
+
+      {cfpStatus === "upcoming" ? (
+        <p className="m-0 text-base text-[var(--color-text-secondary)]">
           Pronto vamos a abrir la convocatoria de charlas. Si querés que te
           avisemos cuando podés enviar tu propuesta, escribinos.
         </p>
-      ) : (
-        <p className="text-[var(--color-text-primary)]">
+      ) : cfpStatus === "closed" ? (
+        <p className="m-0 text-base text-[var(--color-text-secondary)]">
           La convocatoria de charlas para esta edición ya está cerrada. Pronto
           vamos a publicar a los oradores seleccionados.
         </p>
-      )}
+      ) : null}
 
-      <div>
+      <div className="mt-auto">
         {isOpen && cfpSubmissionUrl ? (
-          <Button
-            as="a"
+          <a
             href={cfpSubmissionUrl}
             target="_blank"
             rel="noopener noreferrer"
-            variant="primary"
-            size="lg"
+            className={`${BTN_PRIMARY} w-full sm:w-auto`}
           >
             Enviar propuesta en Sessionize
-          </Button>
+            <GlyphIcon name="external" size={20} />
+          </a>
         ) : cfpStatus === "upcoming" ? (
-          <Button
-            as="a"
+          <a
             href={`mailto:${contactEmail}?subject=Avisame%20cuando%20abra%20la%20convocatoria%20de%20charlas`}
-            variant="secondary"
-            size="md"
+            className={BTN_OUTLINE}
           >
+            <GlyphIcon name="mail" size={20} />
             Avisame de la convocatoria
-          </Button>
+          </a>
         ) : (
-          <Button as="a" href="/speakers" variant="secondary" size="md">
+          <a href="/speakers" className={BTN_OUTLINE}>
             Ver speakers confirmados
-          </Button>
+          </a>
         )}
       </div>
     </div>

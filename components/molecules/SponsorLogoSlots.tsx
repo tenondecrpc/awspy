@@ -1,21 +1,15 @@
-// The open room on a sponsor board, drawn as a row of empty "Tu logo aquí"
-// frames.
+// The open room on a sponsor board, said plainly: one sentence and one link.
 //
-// The frames deliberately carry no tier and no amount: the board invites a
-// company to ask, and the prospectus sent by mail is where the numbers live.
-// A dashed, empty frame reads as "this space is for sale" without implying a
-// sponsor nobody signed.
-//
-// The whole row is a single link. The frames are identical, so separate links
-// would make a screen reader announce the same destination once per frame and
-// a keyboard user tab through each of them.
+// It carries no tier and no amount: the board invites a company to ask, and
+// the prospectus sent by mail is where the numbers live. `count` is how many
+// tiers still take sponsors.
 
 import { cn } from "@/lib/utils/cn";
 
 type SponsorLogoSlotsProps = {
-  /** How many empty frames to draw. Renders nothing at zero. */
+  /** How many tiers still have room. Renders nothing at zero. */
   count: number;
-  /** Where the row sends the reader: the packages section or the mailto. */
+  /** Where the link sends the reader: the packages section or the mailto. */
   href: string;
   className?: string;
 };
@@ -28,23 +22,21 @@ export function SponsorLogoSlots({
   if (count <= 0) return null;
 
   return (
-    <a
-      href={href}
-      aria-label="Tu logo aquí: sumate como sponsor"
+    <p
       className={cn(
-        "group grid gap-3 [grid-template-columns:repeat(auto-fit,minmax(min(160px,100%),1fr))]",
+        "m-0 max-w-[40rem] text-step-0 text-[var(--color-text-secondary)]",
         className
       )}
     >
-      {Array.from({ length: count }, (_, i) => (
-        <span
-          key={i}
-          aria-hidden="true"
-          className="flex h-[88px] items-center justify-center rounded-[4px] border border-dashed border-[var(--color-border-strong)] px-4 text-center font-mono text-[11px] uppercase tracking-[0.16em] text-[var(--color-text-muted)] transition-colors group-hover:border-[var(--color-text-primary)] group-hover:text-[var(--color-text-primary)]"
-        >
-          Tu logo aquí
-        </span>
-      ))}
-    </a>
+      {count === 1
+        ? "Queda un nivel de patrocinio abierto. "
+        : `Quedan ${count} niveles de patrocinio abiertos. `}
+      <a
+        href={href}
+        className="inline-flex min-h-[var(--size-touch)] items-center font-semibold text-[var(--color-text-primary)] underline decoration-[var(--color-national-red)] decoration-2 underline-offset-4 hover:decoration-[var(--color-text-primary)]"
+      >
+        Sumá tu organización
+      </a>
+    </p>
   );
 }

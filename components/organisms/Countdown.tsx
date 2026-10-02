@@ -12,14 +12,16 @@ type CountdownProps = {
   targetDate: string;
   /**
    * `default`: muted panel used on light surfaces.
-   * `hero`: frosted glass boxes sitting directly on the midnight-blue hero.
+   * `hero`: the same cells, set in the light ink used on the dark hero.
    */
   tone?: "default" | "hero";
   /**
    * `grid` (default): the three-cell días/hs/min block.
-   * `inline`: a single "Faltan N días" line, used in the light hero CTA row.
+   * `inline`: a single small "Faltan N días" line.
+   * `display`: the same phrase as a single large serif line; the caller sets
+   * its size and color (used for the days left in the hero).
    */
-  variant?: "grid" | "inline";
+  variant?: "grid" | "inline" | "display";
   className?: string;
 };
 
@@ -66,11 +68,65 @@ export function Countdown({
 
   if (Number.isNaN(target)) return null;
 
+  if (variant === "display") {
+    if (parts.past) {
+      return (
+        <p
+          className={cn("m-0 font-display text-step-2", className)}
+          role="status"
+          aria-live="polite"
+        >
+          El evento ya comenzó
+        </p>
+      );
+    }
+    // The NUMBER is the information, so it is set huge in the display serif
+    // and the words ("Faltan", "días") stay small beside it on one baseline.
+    // The visual pieces are aria-hidden and the full phrase is written once
+    // for assistive technology ("Faltan 15 días"), so the announcement and
+    // text queries read it whole instead of as three fragments.
+    return (
+      <div
+        className={cn("flex items-baseline gap-[0.6em]", className)}
+        role="status"
+        aria-live="polite"
+      >
+        <span className="sr-only">{`Faltan ${parts.days} días`}</span>
+        <span
+          aria-hidden="true"
+          className={`text-step-1 ${
+            tone === "hero"
+              ? "text-[var(--color-text-on-hero)]"
+              : "text-[var(--color-text-secondary)]"
+          }`}
+        >
+          Faltan
+        </span>
+        <span
+          aria-hidden="true"
+          className="font-display text-[min(7.5rem,12svh,18vw)] leading-[0.8] tracking-[-0.03em] tabular-nums"
+        >
+          {parts.days}
+        </span>
+        <span
+          aria-hidden="true"
+          className={`text-step-1 ${
+            tone === "hero"
+              ? "text-[var(--color-text-on-hero)]"
+              : "text-[var(--color-text-secondary)]"
+          }`}
+        >
+          días
+        </span>
+      </div>
+    );
+  }
+
   if (variant === "inline") {
     return (
       <p
         className={cn(
-          "font-mono text-[12.5px] text-[var(--color-text-muted)]",
+          "text-sm text-[var(--color-text-muted)]",
           className
         )}
         role="status"
@@ -90,7 +146,7 @@ export function Countdown({
       >
         <p
           className={cn(
-            "text-sm font-semibold uppercase tracking-wide",
+            "text-sm font-semibold",
             tone === "hero"
               ? "text-[var(--color-text-on-hero)]"
               : "text-[var(--color-text-secondary)]"
@@ -110,7 +166,7 @@ export function Countdown({
         "grid grid-cols-3 gap-3",
         isHero
           ? "w-full max-w-sm"
-          : "mx-auto rounded-[var(--radius-lg)] bg-[var(--color-surface-muted)] p-4 sm:max-w-md",
+          : "mx-auto bg-[var(--color-surface-muted)] p-4 sm:max-w-md",
         className
       )}
       role="status"
@@ -126,13 +182,12 @@ export function Countdown({
           key={unit.label}
           className={cn(
             "flex flex-col items-center justify-center",
-            isHero &&
-              "glass-panel gap-1 rounded-[var(--radius-lg)] px-2 py-3 sm:py-4"
+            isHero && "gap-1 border-t-2 border-[var(--color-text-on-hero)] pt-3"
           )}
         >
           <span
             className={cn(
-              "font-bold tabular-nums",
+              "font-display tabular-nums",
               isHero
                 ? "text-3xl leading-none text-[var(--color-text-on-hero)] sm:text-4xl"
                 : "text-3xl sm:text-4xl"
@@ -142,7 +197,7 @@ export function Countdown({
           </span>
           <span
             className={cn(
-              "text-xs uppercase tracking-wide",
+              "text-xs",
               isHero
                 ? "text-[var(--color-text-on-hero)] opacity-75"
                 : "text-[var(--color-text-secondary)]"

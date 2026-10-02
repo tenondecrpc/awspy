@@ -54,9 +54,10 @@ describe("HomeTemplate sponsors board", () => {
   it("invites a logo instead of quoting the package prices", () => {
     const section = renderHome();
 
-    const row = within(section).getByRole("link", { name: /^Tu logo aquí/ });
+    const row = within(section).getByRole("link", {
+      name: "Sumá tu organización",
+    });
     expect(row).toHaveAttribute("href", "/sponsors");
-    expect(row.children.length).toBeGreaterThan(0);
     expect(section.textContent).not.toMatch(AMOUNT);
     expect(screen.queryByText(/Disponible/)).not.toBeInTheDocument();
   });

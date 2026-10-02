@@ -97,17 +97,21 @@ describe("SpeakerCard", () => {
     expect(screen.getByText("Top speaker")).toBeInTheDocument();
   });
 
-  it("cycles the decorative accent so neighbouring cards differ", () => {
-    const { container: first } = render(
-      <SpeakerCard speaker={SPEAKER} accentIndex={0} />
-    );
-    const { container: second } = render(
-      <SpeakerCard speaker={SPEAKER} accentIndex={1} />
-    );
-    const accentOf = (el: HTMLElement) =>
-      el.querySelector("article")?.getAttribute("style");
-    expect(accentOf(first)).toContain("--card-accent");
-    expect(accentOf(first)).not.toEqual(accentOf(second));
+  // Every speaker carries the same weight, and the source photos are square,
+  // so the portrait is the same square at any position in the list: nobody is
+  // cropped into a close-up or made larger than the rest.
+  it("frames every portrait as the same square, whatever its position", () => {
+    const cropOf = (index: number) => {
+      const { container } = render(
+        <SpeakerCard speaker={SPEAKER} accentIndex={index} />
+      );
+      return container
+        .querySelector("article > div")
+        ?.className.match(/aspect-\S+/)?.[0];
+    };
+    expect(cropOf(0)).toBe("aspect-square");
+    expect(cropOf(1)).toBe("aspect-square");
+    expect(cropOf(2)).toBe("aspect-square");
   });
 
   it("wraps the accent index so any list length is safe", () => {

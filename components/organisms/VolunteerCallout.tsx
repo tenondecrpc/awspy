@@ -1,14 +1,9 @@
 // Volunteer registration callout. Keeps the application link-only: the
 // external form owns data collection and no Google Forms script is embedded.
 //
-// Shaped like the closing call to action the rest of the AWS Community Day
-// family uses: a dark panel, the state as a badge, what helping actually
-// involves as a checklist, and one pill CTA.
+// A dark panel: the state as a plain label, what helping involves as a ruled
+// list, and one link at the end.
 
-import { Badge } from "@/components/atoms/Badge";
-import { Button } from "@/components/atoms/Button";
-import { GlyphIcon } from "@/components/atoms/GlyphIcon";
-import { DecorativePattern } from "@/components/atoms/DecorativePattern";
 import type { EventInfo } from "@/lib/content/event-info";
 
 type VolunteerCalloutProps = {
@@ -32,13 +27,12 @@ const TASKS = [
   "Armado y desarmado del evento",
 ];
 
+const LINK_CLASS =
+  "inline-flex min-h-[var(--size-touch)] items-center self-start text-base font-semibold text-[var(--color-text-on-inverse)] underline decoration-[var(--color-national-red-on-dark)] decoration-2 underline-offset-4 hover:decoration-[var(--color-text-on-inverse)]";
+
 export function VolunteerCallout({ eventInfo }: VolunteerCalloutProps) {
-  const {
-    contactEmail,
-    volunteerRegistrationStatus,
-    volunteerRegistrationUrl,
-    year,
-  } = eventInfo;
+  const { contactEmail, volunteerRegistrationStatus, volunteerRegistrationUrl } =
+    eventInfo;
   const effectiveStatus =
     volunteerRegistrationStatus === "open" && !volunteerRegistrationUrl
       ? "upcoming"
@@ -47,54 +41,42 @@ export function VolunteerCallout({ eventInfo }: VolunteerCalloutProps) {
   return (
     <div
       data-tone="inverse"
-      className="relative overflow-hidden rounded-[var(--radius-lg)] border border-[var(--color-border-subtle)] bg-[var(--color-surface-inverse)] p-6 text-[var(--color-text-on-inverse)] sm:p-10"
+      className="bg-[var(--color-surface-inverse)] p-6 text-[var(--color-text-on-inverse)] sm:p-10"
     >
-      <DecorativePattern
-        density="low"
-        opacity={0.06}
-        seed={`volunteers-callout-${year}`}
-      />
-
-      <div className="relative flex flex-col gap-6">
-        <Badge
-          variant={effectiveStatus === "open" ? "info" : "neutral"}
-          className="self-start"
-        >
+      <div className="flex flex-col gap-6">
+        <p className="m-0 text-sm font-semibold text-[var(--color-national-red-on-dark)]">
           {STATUS_COPY[effectiveStatus]}
-        </Badge>
+        </p>
 
         {effectiveStatus === "open" ? (
-          <p className="max-w-2xl text-lg opacity-90">
+          <p className="m-0 max-w-2xl text-step-1 text-[var(--color-text-on-inverse-secondary)]">
             Estamos sumando personas con ganas de colaborar antes y durante el
             evento. Completá el formulario y contanos cómo te gustaría ayudar.
           </p>
         ) : effectiveStatus === "upcoming" ? (
-          <p className="max-w-2xl text-lg opacity-90">
+          <p className="m-0 max-w-2xl text-step-1 text-[var(--color-text-on-inverse-secondary)]">
             Pronto vamos a abrir la convocatoria de voluntariado. Si querés que
             te avisemos, escribinos.
           </p>
         ) : (
-          <p className="max-w-2xl text-lg opacity-90">
+          <p className="m-0 max-w-2xl text-step-1 text-[var(--color-text-on-inverse-secondary)]">
             La convocatoria de voluntariado para esta edición ya está cerrada.
             Gracias a todas las personas que se sumaron.
           </p>
         )}
 
         {effectiveStatus !== "closed" ? (
-          <div className="space-y-4">
-            <p className="text-xs font-bold uppercase tracking-[0.18em] text-[var(--color-national-red-on-dark)]">
+          <div>
+            <h3 className="m-0 mb-3 font-semibold text-step-1 text-[var(--color-text-on-inverse)]">
               En qué podés ayudar
-            </p>
-            <ul className="grid gap-3 sm:grid-cols-2">
+            </h3>
+            <ul className="m-0 grid list-none gap-x-10 border-t border-[var(--color-border-on-inverse)] p-0 [grid-template-columns:repeat(auto-fit,minmax(min(280px,100%),1fr))]">
               {TASKS.map((task) => (
-                <li key={task} className="flex items-start gap-3">
-                  <span
-                    aria-hidden="true"
-                    className="glass-panel mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-[var(--radius-pill)] text-[var(--color-national-red-on-dark)]"
-                  >
-                    <GlyphIcon name="bolt" size={13} />
-                  </span>
-                  <span className="text-sm opacity-90">{task}</span>
+                <li
+                  key={task}
+                  className="border-b border-[var(--color-border-on-inverse)] py-3 text-base text-[var(--color-text-on-inverse-secondary)]"
+                >
+                  {task}
                 </li>
               ))}
             </ul>
@@ -102,27 +84,21 @@ export function VolunteerCallout({ eventInfo }: VolunteerCalloutProps) {
         ) : null}
 
         {effectiveStatus === "open" && volunteerRegistrationUrl ? (
-          <Button
-            as="a"
+          <a
             href={volunteerRegistrationUrl}
             target="_blank"
             rel="noopener noreferrer"
-            size="lg"
-            shape="pill"
-            className="self-start"
+            className={LINK_CLASS}
           >
             Completar formulario de voluntariado
-          </Button>
+          </a>
         ) : effectiveStatus === "upcoming" ? (
-          <Button
-            as="a"
+          <a
             href={`mailto:${contactEmail}?subject=Avisame%20cuando%20abra%20la%20convocatoria%20de%20voluntariado`}
-            variant="secondary"
-            shape="pill"
-            className="self-start"
+            className={LINK_CLASS}
           >
             Avisame por mail
-          </Button>
+          </a>
         ) : null}
       </div>
     </div>

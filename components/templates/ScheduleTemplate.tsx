@@ -1,25 +1,36 @@
-// Schedule page, rebuilt from scratch to reproduce the "Agenda" mockup
-// (`AWS Community Day Paraguay (colored)/Agenda.dc.html`) 1:1 — same sections,
-// same order, same colors (via exact design tokens), and same spacing.
+// Schedule page. The Sessionize GridSmart response is grouped by its Asunción
+// start day and then by start time, so the sessions that run in parallel in
+// different rooms sit side by side as cards under one large serif time. That is
+// what a visitor needs to understand: what can I choose between, and when.
 //
-// The real data is wired through: the Sessionize GridSmart response is grouped
-// by its Asunción start day (kept from the previous grid logic) and rendered as
-// the mockup's dense session rows. Each room keeps a stable accent from the
-// categorical token ramp, shown both as a legend and as the row stripe. Every
-// row credits its speakers with portrait and name, so the speakers list can
-// stay identity-only.
+// Two rails stick under the header while the page scrolls. The room rail is a
+// <nav> of links (so the filter works without JavaScript and stays shareable)
+// that scrolls sideways on a phone; each chip carries the room's dot, which
+// doubles as the legend, and the active room is marked by a filled chip and
+// `aria-current`. The time rail jumps to the first slot of each hour; with
+// several days it jumps between days.
 //
 // Sessionize accepts talks well before it publishes the grid. In that window
 // the page lists the confirmed talks, built from the sessions each speaker
-// already carries, instead of an empty agenda: the talks stay findable without
-// an extra provider request. The empty state is kept for when neither exists.
+// already carries, instead of an empty agenda. The empty state is kept for
+// when neither exists.
 
 import NextLink from "next/link";
-import { PageHeader, WRAP } from "@/components/molecules/SectionPrimitives";
+import { GlyphIcon, type GlyphName } from "@/components/atoms/GlyphIcon";
+import { IconBadge } from "@/components/atoms/IconBadge";
+import {
+  SessionCard,
+  type SessionCardData,
+} from "@/components/molecules/SessionCard";
 import {
   SessionSpeakers,
   type SessionSpeakerRef,
 } from "@/components/molecules/SessionSpeakers";
+import {
+  BTN_PRIMARY,
+  SectionTitle,
+  WRAP,
+} from "@/components/molecules/SectionPrimitives";
 import { formatDate, formatTime, startOfDayKey } from "@/lib/utils/datetime";
 import type { ScheduleGrid, Speaker } from "@/lib/api/sessionize";
 import type { EventInfo } from "@/lib/content/event-info";
@@ -34,8 +45,7 @@ type ScheduleTemplateProps = {
 };
 
 // A fixed-order set of categorical hues that tells sibling rooms apart. It is
-// identity, never meaning: every room also carries its written name, so a
-// reader who cannot distinguish the hues loses nothing.
+// identity, never meaning: every card also carries its written room name.
 const ROOM_COLORS = [
   "var(--color-category-blue)",
   "var(--color-category-teal)",
@@ -45,29 +55,23 @@ const ROOM_COLORS = [
   "var(--color-category-pink)",
 ] as const;
 
-type Slot = {
-  id: string;
+type TimeBlock = {
+  key: string;
   startsAt: string;
   endsAt: string;
-  title: string;
-  description?: string | null;
-  roomName: string;
-  roomColor: string;
-  isPlenum: boolean;
-  isService: boolean;
-  speakers: SessionSpeakerRef[];
+  sessions: SessionCardData[];
+};
+
+type DayGroup = {
+  dayKey: string;
+  representative: string;
+  blocks: TimeBlock[];
 };
 
 type Talk = {
   id: string;
   title: string;
   speakers: SessionSpeakerRef[];
-};
-
-type DayGroup = {
-  dayKey: string;
-  representative: string;
-  slots: Slot[];
 };
 
 /** Rooms in first-appearance order, each mapped to a stable accent hue. */
@@ -83,33 +87,62 @@ function listRooms(grid: ScheduleGrid): Array<{ name: string; color: string }> {
   return Array.from(seen, ([name, color]) => ({ name, color }));
 }
 
+function durationLabel(startsAt: string, endsAt: string): string {
+  const mins = Math.round(
+    (new Date(endsAt).getTime() - new Date(startsAt).getTime()) / 60000
+  );
+  return `${Math.max(0, mins)} min`;
+}
+
 /**
- * Groups every session by its Asunción start day and sorts days and slots
- * ascending. Sessions that cross midnight appear under their start day only.
+ * Groups every session by its Asunción start day, then by start time, and sorts
+ * both ascending. Sessions that cross midnight appear under their start day.
+ * `room` keeps only that room's sessions.
  */
-function groupByStartDay(grid: ScheduleGrid, speakers: Speaker[]): DayGroup[] {
-  const roomColor = new Map(listRooms(grid).map((r) => [r.name, r.color]));
+function groupByDayAndTime(
+  grid: ScheduleGrid,
+  speakers: Speaker[],
+  room: string | undefined
+): DayGroup[] {
+  const color = new Map(listRooms(grid).map((r) => [r.name, r.color]));
   const speakerById = new Map(speakers.map((sp) => [sp.id, sp]));
 
-  const map = new Map<string, DayGroup>();
+  const days = new Map<string, DayGroup>();
+  const blocks = new Map<string, TimeBlock>();
+
   for (const day of grid) {
-    for (const room of day.rooms) {
-      for (const session of room.sessions) {
+    for (const r of day.rooms) {
+      if (room && r.name !== room) continue;
+      for (const session of r.sessions) {
         const dayKey = startOfDayKey(session.startsAt);
         if (!dayKey) continue;
-        let group = map.get(dayKey);
+        let group = days.get(dayKey);
         if (!group) {
-          group = { dayKey, representative: session.startsAt, slots: [] };
-          map.set(dayKey, group);
+          group = { dayKey, representative: session.startsAt, blocks: [] };
+          days.set(dayKey, group);
         }
-        group.slots.push({
+        const blockKey = `${dayKey}|${new Date(session.startsAt).getTime()}`;
+        let block = blocks.get(blockKey);
+        if (!block) {
+          block = {
+            key: blockKey,
+            startsAt: session.startsAt,
+            endsAt: session.endsAt,
+            sessions: [],
+          };
+          blocks.set(blockKey, block);
+          group.blocks.push(block);
+        }
+        if (new Date(session.endsAt) > new Date(block.endsAt)) {
+          block.endsAt = session.endsAt;
+        }
+        block.sessions.push({
           id: session.id,
-          startsAt: session.startsAt,
-          endsAt: session.endsAt,
           title: session.title,
           description: session.description,
-          roomName: room.name,
-          roomColor: roomColor.get(room.name) ?? ROOM_COLORS[0],
+          durationLabel: durationLabel(session.startsAt, session.endsAt),
+          roomName: r.name,
+          roomColor: color.get(r.name) ?? ROOM_COLORS[0],
           isPlenum: session.isPlenumSession,
           isService: session.isServiceSession,
           speakers: session.speakers.map((sp) => ({
@@ -123,14 +156,14 @@ function groupByStartDay(grid: ScheduleGrid, speakers: Speaker[]): DayGroup[] {
     }
   }
 
-  const days = Array.from(map.values());
-  days.sort((a, b) => a.dayKey.localeCompare(b.dayKey));
-  for (const d of days) {
-    d.slots.sort(
+  const result = Array.from(days.values());
+  result.sort((a, b) => a.dayKey.localeCompare(b.dayKey));
+  for (const d of result) {
+    d.blocks.sort(
       (a, b) => new Date(a.startsAt).getTime() - new Date(b.startsAt).getTime()
     );
   }
-  return days;
+  return result;
 }
 
 /**
@@ -160,11 +193,33 @@ function listConfirmedTalks(speakers: Speaker[]): Talk[] {
   );
 }
 
-function durationLabel(startsAt: string, endsAt: string): string {
-  const mins = Math.round(
-    (new Date(endsAt).getTime() - new Date(startsAt).getTime()) / 60000
+/** Two-digit Asunción hour of a timestamp, e.g. "09". */
+function hourOf(iso: string): string {
+  return formatTime(iso).slice(0, 2);
+}
+
+const RAIL =
+  "flex snap-x snap-proximity items-center gap-2 overflow-x-auto py-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden";
+
+const CHIP =
+  "inline-flex min-h-[var(--size-touch)] shrink-0 snap-start items-center gap-2 whitespace-nowrap rounded-[var(--radius-sm)] border-2 px-4 text-step--1 font-semibold leading-tight transition-colors";
+
+const CHIP_ON =
+  "border-[var(--color-text-primary)] bg-[var(--color-text-primary)] text-[var(--color-surface)]";
+
+const CHIP_OFF =
+  "border-[var(--color-border-subtle)] bg-[var(--color-surface-elevated)] text-[var(--color-text-primary)] hover:border-[var(--color-text-primary)]";
+
+const CARD_GRID =
+  "grid gap-3 [grid-template-columns:repeat(auto-fill,minmax(min(280px,100%),1fr))]";
+
+function Fact({ icon, children }: { icon: GlyphName; children: string }) {
+  return (
+    <li className="flex items-center gap-2 text-step--1 text-[var(--color-text-secondary)] sm:text-step-0">
+      <GlyphIcon name={icon} size={20} />
+      <span>{children}</span>
+    </li>
   );
-  return `${Math.max(0, mins)} min`;
 }
 
 export function ScheduleTemplate({
@@ -176,215 +231,230 @@ export function ScheduleTemplate({
   selectedRoom,
 }: ScheduleTemplateProps) {
   const rooms = listRooms(grid);
-  const days = groupByStartDay(grid, speakers);
   const activeRoom = rooms.find((room) => room.name === selectedRoom)?.name;
-  const visibleDays = activeRoom
-    ? days
-        .map((day) => ({
-          ...day,
-          slots: day.slots.filter((slot) => slot.roomName === activeRoom),
-        }))
-        .filter((day) => day.slots.length > 0)
-    : days;
-  const multiDay = visibleDays.length > 1;
-  const talks = days.length === 0 ? listConfirmedTalks(speakers) : [];
+  const days = groupByDayAndTime(grid, speakers, activeRoom);
+  const multiDay = days.length > 1;
+  const hasGrid = days.length > 0;
+  const talks = hasGrid ? [] : listConfirmedTalks(speakers);
+
+  // First slot of each hour is the target of the time rail.
+  const hourAnchors = new Map<string, string>();
+  if (days.length === 1) {
+    for (const block of days[0].blocks) {
+      const hour = hourOf(block.startsAt);
+      if (!hourAnchors.has(hour)) hourAnchors.set(hour, block.key);
+    }
+  }
+  const hourIds = Array.from(hourAnchors.keys());
+
+  const showRail = rooms.length > 0;
+  const showTimeRail = hourIds.length > 1 || multiDay;
 
   return (
     <>
-      <PageHeader
-        eyebrow="Programa"
-        title="Agenda"
-        description={`Charlas, talleres y actividades de ${eventInfo.name}. Los horarios están en hora local de Asunción (UTC−3) y pueden ajustarse hasta la semana del evento.`}
-      />
+      <section id="contenido-principal">
+        <div
+          className={`${WRAP} flex flex-wrap items-end justify-between gap-x-10 gap-y-3 py-[clamp(1rem,3.5svh,2rem)]`}
+        >
+          <h1 className="m-0 font-display text-step-2 leading-[1.05] tracking-[-0.01em] text-[var(--color-text-primary)]">
+            Agenda
+          </h1>
+          <ul className="m-0 flex list-none flex-wrap gap-x-6 gap-y-2 p-0">
+            <Fact icon="calendar">{formatDate(eventInfo.dates.start)}</Fact>
+            <Fact icon="pin">{eventInfo.location.summary}</Fact>
+            <Fact icon="clock">Hora de Asunción (UTC−3)</Fact>
+          </ul>
+        </div>
+      </section>
 
-      {rooms.length > 0 ? (
-        <section className="border-b border-[var(--color-border-subtle)] bg-[var(--color-surface-warm)]">
-          <nav
-            aria-label="Filtrar agenda por sala"
-            className={`${WRAP} flex flex-wrap items-center gap-2.5 py-[22px]`}
-          >
-            <span className="mr-1.5 font-mono text-[11px] uppercase tracking-[0.14em] text-[var(--color-text-muted)]">
-              Salas
-            </span>
-            <NextLink
-              href={schedulePath}
-              prefetch={false}
-              scroll={false}
-              aria-current={!activeRoom ? "page" : undefined}
-              className={`inline-flex min-h-11 max-w-full items-center rounded-[3px] border px-3 py-1.5 text-[13px] font-semibold leading-tight transition-colors hover:border-[var(--color-accent)] ${
-                !activeRoom
-                  ? "border-[var(--color-accent)] bg-[var(--color-accent-soft)]"
-                  : "border-[var(--color-border-subtle)] bg-[var(--color-surface)]"
-              }`}
-            >
-              Todas las salas
-            </NextLink>
-            {rooms.map((room) => (
+      {showRail ? (
+        <div className="sticky top-[4.0625rem] z-20 bg-[var(--color-surface)]">
+          <div className={WRAP}>
+            <nav aria-label="Filtrar agenda por sala" className={RAIL}>
               <NextLink
-                key={room.name}
-                href={{ pathname: schedulePath, query: { room: room.name } }}
+                href={schedulePath}
                 prefetch={false}
                 scroll={false}
-                aria-current={activeRoom === room.name ? "page" : undefined}
-                className={`inline-flex min-h-11 max-w-full items-center gap-2 rounded-[3px] border px-3 py-1.5 text-left text-[13px] font-semibold leading-tight transition-colors hover:border-[var(--color-accent)] ${
-                  activeRoom === room.name
-                    ? "border-[var(--color-accent)] bg-[var(--color-accent-soft)]"
-                    : "border-[var(--color-border-subtle)] bg-[var(--color-surface)]"
-                }`}
+                aria-current={!activeRoom ? "page" : undefined}
+                className={`${CHIP} ${!activeRoom ? CHIP_ON : CHIP_OFF}`}
               >
-                <span
-                  aria-hidden="true"
-                  className="h-[9px] w-[9px] shrink-0 rounded-[2px]"
-                  style={{ background: room.color }}
-                />
-                {room.name}
+                Todas las salas
               </NextLink>
-            ))}
-          </nav>
-        </section>
+              {rooms.map((room) => (
+                <NextLink
+                  key={room.name}
+                  href={{ pathname: schedulePath, query: { room: room.name } }}
+                  prefetch={false}
+                  scroll={false}
+                  aria-current={activeRoom === room.name ? "page" : undefined}
+                  className={`${CHIP} ${
+                    activeRoom === room.name ? CHIP_ON : CHIP_OFF
+                  }`}
+                >
+                  <span
+                    aria-hidden="true"
+                    className="size-3 shrink-0 rounded-full"
+                    style={{ backgroundColor: room.color }}
+                  />
+                  {room.name}
+                </NextLink>
+              ))}
+            </nav>
+            {showTimeRail ? (
+              <nav
+                aria-label={multiDay ? "Saltar a un día" : "Saltar a una hora"}
+                className={`${RAIL} py-1`}
+              >
+                <span className="shrink-0 pr-1 text-step--1 text-[var(--color-text-secondary)]">
+                  {multiDay ? "Día" : "Hora"}
+                </span>
+                {multiDay
+                  ? days.map((day) => (
+                      <a
+                        key={day.dayKey}
+                        href={`#day-${day.dayKey}`}
+                        className="inline-flex min-h-[var(--size-touch)] shrink-0 snap-start items-center whitespace-nowrap px-2 text-step--1 font-semibold text-[var(--color-text-primary)] underline decoration-[var(--color-border-subtle)] decoration-2 underline-offset-4 first-letter:uppercase"
+                      >
+                        {formatDate(day.representative)}
+                      </a>
+                    ))
+                  : hourIds.map((hour) => (
+                      <a
+                        key={hour}
+                        href={`#hour-${hour}`}
+                        className="inline-flex min-h-[var(--size-touch)] min-w-[var(--size-touch)] shrink-0 snap-start items-center justify-center whitespace-nowrap px-2 font-display text-step-0 text-[var(--color-text-primary)] underline decoration-[var(--color-border-subtle)] decoration-2 underline-offset-4"
+                      >
+                        {hour}:00
+                      </a>
+                    ))}
+              </nav>
+            ) : null}
+          </div>
+        </div>
       ) : null}
 
-      <section className="bg-[var(--color-surface)]">
-        <div className={`${WRAP} pb-[72px] pt-11`}>
-          {days.length === 0 && talks.length > 0 ? (
+      <section>
+        <div className={`${WRAP} pb-16 pt-6 sm:pt-8`}>
+          {!hasGrid && talks.length > 0 ? (
             <div>
-              <div className="mb-2 flex flex-wrap items-baseline justify-between gap-4">
-                <h2 className="m-0 text-[20px] font-extrabold tracking-[-0.03em]">
-                  Charlas confirmadas
+              <SectionTitle title="Charlas confirmadas" />
+              <p className="m-0 mb-8 max-w-[44rem] text-step-0 text-[var(--color-text-secondary)]">
+                Todavía estamos armando la grilla. Estas son las {talks.length}{" "}
+                {talks.length === 1 ? "charla" : "charlas"} ya aceptadas; los
+                horarios y las salas se publican acá apenas estén definidos.
+              </p>
+              <ul className={`${CARD_GRID} m-0 list-none p-0`}>
+                {talks.map((talk) => (
+                  <li
+                    key={talk.id}
+                    className="flex flex-col gap-3 rounded-[var(--radius-md)] border border-[var(--color-border-subtle)] bg-[var(--color-surface-elevated)] p-4 sm:p-5"
+                  >
+                    <h3 className="m-0 text-step-0 leading-[1.3] sm:text-step-1">
+                      {talk.title}
+                    </h3>
+                    <SessionSpeakers
+                      speakers={talk.speakers}
+                      basePath={speakerBasePath}
+                    />
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ) : !hasGrid ? (
+            <div className="flex max-w-[40rem] items-start gap-4 pt-4">
+              <IconBadge name="calendar" size="lg" />
+              <div>
+                <h2 className="m-0 font-display text-step-2 leading-[1.1]">
+                  Agenda próximamente
                 </h2>
-                <p className="m-0 font-mono text-[12px] text-[var(--color-text-muted)]">
-                  {talks.length} {talks.length === 1 ? "charla" : "charlas"}
+                <p className="m-0 mt-3 text-step-0 text-[var(--color-text-secondary)]">
+                  Estamos cerrando la agenda con horarios y salas. Volvé en unos
+                  días para verla completa.
                 </p>
               </div>
-              <p className="m-0 mb-6 max-w-[44rem] text-[14.5px] text-[var(--color-text-secondary)]">
-                Todavía estamos armando la grilla. Estas son las charlas ya
-                aceptadas; los horarios y las salas se publican acá apenas estén
-                definidos.
-              </p>
-              <div className="border-t border-[var(--color-text-primary)]">
-                {talks.map((talk, i) => (
-                  <article
-                    key={talk.id}
-                    className="grid items-start gap-x-[18px] border-b border-[var(--color-border-subtle)] px-1 py-[18px] transition-colors [grid-template-columns:22px_minmax(0,1fr)] hover:bg-[var(--color-surface-muted)]"
-                  >
-                    <span className="pt-[3px] font-mono text-[11px] text-[var(--color-text-muted)]">
-                      {String(i + 1).padStart(2, "0")}
-                    </span>
-                    <div className="min-w-0">
-                      <h3 className="m-0 mb-2.5 text-[17px] font-bold leading-[1.3] tracking-[-0.018em]">
-                        {talk.title}
-                      </h3>
-                      <SessionSpeakers
-                        speakers={talk.speakers}
-                        basePath={speakerBasePath}
-                      />
-                    </div>
-                  </article>
-                ))}
-              </div>
-            </div>
-          ) : days.length === 0 ? (
-            <div className="border border-[var(--color-border-subtle)] bg-[var(--color-surface-muted)] px-7 py-14 text-center">
-              <h2 className="m-0 text-[22px] font-bold tracking-[-0.02em]">
-                Agenda próximamente
-              </h2>
-              <p className="mx-auto mt-3 max-w-[34rem] text-[15px] text-[var(--color-text-secondary)]">
-                Estamos cerrando la agenda con horarios y salas. Volvé en unos
-                días para verla completa.
-              </p>
             </div>
           ) : (
-            visibleDays.map((day) => (
-              <div key={day.dayKey} className={multiDay ? "mb-12" : ""}>
+            days.map((day) => (
+              <div
+                key={day.dayKey}
+                id={`day-${day.dayKey}`}
+                className={`scroll-mt-44 ${multiDay ? "mb-14" : ""}`}
+              >
                 {multiDay ? (
-                  <h2 className="mb-4 text-[20px] font-extrabold tracking-[-0.03em] first-letter:uppercase">
-                    {formatDate(day.representative)}
-                  </h2>
+                  <SectionTitle
+                    title={
+                      <span className="first-letter:uppercase">
+                        {formatDate(day.representative)}
+                      </span>
+                    }
+                  />
                 ) : null}
-                <div className="border-t border-[var(--color-text-primary)]">
-                  {day.slots.map((slot) => (
-                    <div
-                      key={slot.id}
-                      className={
-                        // Same stacking as the home agenda preview: below `sm`
-                        // the colour bar runs down the left and time, detail
-                        // and room labels stack beside it. The four-column
-                        // layout needs ~470px and was forcing the whole page
-                        // to scroll sideways on every phone.
-                        "grid items-start gap-x-[18px] gap-y-2 border-b border-[var(--color-border-subtle)] px-1 py-[18px] [grid-template-columns:4px_minmax(0,1fr)] sm:gap-y-0 sm:[grid-template-columns:minmax(110px,130px)_4px_minmax(0,1fr)_minmax(0,0.75fr)] " +
-                        (slot.isService
-                          ? "bg-[var(--color-surface-muted)]"
-                          : "transition-colors hover:bg-[var(--color-surface-muted)]")
-                      }
-                    >
-                      <div className="col-start-2 row-start-1 min-w-0 sm:col-start-auto sm:row-start-auto">
-                        <div className="font-mono text-[14px] font-medium text-[var(--color-text-primary)]">
-                          {formatTime(slot.startsAt)}
-                        </div>
-                        <div className="mt-0.5 font-mono text-[11.5px] text-[var(--color-text-muted)]">
-                          {durationLabel(slot.startsAt, slot.endsAt)}
-                        </div>
-                      </div>
-
-                      <span
-                        aria-hidden="true"
-                        className="col-start-1 row-start-1 row-span-3 w-1 self-stretch rounded-[2px] sm:col-start-auto sm:row-start-auto sm:row-span-1"
-                        style={{ background: slot.roomColor }}
-                      />
-
-                      <div className="col-start-2 row-start-2 min-w-0 sm:col-start-auto sm:row-start-auto">
-                        <h3 className="m-0 mb-1 text-[17px] font-bold leading-[1.3] tracking-[-0.018em]">
-                          {slot.title}
-                        </h3>
-                        {slot.description ? (
-                          <p className="m-0 mb-1.5 max-w-[44rem] break-words text-[14px] text-[var(--color-text-muted)]">
-                            {slot.description}
-                          </p>
-                        ) : null}
-                        <SessionSpeakers
-                          speakers={slot.speakers}
-                          basePath={speakerBasePath}
-                          className="mt-2"
-                        />
-                      </div>
-
-                      <div className="col-start-2 row-start-3 flex min-w-0 flex-wrap justify-start gap-1.5 pt-0.5 sm:col-start-auto sm:row-start-auto">
-                        <span className="max-w-full break-words rounded-[3px] border border-[var(--color-border-subtle)] px-[9px] py-1 font-mono text-[10.5px] uppercase tracking-[0.1em] text-[var(--color-text-secondary)]">
-                          {slot.roomName}
-                        </span>
-                        {slot.isPlenum ? (
-                          <span className="whitespace-nowrap rounded-[3px] bg-[var(--color-surface-muted)] px-[9px] py-1 font-mono text-[10.5px] uppercase tracking-[0.1em] text-[var(--color-accent)]">
-                            Plenaria
+                <ol className="m-0 flex list-none flex-col gap-8 p-0 sm:gap-10">
+                  {day.blocks.map((block) => {
+                    const hour = hourOf(block.startsAt);
+                    const isAnchor =
+                      !multiDay && hourAnchors.get(hour) === block.key;
+                    const onlyBreaks = block.sessions.every((s) => s.isService);
+                    return (
+                      <li
+                        key={block.key}
+                        id={isAnchor ? `hour-${hour}` : undefined}
+                        className="grid scroll-mt-44 gap-x-8 gap-y-3 sm:[grid-template-columns:8.5rem_minmax(0,1fr)]"
+                      >
+                        <div className="flex items-baseline gap-3 sm:block">
+                          <time
+                            dateTime={block.startsAt}
+                            className="block font-display text-step-3 leading-none text-[var(--color-text-primary)]"
+                          >
+                            {formatTime(block.startsAt)}
+                          </time>
+                          <span className="block text-step--1 text-[var(--color-text-secondary)] sm:mt-2">
+                            hasta {formatTime(block.endsAt)}
                           </span>
-                        ) : null}
-                      </div>
-                    </div>
-                  ))}
-                </div>
+                        </div>
+                        <div
+                          className={
+                            onlyBreaks ? "flex min-w-0 flex-col gap-3" : CARD_GRID
+                          }
+                        >
+                          {block.sessions.map((s) => (
+                            <SessionCard
+                              key={`${s.id}-${s.roomName}`}
+                              session={s}
+                              speakerBasePath={speakerBasePath}
+                            />
+                          ))}
+                        </div>
+                      </li>
+                    );
+                  })}
+                </ol>
               </div>
             ))
           )}
 
-          {days.length > 0 ? (
-            <p className="mt-[22px] text-[13.5px] text-[var(--color-text-muted)]">
+          {hasGrid ? (
+            <p className="mt-8 flex items-center gap-2 text-step--1 text-[var(--color-text-secondary)]">
+              <GlyphIcon name="info" size={18} />
               Los horarios pueden ajustarse hasta la semana del evento.
             </p>
           ) : null}
 
-          <div className="mt-12 flex flex-wrap items-center justify-between gap-5 border border-[var(--color-border-subtle)] p-7">
-            <div className="min-w-0">
-              <h2 className="m-0 mb-1.5 text-[19px] font-bold tracking-[-0.02em]">
-                Los talleres tienen cupo limitado
-              </h2>
-              <p className="m-0 text-[14.5px] text-[var(--color-text-secondary)]">
-                Si querés participar, revisá los requisitos de cada taller en la
-                agenda. La inscripción se hace en el mostrador de acreditación.
-              </p>
+          <div className="mt-14 flex flex-wrap items-center justify-between gap-6 rounded-[var(--radius-md)] bg-[var(--color-surface-muted)] p-6 sm:p-8">
+            <div className="flex min-w-0 max-w-[36rem] items-start gap-4">
+              <IconBadge name="ticket" tone="solid" />
+              <div>
+                <h2 className="m-0 mb-2 font-display text-step-2 leading-[1.1]">
+                  Reservá tu lugar
+                </h2>
+                <p className="m-0 text-step-0 text-[var(--color-text-secondary)]">
+                  La entrada es gratis. Registrate para asistir a{" "}
+                  {eventInfo.name}; cada taller indica sus requisitos en esta
+                  agenda.
+                </p>
+              </div>
             </div>
-            <NextLink
-              href="/register"
-              className="inline-flex flex-none items-center rounded-[4px] bg-[var(--color-action)] px-[26px] py-[13px] text-[15px] font-bold text-[var(--color-text-on-action)] transition hover:brightness-95"
-            >
+            <NextLink href="/register" className={BTN_PRIMARY}>
               Registrarme gratis
             </NextLink>
           </div>

@@ -1,14 +1,13 @@
-// Site-wide footer, styled after the "colored" mockup: a navy panel with
-// Amazon-Orange accents and columns for the event, participation, and contact.
-// It carries the full navigation (including the destinations the condensed
-// header omits), the contact email, social links (or a fallback), the privacy
-// notice (FR-036), and the community-organized disclaimer.
+// Site-wide footer: a light band on the same paper as the page, one row for the
+// mark and the full navigation (including the destinations the condensed header
+// omits), one row for the contact and social links, and the small print: the
+// privacy notice (FR-036) and the community-organized disclaimer.
 //
-// Links here are plain Next/anchor elements with explicit token colors rather
-// than the blue Link atom, because `cn` is a plain join (no tailwind-merge)
-// and the atom's color could not be overridden deterministically on the dark
-// surface.
+// It is deliberately quiet. The page content is what the person came for, so
+// the footer is a few lines of links, not a second poster at the bottom of
+// every page.
 
+import { FlagRule } from "@/components/atoms/FlagRule";
 import NextLink from "next/link";
 import Image from "next/image";
 import { Container } from "@/components/atoms/Container";
@@ -31,11 +30,10 @@ const SOCIAL_LABELS: Record<keyof NonNullable<EventInfo["social"]>, string> = {
 };
 
 const LINK_CLASS =
-  "text-sm text-[var(--color-link-on-inverse)] transition-colors hover:text-[var(--color-action)]";
-const HEADING_CLASS =
-  "mb-3 font-mono text-[11px] uppercase tracking-[0.14em] text-[var(--color-text-on-inverse-muted)]";
+  "inline-flex min-h-10 items-center text-sm text-[var(--color-text-secondary)] underline-offset-4 transition-colors hover:text-[var(--color-text-primary)] hover:underline";
 
-// The mockup splits the destinations into two columns; the split is presentational.
+// The destinations split into two lists, each its own landmark; the split is
+// presentational.
 const EVENT_NAV = FOOTER_NAV.slice(0, 6);
 const PARTICIPATE_NAV = FOOTER_NAV.slice(6);
 
@@ -64,95 +62,97 @@ export function SiteFooter({
 
   return (
     <footer
-      className="mt-16 bg-[var(--color-surface-inverse)] text-[var(--color-text-on-inverse)]"
+      className=" bg-[var(--color-surface-muted)] text-[var(--color-text-primary)]"
       role="contentinfo"
     >
+      <FlagRule />
       <Container>
-        <div className="grid gap-9 py-14 sm:grid-cols-2 lg:grid-cols-[minmax(0,1.4fr)_minmax(0,0.65fr)_minmax(0,0.65fr)_minmax(19rem,1.5fr)]">
-          <div className="min-w-0 space-y-4">
+        <div className="flex flex-wrap items-center justify-between gap-x-10 gap-y-4 py-7">
+          {/* Same two inks as the header: whichever is hidden by
+              `display: none` is out of the accessibility tree too. */}
+          <span className="shrink-0">
+            <Image
+              src="/assets/logo-dark.png"
+              alt="AWS Community Day Paraguay"
+              width={501}
+              height={139}
+              className="brand-logo--light h-8 w-auto"
+            />
             <Image
               src="/assets/logo.png"
               alt="AWS Community Day Paraguay"
               width={501}
               height={139}
-              className="h-[34px] w-auto"
+              className="brand-logo--dark h-8 w-auto"
             />
-            <p className="max-w-xs text-sm text-[var(--color-text-on-inverse-secondary)]">
-              {eventInfo.tagline}
-            </p>
-            <p className="inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.12em] text-[var(--color-action)]">
-              <span
-                aria-hidden="true"
-                className="h-px w-4 bg-[var(--color-action)]"
-              />
-              Entrada gratuita
-            </p>
-          </div>
+          </span>
 
-          <nav aria-label="Navegación del evento">
-            <p className={HEADING_CLASS}>Evento</p>
-            <ul className="flex flex-col gap-2">
-              {EVENT_NAV.map((entry) => (
-                <li key={entry.href}>
-                  <NextLink href={entry.href} className={LINK_CLASS}>
-                    {entry.label}
-                  </NextLink>
-                </li>
-              ))}
-            </ul>
-          </nav>
-
-          <nav aria-label="Participar">
-            <p className={HEADING_CLASS}>Participar</p>
-            <ul className="flex flex-col gap-2">
-              {PARTICIPATE_NAV.map((entry) => (
-                <li key={entry.href}>
-                  <NextLink href={entry.href} className={LINK_CLASS}>
-                    {entry.label}
-                  </NextLink>
-                </li>
-              ))}
-            </ul>
-          </nav>
-
-          <div className="min-w-0">
-            <p className={HEADING_CLASS}>Contacto</p>
-            <a
-              href={`mailto:${eventInfo.contactEmail}`}
-              className="break-words text-sm font-semibold text-[var(--color-action)] transition hover:brightness-95 lg:whitespace-nowrap"
-            >
-              {/* The address is one long token, so a narrow footer column broke
-                  it mid-word ("…gmail.co / m"). `<wbr>` offers the break after
-                  the "@" instead; it adds no characters, so the link text and
-                  its accessible name are unchanged. */}
-              {emailParts(eventInfo.contactEmail)}
-            </a>
-            {socialEntries.length === 0 ? (
-              <p className="mt-3 text-sm text-[var(--color-text-on-inverse-muted)]">
-                Próximamente en redes
-              </p>
-            ) : (
-              <ul className="mt-3 flex flex-col gap-2">
-                {socialEntries.map(([key, url]) => (
-                  <li key={key}>
-                    <a
-                      href={url as string}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className={LINK_CLASS}
-                    >
-                      {SOCIAL_LABELS[key]}
-                    </a>
+          <div className="flex flex-wrap items-center gap-x-8 gap-y-1">
+            <nav aria-label="Navegación del evento">
+              <ul className="m-0 flex list-none flex-wrap gap-x-5 p-0">
+                {EVENT_NAV.map((entry) => (
+                  <li key={entry.href}>
+                    <NextLink href={entry.href} className={LINK_CLASS}>
+                      {entry.label}
+                    </NextLink>
                   </li>
                 ))}
               </ul>
-            )}
+            </nav>
+
+            <nav aria-label="Participar">
+              <ul className="m-0 flex list-none flex-wrap gap-x-5 p-0">
+                {PARTICIPATE_NAV.map((entry) => (
+                  <li key={entry.href}>
+                    <NextLink href={entry.href} className={LINK_CLASS}>
+                      {entry.label}
+                    </NextLink>
+                  </li>
+                ))}
+              </ul>
+            </nav>
           </div>
         </div>
 
-        <div className="border-t border-[var(--color-border-on-inverse)] py-6">
-          <PrivacyFooterNote tone="inverse" analytics={analyticsEnabled} />
-          <p className="mt-3 text-xs text-[var(--color-text-on-inverse-muted)]">
+        <div className="flex flex-wrap items-center gap-x-6 gap-y-1 py-3">
+          <a
+            href={`mailto:${eventInfo.contactEmail}`}
+            className="inline-block break-words py-2 text-sm font-semibold text-[var(--color-text-primary)] underline decoration-[var(--color-border-strong)] underline-offset-4 hover:decoration-[var(--color-text-primary)]"
+          >
+            {/* The address is one long token, so a narrow footer broke it
+                mid-word ("…gmail.co / m"). `<wbr>` offers the break after the
+                "@" instead; it adds no characters, so the link text and its
+                accessible name are unchanged. The link stays inline-block
+                (padding gives the touch height): as a flex container it would
+                turn the `<wbr>` into a separate item and split the name into
+                "…@ gmail.com". */}
+            {emailParts(eventInfo.contactEmail)}
+          </a>
+          {socialEntries.length === 0 ? (
+            <span className="text-sm text-[var(--color-text-muted)]">
+              Próximamente en redes
+            </span>
+          ) : (
+            <ul className="m-0 flex list-none flex-wrap gap-x-5 p-0">
+              {socialEntries.map(([key, url]) => (
+                <li key={key}>
+                  <a
+                    href={url as string}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={LINK_CLASS}
+                  >
+                    {SOCIAL_LABELS[key]}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+
+        <div className=" py-4 text-xs text-[var(--color-text-muted)]">
+          <PrivacyFooterNote analytics={analyticsEnabled} />
+          <p className="m-0 mt-2">
             AWS Community Day Paraguay es un evento organizado por la comunidad
             local. No es un evento oficial de Amazon Web Services.
           </p>

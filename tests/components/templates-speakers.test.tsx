@@ -55,7 +55,7 @@ describe("SpeakersTemplate", () => {
       );
   });
 
-  it("identifies each speaker and leaves the talk to the agenda", () => {
+  it("identifies each speaker and always shows the talk title", () => {
     render(
       <SpeakersTemplate
         speakers={[
@@ -69,17 +69,18 @@ describe("SpeakersTemplate", () => {
     );
 
     expect(
-      screen.getByRole("heading", { level: 2, name: "Ana Perez" })
+      screen.getByRole("heading", { level: 3, name: "Ana Perez" })
     ).toBeInTheDocument();
     expect(screen.getByText("Cloud Engineer")).toBeInTheDocument();
-    expect(
-      screen.queryByText("Arquitecturas serverless")
-    ).not.toBeInTheDocument();
+    expect(screen.getByText("Arquitecturas serverless")).toBeVisible();
   });
 
-  it("uses the plural count and stays usable with no speakers yet", () => {
+  it("stays usable with no speakers yet", () => {
     render(<SpeakersTemplate speakers={[]} eventInfo={EVENT_INFO} />);
 
-    expect(screen.getByText(/0 personas confirmadas/)).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", { name: /pronto anunciamos/i })
+    ).toBeInTheDocument();
+    expect(screen.queryByText(/confirmadas?$/)).not.toBeInTheDocument();
   });
 });

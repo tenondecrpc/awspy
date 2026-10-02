@@ -1,42 +1,37 @@
-// Speaker card molecule. Portrait, photo-dominant card: the headshot fills
-// the top of the card, the talk title is revealed over it on hover or on
-// keyboard focus, and the name plus tagline sit on the card surface below.
+// Speaker card molecule. An editorial entry, not a boxed card: the portrait
+// sits on the paper with no frame, and under it come the name in the display
+// serif, the tagline and the talk title, all always visible (touch screens have
+// no hover, and a hover-only title is invisible to most readers).
 //
 // Design notes:
-//  - One link per card. The name anchor is stretched over the whole card with
-//    an `::after` overlay, so the card is fully clickable but still exposes a
+//  - One link per card. The name anchor is stretched over the whole entry with
+//    an `::after` overlay, so the entry is fully clickable but still exposes a
 //    single tab stop and a single accessible name (the speaker's full name).
-//  - The talk title lives in the DOM at all times (the scrim animates
-//    `opacity`), so assistive technology reads it whatever the visual state
-//    is, and touch devices - which have no hover - always show it.
-//  - The accent border cycles through palette tokens purely for rhythm. It
-//    carries no meaning, so no information is communicated by color alone.
+//  - Every portrait is a square. The source photos are square (Sessionize
+//    serves 400x400), so a square frame shows each one whole: nothing is
+//    cropped into a close-up or stretched, and all speakers carry equal weight.
+//    `accentIndex` is kept for call-site compatibility and no longer varies
+//    anything.
+//  - No "Top speaker" marker: a label on only some cards moved their names out of line with the rest and made some speakers weigh more than others.
 
-import type { CSSProperties } from "react";
 import Image from "next/image";
 import NextLink from "next/link";
-import { Badge } from "@/components/atoms/Badge";
+import { GlyphIcon } from "@/components/atoms/GlyphIcon";
 import { cn } from "@/lib/utils/cn";
 import type { Speaker } from "@/lib/api/sessionize";
+import { tieLast } from "@/lib/utils/typography";
 
 type SpeakerCardProps = {
   speaker: Speaker;
   /** Path prefix for the detail link (e.g. `/speakers` or
    *  `/editions/2025/speakers`). */
   basePath?: string;
-  /** Position in the list. Selects which accent the card border uses. */
+  /** When the talk is scheduled: start time label and room name. */
+  talkSlot?: { time: string; room: string };
+  /** Kept for call-site compatibility; the card no longer varies by position. */
   accentIndex?: number;
   className?: string;
 };
-
-// Decorative only, and deliberately just two steps: the palette's two blues
-// are close enough that a three-step cycle read as an inconsistency rather
-// than a pattern. Alternating flag blue and Paraguayan red gives a row of
-// four cards a clear beat.
-const ACCENTS = [
-  { accent: "var(--color-action)", glow: "var(--color-glow-action)" },
-  { accent: "var(--color-national-red)", glow: "var(--color-glow-red)" },
-] as const;
 
 function initials(name: string): string {
   const parts = name.trim().split(/\s+/);
@@ -48,86 +43,88 @@ function initials(name: string): string {
 export function SpeakerCard({
   speaker,
   basePath = "/speakers",
-  accentIndex = 0,
+  talkSlot,
   className,
 }: SpeakerCardProps) {
   const detailHref = `${basePath}/${speaker.slug}`;
   const talkTitle = speaker.sessions?.find((s) => s.name)?.name;
-  const { accent, glow } = ACCENTS[accentIndex % ACCENTS.length];
 
   return (
+    // The card spans four rows of the parent grid (portrait, name, tagline,
+    // talk) as a subgrid, so each field sits at the same height across a whole
+    // row of cards however many lines the others take.
     <article
       className={cn(
-        "media-card relative flex h-full flex-col overflow-hidden",
-        "rounded-[var(--radius-lg)] bg-[var(--color-surface-elevated)] shadow-sm",
+        "group relative row-span-4 grid grid-rows-subgrid gap-y-0",
         className
       )}
-      style={
-        {
-          "--card-accent": accent,
-          "--card-glow": glow,
-        } as CSSProperties
-      }
     >
-      <span
-        aria-hidden="true"
-        className="h-1 w-full shrink-0 bg-[var(--card-accent)]"
-      />
-
-      <div className="relative aspect-[4/5] w-full overflow-hidden bg-[var(--color-accent-soft)]">
+      <div className="relative aspect-square w-full overflow-hidden bg-[var(--color-surface-muted)]">
         {speaker.profilePicture ? (
           <Image
             src={speaker.profilePicture}
             alt=""
             fill
-            sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw"
-            className="object-cover"
+            sizes="(min-width: 1024px) 290px, (min-width: 640px) 33vw, 50vw"
+            className="object-cover object-[50%_20%]"
           />
         ) : (
           <div
             aria-hidden="true"
-            className="flex h-full w-full items-center justify-center text-5xl font-bold text-[var(--color-accent-strong)]"
+            className="flex h-full w-full items-center justify-center font-display text-step-4 text-[var(--color-text-secondary)]"
           >
             {initials(speaker.fullName)}
           </div>
         )}
-
-        {speaker.isTopSpeaker ? (
-          <Badge variant="info" className="absolute right-3 top-3">
-            Top speaker
-          </Badge>
-        ) : null}
-
-        {talkTitle ? (
-          <div className="media-card__scrim pointer-events-none absolute inset-x-0 bottom-0 px-4 pb-4 pt-10">
-            <p className="text-sm font-semibold text-[var(--color-text-on-hero)]">
-              <span className="sr-only">Charla: </span>
-              {talkTitle}
-            </p>
-          </div>
-        ) : null}
       </div>
 
-      <div className="flex flex-1 flex-col gap-1 p-3 sm:p-4">
-        <NextLink
-          href={detailHref}
-          className={cn(
-            "text-base font-bold sm:text-lg",
-            "text-[var(--color-text-primary)]",
-            "after:absolute after:inset-0 after:content-['']",
-            "hover:text-[var(--color-accent)]"
-          )}
-        >
-          {speaker.fullName}
-        </NextLink>
+      <>
+        <h3 className="m-0 mt-3 font-semibold text-step-2 leading-[1.08]">
+          <NextLink
+            href={detailHref}
+            className={cn(
+              "text-[var(--color-text-primary)]",
+              "after:absolute after:inset-0 after:content-['']",
+              "underline decoration-transparent decoration-2 underline-offset-4 group-hover:decoration-[var(--color-national-red)]"
+            )}
+          >
+            {speaker.fullName}
+          </NextLink>
+        </h3>
         {speaker.tagLine ? (
           // Sessionize taglines run from two words to four lines. Clamping
-          // keeps the grid even; the full text is on the detail page.
-          <p className="line-clamp-2 text-sm text-[var(--color-text-secondary)]">
-            {speaker.tagLine}
+          // keeps the rhythm; the full text is on the detail page.
+          <p className="m-0 mt-1.5 line-clamp-3 text-step--1 text-[var(--color-text-secondary)]">
+            {tieLast(speaker.tagLine)}
           </p>
-        ) : null}
-      </div>
+        ) : (
+          <div aria-hidden="true" />
+        )}
+        {talkTitle ? (
+          // No filled box: a box sized by its text reads as empty space under
+          // the shorter titles. A hairline rule opens the talk instead.
+          <div className="mt-3 flex flex-col gap-2 border-t border-[var(--color-border-strong)] pt-3">
+            <p className="m-0 text-step--1 font-semibold leading-[1.35] text-[var(--color-text-primary)] sm:text-step-0">
+              <span className="sr-only">Charla: </span>
+              {tieLast(talkTitle)}
+            </p>
+            {talkSlot ? (
+              <p className="m-0 flex flex-wrap gap-x-3 gap-y-1 text-step--1 text-[var(--color-text-secondary)]">
+                <span className="inline-flex items-center gap-1.5">
+                  <GlyphIcon name="clock" size={16} />
+                  {talkSlot.time}
+                </span>
+                <span className="inline-flex items-center gap-1.5">
+                  <GlyphIcon name="pin" size={16} />
+                  {tieLast(talkSlot.room)}
+                </span>
+              </p>
+            ) : null}
+          </div>
+        ) : (
+          <div aria-hidden="true" />
+        )}
+      </>
     </article>
   );
 }

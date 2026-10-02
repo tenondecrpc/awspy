@@ -1,156 +1,119 @@
-// Speakers list page, rebuilt from scratch to reproduce the "Speakers" mockup
-// (`AWS Community Day Paraguay (colored)/Speakers.dc.html`) 1:1 — same header
-// band, same confirmed-count row, same portrait grid, and the same closing CFP
-// banner. Real Sessionize data drives the grid; the empty-state branch and the
-// CFP status logic are preserved.
-//
-// Each card identifies the person only: portrait, name and tagline. The talk
-// belongs to the agenda, which credits every session to its speakers, and to
-// the speaker's own page.
+// Speakers list page. Real Sessionize data drives an editorial lineup: a
+// heading row with the count and the two actions, then a uniform grid of
+// portraits where each card says who the person is and what they will talk
+// about (see SpeakersGrid / SpeakerCard). When the schedule is passed in, each
+// talk also shows its time and room. Empty-state and CFP status logic kept.
 
 import NextLink from "next/link";
-import {
-  PageHeader,
-  Frame,
-  WRAP,
-} from "@/components/molecules/SectionPrimitives";
-import type { Speaker } from "@/lib/api/sessionize";
+import { SpeakersGrid } from "@/components/organisms/SpeakersGrid";
+import { GlyphIcon } from "@/components/atoms/GlyphIcon";
+import { IconBadge } from "@/components/atoms/IconBadge";
+import { BTN_OUTLINE, WRAP } from "@/components/molecules/SectionPrimitives";
+import type { ScheduleGrid, Speaker } from "@/lib/api/sessionize";
 import type { EventInfo } from "@/lib/content/event-info";
 
 type SpeakersTemplateProps = {
   speakers: Speaker[];
   eventInfo: EventInfo;
   basePath?: string;
+  /** Published schedule, to show each talk's time and room. Optional. */
+  grid?: ScheduleGrid;
 };
+
+const TEXT_LINK =
+  "inline-flex min-h-[var(--size-touch)] items-center text-step-0 font-semibold text-[var(--color-text-primary)] underline decoration-[var(--color-national-red)] decoration-2 underline-offset-4 hover:decoration-[var(--color-text-primary)]";
 
 export function SpeakersTemplate({
   speakers,
   eventInfo,
   basePath = "/speakers",
+  grid,
 }: SpeakersTemplateProps) {
   const cfpOpen = eventInfo.cfpStatus === "open";
   const cfpHref = cfpOpen ? "/cfp" : `mailto:${eventInfo.contactEmail}`;
 
   return (
     <>
-      <PageHeader
-        eyebrow="Comunidad"
-        title="Speakers"
-        description={`Las personas que van a compartir charlas y talleres en ${eventInfo.name}. La grilla se completa a medida que se confirman las propuestas de la convocatoria.`}
-      >
-        <div className="flex flex-wrap items-center gap-2.5">
-          <NextLink
-            href="/schedule"
-            className="inline-flex items-center rounded-[4px] border-[1.5px] border-[var(--color-text-primary)] px-[22px] py-[11px] text-[14.5px] font-semibold text-[var(--color-text-primary)] transition-colors hover:bg-[var(--color-text-primary)] hover:text-[var(--color-surface)]"
-          >
-            Ver la agenda
-          </NextLink>
-          <NextLink
-            href="/cfp"
-            className="inline-flex items-center rounded-[4px] border-[1.5px] border-[var(--color-border-subtle)] px-[22px] py-[11px] text-[14.5px] font-semibold text-[var(--color-text-secondary)] transition-colors hover:border-[var(--color-text-primary)] hover:text-[var(--color-text-primary)]"
-          >
-            Proponer una charla
-          </NextLink>
-        </div>
-      </PageHeader>
-
-      <section className="bg-[var(--color-surface)]">
-        <div className={`${WRAP} pb-[72px] pt-12`}>
-          <div className="mb-7 flex flex-wrap items-baseline justify-between gap-4">
-            <p className="m-0 font-mono text-[12px] text-[var(--color-text-muted)]">
-              {speakers.length}{" "}
-              {speakers.length === 1
-                ? "persona confirmada"
-                : "personas confirmadas"}
-            </p>
+      <section id="contenido-principal">
+        <div
+          className={`${WRAP} flex flex-wrap items-end justify-between gap-x-10 gap-y-4 py-[clamp(1rem,3.5svh,2rem)]`}
+        >
+          <div className="min-w-0">
+            <h1 className="m-0 font-display text-step-2 leading-[1.05] tracking-[-0.01em] text-[var(--color-text-primary)]">
+              Speakers
+            </h1>
+            {speakers.length > 0 ? (
+              <p className="m-0 mt-2 flex items-center gap-2 text-step-0 text-[var(--color-text-secondary)]">
+                <GlyphIcon name="mic" size={20} />
+                {speakers.length}{" "}
+                {speakers.length === 1
+                  ? "persona confirmada"
+                  : "personas confirmadas"}
+              </p>
+            ) : null}
           </div>
+          <div className="flex flex-wrap items-center gap-3">
+            <NextLink href="/schedule" className={BTN_OUTLINE}>
+              <GlyphIcon name="calendar" size={18} />
+              Ver la agenda
+            </NextLink>
+            <NextLink href="/cfp" className={BTN_OUTLINE}>
+              <GlyphIcon name="send" size={18} />
+              Proponer una charla
+            </NextLink>
+          </div>
+        </div>
+      </section>
 
+      <section className="">
+        <div className={`${WRAP} pb-16 pt-4`}>
           {speakers.length === 0 ? (
-            <div className="flex flex-wrap items-center justify-between gap-5 border border-[var(--color-border-subtle)] p-7">
-              <div className="min-w-0">
-                <h2 className="m-0 mb-1.5 text-[19px] font-bold tracking-[-0.02em]">
-                  Pronto anunciamos a los speakers
-                </h2>
-                <p className="m-0 text-[14.5px] text-[var(--color-text-secondary)]">
-                  Estamos definiendo la grilla de oradores. Si querés
-                  participar, enviá tu propuesta desde la convocatoria de
-                  charlas.
-                </p>
+            <div className="flex flex-wrap items-center justify-between gap-6 pt-6">
+              <div className="flex min-w-0 max-w-[36rem] items-start gap-4">
+                <IconBadge name="mic" size="lg" />
+                <div>
+                  <h2 className="m-0 mb-2 font-display text-step-2 leading-[1.1]">
+                    Pronto anunciamos a los speakers
+                  </h2>
+                  <p className="m-0 text-step-0 text-[var(--color-text-secondary)]">
+                    Estamos definiendo la lista de oradores. Si querés
+                    participar, enviá tu propuesta desde la convocatoria de
+                    charlas.
+                  </p>
+                </div>
               </div>
-              <a
-                href={cfpHref}
-                className="inline-flex flex-none items-center whitespace-nowrap rounded-[4px] bg-[var(--color-action)] px-[26px] py-[13px] text-[15px] font-bold text-[var(--color-text-on-action)] transition hover:brightness-95"
-              >
+              <a href={cfpHref} className={TEXT_LINK}>
                 {cfpOpen ? "Enviar mi charla" : "Escribirnos"}
               </a>
             </div>
           ) : (
-            <div className="grid gap-7 [grid-template-columns:repeat(auto-fit,minmax(min(220px,100%),1fr))]">
-              {speakers.map((sp, i) => (
-                <article key={sp.id} className="min-w-0">
-                  <NextLink
-                    href={`${basePath}/${sp.slug}`}
-                    className="block text-[var(--color-text-primary)]"
-                  >
-                    <Frame
-                      label={sp.fullName}
-                      photo={sp.profilePicture ?? undefined}
-                      className="mb-3.5 aspect-[3/4] w-full"
-                      sizes="(min-width: 640px) 380px, 100vw"
-                    />
-                  </NextLink>
-                  <div className="flex items-baseline gap-2.5">
-                    <span className="flex-none font-mono text-[11px] text-[var(--color-text-muted)]">
-                      {String(i + 1).padStart(2, "0")}
-                    </span>
-                    <div className="min-w-0">
-                      <div className="flex flex-wrap items-center gap-2">
-                        <h2 className="m-0 text-[17px] font-bold tracking-[-0.02em]">
-                          <NextLink
-                            href={`${basePath}/${sp.slug}`}
-                            className="text-[var(--color-text-primary)] hover:text-[var(--color-accent)]"
-                          >
-                            {sp.fullName}
-                          </NextLink>
-                        </h2>
-                        {sp.isTopSpeaker ? (
-                          <span className="rounded-[3px] bg-[var(--color-surface-inverse)] px-[7px] py-[3px] font-mono text-[9.5px] uppercase tracking-[0.12em] text-[var(--color-text-on-inverse)]">
-                            Top speaker
-                          </span>
-                        ) : null}
-                      </div>
-                      {sp.tagLine ? (
-                        <p className="m-0 mt-[3px] text-[13px] text-[var(--color-text-muted)]">
-                          {sp.tagLine}
-                        </p>
-                      ) : null}
-                    </div>
+            <>
+              <SpeakersGrid
+                speakers={speakers}
+                eventInfo={eventInfo}
+                basePath={basePath}
+                grid={grid}
+              />
+              <div className="mt-16 flex flex-wrap items-center justify-between gap-6 rounded-[var(--radius-md)] bg-[var(--color-surface-muted)] p-6 sm:p-8">
+                <div className="flex min-w-0 max-w-[36rem] items-start gap-4">
+                  <IconBadge name="bulb" tone="solid" />
+                  <div>
+                    <h2 className="m-0 mb-2 font-display text-step-2 leading-[1.1]">
+                      ¿Querés estar en esta lista?
+                    </h2>
+                    <p className="m-0 text-step-0 text-[var(--color-text-secondary)]">
+                      {cfpOpen
+                        ? "La convocatoria de charlas sigue abierta. Enviá tu propuesta y sumate."
+                        : "La convocatoria de charlas está cerrada por ahora. Escribinos si querés participar en próximas ediciones."}
+                    </p>
                   </div>
-                </article>
-              ))}
-            </div>
-          )}
-
-          {speakers.length > 0 ? (
-            <div className="mt-14 flex flex-wrap items-center justify-between gap-5 border border-[var(--color-border-subtle)] p-7">
-              <div className="min-w-0">
-                <h2 className="m-0 mb-1.5 text-[19px] font-bold tracking-[-0.02em]">
-                  ¿Querés estar en esta lista?
-                </h2>
-                <p className="m-0 text-[14.5px] text-[var(--color-text-secondary)]">
-                  {cfpOpen
-                    ? "La convocatoria de charlas sigue abierta. Enviá tu propuesta y sumate a la grilla."
-                    : "La convocatoria de charlas está cerrada por ahora. Escribinos si querés participar en próximas ediciones."}
-                </p>
+                </div>
+                <a href={cfpHref} className={TEXT_LINK}>
+                  {cfpOpen ? "Enviar mi propuesta" : "Escribirnos"}
+                </a>
               </div>
-              <a
-                href={cfpHref}
-                className="inline-flex flex-none items-center whitespace-nowrap rounded-[4px] bg-[var(--color-action)] px-[26px] py-[13px] text-[15px] font-bold text-[var(--color-text-on-action)] transition hover:brightness-95"
-              >
-                {cfpOpen ? "Enviar mi propuesta" : "Escribirnos"}
-              </a>
-            </div>
-          ) : null}
+            </>
+          )}
         </div>
       </section>
     </>

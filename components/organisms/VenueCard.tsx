@@ -1,43 +1,29 @@
-// Venue card organism. Lays the venue out the way the rest of the AWS
-// Community Day family does it: the map takes the visual lead, and the
-// practical details sit beside it as separate cards (address, how to get
-// there, accessibility) with the map actions at the end.
-//
-// When `venue.embedMapUrl` is absent, a Placeholder of the same height keeps
-// the two columns balanced, so configuring the embed later causes no layout
-// shift. The embed host is restricted by the venue schema.
+// Venue card organism: name, address and the map link, with the embedded map
+// beside them. Without `venue.embedMapUrl` a Placeholder of the same height
+// keeps the layout stable. The embed host is restricted by the venue schema.
 
 import { Container } from "@/components/atoms/Container";
-import { Heading } from "@/components/atoms/Heading";
-import { Button } from "@/components/atoms/Button";
+import { GlyphIcon } from "@/components/atoms/GlyphIcon";
 import { Placeholder } from "@/components/atoms/Placeholder";
-import { GlyphIcon, type GlyphName } from "@/components/atoms/GlyphIcon";
+import { IconBadge } from "@/components/atoms/IconBadge";
+import { BTN_OUTLINE } from "@/components/molecules/SectionPrimitives";
 import type { Venue } from "@/lib/content/venue";
 
 type VenueCardProps = {
   venue: Venue;
 };
 
-function InfoCard({
-  glyph,
-  title,
-  children,
-}: {
-  glyph: GlyphName;
-  title: string;
-  children: React.ReactNode;
-}) {
+function DetailList({ title, items }: { title: string; items: string[] }) {
   return (
-    <div className="rounded-[var(--radius-lg)] border border-[var(--color-border-subtle)] bg-[var(--color-surface-elevated)] p-5">
-      <h3 className="mb-3 flex items-center gap-2 text-base font-bold">
-        <GlyphIcon
-          name={glyph}
-          size={18}
-          className="text-[var(--color-national-red-label)]"
-        />
-        {title}
-      </h3>
-      {children}
+    <div>
+      <h3 className="m-0 mb-3 text-step-1">{title}</h3>
+      <ul className="m-0 flex list-none flex-col gap-2 p-0">
+        {items.map((item, i) => (
+          <li key={i} className="text-base text-[var(--color-text-secondary)]">
+            {item}
+          </li>
+        ))}
+      </ul>
     </div>
   );
 }
@@ -46,11 +32,9 @@ export function VenueCard({ venue }: VenueCardProps) {
   return (
     <Container>
       <div className="grid gap-8 lg:grid-cols-[1.1fr_1fr] lg:gap-12">
-        {/* Map first on large screens, after the details on small ones, so a
-            phone shows the address before a 400px map. */}
         <div className="order-2 lg:order-1">
           {venue.embedMapUrl ? (
-            <div className="overflow-hidden rounded-[var(--radius-lg)] border border-[var(--color-border-subtle)] shadow-sm">
+            <div className="overflow-hidden rounded-[var(--radius-md)]">
               <iframe
                 src={venue.embedMapUrl}
                 loading="lazy"
@@ -68,65 +52,36 @@ export function VenueCard({ venue }: VenueCardProps) {
           )}
         </div>
 
-        <div className="order-1 flex flex-col gap-5 lg:order-2">
-          <div className="space-y-2">
-            <Heading level={2} visualLevel={3}>
-              {venue.name}
-            </Heading>
-            <p className="flex items-start gap-2 text-[var(--color-text-secondary)]">
-              <GlyphIcon
-                name="pin"
-                size={20}
-                className="mt-0.5 text-[var(--color-national-red-label)]"
-              />
-              {venue.address}
-            </p>
+        <div className="order-1 flex flex-col gap-6 lg:order-2">
+          <div className="flex items-start gap-4">
+            <IconBadge name="pin" />
+            <div className="min-w-0">
+              <h2 className="m-0 font-display text-step-2 leading-[1.1]">
+                {venue.name}
+              </h2>
+              <p className="m-0 mt-1 text-[var(--color-text-secondary)]">
+                {venue.address}
+              </p>
+            </div>
           </div>
 
           {venue.transport.length > 0 ? (
-            <InfoCard glyph="pin" title="Cómo llegar">
-              <ul className="space-y-2 text-sm text-[var(--color-text-secondary)]">
-                {venue.transport.map((t, i) => (
-                  <li key={i} className="flex items-start gap-2">
-                    <span
-                      aria-hidden="true"
-                      className="mt-[0.45rem] h-1.5 w-1.5 shrink-0 rounded-[var(--radius-pill)] bg-[var(--color-action)]"
-                    />
-                    {t}
-                  </li>
-                ))}
-              </ul>
-            </InfoCard>
+            <DetailList title="Cómo llegar" items={venue.transport} />
           ) : null}
 
           {venue.accessibility && venue.accessibility.length > 0 ? (
-            <InfoCard glyph="users" title="Accesibilidad">
-              <ul className="space-y-2 text-sm text-[var(--color-text-secondary)]">
-                {venue.accessibility.map((a, i) => (
-                  <li key={i} className="flex items-start gap-2">
-                    <span
-                      aria-hidden="true"
-                      className="mt-[0.45rem] h-1.5 w-1.5 shrink-0 rounded-[var(--radius-pill)] bg-[var(--color-tier-community)]"
-                    />
-                    {a}
-                  </li>
-                ))}
-              </ul>
-            </InfoCard>
+            <DetailList title="Accesibilidad" items={venue.accessibility} />
           ) : null}
 
-          <Button
-            as="a"
+          <a
             href={venue.mapUrl}
             target="_blank"
             rel="noopener noreferrer"
-            variant="primary"
-            size="lg"
-            shape="pill"
-            className="self-start"
+            className={`${BTN_OUTLINE} self-start`}
           >
+            <GlyphIcon name="external" size={20} />
             Ver en el mapa
-          </Button>
+          </a>
         </div>
       </div>
     </Container>

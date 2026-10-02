@@ -62,7 +62,7 @@ describe("HomeTemplate edition links", () => {
       "/editions/2026/speakers/ada-lovelace"
     );
 
-    const allLinks = screen.getAllByRole("link", { name: "Ver todos →" });
+    const allLinks = screen.getAllByRole("link", { name: "Ver todos" });
     expect(allLinks.map((link) => link.getAttribute("href"))).toEqual([
       "/editions/2026/speakers",
       "/editions/2026/sponsors",

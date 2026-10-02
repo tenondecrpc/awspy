@@ -1,15 +1,18 @@
-// Eventbrite registration button. Renders an anchor styled as a button that
-// opens the public Eventbrite event page in a new tab. We deliberately do not
-// embed the Eventbrite widget script: the AWS Community Days in Mexico and
-// Colombia (the regional reference points cited in research R2) both use a
-// plain external link, and skipping the widget eliminates third-party
-// JavaScript on the home and register pages.
+// Eventbrite registration button. Renders an anchor styled as the one orange
+// button that opens the public Eventbrite event page in a new tab. We
+// deliberately do not embed the Eventbrite widget script: a plain external link
+// keeps third-party JavaScript off the home and register pages.
 //
-// When the URL is missing, the component renders the "Registro proximamente"
+// When the URL is missing, the component renders the "Registro próximamente"
 // alternative with a mailto fallback so editors can ship the page before the
 // Eventbrite event is published.
 
-import { Button } from "@/components/atoms/Button";
+import { GlyphIcon } from "@/components/atoms/GlyphIcon";
+import {
+  BTN_OUTLINE,
+  BTN_PRIMARY,
+} from "@/components/molecules/SectionPrimitives";
+import { cn } from "@/lib/utils/cn";
 
 type EventbriteRegisterButtonProps = {
   eventbriteEventUrl: string | null;
@@ -28,34 +31,30 @@ export function EventbriteRegisterButton({
 }: EventbriteRegisterButtonProps) {
   if (!eventbriteEventUrl) {
     return (
-      <div className="flex flex-col items-center gap-3 text-center">
-        <p className="text-sm font-semibold text-[var(--color-text-secondary)]">
+      <div className="flex flex-col items-start gap-3">
+        <p className="m-0 text-sm font-semibold text-[var(--color-text-secondary)]">
           Registro próximamente
         </p>
-        <Button
-          as="a"
+        <a
           href={`mailto:${contactEmail}?subject=Avisame%20cuando%20abra%20el%20registro`}
-          variant="secondary"
-          size="md"
-          className={className}
+          className={cn(BTN_OUTLINE, className)}
         >
+          <GlyphIcon name="mail" size={20} />
           Avisame por mail
-        </Button>
+        </a>
       </div>
     );
   }
 
   return (
-    <Button
-      as="a"
+    <a
       href={eventbriteEventUrl}
       target="_blank"
       rel="noopener noreferrer"
-      variant="primary"
-      size="lg"
-      className={className}
+      className={cn(BTN_PRIMARY, className)}
     >
       {label}
-    </Button>
+      <GlyphIcon name="external" size={20} />
+    </a>
   );
 }

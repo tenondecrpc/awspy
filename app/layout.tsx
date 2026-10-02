@@ -1,27 +1,25 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Atkinson_Hyperlegible_Next, Young_Serif } from "next/font/google";
 import "./globals.css";
 import { SiteHeader } from "@/components/organisms/SiteHeader";
 import { SiteFooter } from "@/components/organisms/SiteFooter";
-import { KiroMascot } from "@/components/organisms/KiroMascot";
 import { GoogleAnalytics } from "@/components/atoms/GoogleAnalytics";
-// Disabled: the rectangular photo mascot fought the shaded Kiro ghost for the
-// same bottom-right corner. Keep the import commented so the ghost stands alone.
-// import { Mascot } from "@/components/atoms/Mascot";
 import { currentEdition } from "@/lib/content/editions";
 import { getEventInfo } from "@/lib/content/event-info";
-import { getFAQ } from "@/lib/content/faq";
 import { getSiteUrl } from "@/lib/utils/seo";
 import { getGaMeasurementId } from "@/lib/config/analytics";
 import { THEME_STORAGE_KEY } from "@/lib/theme";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+// Headlines: a single-weight old-style serif with some warmth. Body: a face
+// designed for legibility. Neither is the framework default.
+const displayFont = Young_Serif({
+  variable: "--font-display-next",
   subsets: ["latin"],
+  weight: "400",
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const bodyFont = Atkinson_Hyperlegible_Next({
+  variable: "--font-body-next",
   subsets: ["latin"],
 });
 
@@ -51,25 +49,33 @@ export default function RootLayout({
   // of which route inside the app loads.
   const editionYear = currentEdition();
   const eventInfo = getEventInfo(editionYear);
-  const faq = getFAQ(editionYear);
   // Unset outside production, so local and E2E builds load no analytics.
   const gaMeasurementId = getGaMeasurementId();
 
   return (
-    <html lang="es-PY" data-theme="light" suppressHydrationWarning>
+    // The font variables sit on <html>, not <body>: the theme tokens in
+    // globals.css (`--font-sans`, `--font-display`) are declared on :root and
+    // reference them, so they must be defined at that level or the whole
+    // declaration is invalid and the page falls back to the system font.
+    <html
+      lang="es-PY"
+      data-theme="light"
+      className={`${displayFont.variable} ${bodyFont.variable}`}
+      suppressHydrationWarning
+    >
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
       </head>
-      <body className={`${geistSans.variable} ${geistMono.variable}`}>
+      {/* Browser extensions (e.g. ColorZilla's `cz-shortcut-listen`) add
+          attributes to <body> before React hydrates; that is not a mismatch we
+          can fix, so the warning is silenced here only. */}
+      <body suppressHydrationWarning>
         <SiteHeader />
         <main>{children}</main>
         <SiteFooter
           eventInfo={eventInfo}
           analyticsEnabled={gaMeasurementId !== null}
         />
-        <KiroMascot faq={faq} />
-        {/* Disabled so the shaded Kiro ghost owns the bottom-right corner. */}
-        {/* <Mascot /> */}
         {gaMeasurementId && <GoogleAnalytics measurementId={gaMeasurementId} />}
       </body>
     </html>

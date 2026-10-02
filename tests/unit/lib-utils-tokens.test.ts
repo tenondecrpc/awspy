@@ -28,13 +28,6 @@ const REQUIRED_TOKENS = [
   "--color-surface-hero",
   "--color-overlay",
   "--color-scrim-strong",
-  "--color-glass",
-  "--color-glass-border",
-  // Decorative glow: only ever the outer stop of a box-shadow, so these
-  // carry no contrast pair.
-  "--color-glow-action",
-  "--color-glow-accent",
-  "--color-glow-red",
   // Text
   "--color-text-primary",
   "--color-text-secondary",

@@ -52,12 +52,17 @@ describe("SponsorsTemplate", () => {
       screen.getByText(/Todavía no hay sponsors confirmados/)
     ).toBeInTheDocument();
 
-    // One frame per packaged tier, routed to the package table.
+    // One open tier per packaged tier, routed to the package table.
     const packages = SPONSORSHIP?.packages ?? [];
     expect(packages.length).toBeGreaterThan(0);
-    const row = screen.getByRole("link", { name: /^Tu logo aquí/ });
-    expect(row).toHaveAttribute("href", "#paquetes");
-    expect(row.children).toHaveLength(packages.length);
+    expect(
+      screen.getByText(
+        new RegExp(`Quedan ${packages.length} niveles de patrocinio abiertos`)
+      )
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("link", { name: "Sumá tu organización" })
+    ).toHaveAttribute("href", "#paquetes");
   });
 
   it("names every package and its benefits but never an amount", () => {
@@ -144,10 +149,10 @@ describe("SponsorsTemplate", () => {
     );
 
     expect(
-      screen.getByRole("heading", { name: "Sumate como sponsor" })
+      screen.getByRole("heading", { name: "¿Querés ser sponsor?" })
     ).toBeInTheDocument();
     expect(
-      screen.queryByRole("link", { name: /^Tu logo aquí/ })
+      screen.queryByRole("link", { name: "Sumá tu organización" })
     ).not.toBeInTheDocument();
   });
 

@@ -35,10 +35,10 @@
   --color-national-red-on-dark: #ff5566;
 
   /* Surfaces */
-  --color-surface: #ffffff;
-  --color-surface-muted: #eef2fd;
-  --color-surface-warm: #fff6e8;
-  --color-surface-elevated: #ffffff;
+  --color-surface: #f7f2e8; /* paper: the page ground, warm like print */
+  --color-surface-muted: #ece3d0; /* a deeper sheet of the same paper */
+  --color-surface-warm: #f4e6d2;
+  --color-surface-elevated: #ffffff; /* white card laid on the paper */
   --color-surface-inverse: #08152f;
   --color-surface-hero: #000c2f;
   --color-overlay: #000c2fb3;
@@ -48,19 +48,13 @@
      surface stays light in both themes and the logo keeps its own ink. */
   --color-surface-logo-plate: #ffffff;
 
-  /* Scrims, glass panels, and decorative glow. Always paired with a
-     text label; never the only carrier of meaning. */
+  /* Scrim behind the mobile drawer. Flat, never a gradient or a blur. */
   --color-scrim-strong: #000c2feb;
-  --color-glass: #ffffff14;
-  --color-glass-border: #ffffff3d;
-  --color-glow-action: #ff990052;
-  --color-glow-accent: #0038a852;
-  --color-glow-red: #f02f3b52;
 
   /* Text */
   --color-text-primary: #08152f;
   --color-text-secondary: #34415f;
-  --color-text-muted: #5b647a;
+  --color-text-muted: #4f586e;
   --color-text-on-action: #08152f;
   --color-text-on-accent: #ffffff;
   --color-text-on-inverse: #ffffff;
@@ -75,13 +69,13 @@
   --color-text-on-tier: #ffffff;
 
   /* Borders */
-  --color-border-subtle: #dfe4f2;
-  --color-border-strong: #5b647a;
+  --color-border-subtle: #d6cbb3;
+  --color-border-strong: #4f586e;
 
   /* State */
   --color-focus: #0a4db8;
   --color-focus-on-hero: #ff5566;
-  --color-success: #1f7a3a;
+  --color-success: #1a6d32;
   --color-success-soft: #e5f5ea;
   --color-warning: #965000;
   --color-warning-soft: #fff1dd;
@@ -113,11 +107,37 @@
   --container-max: 1200px;
   --container-padding: 1.5rem;
 
-  /* Radius */
-  --radius-sm: 0.375rem;
-  --radius-md: 0.625rem;
-  --radius-lg: 1rem;
+  /* Radius: square-cornered like a printed page. The pill stays only for
+     the registration button. */
+  --radius-sm: 0.125rem;
+  --radius-md: 0.1875rem;
+  --radius-lg: 0.25rem;
   --radius-pill: 9999px;
+
+  /* Typefaces. Display = Young Serif (headlines only, one weight, never
+     faux-bolded). Body = Atkinson Hyperlegible Next. Both are loaded in
+     app/layout.tsx. */
+  --font-display: var(--font-display-next), "Iowan Old Style", Georgia, serif;
+  --font-sans: var(--font-body-next), system-ui, "Segoe UI", sans-serif;
+
+  /* Fluid type scale. Each step follows the viewport WIDTH (vw) and is also
+     capped by the viewport HEIGHT (svh), so a wide but short window, such as
+     a laptop with browser bars showing, shrinks the type instead of
+     overflowing. The rem floor keeps text legible and honors the user's
+     browser font size; the rem ceiling stops growth on large screens. On
+     phones and tall windows the svh term never binds. */
+  --text-step--1: clamp(0.8125rem, min(0.86rem + 0.08vw, 2.4svh), 0.9375rem);
+  --text-step-0: clamp(0.9375rem, min(0.97rem + 0.15vw, 2.7svh), 1.125rem);
+  --text-step-1: clamp(1.0625rem, min(1.15rem + 0.5vw, 3.4svh), 1.5rem);
+  --text-step-2: clamp(1.25rem, min(1.4rem + 1.1vw, 4.9svh), 2.25rem);
+  --text-step-3: clamp(1.75rem, min(1.6rem + 2vw, 8.2svh), 3.25rem);
+  --text-step-4: clamp(2.25rem, min(1.6rem + 4.2vw, 11svh), 5.25rem);
+
+  /* Touch target and section rhythm. */
+  --size-touch: 2.75rem;
+  /* Rhythm of an inner-page section. Deliberately tight: these pages are
+     read, not toured, and the home page uses its own `.fit-screen` rhythm. */
+  --space-section-y: clamp(2rem, min(1.25rem + 3vw, 7svh), 4rem);
 }
 
 /* Light is the default. Dark applies only via the explicit
@@ -151,11 +171,6 @@ html[data-theme="dark"] {
   /* Deliberately not darkened: see the light theme's note. */
   --color-surface-logo-plate: #ffffff;
   --color-scrim-strong: #01051deb;
-  --color-glass: #ffffff14;
-  --color-glass-border: #ffffff33;
-  --color-glow-action: #ff99003d;
-  --color-glow-accent: #74a8ff3d;
-  --color-glow-red: #ff4b5b3d;
   --color-text-primary: #f7f8ff;
   --color-text-secondary: #c5ccea;
   --color-text-muted: #9aa5ca;
@@ -210,16 +225,52 @@ html[data-theme="dark"] {
 body {
   background: var(--color-surface);
   color: var(--color-text-primary);
-  font-family:
-    var(--font-geist-sans),
-    system-ui,
-    -apple-system,
-    "Segoe UI",
-    Roboto,
-    Helvetica,
-    Arial,
-    sans-serif;
-  line-height: 1.55;
+  font-family: var(--font-sans);
+  font-size: var(--text-step-0);
+  line-height: 1.6;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Page and section titles (h1, h2) use the display serif, which ships in a
+   single weight. Faux bold would smear it, so synthesis is off and they stay
+   at 400. Item titles (h3, h4) are the body face in semibold: a serif on every
+   list entry made the pages noisy. */
+:where(h1, h2) {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-synthesis: none;
+  text-wrap: balance;
+}
+
+:where(h3, h4) {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  text-wrap: balance;
+}
+
+/* No word is left alone on the last line (an "orphan").
+ *
+ * `balance` evens out the length of every line of a block, which removes the
+ * stray last word outright. It is inherited, so one rule on `body` covers the
+ * short blocks that make up almost all of this site: titles, taglines, list
+ * items, room names, descriptions. Browsers apply it to blocks of up to about
+ * six lines and leave longer ones alone.
+ *
+ * Long running text (biographies, the code of conduct, the privacy notice)
+ * opts into `pretty` with `.prose-flow`, which only tidies the last lines and
+ * keeps a natural ragged edge on a long measure. */
+body {
+  text-wrap: balance;
+}
+
+.prose-flow,
+.prose-flow :where(p, li, dd) {
+  text-wrap: pretty;
+}
+
+/* A phone number, a time range or a date must never be split across lines. */
+:where(a[href^="tel:"], time) {
+  white-space: nowrap;
 }
 
 /* Visible focus ring for every interactive element. */
@@ -281,6 +332,63 @@ html[data-theme="dark"] .theme-toggle__moon {
   }
 }
 
+/* Full-screen sections (home page).
+ *
+ * Each `.fit-screen` section fills the visible area below the sticky header and
+ * centres its content, so on a laptop one section is one screen.
+ *
+ * - `svh` (small viewport height) never exceeds the visible area, even with the
+ *   browser's own bars showing; `dvh` would resize while scrolling and jitter.
+ * - `min-height`, not `height`: a section whose content is taller than the
+ *   screen (large text zoom, a short window) grows instead of overflowing onto
+ *   the next one.
+ * - Snapping is `proximity`: it settles on a section when the scroll ends near
+ *   it, but never traps someone inside a tall section the way `mandatory` can.
+ * - Only on wide, tall-enough viewports. Phones, portrait tablets and short
+ *   landscape windows get the natural flow.
+ *
+ * `--header-h` is the sticky header: a 4rem bar plus its 6px flag rule.
+ * Every threshold below is in rem, so it follows the user's font size.
+ */
+:root {
+  --header-h: 4.4375rem;
+}
+
+@media (min-width: 64rem) and (min-height: 37.5rem) {
+  html {
+    scroll-snap-type: y proximity;
+    scroll-padding-top: var(--header-h);
+  }
+
+  .fit-screen {
+    min-height: calc(100svh - var(--header-h));
+    scroll-snap-align: start;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  /* A section that already fits the screen on its own (the hero). */
+  .snap-here {
+    scroll-snap-align: start;
+  }
+}
+
+/* Drop list items that would not fit on a short, wide screen. `-short` is for
+   windows up to 55rem tall, `-shorter` up to 44rem. Nothing is hidden on
+   phones or tall windows. */
+@media (min-width: 64rem) and (max-height: 55rem) {
+  .hide-on-short {
+    display: none;
+  }
+}
+
+@media (min-width: 64rem) and (max-height: 44rem) {
+  .hide-on-shorter {
+    display: none;
+  }
+}
+
 /* Skip link helper. */
 .skip-link {
   position: absolute;
@@ -314,124 +422,3 @@ html[data-theme="dark"] .theme-toggle__moon {
   animation: skeleton-pulse 1.4s ease-in-out infinite;
 }
 
-/* Decorative pattern fade-in (suppressed by prefers-reduced-motion). */
-@keyframes pattern-fade-in {
-  from {
-    opacity: 0;
-  }
-
-  to {
-    opacity: var(--pattern-opacity, 0.08);
-  }
-}
-
-.decorative-pattern-fade {
-  animation: pattern-fade-in 0.2s ease-out forwards;
-}
-
-/* ---------------------------------------------------------------------------
-   Composite surface helpers.
-
-   These classes exist here (and not as Tailwind utilities in a component)
-   because they combine several color stops. Keeping them in this file
-   preserves the single-source-of-truth boundary enforced by
-   `local/no-color-literals`.
-   --------------------------------------------------------------------------- */
-
-/* Frosted panel used for the hero countdown boxes and eyebrow pills over
-   dark surfaces. */
-.glass-panel {
-  background: var(--color-glass);
-  border: 1px solid var(--color-glass-border);
-  -webkit-backdrop-filter: blur(8px);
-  backdrop-filter: blur(8px);
-}
-
-/* Portrait media card with an accent border that reacts to hover and to
-   keyboard focus anywhere inside it. Consumers set `--card-accent` and
-   `--card-glow` from palette tokens. */
-.media-card {
-  border: 1px solid var(--color-border-subtle);
-  transition:
-    transform 0.25s ease,
-    border-color 0.25s ease,
-    box-shadow 0.25s ease;
-}
-
-.media-card:hover,
-.media-card:focus-within {
-  transform: translateY(-6px);
-  border-color: var(--card-accent, var(--color-accent));
-  box-shadow:
-    0 0 0 1px var(--card-accent, var(--color-accent)),
-    0 22px 45px -20px var(--card-glow, var(--color-glow-accent));
-}
-
-/* Scrim that reveals secondary content (a talk title) over a photo. The
-   content stays in the DOM and in the accessibility tree at all times, so a
-   screen reader announces it regardless of the visual state. */
-.media-card__scrim {
-  background: linear-gradient(
-    to top,
-    var(--color-scrim-strong) 0%,
-    var(--color-overlay) 55%,
-    transparent 100%
-  );
-  opacity: 0;
-  transition: opacity 0.25s ease;
-}
-
-.media-card:hover .media-card__scrim,
-.media-card:focus-within .media-card__scrim {
-  opacity: 1;
-}
-
-/* Touch devices have no hover state, so the scrim is always visible there. */
-@media (hover: none) {
-  .media-card__scrim {
-    opacity: 1;
-  }
-}
-
-/* Custom scrollbar for the Kiro FAQ chat transcript. Lives here (not as a
-   Tailwind utility) because it sets color stops on scrollbar pseudo-elements,
-   which keeps the palette single-source-of-truth boundary intact. */
-.kiro-chat-scroll {
-  scrollbar-width: thin;
-  scrollbar-color: var(--color-border-strong) transparent;
-  /* Reaching the top or bottom of the transcript must not start scrolling the
-     page behind the chat. The panel handles the regions that do not scroll at
-     all; see `components/organisms/KiroMascot.tsx`. */
-  overscroll-behavior: contain;
-}
-
-.kiro-chat-scroll::-webkit-scrollbar {
-  width: 8px;
-}
-
-.kiro-chat-scroll::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-.kiro-chat-scroll::-webkit-scrollbar-thumb {
-  background: var(--color-border-subtle);
-  border-radius: var(--radius-pill);
-  border: 2px solid transparent;
-  background-clip: content-box;
-}
-
-.kiro-chat-scroll::-webkit-scrollbar-thumb:hover {
-  background: var(--color-accent);
-  background-clip: content-box;
-}
-
-/* AWS service-icon marquee on the home page. The global reduced-motion rule
-   above neutralizes the animation for users who prefer reduced motion. */
-@keyframes acd-marquee {
-  from {
-    transform: translateX(0);
-  }
-  to {
-    transform: translateX(-50%);
-  }
-}

@@ -13,6 +13,7 @@
 import { useId, useState } from "react";
 import { cn } from "@/lib/utils/cn";
 import type { FAQItem as FAQItemData } from "@/lib/content/faq";
+import { tieLast } from "@/lib/utils/typography";
 
 type FAQItemProps = {
   item: FAQItemData;
@@ -35,23 +36,38 @@ export function FAQItem({
   return (
     <div
       className={cn(
-        "rounded-[var(--radius-lg)] border border-[var(--color-surface-muted)] bg-[var(--color-surface)]",
+        "rounded-[var(--radius-md)] bg-[var(--color-surface-elevated)]",
         className
       )}
     >
-      <h3>
+      <h3 className="m-0">
         <button
           id={triggerId}
           type="button"
           aria-expanded={open}
           aria-controls={panelId}
           onClick={() => setOpen((v) => !v)}
-          className="flex w-full items-center justify-between gap-4 px-4 py-3 text-left font-semibold"
+          className="flex min-h-14 w-full items-center justify-between gap-4 rounded-[var(--radius-md)] px-5 py-4 text-left font-semibold text-step-0 leading-[1.3] text-[var(--color-text-primary)]"
         >
-          <span>{item.question}</span>
-          <span aria-hidden="true" className="text-[var(--color-accent)]">
-            {open ? "-" : "+"}
-          </span>
+          <span>{tieLast(item.question)}</span>
+          <svg
+            aria-hidden="true"
+            focusable="false"
+            width={22}
+            height={22}
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth={1.75}
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            className={cn(
+              "shrink-0 transition-transform duration-150",
+              open && "rotate-180"
+            )}
+          >
+            <path d="m6 9 6 6 6-6" />
+          </svg>
         </button>
       </h3>
       <div
@@ -59,9 +75,9 @@ export function FAQItem({
         role="region"
         aria-labelledby={triggerId}
         hidden={!open}
-        className="px-4 pb-4 text-[var(--color-text-secondary)]"
+        className="px-5 pb-5 pr-10 text-step-0 leading-[1.6] text-[var(--color-text-secondary)]"
       >
-        <p>{item.answer}</p>
+        <p className="m-0">{tieLast(item.answer)}</p>
       </div>
     </div>
   );

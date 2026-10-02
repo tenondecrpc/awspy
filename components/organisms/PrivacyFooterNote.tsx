@@ -13,6 +13,7 @@
 // underlined. On light surfaces (`tone="default"`) the Link atom's blue is
 // used as before.
 
+import NextLink from "next/link";
 import { Link } from "@/components/atoms/Link";
 
 type PrivacyFooterNoteProps = {
@@ -66,6 +67,21 @@ function GoogleLink({ tone }: { tone: "default" | "inverse" }) {
   );
 }
 
+function PrivacyPageLink({ tone }: { tone: "default" | "inverse" }) {
+  return (
+    <NextLink
+      href="/privacy"
+      className={
+        tone === "inverse"
+          ? INVERSE_LINK_CLASS
+          : "font-semibold text-[var(--color-accent)] underline underline-offset-2"
+      }
+    >
+      Cómo tratamos la privacidad
+    </NextLink>
+  );
+}
+
 export function PrivacyFooterNote({
   tone = "default",
   analytics = false,
@@ -83,7 +99,7 @@ export function PrivacyFooterNote({
         compra de entradas se hacen a través de <EventbriteLink tone={tone} />{" "}
         según su política de privacidad. Las postulaciones de voluntariado se
         realizan mediante Google Forms. Google Analytics y Google Forms están
-        sujetos a la <GoogleLink tone={tone} />.
+        sujetos a la <GoogleLink tone={tone} />. <PrivacyPageLink tone={tone} />.
       </p>
     );
   }
@@ -93,7 +109,7 @@ export function PrivacyFooterNote({
       Este sitio no recopila datos personales. El registro y la compra de
       entradas se hacen a través de <EventbriteLink tone={tone} /> según su
       política de privacidad. Las postulaciones de voluntariado se realizan
-      mediante Google Forms y están sujetas a la <GoogleLink tone={tone} />.
+      mediante Google Forms y están sujetas a la <GoogleLink tone={tone} />. <PrivacyPageLink tone={tone} />.
     </p>
   );
 }

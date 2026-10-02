@@ -16,27 +16,31 @@ function sponsor(overrides: Partial<Sponsor> = {}): Sponsor {
 }
 
 describe("SponsorLogoSlots", () => {
-  it("draws one empty frame per open slot behind a single link", () => {
+  it("invites with one sentence and a single link to the given href", () => {
     render(<SponsorLogoSlots count={3} href="#paquetes" />);
 
-    const links = screen.getAllByRole("link");
-    expect(links).toHaveLength(1);
-    const row = screen.getByRole("link", {
-      name: "Tu logo aquí: sumate como sponsor",
-    });
-    expect(row).toHaveAttribute("href", "#paquetes");
-    expect(row.children).toHaveLength(3);
-    Array.from(row.children).forEach((frame) => {
-      expect(frame).toHaveTextContent("Tu logo aquí");
-      expect(frame).toHaveAttribute("aria-hidden", "true");
-    });
+    expect(screen.getAllByRole("link")).toHaveLength(1);
+    expect(screen.getByText(/Quedan 3 niveles de patrocinio abiertos/)).toBeInTheDocument();
+    expect(
+      screen.getByRole("link", { name: "Sumá tu organización" })
+    ).toHaveAttribute("href", "#paquetes");
+  });
+
+  it("uses the singular when one tier is left", () => {
+    render(<SponsorLogoSlots count={1} href="/sponsors" />);
+
+    expect(
+      screen.getByText(/Queda un nivel de patrocinio abierto/)
+    ).toBeInTheDocument();
+    expect(screen.getByRole("link")).toHaveAttribute("href", "/sponsors");
   });
 
   it("names no tier and no amount, so the invitation never quotes a price", () => {
-    render(<SponsorLogoSlots count={4} href="/sponsors" />);
+    const { container } = render(<SponsorLogoSlots count={4} href="/sponsors" />);
 
-    const row = screen.getByRole("link");
-    expect(row.textContent).toBe("Tu logo aquí".repeat(4));
+    expect(container.textContent).toBe(
+      "Quedan 4 niveles de patrocinio abiertos. Sumá tu organización"
+    );
   });
 
   it("renders nothing when there is no room left", () => {

@@ -11,8 +11,8 @@
 //
 // The filter is a set of toggle buttons rather than an ARIA tablist: every
 // button is a normal tab stop, `aria-pressed` says which one is on, and
-// there is no roving-tabindex behaviour to get subtly wrong. The room name
-// is always spelled out, so the choice never rests on the accent color.
+// there is no roving-tabindex behaviour to get subtly wrong. The pressed
+// button is filled and bordered, so the choice never rests on color alone.
 
 "use client";
 
@@ -161,12 +161,12 @@ export function ScheduleGridOrganism({
   }
 
   return (
-    <div className="space-y-12">
+    <div className="space-y-14">
       {rooms.length > 1 ? (
         <div
           role="group"
           aria-label="Filtrar la agenda por sala"
-          className="-mx-1 flex flex-wrap gap-2 overflow-x-auto px-1 pb-1"
+          className="-mx-1 flex snap-x snap-proximity gap-2 overflow-x-auto px-1 pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
         >
           {[ALL_ROOMS, ...rooms].map((value) => {
             const selected =
@@ -178,10 +178,10 @@ export function ScheduleGridOrganism({
                 aria-pressed={selected}
                 onClick={() => setRoom(value)}
                 className={cn(
-                  "whitespace-nowrap rounded-[var(--radius-pill)] border px-4 py-2 text-sm font-semibold transition",
+                  "min-h-[var(--size-touch)] shrink-0 snap-start whitespace-nowrap rounded-[var(--radius-sm)] border-2 px-4 text-step--1 font-semibold transition-colors",
                   selected
-                    ? "border-[var(--color-accent)] bg-[var(--color-accent)] text-[var(--color-text-on-accent)]"
-                    : "border-[var(--color-border-subtle)] text-[var(--color-text-secondary)] hover:border-[var(--color-accent)] hover:text-[var(--color-accent)]"
+                    ? "border-[var(--color-text-primary)] bg-[var(--color-text-primary)] text-[var(--color-surface)]"
+                    : "border-[var(--color-border-subtle)] bg-[var(--color-surface-elevated)] text-[var(--color-text-primary)] hover:border-[var(--color-text-primary)]"
                 )}
               >
                 {value === ALL_ROOMS ? "Todas las salas" : value}
@@ -196,7 +196,7 @@ export function ScheduleGridOrganism({
           key={day.dayKey}
           aria-labelledby={`schedule-day-${day.dayKey}`}
         >
-          <div className="mb-6 flex flex-wrap items-center gap-4">
+          <div className="mb-6 flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1">
             <Heading
               id={`schedule-day-${day.dayKey}`}
               level={2}
@@ -205,16 +205,12 @@ export function ScheduleGridOrganism({
             >
               {formatDate(day.representative)}
             </Heading>
-            <span
-              aria-hidden="true"
-              className="h-1 min-w-12 flex-1 rounded-[var(--radius-pill)] bg-[var(--color-border-subtle)]"
-            />
-            <span className="text-sm font-semibold text-[var(--color-text-muted)]">
+            <span className="text-step--1 text-[var(--color-text-secondary)]">
               {day.slots.length}{" "}
               {day.slots.length === 1 ? "actividad" : "actividades"}
             </span>
           </div>
-          <ul className="space-y-4">
+          <ul className="m-0 list-none p-0">
             {day.slots.map((slot) => (
               <li key={slot.id}>
                 <ScheduleSlot

@@ -189,7 +189,7 @@ describe("ScheduleTemplate", () => {
     ).not.toBeInTheDocument();
   });
 
-  it("credits each session to its speakers, portrait first", () => {
+  it("credits each session to its speakers as a plain line", () => {
     const { container } = render(
       <ScheduleTemplate
         grid={GRID}
@@ -206,13 +206,8 @@ describe("ScheduleTemplate", () => {
     expect(
       screen.getByRole("link", { name: "Ana Perez" }).closest("p")
     ).toHaveTextContent(/^Por Ana Perez$/);
-    const portraits = Array.from(container.querySelectorAll("img"));
-    expect(portraits).toHaveLength(1);
-    // Decorative: the name is spelled out right after it.
-    expect(portraits[0]).toHaveAttribute("alt", "");
-    expect(portraits[0].getAttribute("src")).toContain(
-      encodeURIComponent("https://cdn.sessionize.com/image/ana.jpg")
-    );
+    // No avatars: the names carry the credit.
+    expect(container.querySelectorAll("img")).toHaveLength(0);
   });
 
   it("lists every co-speaker of a session as one sentence", () => {

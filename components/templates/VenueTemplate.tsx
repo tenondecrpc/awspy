@@ -1,19 +1,16 @@
-// Venue page, rebuilt from scratch to reproduce the "Sede" mockup
-// (`AWS Community Day Paraguay (colored)/Sede.dc.html`) 1:1 — same sections,
-// same order, same colors (via exact design tokens), same spacing.
-//
-// The venue name, address, embedded map, external map link, transport notes,
-// and accessibility notes are wired to the real `venue` prop. Sections backed
-// by arrays (transport, accessibility) render the real arrays and collapse
-// when empty. The fixed facts panel and photo gallery mirror the mockup's
-// static presentational content.
+// Venue page: where, how to get there, what is there. The top block puts the
+// name, address and the three facts (where, day, hours) beside the facade
+// photo; the map gets the full width below. Transport and accessibility are
+// wired to the real `venue` arrays and render only when they have content:
+// nothing is invented to fill a block the organizers have not written yet.
 
 import venuePhoto from "@/public/assets/venue/cover.jpg";
+import { GlyphIcon, type GlyphName } from "@/components/atoms/GlyphIcon";
+import { IconBadge } from "@/components/atoms/IconBadge";
 import {
+  BTN_OUTLINE,
   Frame,
-  NumberHeading,
-  PageHeader,
-  SECTION_BORDER,
+  SectionTitle,
   WRAP,
 } from "@/components/molecules/SectionPrimitives";
 import { formatDate, formatTime } from "@/lib/utils/datetime";
@@ -25,178 +22,171 @@ type VenueTemplateProps = {
   eventInfo: EventInfo;
 };
 
-/** Conventional venue photo path (see `public/assets/README.md`). Swapping the
- *  image is replacing that file; no code change required. The static import
- *  means the build hashes whatever that file currently holds, so a replacement
- *  gets a fresh URL instead of waiting out the optimizer's cache TTL. */
+/** Swapping the photo is replacing `public/assets/venue/cover.jpg`; the static
+ *  import hashes whatever the file holds, so a new photo gets a fresh URL. */
 const VENUE_PHOTO = venuePhoto;
 
-const GALLERY = [
-  "Auditorio",
-  "Sala de taller",
-  "Espacio de networking",
-  "Ingreso / acreditación",
-];
+function Fact({
+  icon,
+  label,
+  children,
+}: {
+  icon: GlyphName;
+  label: string;
+  children: string;
+}) {
+  return (
+    <li className="flex items-center gap-4">
+      <IconBadge name={icon} />
+      <div className="min-w-0">
+        <p className="m-0 text-sm text-[var(--color-text-muted)]">{label}</p>
+        <p className="m-0 text-step-0 font-semibold leading-snug text-[var(--color-text-primary)]">
+          {children}
+        </p>
+      </div>
+    </li>
+  );
+}
+
+function InfoCard({
+  icon,
+  title,
+  items,
+}: {
+  icon: GlyphName;
+  title: string;
+  items: string[];
+}) {
+  return (
+    <section className="min-w-0 rounded-[var(--radius-md)] bg-[var(--color-surface-elevated)] p-6">
+      <div className="mb-4 flex items-center gap-3">
+        <IconBadge name={icon} />
+        <h3 className="m-0 text-step-1">{title}</h3>
+      </div>
+      <ul className="m-0 flex list-none flex-col gap-3 p-0">
+        {items.map((item, i) => (
+          <li
+            key={i}
+            className="text-step-0 leading-[1.55] text-[var(--color-text-secondary)]"
+          >
+            {item}
+          </li>
+        ))}
+      </ul>
+    </section>
+  );
+}
 
 export function VenueTemplate({ venue, eventInfo }: VenueTemplateProps) {
-  const details: Array<[string, string]> = [
-    ["Fecha", formatDate(eventInfo.dates.start)],
-    [
-      "Horario",
-      `${formatTime(eventInfo.dates.start)} – ${formatTime(eventInfo.dates.end)}`,
-    ],
-    ["Acreditación", "Hall de ingreso"],
-    ["Salas", "Guaraní · Ñandútí · Taller"],
-  ];
+  const hasExtras =
+    venue.transport.length > 0 || venue.accessibility.length > 0;
 
   return (
     <>
-      <PageHeader
-        eyebrow="Ubicación"
-        title="Sede"
-        description="Dónde nos vemos para el AWS Community Day Paraguay."
-      />
-
-      {/* ── Venue detail: photo + facts ──────────────────────── */}
-      <section className={SECTION_BORDER}>
-        <div className="grid items-stretch [grid-template-columns:repeat(auto-fit,minmax(min(340px,100%),1fr))]">
-          <div className="relative min-h-[420px] min-w-0 border-b border-[var(--color-border-subtle)] lg:border-b-0 lg:border-r">
-            <Frame
-              label={`Fachada de ${venue.name}`}
-              photo={VENUE_PHOTO}
-              className="h-full w-full"
-              // Measured cover-rendered widths for this 16:9 photo in a
-              // 420px-tall panel: 741px on a phone, 932-1043px above it.
-              sizes="(min-width: 768px) 1050px, 750px"
-              preload
-            />
-          </div>
-          <div className="flex min-w-0 flex-col justify-center px-7 py-14 lg:px-10">
-            <h2 className="m-0 mb-3 text-[clamp(24px,3vw,34px)] font-extrabold leading-[1.08] tracking-[-0.035em] text-[var(--color-text-primary)]">
+      <section id="contenido-principal">
+        <div
+          className={`${WRAP} grid items-center gap-x-14 gap-y-8 py-[clamp(1.5rem,5svh,3.5rem)] lg:grid-cols-[minmax(0,1fr)_minmax(0,1.15fr)]`}
+        >
+          <div className="min-w-0">
+            <h1 className="m-0 font-display text-step-3 leading-[1.05] tracking-[-0.01em] text-[var(--color-text-primary)]">
+              Sede
+            </h1>
+            <p className="m-0 mt-3 text-step-1 font-semibold leading-snug text-[var(--color-text-primary)]">
               {venue.name}
-            </h2>
-            <p className="m-0 mb-[26px] max-w-[30rem] text-[16px] text-[var(--color-text-secondary)]">
-              {venue.address}
             </p>
-            <dl className="m-0 mb-7 max-w-[30rem] border-t border-[var(--color-text-primary)]">
-              {details.map(([k, v]) => (
-                <div
-                  key={k}
-                  className="flex justify-between gap-4 border-b border-[var(--color-border-subtle)] py-[13px]"
-                >
-                  <dt className="text-[14px] text-[var(--color-text-muted)]">
-                    {k}
-                  </dt>
-                  <dd className="m-0 text-[14.5px] font-semibold text-[var(--color-text-primary)]">
-                    {v}
-                  </dd>
-                </div>
-              ))}
-            </dl>
-            <div className="flex flex-wrap gap-2.5">
+
+            <ul className="m-0 mt-7 flex list-none flex-col gap-5 p-0">
+              <Fact icon="pin" label="Dirección">
+                {venue.address}
+              </Fact>
+              <Fact icon="calendar" label="Fecha">
+                {formatDate(eventInfo.dates.start)}
+              </Fact>
+              <Fact icon="clock" label="Horario">
+                {`${formatTime(eventInfo.dates.start)} – ${formatTime(eventInfo.dates.end)}`}
+              </Fact>
+            </ul>
+
+            <div className="mt-8 flex flex-wrap gap-3">
               <a
                 href={venue.mapUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center whitespace-nowrap rounded-[4px] bg-[var(--color-surface-inverse)] px-[26px] py-[13px] text-[15px] font-semibold text-[var(--color-text-on-inverse)] transition-colors hover:bg-[var(--color-action)] hover:text-[var(--color-text-on-action)]"
+                className={BTN_OUTLINE}
               >
+                <GlyphIcon name="external" size={20} />
                 Abrir en Google Maps
               </a>
-              <a
-                href="#mapa"
-                className="inline-flex items-center whitespace-nowrap rounded-[4px] border-[1.5px] border-[var(--color-border-subtle)] px-[26px] py-[13px] text-[15px] font-semibold text-[var(--color-text-secondary)] transition-colors hover:border-[var(--color-text-primary)] hover:text-[var(--color-text-primary)]"
-              >
-                Ver el mapa acá
+              <a href="#mapa" className={BTN_OUTLINE}>
+                <GlyphIcon name="route" size={20} />
+                Cómo llegar
               </a>
             </div>
           </div>
+
+          <Frame
+            label={`Fachada de ${venue.name}`}
+            photo={VENUE_PHOTO}
+            className="aspect-video w-full rounded-[var(--radius-md)]"
+            sizes="(min-width: 1024px) 680px, 100vw"
+            preload
+          />
         </div>
       </section>
 
-      {/* ── 01 · Cómo llegar (map + transport) ───────────────── */}
-      <section id="mapa" className={SECTION_BORDER}>
-        <div className={`${WRAP} py-14`}>
-          <NumberHeading n="01" title="Cómo llegar" />
-          <div className="overflow-hidden border border-[var(--color-text-primary)] bg-[var(--color-surface-muted)]">
+      <section id="mapa" className="scroll-mt-24">
+        <div className={`${WRAP} pb-[var(--space-section-y)]`}>
+          <SectionTitle title="Cómo llegar" />
+          <div className="overflow-hidden rounded-[var(--radius-md)] bg-[var(--color-surface-muted)]">
             {venue.embedMapUrl ? (
               <iframe
                 title={`Mapa de la sede: ${venue.name}`}
                 src={venue.embedMapUrl}
                 loading="lazy"
                 referrerPolicy="no-referrer-when-downgrade"
-                className="block h-[420px] w-full border-0"
+                className="block h-[22rem] w-full border-0 sm:h-[24rem]"
               />
             ) : (
-              <Frame label="Mapa de la sede" className="h-[420px] w-full" />
+              <Frame label="Mapa de la sede" className="h-[22rem] w-full" />
             )}
           </div>
-          {venue.transport.length > 0 ? (
-            <div className="mt-7 grid border-l border-t border-[var(--color-border-subtle)] [grid-template-columns:repeat(auto-fit,minmax(min(260px,100%),1fr))]">
-              {venue.transport.map((t, i) => (
-                <div
-                  key={i}
-                  className="min-w-0 border-b border-r border-[var(--color-border-subtle)] px-[22px] py-5"
-                >
-                  <p className="m-0 font-mono text-[10.5px] uppercase tracking-[0.14em] text-[var(--color-text-muted)]">
-                    Cómo llegar
-                  </p>
-                  <p className="m-0 mt-1.5 text-[14.5px] text-[var(--color-text-primary)]">
-                    {t}
-                  </p>
-                </div>
-              ))}
-            </div>
-          ) : null}
         </div>
       </section>
 
-      {/* ── 02 · Accesibilidad ───────────────────────────────── */}
-      {venue.accessibility.length > 0 ? (
-        <section className={`${SECTION_BORDER} bg-[var(--color-surface-warm)]`}>
-          <div className={`${WRAP} py-14`}>
-            <NumberHeading n="02" title="Accesibilidad" />
-            <div className="grid border-t border-[var(--color-text-primary)] [grid-template-columns:repeat(auto-fit,minmax(min(280px,100%),1fr))]">
-              {venue.accessibility.map((a, i) => (
-                <div
-                  key={i}
-                  className="flex min-w-0 items-baseline gap-3 border-b border-[var(--color-border-subtle)] py-4 pr-[18px]"
-                >
-                  <span
-                    aria-hidden="true"
-                    className="flex-none font-mono text-[11px] text-[var(--color-success)]"
-                  >
-                    ✓
-                  </span>
-                  <span className="text-[15px] text-[var(--color-text-primary)]">
-                    {a}
-                  </span>
-                </div>
-              ))}
+      {hasExtras ? (
+        <section>
+          <div className={`${WRAP} pb-[var(--space-section-y)]`}>
+            <div className="grid gap-5 [grid-template-columns:repeat(auto-fit,minmax(min(320px,100%),1fr))]">
+              {venue.transport.length > 0 ? (
+                <InfoCard
+                  icon="route"
+                  title="Transporte"
+                  items={venue.transport}
+                />
+              ) : null}
+              {venue.accessibility.length > 0 ? (
+                <InfoCard
+                  icon="info"
+                  title="Accesibilidad"
+                  items={venue.accessibility}
+                />
+              ) : null}
             </div>
-            <p className="mt-5 text-[13.5px] text-[var(--color-text-muted)]">
-              ¿Necesitás una adaptación puntual? Escribinos a{" "}
-              <a
-                href="mailto:awscommunitydayparaguay@gmail.com"
-                className="font-semibold text-[var(--color-accent)]"
-              >
-                awscommunitydayparaguay@gmail.com
-              </a>{" "}
-              y lo resolvemos antes del evento.
-            </p>
+            {venue.accessibility.length > 0 ? (
+              <p className="m-0 mt-5 text-base text-[var(--color-text-secondary)]">
+                Si necesitás una adaptación puntual, escribinos a{" "}
+                <a
+                  href={`mailto:${eventInfo.contactEmail}`}
+                  className="font-semibold text-[var(--color-text-primary)] underline decoration-[var(--color-national-red)] decoration-2 underline-offset-4"
+                >
+                  {eventInfo.contactEmail}
+                </a>
+                .
+              </p>
+            ) : null}
           </div>
         </section>
       ) : null}
-
-      {/* ── Gallery ──────────────────────────────────────────── */}
-      <section>
-        <div className={`${WRAP} pb-[72px] pt-14`}>
-          <div className="grid gap-3.5 [grid-template-columns:repeat(auto-fit,minmax(min(220px,100%),1fr))]">
-            {GALLERY.map((g) => (
-              <Frame key={g} label={g} className="aspect-[4/3] w-full" />
-            ))}
-          </div>
-        </div>
-      </section>
     </>
   );
 }

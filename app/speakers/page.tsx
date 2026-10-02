@@ -2,7 +2,7 @@
 
 import { SpeakersTemplate } from "@/components/templates/SpeakersTemplate";
 import { currentEdition, getEdition } from "@/lib/content/editions";
-import { listSpeakers } from "@/lib/api/sessionize";
+import { getProgramme } from "@/lib/api/sessionize";
 import { buildPageMetadata } from "@/lib/utils/seo";
 
 export async function generateMetadata() {
@@ -17,6 +17,9 @@ export async function generateMetadata() {
 export default async function SpeakersPage() {
   const year = currentEdition();
   const { eventInfo } = getEdition(year);
-  const speakers = await listSpeakers(eventInfo.sessionizeEventId);
-  return <SpeakersTemplate speakers={speakers} eventInfo={eventInfo} />;
+  // The programme gives each speaker's talk its time and room.
+  const { grid, speakers } = await getProgramme(eventInfo.sessionizeEventId);
+  return (
+    <SpeakersTemplate speakers={speakers} eventInfo={eventInfo} grid={grid} />
+  );
 }

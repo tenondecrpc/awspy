@@ -26,6 +26,11 @@ import { getVenue } from "@/lib/content/venue";
 // still live code, so it is covered with a throwaway fixture whose name no
 // loader reads.
 const FIXTURE_NAME = "preview-fixture.json";
+
+// `editionFile` returns an OS path: backslashes on Windows. The assertions
+// below describe the path inside the repo, so they compare it with forward
+// slashes and pass on every platform.
+const posix = (path: string) => path.replaceAll("\\", "/");
 const FIXTURE_EXAMPLE = join(
   editionDir("2026"),
   "preview-fixture.example.json"
@@ -62,7 +67,7 @@ describe("editionFile", () => {
   describe("switched off", () => {
     it.each(["0", "false"])("serves the live file when set to %s", (value) => {
       vi.stubEnv("CONTENT_PREVIEW", value);
-      expect(editionFile("2026", FIXTURE_NAME)).toMatch(
+      expect(posix(editionFile("2026", FIXTURE_NAME))).toMatch(
         /content\/editions\/2026\/preview-fixture\.json$/
       );
     });
@@ -70,7 +75,7 @@ describe("editionFile", () => {
     it("switches off in a production build too", () => {
       vi.stubEnv("NODE_ENV", "production");
       vi.stubEnv("CONTENT_PREVIEW", "0");
-      expect(editionFile("2026", FIXTURE_NAME)).toMatch(
+      expect(posix(editionFile("2026", FIXTURE_NAME))).toMatch(
         /content\/editions\/2026\/preview-fixture\.json$/
       );
     });
@@ -78,13 +83,13 @@ describe("editionFile", () => {
 
   describe("resolution", () => {
     it("falls back to the live file when no example sibling exists", () => {
-      expect(editionFile("2026", "faq.json")).toMatch(
+      expect(posix(editionFile("2026", "faq.json"))).toMatch(
         /content\/editions\/2026\/faq\.json$/
       );
     });
 
     it("leaves an extensionless name alone", () => {
-      expect(editionFile("2026", "LICENSE")).toMatch(
+      expect(posix(editionFile("2026", "LICENSE"))).toMatch(
         /content\/editions\/2026\/LICENSE$/
       );
     });
