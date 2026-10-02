@@ -119,8 +119,9 @@ export function CFPTemplate({ eventInfo, archived = false }: CFPTemplateProps) {
             Proponé una charla
           </h1>
           <p className="m-0 mb-8 max-w-[40rem] text-step-0 text-[var(--color-text-secondary)]">
-            No hace falta ser speaker profesional: hace falta tener algo para
-            contar.
+            Compartí tu experiencia con la comunidad. Buscamos charlas técnicas,
+            casos reales, talleres y lightning talks en español. No hace falta
+            ser speaker profesional: hace falta tener algo para contar.
           </p>
 
           <div className="grid items-stretch gap-6 lg:grid-cols-2">
@@ -199,9 +200,9 @@ export function CFPTemplate({ eventInfo, archived = false }: CFPTemplateProps) {
             ))}
           </ol>
           <p className="m-0 mt-8 max-w-[38rem] text-base text-[var(--color-text-secondary)]">
-            Después de enviar, el comité revisa cada propuesta y responde por
-            Sessionize. Si tu charla queda seleccionada, te pedimos confirmación
-            y datos para el perfil público.
+            El comité revisa cada propuesta y responde por Sessionize. Si tu
+            charla queda seleccionada, te pedimos confirmación y datos para el
+            perfil público.
           </p>
           <NextLink href="/speakers" className={TEXT_LINK}>
             Ver speakers confirmados

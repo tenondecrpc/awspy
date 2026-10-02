@@ -161,8 +161,9 @@ export function RegisterTemplate({
                   Entrada gratuita
                 </p>
                 <p className="m-0 mb-6 mt-2 text-base text-[var(--color-text-secondary)]">
-                  Reservá tu lugar en Eventbrite: solo necesitás un correo. El
-                  cupo es limitado.
+                  El acceso al evento es gratuito. Reservá tu lugar a través de
+                  Eventbrite: es un proceso rápido y solo necesitás un correo.
+                  El cupo es limitado.
                 </p>
                 <ul className="m-0 mb-7 grid list-none gap-3 p-0 sm:grid-cols-2">
                   <Fact icon="calendar">
@@ -177,14 +178,15 @@ export function RegisterTemplate({
                     {eventInfo.location.summary}
                   </Fact>
                   <Fact icon="ticket">Cupo limitado</Fact>
+                  <Fact icon="heart">Charlas, labs y café</Fact>
                 </ul>
                 <EventbriteRegisterButton
                   eventbriteEventUrl={eventInfo.eventbriteEventUrl}
                   contactEmail={eventInfo.contactEmail}
                   label="Reservar en Eventbrite"
-                  className="w-full sm:w-auto"
+                  className="w-full text-center"
                 />
-                <p className="m-0 mt-3 text-sm text-[var(--color-text-secondary)]">
+                <p className="m-0 mt-3 text-center text-sm text-[var(--color-text-secondary)]">
                   Se abre en una pestaña nueva
                 </p>
               </div>
@@ -233,8 +235,8 @@ export function RegisterTemplate({
           </ol>
           <p className="m-0 mt-6 max-w-[38rem] text-sm text-[var(--color-text-secondary)]">
             El registro lo gestiona Eventbrite bajo sus propias políticas de
-            privacidad. Este sitio no recolecta tus datos ni embebe scripts de
-            terceros.
+            privacidad. Este sitio no recibe datos de registro ni embebe scripts
+            de Eventbrite.
           </p>
         </div>
       </section>

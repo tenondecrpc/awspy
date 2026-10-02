@@ -31,13 +31,18 @@ export function EditionsIndexTemplate({
       <section>
         <div className={`${WRAP} ${SECTION_Y} !pt-4`}>
           {pastEditions.length === 0 ? (
-            <EmptyState
-              variant="schedule"
-              title="Aún no hay ediciones anteriores"
-              description="Esta es la primera edición del AWS Community Day Paraguay. Cuando termine, la vamos a archivar acá."
-              actionHref="/"
-              actionLabel="Volver al inicio"
-            />
+            <div>
+              <p className="m-0 mb-3 font-mono text-xs uppercase tracking-[0.12em] text-[var(--color-text-muted)]">
+                Sin ediciones anteriores
+              </p>
+              <EmptyState
+                variant="schedule"
+                title="Aún no hay ediciones anteriores"
+                description="Esta es la primera edición del AWS Community Day Paraguay. Cuando termine, vamos a archivarla acá con su agenda, sus speakers y sus sponsors."
+                actionHref="/"
+                actionLabel="Volver al inicio"
+              />
+            </div>
           ) : (
             <ul
               className="m-0 grid list-none gap-4 p-0 [grid-template-columns:repeat(auto-fit,minmax(min(260px,100%),1fr))]"

@@ -27,7 +27,7 @@ describe("FAQList", () => {
     ).toBeInTheDocument();
   });
 
-  it("opens the first item by default for visual context", () => {
+  it("shows every answer by default", () => {
     render(
       <FAQList
         items={[
@@ -42,7 +42,7 @@ describe("FAQList", () => {
     );
     expect(screen.getByRole("button", { name: "Pregunta 2" })).toHaveAttribute(
       "aria-expanded",
-      "false"
+      "true"
     );
   });
 });

@@ -90,7 +90,7 @@ export function CodeOfConductTemplate({
       <section id="contenido-principal">
         <div className={`${WRAP} pb-8 pt-[clamp(1.5rem,5svh,3.5rem)]`}>
           <h1 className="m-0 font-display text-step-3 leading-[1.05] tracking-[-0.01em] text-[var(--color-text-primary)]">
-            Código de conducta
+            Código de{"\u00a0"}conducta
           </h1>
           <p className="m-0 mt-3 max-w-[40rem] text-step-0 leading-[1.5] text-[var(--color-text-secondary)]">
             Un espacio seguro, inclusivo y respetuoso para toda la comunidad AWS

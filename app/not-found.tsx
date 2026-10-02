@@ -26,8 +26,8 @@ export default function NotFound() {
           Página no encontrada
         </h1>
         <p className="m-0 max-w-[32rem] text-step-0 leading-[1.5] text-[var(--color-text-secondary)]">
-          La página que buscás no existe o ya no está disponible. Volvamos al
-          camino.
+          La página que buscás no existe o ya no está disponible. Volvé al
+          inicio y desde ahí podés navegar a speakers, agenda, sponsors y más.
         </p>
         <nav aria-label="Otras páginas" className="flex flex-wrap gap-3 pt-2">
           <NextLink href="/" className={BTN_OUTLINE}>

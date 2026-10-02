@@ -21,8 +21,8 @@ export function FAQList({ items }: FAQListProps) {
   }
   return (
     <div className="flex flex-col gap-3">
-      {items.map((item, index) => (
-        <FAQItem key={item.id} item={item} defaultOpen={index === 0} />
+      {items.map((item) => (
+        <FAQItem key={item.id} item={item} defaultOpen />
       ))}
     </div>
   );

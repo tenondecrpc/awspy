@@ -45,6 +45,13 @@ export function SessionizeCFPCallout({ eventInfo }: SessionizeCFPCalloutProps) {
         {STATUS_COPY[cfpStatus]}
       </p>
 
+      {cfpStatus === "open" ? (
+        <p className="m-0 text-base text-[var(--color-text-secondary)]">
+          Estamos recibiendo propuestas de charlas, talleres y lightning talks.
+          Las charlas son en español. Animate a presentar la tuya.
+        </p>
+      ) : null}
+
       {cfpDeadline ? (
         <div>
           {showCountdown ? (

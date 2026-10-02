@@ -18,8 +18,7 @@ import { tieLast } from "@/lib/utils/typography";
 type FAQItemProps = {
   item: FAQItemData;
   className?: string;
-  /** When provided, the item starts open. Used for the first item on the
-   *  FAQ page to give the visitor immediate context. */
+  /** When provided, the item starts open. */
   defaultOpen?: boolean;
 };
 

@@ -1,11 +1,5 @@
-// Site-wide footer: a light band on the same paper as the page, one row for the
-// mark and the full navigation (including the destinations the condensed header
-// omits), one row for the contact and social links, and the small print: the
-// privacy notice (FR-036) and the community-organized disclaimer.
-//
-// It is deliberately quiet. The page content is what the person came for, so
-// the footer is a few lines of links, not a second poster at the bottom of
-// every page.
+// Site-wide footer: event context, complete navigation, contact details, and
+// the privacy notice (FR-036) on the same muted surface as the page.
 
 import { FlagRule } from "@/components/atoms/FlagRule";
 import NextLink from "next/link";
@@ -31,6 +25,8 @@ const SOCIAL_LABELS: Record<keyof NonNullable<EventInfo["social"]>, string> = {
 
 const LINK_CLASS =
   "inline-flex min-h-10 items-center text-sm text-[var(--color-text-secondary)] underline-offset-4 transition-colors hover:text-[var(--color-text-primary)] hover:underline";
+const HEADING_CLASS =
+  "m-0 font-mono text-xs font-semibold uppercase tracking-[0.12em] text-[var(--color-text-primary)]";
 
 // The destinations split into two lists, each its own landmark; the split is
 // presentational.
@@ -62,7 +58,7 @@ export function SiteFooter({
 
   return (
     <footer
-      className=" bg-[var(--color-surface-muted)] text-[var(--color-text-primary)]"
+      className="bg-[var(--color-surface-muted)] text-[var(--color-text-primary)]"
       role="contentinfo"
     >
       <FlagRule />
@@ -70,7 +66,7 @@ export function SiteFooter({
         <div className="flex flex-wrap items-center justify-between gap-x-10 gap-y-4 py-7">
           {/* Same two inks as the header: whichever is hidden by
               `display: none` is out of the accessibility tree too. */}
-          <span className="shrink-0">
+          <div className="min-w-0 max-w-[18rem] shrink-0">
             <Image
               src="/assets/logo-dark.png"
               alt="AWS Community Day Paraguay"
@@ -85,10 +81,17 @@ export function SiteFooter({
               height={139}
               className="brand-logo--dark h-8 w-auto"
             />
-          </span>
+            <p className="m-0 mt-3 text-sm text-[var(--color-text-secondary)]">
+              {eventInfo.tagline}
+            </p>
+            <p className="m-0 mt-2 font-mono text-xs font-semibold uppercase tracking-[0.12em] text-[var(--color-text-primary)]">
+              Entrada gratuita
+            </p>
+          </div>
 
           <div className="flex flex-wrap items-center gap-x-8 gap-y-1">
             <nav aria-label="Navegación del evento">
+              <p className={HEADING_CLASS}>Evento</p>
               <ul className="m-0 flex list-none flex-wrap gap-x-5 p-0">
                 {EVENT_NAV.map((entry) => (
                   <li key={entry.href}>
@@ -101,6 +104,7 @@ export function SiteFooter({
             </nav>
 
             <nav aria-label="Participar">
+              <p className={HEADING_CLASS}>Participar</p>
               <ul className="m-0 flex list-none flex-wrap gap-x-5 p-0">
                 {PARTICIPATE_NAV.map((entry) => (
                   <li key={entry.href}>
@@ -114,43 +118,46 @@ export function SiteFooter({
           </div>
         </div>
 
-        <div className="flex flex-wrap items-center gap-x-6 gap-y-1 py-3">
-          <a
-            href={`mailto:${eventInfo.contactEmail}`}
-            className="inline-block break-words py-2 text-sm font-semibold text-[var(--color-text-primary)] underline decoration-[var(--color-border-strong)] underline-offset-4 hover:decoration-[var(--color-text-primary)]"
-          >
-            {/* The address is one long token, so a narrow footer broke it
+        <div className="py-3">
+          <p className={HEADING_CLASS}>Contacto</p>
+          <div className="flex flex-wrap items-center gap-x-6 gap-y-1">
+            <a
+              href={`mailto:${eventInfo.contactEmail}`}
+              className="inline-block break-words py-2 text-sm font-semibold text-[var(--color-text-primary)] underline decoration-[var(--color-border-strong)] underline-offset-4 hover:decoration-[var(--color-text-primary)]"
+            >
+              {/* The address is one long token, so a narrow footer broke it
                 mid-word ("…gmail.co / m"). `<wbr>` offers the break after the
                 "@" instead; it adds no characters, so the link text and its
                 accessible name are unchanged. The link stays inline-block
                 (padding gives the touch height): as a flex container it would
                 turn the `<wbr>` into a separate item and split the name into
                 "…@ gmail.com". */}
-            {emailParts(eventInfo.contactEmail)}
-          </a>
-          {socialEntries.length === 0 ? (
-            <span className="text-sm text-[var(--color-text-muted)]">
-              Próximamente en redes
-            </span>
-          ) : (
-            <ul className="m-0 flex list-none flex-wrap gap-x-5 p-0">
-              {socialEntries.map(([key, url]) => (
-                <li key={key}>
-                  <a
-                    href={url as string}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className={LINK_CLASS}
-                  >
-                    {SOCIAL_LABELS[key]}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          )}
+              {emailParts(eventInfo.contactEmail)}
+            </a>
+            {socialEntries.length === 0 ? (
+              <span className="text-sm text-[var(--color-text-muted)]">
+                Próximamente en redes
+              </span>
+            ) : (
+              <ul className="m-0 flex list-none flex-wrap gap-x-5 p-0">
+                {socialEntries.map(([key, url]) => (
+                  <li key={key}>
+                    <a
+                      href={url as string}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className={LINK_CLASS}
+                    >
+                      {SOCIAL_LABELS[key]}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
         </div>
 
-        <div className=" py-4 text-xs text-[var(--color-text-muted)]">
+        <div className="py-4 text-xs text-[var(--color-text-muted)]">
           <PrivacyFooterNote analytics={analyticsEnabled} />
           <p className="m-0 mt-2">
             AWS Community Day Paraguay es un evento organizado por la comunidad

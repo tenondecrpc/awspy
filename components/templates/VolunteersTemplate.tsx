@@ -93,7 +93,7 @@ const GAINS: { icon: GlyphName; title: string; body: string }[] = [
 const PHASES: { label: string; body: string }[] = [
   {
     label: "Antes",
-    body: "Armado de la sala, credenciales y recorrido con el equipo.",
+    body: "Armado de la sala y preparación de credenciales.",
   },
   {
     label: "Durante",
@@ -101,8 +101,14 @@ const PHASES: { label: string; body: string }[] = [
   },
   {
     label: "Después",
-    body: "Desarmado y cierre, con una foto del equipo completo.",
+    body: "Desarmado y cierre del evento.",
   },
+];
+
+const EXPECTATIONS = [
+  { label: "Compromiso", value: "Un turno durante el evento" },
+  { label: "Incluye", value: "Remera oficial y almuerzo" },
+  { label: "Requisitos", value: "Ninguno, solo ganas" },
 ];
 
 export function VolunteersTemplate({
@@ -158,6 +164,21 @@ export function VolunteersTemplate({
               speakers y asistentes tengan una buena experiencia en el AWS
               Community Day Paraguay.
             </p>
+
+            {!archived && (
+              <dl className="m-0 mb-7 grid gap-3 border-t border-[var(--color-border-subtle)] pt-5 sm:grid-cols-3">
+                {EXPECTATIONS.map(({ label, value }) => (
+                  <div key={label} className="min-w-0">
+                    <dt className="text-sm font-semibold text-[var(--color-text-primary)]">
+                      {label}
+                    </dt>
+                    <dd className="m-0 text-sm text-[var(--color-text-secondary)]">
+                      {value}
+                    </dd>
+                  </div>
+                ))}
+              </dl>
+            )}
 
             {archived ? (
               <p className="m-0 text-step-0 text-[var(--color-text-secondary)]">
@@ -278,7 +299,7 @@ export function VolunteersTemplate({
           <div className={WRAP}>
             <div className="flex flex-col gap-6 bg-[var(--color-surface-muted)] p-8 md:flex-row md:items-center md:justify-between">
               <div className="min-w-0">
-                <h2 className={`${H2} mb-2`}>¿Listo para sumarte?</h2>
+                <h2 className={`${H2} mb-2`}>¿Listo para sumarte?</h2>
                 <p className="m-0 max-w-[34rem] text-base text-[var(--color-text-secondary)]">
                   Completá el formulario y contanos cómo te gustaría ayudar. Te
                   escribimos antes del evento.

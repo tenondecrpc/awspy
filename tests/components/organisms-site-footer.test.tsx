@@ -35,6 +35,15 @@ const FAKE_INFO: EventInfo = {
 };
 
 describe("SiteFooter", () => {
+  it("keeps the event context and column headings", () => {
+    render(<SiteFooter eventInfo={FAKE_INFO} />);
+    expect(screen.getByText("First edition")).toBeInTheDocument();
+    expect(screen.getByText("Entrada gratuita")).toBeInTheDocument();
+    expect(screen.getByText("Evento")).toBeInTheDocument();
+    expect(screen.getByText("Participar")).toBeInTheDocument();
+    expect(screen.getByText("Contacto")).toBeInTheDocument();
+  });
+
   it("renders contact email as a mailto link", () => {
     render(<SiteFooter eventInfo={FAKE_INFO} />);
     const link = screen.getByRole("link", { name: FAKE_INFO.contactEmail });
@@ -50,6 +59,7 @@ describe("SiteFooter", () => {
     );
     expect(link).toHaveAttribute("target", "_blank");
     expect(link).toHaveAttribute("rel", "noopener noreferrer");
+    expect(link.className).toContain("underline");
   });
 
   it("links volunteer applicants to Google's privacy policy", () => {

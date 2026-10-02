@@ -24,13 +24,18 @@ export function FAQTemplate({ items }: FAQTemplateProps) {
           </h1>
           <p className="m-0 mt-3 text-step-0 leading-[1.5] text-[var(--color-text-secondary)]">
             Lo que más nos consultan sobre el AWS Community Day Paraguay 2026.
+            Si tu pregunta no está, escribinos.
           </p>
 
           <div className="mt-7 flex items-start gap-4 rounded-[var(--radius-md)] bg-[var(--color-surface-muted)] p-5">
             <IconBadge name="mail" tone="solid" />
             <div className="min-w-0">
               <p className="m-0 font-semibold text-[var(--color-text-primary)]">
-                Si tu pregunta no está, escribinos
+                ¿No está tu pregunta?
+              </p>
+              <p className="m-0 mt-1 text-sm text-[var(--color-text-secondary)]">
+                Escribinos y te respondemos. También podés consultarnos el día
+                del evento en el mostrador de acreditación.
               </p>
               <a
                 href={`mailto:${CONTACT_EMAIL}`}
