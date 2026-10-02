@@ -27,19 +27,19 @@
   --color-action: #ff9900;
   --color-action-strong: #e88c00;
   --color-action-label: #9a5200;
-  --color-accent: #0038a8;
-  --color-accent-strong: #002b7a;
+  --color-accent: #075ab0;
+  --color-accent-strong: #054a8f;
   --color-accent-soft: #e8efff;
   --color-national-red: #f02f3b;
   --color-national-red-label: #c4152f;
-  --color-national-red-on-dark: #ff5566;
+  --color-national-red-on-dark: #ff6b78;
 
   /* Surfaces */
   --color-surface: #ffffff;
   --color-surface-muted: #eef2fd;
   --color-surface-warm: #fff6e8;
   --color-surface-elevated: #ffffff;
-  --color-surface-inverse: #08152f;
+  --color-surface-inverse: #232f3e;
   --color-surface-hero: #000c2f;
   --color-overlay: #000c2fb3;
 
@@ -54,7 +54,7 @@
   --color-glass: #ffffff14;
   --color-glass-border: #ffffff3d;
   --color-glow-action: #ff990052;
-  --color-glow-accent: #0038a852;
+  --color-glow-accent: #075ab052;
   --color-glow-red: #f02f3b52;
 
   /* Text */
@@ -70,7 +70,7 @@
   --color-text-on-inverse-secondary: #c5ccea;
   --color-text-on-inverse-muted: #9aa5ca;
   --color-link-on-inverse: #e6eaf7;
-  --color-border-on-inverse: #34415f;
+  --color-border-on-inverse: #414d5c;
   --color-text-on-hero: #f7f8ff;
   --color-text-on-tier: #ffffff;
 
@@ -79,7 +79,7 @@
   --color-border-strong: #5b647a;
 
   /* State */
-  --color-focus: #0a4db8;
+  --color-focus: #075ab0;
   --color-focus-on-hero: #ff5566;
   --color-success: #1f7a3a;
   --color-success-soft: #e5f5ea;
@@ -130,22 +130,22 @@ html[data-theme="dark"] {
   --color-action: #ff9900;
   --color-action-strong: #ffac33;
   --color-action-label: #ff9900;
-  --color-accent: #74a8ff;
-  --color-accent-strong: #9bbfff;
-  --color-accent-soft: #11285c;
-  --color-national-red: #ff4b5b;
-  --color-national-red-label: #ff5566;
-  --color-national-red-on-dark: #ff5566;
-  --color-surface: #010928;
-  --color-surface-muted: #071438;
+  --color-accent: #539fe5;
+  --color-accent-strong: #7bb8f0;
+  --color-accent-soft: #12304f;
+  --color-national-red: #ff6b78;
+  --color-national-red-label: #ff6b78;
+  --color-national-red-on-dark: #ff6b78;
+  --color-surface: #0f1b2a;
+  --color-surface-muted: #16202c;
   /* The warm band, dark. The light theme uses a cream tint of the orange
      accent; a literal dark translation of it lands on brown, which reads as
      a rendering fault next to the navy surfaces. This keeps the warmer,
      redder cast that separates the band from `--color-surface` and
      `--color-surface-muted`, while staying inside the blue family. */
-  --color-surface-warm: #16142e;
-  --color-surface-elevated: #0d1b46;
-  --color-surface-inverse: #08152f;
+  --color-surface-warm: #1c2330;
+  --color-surface-elevated: #1b2838;
+  --color-surface-inverse: #232f3e;
   --color-surface-hero: #01051d;
   --color-overlay: #000c2fb3;
   /* Deliberately not darkened: see the light theme's note. */
@@ -154,8 +154,8 @@ html[data-theme="dark"] {
   --color-glass: #ffffff14;
   --color-glass-border: #ffffff33;
   --color-glow-action: #ff99003d;
-  --color-glow-accent: #74a8ff3d;
-  --color-glow-red: #ff4b5b3d;
+  --color-glow-accent: #539fe53d;
+  --color-glow-red: #ff6b783d;
   --color-text-primary: #f7f8ff;
   --color-text-secondary: #c5ccea;
   --color-text-muted: #9aa5ca;
@@ -165,12 +165,12 @@ html[data-theme="dark"] {
   --color-text-on-inverse-secondary: #c5ccea;
   --color-text-on-inverse-muted: #9aa5ca;
   --color-link-on-inverse: #e6eaf7;
-  --color-border-on-inverse: #34415f;
+  --color-border-on-inverse: #414d5c;
   --color-text-on-hero: #f7f8ff;
   --color-text-on-tier: #0b1626;
-  --color-border-subtle: #1b2d5b;
+  --color-border-subtle: #2a3a4d;
   --color-border-strong: #9aa5ca;
-  --color-focus: #74a8ff;
+  --color-focus: #539fe5;
   --color-focus-on-hero: #ff5566;
   --color-success: #52c97a;
   --color-success-soft: #14361f;
