@@ -23,7 +23,7 @@ import {
 import { SponsorBoard } from "@/components/organisms/SponsorBoard";
 import { SponsorshipPackages } from "@/components/organisms/SponsorshipPackages";
 import { TIER_COLOR, TIER_LABEL } from "@/lib/utils/sponsor-tiers";
-import type { Sponsor } from "@/lib/content/sponsors";
+import { listAvailableTiers, type Sponsor } from "@/lib/content/sponsors";
 import type { Sponsorship } from "@/lib/content/sponsorship";
 import type { EventInfo } from "@/lib/content/event-info";
 
@@ -57,7 +57,7 @@ const FIGURE_LABELS = [
 const LINK =
   "font-semibold text-[var(--color-text-primary)] underline decoration-[var(--color-national-red)] decoration-2 underline-offset-4 [overflow-wrap:anywhere]";
 
-const nbsp = (text: string) => text.replace(/ /g, " ");
+const nbsp = (text: string) => text.replace(/ /g, "\u00a0");
 
 export function SponsorsTemplate({
   sponsors,
@@ -71,6 +71,7 @@ export function SponsorsTemplate({
     `mailto:${contactEmail}?subject=${encodeURIComponent(s)}`;
 
   const packages = sponsorship?.packages ?? [];
+  const openSlots = listAvailableTiers(packages, sponsors).length;
   const benefits = sponsorship?.benefits ?? [];
   const highlights = sponsorship?.highlights ?? [];
   const funds = sponsorship?.funds ?? [];
@@ -109,21 +110,38 @@ export function SponsorsTemplate({
             Las empresas y comunidades que hacen posible {eventInfo.name}.
           </p>
 
-          {sponsors.length === 0 ? (
+          {sponsors.length === 0 && openSlots > 0 ? (
+            <p className="m-0 mb-6 text-step-0 text-[var(--color-text-secondary)]">
+              Todavía no hay sponsors confirmados para la primera edición. Este
+              lugar puede ser para tu marca:
+            </p>
+          ) : null}
+          {sponsors.length > 0 && openSlots > 0 ? (
+            <p className="m-0 mb-6 text-step-0 text-[var(--color-text-secondary)]">
+              Estas organizaciones ya confirmaron su apoyo. Cada nivel admite
+              varios sponsors, así que todavía hay lugar para tu marca:
+            </p>
+          ) : null}
+          {sponsors.length === 0 && openSlots === 0 ? (
             <p className="m-0 flex items-center gap-3 text-step-0 text-[var(--color-text-secondary)]">
               <IconBadge name="heart" />
-              Todavía no hay sponsors confirmados.
+              Aún no hay sponsors confirmados. Si querés auspiciar el primer
+              Community Day en Paraguay, escribinos.
             </p>
           ) : (
             <div className="max-w-[44rem]">
               <SponsorBoard
                 sponsors={sponsors}
-                openSlots={0}
+                openSlots={openSlots}
                 slotHref={mailto(subject)}
                 size="lg"
               />
             </div>
           )}
+          <p className="m-0 mt-5 text-sm text-[var(--color-text-muted)]">
+            Los sponsors confirmados se publican a medida que se cierran los
+            acuerdos.
+          </p>
         </div>
       </section>
 
@@ -136,11 +154,16 @@ export function SponsorsTemplate({
           <div className="grid items-start gap-x-14 gap-y-10 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)]">
             <div className="min-w-0">
               <h2 id="ser-sponsor" className={`${H2} mb-3`}>
-                ¿Querés ser{" "}sponsor?
+                ¿Querés ser{"\u00a0"}sponsor?
               </h2>
               <p className="m-0 mb-7 max-w-[34rem] text-step-0 text-[var(--color-text-secondary)]">
                 {sponsorship?.intro ??
                   "Sumá tu organización a la primera edición del Community Day en Paraguay."}
+              </p>
+              <p className="m-0 mb-7 max-w-[34rem] text-base text-[var(--color-text-secondary)]">
+                Cada nivel combina visibilidad, posicionamiento de marca y
+                oportunidades concretas de negocio. También armamos propuestas a
+                medida.
               </p>
 
               <div className="flex flex-wrap items-center gap-x-5 gap-y-3">
@@ -214,12 +237,12 @@ export function SponsorsTemplate({
                 <dl className="m-0 grid grid-cols-2 gap-x-6 gap-y-7">
                   {figures.map((f) => (
                     <div key={f.label} className="min-w-0">
-                      <dd className="m-0 font-display text-[clamp(2.5rem,1.6rem+3vw,3.75rem)] leading-none tracking-[-0.02em] text-[var(--color-text-primary)]">
-                        {f.value}
-                      </dd>
                       <dt className="mt-2 text-base text-[var(--color-text-secondary)]">
                         {f.label}
                       </dt>
+                      <dd className="m-0 font-display text-[clamp(2.5rem,1.6rem+3vw,3.75rem)] leading-none tracking-[-0.02em] text-[var(--color-text-primary)]">
+                        {f.value}
+                      </dd>
                     </div>
                   ))}
                 </dl>
@@ -300,7 +323,7 @@ export function SponsorsTemplate({
                     </span>
                     <div className="min-w-0">
                       <h3 className="m-0 text-step-1 leading-tight text-[var(--color-text-primary)]">
-                        {TIER_LABEL[p.tier]}
+                        Sponsor {TIER_LABEL[p.tier]}
                       </h3>
                       <p className="m-0 text-sm text-[var(--color-text-secondary)]">
                         {i === 0
@@ -404,7 +427,8 @@ export function SponsorsTemplate({
           <div className={WRAP}>
             <h2 className={`${H2} mb-2`}>En qué se invierte el aporte</h2>
             <p className="m-0 mb-6 max-w-[38rem] text-step-0 text-[var(--color-text-secondary)]">
-              El patrocinio se destina a hacer posible la jornada.
+              Tu apoyo es un aporte directo a la comunidad técnica paraguaya.
+              Así se usa:
             </p>
             <ul className="m-0 grid list-none gap-3 p-0 [grid-template-columns:repeat(auto-fit,minmax(min(16rem,100%),1fr))]">
               {funds.map((item) => (

@@ -42,9 +42,11 @@ describe("SponsorLogoSlots", () => {
       <SponsorLogoSlots count={4} href="/sponsors" />
     );
 
-    expect(container.textContent).toBe(
-      "Quedan 4 niveles de patrocinio abiertos. Sumá tu organización"
+    expect(container.textContent).toContain(
+      "Quedan 4 niveles de patrocinio abiertos."
     );
+    expect(screen.getAllByText("Tu logo aquí")).toHaveLength(4);
+    expect(container.textContent).not.toMatch(/USD|Gs\.|\$\d/);
   });
 
   it("renders nothing when there is no room left", () => {

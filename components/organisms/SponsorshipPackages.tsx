@@ -4,13 +4,14 @@
 // It is a real `<table>` because the content is tabular - a benefit read
 // against a package - and a screen reader needs the row and column headers to
 // say which cell it is on. The mark is decorative; every cell also carries a
-// visually hidden "Incluido" / "No incluido", so inclusion never rests on an
-// icon or a color alone (constitution Principle VI).
+// visually hidden "<Nivel>: incluido" / "<Nivel>: no incluido", so inclusion
+// never rests on an icon or a color alone (constitution Principle VI), and a
+// cell read out of the table's context still names its package.
 //
 // The tier color heads each column and tints its included marks, so the eye
 // can run down a package. Ten rows of prose never fit a phone, so the table
-// scrolls horizontally inside its own container and is focusable, which is
-// what lets a keyboard user scroll it.
+// scrolls horizontally inside its own labelled region, which is focusable:
+// that is what lets a keyboard user scroll it.
 
 import { GlyphIcon } from "@/components/atoms/GlyphIcon";
 import { TIER_COLOR, TIER_LABEL } from "@/lib/utils/sponsor-tiers";
@@ -43,8 +44,8 @@ export function SponsorshipPackages({
       <div
         className="relative overflow-x-auto bg-[var(--color-surface-elevated)]"
         tabIndex={0}
-        role="group"
-        aria-label="Tabla de paquetes de patrocinio"
+        role="region"
+        aria-label="Comparación de beneficios de patrocinio"
       >
         <table className="w-full min-w-[46rem] border-collapse text-left">
           <caption className="sr-only">
@@ -123,7 +124,9 @@ export function SponsorshipPackages({
                           className="inline-grid h-7 w-7 place-items-center rounded-full text-[var(--color-text-primary)]"
                         >
                           <GlyphIcon name="check" size={16} />
-                          <span className="sr-only">Incluido</span>
+                          <span className="sr-only">
+                            {TIER_LABEL[pkg.tier]}: incluido
+                          </span>
                         </span>
                       ) : (
                         <>
@@ -133,7 +136,9 @@ export function SponsorshipPackages({
                           >
                             &ndash;
                           </span>
-                          <span className="sr-only">No incluido</span>
+                          <span className="sr-only">
+                            {TIER_LABEL[pkg.tier]}: no incluido
+                          </span>
                         </>
                       )}
                     </td>

@@ -51,6 +51,7 @@ describe("SponsorsTemplate", () => {
     expect(
       screen.getByText(/Todavía no hay sponsors confirmados/)
     ).toBeInTheDocument();
+    expect(screen.getAllByText("Tu logo aquí").length).toBeGreaterThan(0);
 
     // No empty board: the page says so and points a company to the packages
     // and to a person it can write to.
@@ -104,7 +105,7 @@ describe("SponsorsTemplate", () => {
     // The ladder names the same packages, one row per level.
     ["Diamante", "Platinum", "Gold", "Silver"].forEach((tier) =>
       expect(
-        screen.getByRole("heading", { level: 3, name: tier })
+        screen.getByRole("heading", { level: 3, name: `Sponsor ${tier}` })
       ).toBeInTheDocument()
     );
   });

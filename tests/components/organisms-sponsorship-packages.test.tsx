@@ -41,14 +41,16 @@ describe("SponsorshipPackages", () => {
 
     const cells = within(row).getAllByRole("cell");
     expect(cells).toHaveLength(2);
-    expect(cells[0]).toHaveTextContent("Incluido");
-    expect(cells[1]).toHaveTextContent("No incluido");
+    expect(cells[0]).toHaveTextContent(/Diamante: incluido/i);
+    expect(cells[1]).toHaveTextContent(/Silver: no incluido/i);
   });
 
   it("is reachable by keyboard so the wide table can be scrolled", () => {
     render(<SponsorshipPackages packages={PACKAGES} benefits={BENEFITS} />);
     expect(
-      screen.getByRole("group", { name: "Tabla de paquetes de patrocinio" })
+      screen.getByRole("region", {
+        name: "Comparación de beneficios de patrocinio",
+      })
     ).toHaveAttribute("tabindex", "0");
   });
 
