@@ -5,17 +5,17 @@ import { getEventInfo } from "@/lib/content/event-info";
 
 const EVENT_INFO = getEventInfo("2026");
 
-/** Each "Fechas clave" card as [date, title], in rendered order. */
+/** Each "Fechas clave" timeline entry as [date, title], in rendered order. */
 function keyDates() {
   const section = screen
     .getByRole("heading", { level: 2, name: "Fechas clave" })
     .closest("section")!;
   return within(section)
-    .getAllByRole("heading", { level: 3 })
-    .map((title) => [
-      title.previousElementSibling?.textContent ?? "",
-      title.textContent ?? "",
-    ]);
+    .getAllByRole("listitem")
+    .map((item) => {
+      const [when, title] = Array.from(item.querySelectorAll("p"));
+      return [when?.textContent ?? "", title?.textContent ?? ""];
+    });
 }
 
 describe("CFPTemplate", () => {
@@ -30,6 +30,15 @@ describe("CFPTemplate", () => {
     ).toBeInTheDocument();
     expect(screen.getByText("Charla técnica")).toBeInTheDocument();
     expect(screen.getByText("Lightning talk")).toBeInTheDocument();
+    expect(
+      screen.getByText("Última fecha para enviar propuestas en Sessionize.")
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText("Charlas y talleres en el SNPP, San Lorenzo.")
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", { name: "Después de enviar" })
+    ).toBeInTheDocument();
   });
 
   // "Fechas clave" hard-coded the 30 September close and kept showing it

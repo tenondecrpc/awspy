@@ -42,7 +42,7 @@ describe("SponsorBoard", () => {
     ).toEqual(["https://example.com/acme", "https://example.com/acme"]);
     expect(within(diamante).getAllByRole("listitem")).toHaveLength(2);
     expect(
-      screen.queryByRole("link", { name: /Tu logo aquí/ })
+      screen.queryByRole("link", { name: "Sumá tu organización" })
     ).not.toBeInTheDocument();
   });
 
@@ -51,17 +51,19 @@ describe("SponsorBoard", () => {
       <SponsorBoard sponsors={[sponsor()]} openSlots={2} slotHref="/sponsors" />
     );
 
-    const row = screen.getByRole("link", { name: /Tu logo aquí/ });
-    expect(row).toHaveAttribute("href", "/sponsors");
-    expect(row.children).toHaveLength(2);
+    expect(screen.getByText(/Quedan 2 niveles/)).toBeInTheDocument();
+    expect(
+      screen.getByRole("link", { name: "Sumá tu organización" })
+    ).toHaveAttribute("href", "/sponsors");
   });
 
   it("offers only the frames while nobody has signed", () => {
     render(<SponsorBoard sponsors={[]} openSlots={3} slotHref="#paquetes" />);
 
     expect(screen.queryByRole("heading")).not.toBeInTheDocument();
+    expect(screen.getByText(/Quedan 3 niveles/)).toBeInTheDocument();
     expect(
-      screen.getByRole("link", { name: /Tu logo aquí/ }).children
-    ).toHaveLength(3);
+      screen.getByRole("link", { name: "Sumá tu organización" })
+    ).toHaveAttribute("href", "#paquetes");
   });
 });

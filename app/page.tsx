@@ -3,7 +3,8 @@
 
 import { HomeTemplate } from "@/components/templates/HomeTemplate";
 import { currentEdition, getEdition } from "@/lib/content/editions";
-import { listSpeakers } from "@/lib/api/sessionize";
+import { getProgramme } from "@/lib/api/sessionize";
+import { buildAgendaPreview } from "@/lib/utils/agenda-preview";
 import { getFAQ } from "@/lib/content/faq";
 import { getOrganizers } from "@/lib/content/organizers";
 import { formatDate } from "@/lib/utils/datetime";
@@ -26,7 +27,9 @@ export async function generateMetadata() {
 export default async function HomePage() {
   const year = currentEdition();
   const edition = getEdition(year);
-  const speakers = await listSpeakers(edition.eventInfo.sessionizeEventId);
+  const { grid, speakers } = await getProgramme(
+    edition.eventInfo.sessionizeEventId
+  );
 
   const eventLd = buildEventJsonLd({
     name: edition.eventInfo.name,
@@ -54,6 +57,7 @@ export default async function HomePage() {
         eventInfo={edition.eventInfo}
         venue={edition.venue}
         speakers={speakers}
+        agenda={buildAgendaPreview(grid)}
         sponsors={edition.sponsors}
         sponsorship={edition.sponsorship}
         faq={getFAQ(year)}

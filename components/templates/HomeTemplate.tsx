@@ -1,9 +1,11 @@
-// Home page based on the "Home Light" mockup
-// (`AWS Community Day Paraguay (colored)/Home Light.dc.html`).
+// Home page. A printed-poster layout: a full-bleed photograph with the title
+// set in a solid block over it, then sections that each take a different shape
+// (statement and collage, a ruled agenda list, one large speaker beside smaller
+// ones, a venue band, a typographic Q&A, a staggered team strip, an open call).
 //
-// The countdown, speakers, sponsors, FAQ, and organizers use edition content
-// and Sessionize data. The overview keeps only stable, qualitative copy;
-// changing schedule details belong on the agenda page.
+// The countdown, agenda preview, speakers, sponsors, FAQ and organizers use
+// edition content and Sessionize data. Copy is limited to what the content
+// files and the schedule can back up.
 
 import NextLink from "next/link";
 // Imported rather than referenced by path so the optimizer's upstream is the
@@ -13,17 +15,22 @@ import NextLink from "next/link";
 import heroPhoto from "@/public/assets/anterior.jpg";
 import venuePhoto from "@/public/assets/venue/cover.jpg";
 import { Countdown } from "@/components/organisms/Countdown";
+import { Lace } from "@/components/atoms/Lace";
+import { IconBadge } from "@/components/atoms/IconBadge";
+import type { GlyphName } from "@/components/atoms/GlyphIcon";
 import {
+  BTN_OUTLINE_ON_DARK,
+  BTN_PRIMARY,
   Frame,
-  NumberHeading,
-  H2,
-  NUM_ON_DARK,
-  RULE,
+  KICKER,
+  SectionTitle,
+  SECTION_FIT,
   WRAP,
 } from "@/components/molecules/SectionPrimitives";
 import { formatDate, formatTime } from "@/lib/utils/datetime";
 import type { EventInfo } from "@/lib/content/event-info";
 import type { Speaker } from "@/lib/api/sessionize";
+import type { AgendaPreviewItem } from "@/lib/utils/agenda-preview";
 import { SponsorBoard } from "@/components/organisms/SponsorBoard";
 import { listAvailableTiers } from "@/lib/content/sponsors";
 import type { Sponsor } from "@/lib/content/sponsors";
@@ -31,13 +38,17 @@ import type { Sponsorship } from "@/lib/content/sponsorship";
 import type { FAQItem } from "@/lib/content/faq";
 import type { Organizer } from "@/lib/content/organizers";
 import type { Venue } from "@/lib/content/venue";
+import { tieLast } from "@/lib/utils/typography";
 
 type HomeTemplateProps = {
   eventInfo: EventInfo;
   venue: Venue;
   speakers: Speaker[];
+  /** First sessions of the programme. Empty until the agenda is published. */
+  agenda?: AgendaPreviewItem[];
   sponsors: Sponsor[];
-  /** Edition prospectus. `null` when this edition has not published one. */
+  /** Edition prospectus. Its open tiers become "Tu logo aquí" slots on the
+   *  sponsor board. `null` when this edition has not published one. */
   sponsorship?: Sponsorship | null;
   faq: FAQItem[];
   organizers: Organizer[];
@@ -50,48 +61,39 @@ type HomeTemplateProps = {
   volunteersHref?: string;
 };
 
-const MARQUEE_ICONS = [
-  "compute-ec2",
-  "compute-lambda",
-  "compute-fargate",
-  "storage-s3",
-  "database-rds",
-  "database-dynamodb",
-  "network-cloudfront",
-  "network-route53",
-  "ai-bedrock",
-  "ai-sagemaker",
-  "security-iam",
-  "security-cognito",
-];
-
-const PILLARS = [
+/** What sets the day apart, each with the icon that anchors it. */
+const PILLARS: { icon: GlyphName; title: string; body: string }[] = [
   {
-    n: "01",
+    icon: "laptop",
     title: "Contenido técnico real",
     body: "Casos, arquitecturas y errores aprendidos en producción.",
   },
   {
-    n: "02",
+    icon: "users",
     title: "Hecho por la comunidad",
     body: "Voluntarios del AWS User Group Paraguay y Canindeyú.",
   },
   {
-    n: "03",
+    icon: "ticket",
     title: "Entrada libre",
     body: "Acceso sin costo, con registro previo.",
   },
   {
-    n: "04",
+    icon: "flask",
     title: "Talleres hands-on",
     body: "Actividades prácticas para quienes quieran participar.",
   },
 ];
 
+/** Underlined text link, the one link style used inside running copy. */
+const TEXT_LINK =
+  "font-semibold text-[var(--color-text-primary)] underline decoration-[var(--color-national-red)] decoration-2 underline-offset-4 hover:decoration-[var(--color-text-primary)]";
+
 export function HomeTemplate({
   eventInfo,
   venue,
   speakers,
+  agenda = [],
   sponsors,
   sponsorship = null,
   faq,
@@ -120,174 +122,112 @@ export function HomeTemplate({
 
   return (
     <>
-      {/* ── Hero ─────────────────────────────────────────────── */}
+      {/* ── Hero: photograph, title set in a solid block ─────── */}
       <section
         id="contenido-principal"
-        className="border-b border-[var(--color-text-primary)] bg-[var(--color-surface-muted)]"
+        data-tone="hero"
+        className="snap-here relative isolate overflow-hidden bg-[var(--color-surface-hero)] text-[var(--color-text-on-hero)]"
       >
-        <div className={WRAP}>
-          <div className="grid items-stretch gap-0 [grid-template-columns:repeat(auto-fit,minmax(min(320px,100%),1fr))]">
-            <div className="flex min-w-0 flex-col justify-center py-14 pr-0 lg:pr-12">
-              <div className="mb-7 flex items-center gap-3">
-                <span className="font-mono text-[11.5px] uppercase tracking-[0.14em] text-[var(--color-text-muted)]">
-                  Primera edición
-                </span>
-                <span className={RULE} aria-hidden="true" />
-                <span
-                  className={
-                    "inline-flex items-center gap-2 font-mono text-[11.5px] uppercase tracking-[0.1em] " +
-                    (isOpen
-                      ? "text-[var(--color-success)]"
-                      : "text-[var(--color-text-secondary)]")
-                  }
-                >
-                  <span
-                    aria-hidden="true"
-                    className={
-                      "h-[7px] w-[7px] rounded-full " +
-                      (isOpen
-                        ? "bg-[var(--color-success)]"
-                        : "bg-[var(--color-text-muted)]")
-                    }
-                  />
-                  {isOpen ? "Registro abierto" : "Registro próximamente"}
-                </span>
-              </div>
+        {/* The photo is a group selfie with people across its whole width, so
+            nothing is set over it: on desktop it takes the right 7/12 of the
+            hero beside the text, on phones it sits above the text at its own
+            4:3 ratio. The text never covers a face. */}
+        <div className="grid xl:grid-cols-[minmax(0,5fr)_minmax(0,7fr)]">
+          <div className="relative order-1 aspect-[16/10] min-w-0 sm:aspect-[4/3] xl:order-2 xl:aspect-auto xl:min-h-[min(43.75vw,calc(100svh-var(--header-h)))]">
+            <Frame
+              label="Asistentes a una edición anterior del Community Day"
+              photo={heroPhoto}
+              className="absolute inset-0 h-full w-full"
+              sizes="(min-width: 1280px) 58vw, 100vw"
+              preload
+            />
+          </div>
 
-              <h1 className="m-0 mb-6 text-[clamp(40px,6vw,78px)] font-extrabold leading-[0.94] tracking-[-0.045em] text-[var(--color-text-primary)]">
-                AWS
-                <br />
-                Community&nbsp;Day
-                <br />
-                <span className="text-[var(--color-action-label)]">
-                  Paraguay
-                </span>
-              </h1>
+          <div className="relative order-2 min-w-0 overflow-hidden px-6 pb-7 pt-6 sm:px-10 sm:pb-12 sm:pt-10 xl:order-1 xl:flex xl:flex-col xl:justify-center xl:py-[clamp(1.25rem,5svh,4rem)] xl:pl-[clamp(2.75rem,calc((100vw-1240px)/2+1.75rem),6rem)] xl:pr-12">
+            <Lace
+              size="30rem"
+              rings={5}
+              className="absolute -right-40 -top-40 text-[var(--color-border-on-inverse)]"
+            />
+            <p className="relative m-0 mb-[clamp(0.5rem,2svh,1.5rem)] text-base font-semibold text-[var(--color-text-on-hero)]">
+              Primera edición ·{" "}
+              <span className="text-[var(--color-national-red-on-dark)]">
+                {isOpen ? "Registro abierto" : "Registro próximamente"}
+              </span>
+            </p>
 
-              <p className="m-0 mb-8 max-w-[32rem] text-[18px] leading-[1.55] text-[var(--color-text-secondary)]">
-                Una jornada gratuita hecha por la comunidad AWS local. Charlas
-                técnicas, talleres hands-on y networking, en español, en{" "}
-                {eventInfo.location.city}.
-              </p>
+            {/* The rem floor sits outside the height cap so browser zoom can
+                still grow the title (WCAG 1.4.4). */}
+            <h1 className="relative m-0 mb-[clamp(0.625rem,2svh,1.75rem)] font-display text-[clamp(2.25rem,min(0.9rem+2.6vw,8svh),4rem)] leading-[0.98] tracking-[-0.015em]">
+              AWS Community Day&nbsp;Paraguay
+            </h1>
 
-              <dl className="m-0 mb-[34px] grid border-t border-[var(--color-text-primary)] [grid-template-columns:repeat(auto-fit,minmax(min(150px,100%),1fr))]">
-                {[
-                  { k: "Fecha", v: dateLabel },
-                  { k: "Horario", v: timeLabel },
-                  { k: "Sede", v: eventInfo.location.summary },
-                  { k: "Entrada", v: "Gratuita" },
-                ].map((d, i) => (
-                  <div
-                    key={d.k}
-                    className={
-                      "border-b border-[var(--color-border-subtle)] py-3.5 " +
-                      (i === 0
-                        ? "pr-4"
-                        : "border-l border-[var(--color-border-subtle)] px-4")
-                    }
-                  >
-                    <dt className="mb-[5px] font-mono text-[10.5px] uppercase tracking-[0.14em] text-[var(--color-text-muted)]">
-                      {d.k}
-                    </dt>
-                    <dd className="m-0 text-[15px] font-semibold">{d.v}</dd>
-                  </div>
-                ))}
-              </dl>
+            <p className="relative m-0 mb-[clamp(0.75rem,2.4svh,1.5rem)] max-w-[32rem] text-step-0 text-[var(--color-text-on-inverse-secondary)]">
+              Una jornada gratuita hecha por la comunidad AWS local. Charlas
+              técnicas, talleres hands-on y networking, en español, en{" "}
+              {eventInfo.location.city}.
+            </p>
 
-              <div className="flex flex-wrap items-center gap-3">
-                <NextLink
-                  href={registerHref}
-                  className="inline-flex items-center rounded-[4px] bg-[var(--color-action)] px-[30px] py-[15px] text-[16px] font-bold text-[var(--color-text-on-action)] transition hover:brightness-95"
-                >
-                  Registrarme gratis
-                </NextLink>
-                <NextLink
-                  href={cfpHref}
-                  className="inline-flex items-center rounded-[4px] border-[1.5px] border-[var(--color-text-primary)] px-7 py-[15px] text-[16px] font-semibold text-[var(--color-text-primary)] transition-colors hover:bg-[var(--color-text-primary)] hover:text-[var(--color-surface)]"
-                >
-                  Proponer una charla
-                </NextLink>
-                <Countdown
-                  targetDate={eventInfo.dates.start}
-                  variant="inline"
-                />
-              </div>
-            </div>
+            {/* The four facts a visitor checks first, each with its label. */}
+            <dl className="relative m-0 mb-[clamp(0.75rem,2.4svh,2rem)] grid max-w-[34rem] grid-cols-[minmax(0,1.5fr)_minmax(0,1fr)] gap-x-6 gap-y-3">
+              {[
+                { k: "Fecha", v: dateLabel },
+                { k: "Horario", v: timeLabel },
+                { k: "Sede", v: eventInfo.location.summary },
+                { k: "Entrada", v: "Gratuita" },
+              ].map((d) => (
+                <div key={d.k} className="min-w-0">
+                  <dt className="text-sm text-[var(--color-text-on-inverse-secondary)]">
+                    {d.k}
+                  </dt>
+                  <dd className="m-0 text-base font-semibold leading-snug text-[var(--color-text-on-hero)]">
+                    {d.v}
+                  </dd>
+                </div>
+              ))}
+            </dl>
 
-            <div className="min-h-[520px] min-w-0 border-l border-[var(--color-text-primary)]">
-              <Frame
-                label="Foto principal — comunidad / edición anterior"
-                photo={heroPhoto}
-                className="h-full w-full"
-                // Measured cover-rendered widths: 692px on a 390px phone (the
-                // 520px min-height drives it, not the viewport) and 1128-1172px
-                // from 900px up. Stated in px so the srcset keeps every rung —
-                // the previous `190vw` pruned it to 1920/2048/3840, which is
-                // why phones were downloading the largest entry.
-                //
-                // The phone figure is deliberately 640 rather than the 692 it
-                // paints. A 3x phone needs 2073px and the declared value picks
-                // its rung: 692 would round up to 2400 (320 kB) where 1920
-                // (225 kB) is a 7% upscale nobody can see, and 3x phones are
-                // the ones least able to afford the difference. The cost is an
-                // 8% upscale on a 1x phone, which is rarer and older.
-                sizes="(min-width: 700px) 1200px, 640px"
-                preload
-              />
+            {/* The days left are the most time-sensitive fact on the page, so
+                the number is set huge in the action orange, with a thick bar,
+                between the date and the call to action. */}
+            <Countdown
+              targetDate={eventInfo.dates.start}
+              variant="display"
+              tone="hero"
+              className="relative mb-[clamp(0.75rem,2svh,2rem)] border-l-[0.375rem] border-[var(--color-action)] pl-4 text-[var(--color-action)]"
+            />
+
+            <div className="relative flex flex-wrap items-center gap-x-4 gap-y-3">
+              <NextLink href={registerHref} className={BTN_PRIMARY}>
+                Registrarme gratis
+              </NextLink>
+              <NextLink href={cfpHref} className={BTN_OUTLINE_ON_DARK}>
+                Proponer una charla
+              </NextLink>
             </div>
           </div>
         </div>
       </section>
 
-      {/* ── AWS service icon marquee ─────────────────────────── */}
-      <div className="overflow-hidden border-b border-[var(--color-text-primary)] bg-[var(--color-surface-inverse)] py-3.5">
-        <div className="flex w-max animate-[acd-marquee_40s_linear_infinite] gap-14">
-          {[0, 1].map((row) => (
-            <div
-              key={row}
-              className="flex items-center gap-14"
-              aria-hidden="true"
-            >
-              {MARQUEE_ICONS.map((icon) => (
-                <span
-                  key={icon}
-                  className="block h-[26px] w-[26px] bg-[var(--color-text-on-inverse)] opacity-75"
-                  style={{
-                    maskImage: `url(/assets/icons/${icon}.svg)`,
-                    WebkitMaskImage: `url(/assets/icons/${icon}.svg)`,
-                    maskSize: "contain",
-                    WebkitMaskSize: "contain",
-                    maskRepeat: "no-repeat",
-                    WebkitMaskRepeat: "no-repeat",
-                    maskPosition: "center",
-                    WebkitMaskPosition: "center",
-                  }}
-                />
-              ))}
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* ── Cifras esperadas ─────────────────────────────────── */}
+      {/* ── Cifras esperadas: the projected numbers of the day ── */}
       {eventInfo.expectedFigures.length > 0 ? (
         <section
-          aria-label="Esperamos contar con"
-          className="border-b border-[var(--color-text-primary)]"
+          aria-labelledby="cifras"
+          className="bg-[var(--color-surface-muted)] py-[clamp(1.75rem,5svh,3rem)]"
         >
           <div className={WRAP}>
-            <ul className="m-0 grid list-none p-0 [grid-template-columns:repeat(auto-fit,minmax(min(160px,100%),1fr))]">
+            <h2 id="cifras" className={`${KICKER} mb-4`}>
+              Esperamos contar con
+            </h2>
+            <ul className="m-0 grid list-none gap-x-6 gap-y-6 p-0 [grid-template-columns:repeat(auto-fit,minmax(min(8.5rem,100%),1fr))]">
               {eventInfo.expectedFigures.map((figure) => (
-                <li
-                  key={figure.label}
-                  className="min-w-0 border-l border-[var(--color-border-subtle)] px-[18px] pb-[26px] pt-7"
-                >
-                  <div className="text-[38px] font-extrabold leading-none tracking-[-0.04em] text-[var(--color-text-primary)]">
+                <li key={figure.label} className="min-w-0">
+                  <span className="block font-display text-step-3 leading-none text-[var(--color-text-primary)]">
                     {figure.value}
-                  </div>
-                  <div className="mt-[9px] text-[13px] text-[var(--color-text-muted)]">
+                  </span>
+                  <span className="mt-2 block text-base text-[var(--color-text-secondary)]">
                     {figure.label}
-                  </div>
+                  </span>
                 </li>
               ))}
             </ul>
@@ -295,263 +235,306 @@ export function HomeTemplate({
         </section>
       ) : null}
 
-      {/* ── 01 · Qué es el Community Day ─────────────────────── */}
+      {/* ── Qué es: statement and photo collage ──────────────── */}
       <section
         id="sobre"
-        className="border-b border-[var(--color-text-primary)] bg-[var(--color-surface-warm)]"
+        className={`${SECTION_FIT} bg-[var(--color-surface)]`}
       >
-        <div className={`${WRAP} py-[72px]`}>
-          <NumberHeading n="01" title="Qué es el Community Day" />
-          <div className="grid items-start gap-10 [grid-template-columns:repeat(auto-fit,minmax(min(300px,100%),1fr))]">
+        <div className={WRAP}>
+          <div className="grid items-center gap-x-14 gap-y-10 lg:grid-cols-[1.15fr_1fr]">
             <div className="min-w-0">
-              <p className="m-0 mb-5 max-w-[34rem] text-[20px] font-medium leading-[1.5] text-[var(--color-text-primary)]">
+              <SectionTitle size="lg" title="Qué es el Community Day" />
+              <p className="m-0 mb-[clamp(1rem,3.5svh,2rem)] font-display text-[clamp(1.375rem,min(0.95rem+1.05vw,4.6svh),2.125rem)] leading-[1.18] text-[var(--color-text-primary)]">
                 Un evento de la comunidad, para la comunidad. Sin filtro
                 comercial, con contenido técnico que se usa el lunes siguiente.
               </p>
-              <p className="m-0 mb-7 max-w-[34rem] text-[16px] text-[var(--color-text-secondary)]">
-                Lo organizan voluntarios del AWS User Group Paraguay junto al
-                user group de Canindeyú. El acceso es sin costo, con registro
-                previo.
+              <p className="m-0 mb-6 max-w-[34rem] text-step-0 text-[var(--color-text-secondary)]">
+                Lo organizamos voluntarios del AWS User Group Paraguay y del
+                user group de Canindeyú. La entrada es gratuita; hace falta
+                registrarse porque la capacidad del auditorio es limitada.
               </p>
-              <div className="grid max-w-[34rem] border-t border-[var(--color-text-primary)]">
+              <ul className="m-0 mb-[clamp(1.25rem,3.5svh,2rem)] grid max-w-[38rem] list-none gap-x-8 gap-y-5 p-0 sm:grid-cols-2">
                 {PILLARS.map((p) => (
-                  <div
-                    key={p.n}
-                    className="flex gap-4 border-b border-[var(--color-border-subtle)] py-4"
-                  >
-                    <span className="flex-none pt-[3px] font-mono text-[11.5px] text-[var(--color-text-muted)]">
-                      {p.n}
-                    </span>
+                  <li key={p.title} className="flex min-w-0 items-start gap-3">
+                    <IconBadge name={p.icon} size="sm" />
                     <div className="min-w-0">
-                      <h3 className="m-0 mb-[3px] text-[15.5px] font-bold">
+                      <h3 className="m-0 mb-0.5 text-step-0 leading-snug text-[var(--color-text-primary)]">
                         {p.title}
                       </h3>
-                      <p className="m-0 text-[14px] text-[var(--color-text-muted)]">
+                      <p className="m-0 text-base text-[var(--color-text-secondary)]">
                         {p.body}
                       </p>
                     </div>
-                  </div>
+                  </li>
                 ))}
-              </div>
+              </ul>
+              <NextLink href={registerHref} className={BTN_PRIMARY}>
+                Reservar mi lugar
+              </NextLink>
             </div>
-            <div className="grid min-w-0 grid-cols-2 grid-rows-[190px_130px] gap-2.5">
+
+            {/* Every photo keeps its own proportions (the stage is 1600x1027,
+                the other two are 16:9), so nothing is cropped or stretched.
+                To make the block fit a short screen, its WIDTH is capped from
+                the viewport height: the three frames stack to about 0.92 of
+                the width in height, so the cap is the usable height divided
+                by 0.92 (usable = 100svh minus the header minus the section's
+                6svh padding top and bottom). */}
+            <div className="grid min-w-0 grid-cols-2 gap-3 lg:w-full lg:max-w-[calc((100svh-var(--header-h)-max(5rem,12svh)-0.6rem)/0.922)] lg:justify-self-end">
               <Frame
                 label="Sala llena durante una charla"
                 photo="/assets/charla.jpg"
-                className="col-span-2"
-                sizes="(min-width: 1024px) 560px, 100vw"
+                className="col-span-2 aspect-[1600/1027]"
+                sizes="(min-width: 1024px) 520px, 100vw"
               />
               <Frame
-                label="Networking"
+                label="Asistentes conversando durante el networking"
                 photo="/assets/networking.jpg"
-                sizes="(min-width: 1024px) 280px, 50vw"
+                className="aspect-video"
+                sizes="(min-width: 1024px) 260px, 50vw"
               />
               <Frame
-                label="Taller hands-on"
+                label="Participantes en un taller hands-on"
                 photo="/assets/handson.jpg"
-                sizes="(min-width: 1024px) 280px, 50vw"
+                className="aspect-video"
+                sizes="(min-width: 1024px) 260px, 50vw"
               />
             </div>
           </div>
         </div>
       </section>
 
-      {/* ── 02 · Agenda ──────────────────────────────────────── */}
+      {/* ── Agenda: a ruled list of the first sessions ───────── */}
       <section
         id="agenda"
-        className="border-b border-[var(--color-text-primary)] bg-[var(--color-surface)]"
+        className={`${SECTION_FIT} bg-[var(--color-surface-muted)]`}
       >
-        <div className={`${WRAP} py-[72px]`}>
-          <NumberHeading
-            n="02"
+        <div className={WRAP}>
+          <SectionTitle
+            size="lg"
             title="Agenda del día"
             action={{ href: scheduleHref, label: "Agenda completa" }}
           />
-          <div className="border-t border-[var(--color-text-primary)] py-6">
-            <p className="m-0 max-w-[44rem] pl-[30px] text-[16px] text-[var(--color-text-secondary)]">
-              Charlas, talleres y espacios para conectar. Consultá la agenda
-              para ver los horarios, salas y sesiones confirmadas.
-            </p>
-          </div>
-        </div>
-      </section>
-
-      {/* ── 03 · Speakers ────────────────────────────────────── */}
-      <section
-        id="speakers"
-        className="border-b border-[var(--color-text-primary)] bg-[var(--color-surface-muted)]"
-      >
-        <div className={`${WRAP} py-[72px]`}>
-          <NumberHeading
-            n="03"
-            title="Speakers"
-            action={{ href: speakersHref, label: "Ver todos" }}
-          />
-          {previewSpeakers.length === 0 ? (
-            <p className="text-[15px] text-[var(--color-text-secondary)]">
-              Estamos definiendo la grilla de oradores. Volvé pronto para
-              conocer al elenco.
+          <p className="m-0 mb-4 max-w-[40rem] text-step-0 text-[var(--color-text-secondary)]">
+            Charlas, talleres y espacios para conectar. Consultá la agenda para
+            ver los horarios, salas y sesiones confirmadas.
+          </p>
+          {agenda.length === 0 ? (
+            <p className="m-0 max-w-[40rem] text-step-0 text-[var(--color-text-secondary)]">
+              Todavía estamos cerrando la agenda. Mientras tanto, mirá a los
+              speakers confirmados o{" "}
+              <NextLink href={cfpHref} className={TEXT_LINK}>
+                proponé tu charla
+              </NextLink>
+              .
             </p>
           ) : (
-            <div className="grid gap-6 [grid-template-columns:repeat(auto-fit,minmax(min(220px,100%),1fr))]">
-              {previewSpeakers.map((sp, i) => (
-                <article key={sp.id} className="min-w-0">
-                  <NextLink href={`${speakersHref}/${sp.slug}`}>
-                    <Frame
-                      label={sp.fullName}
-                      photo={sp.profilePicture ?? undefined}
-                      className="mb-3.5 aspect-[3/4] w-full"
-                      sizes="(min-width: 640px) 380px, 100vw"
-                    />
-                  </NextLink>
-                  <div className="flex items-baseline gap-2.5">
-                    <span className="font-mono text-[11px] text-[var(--color-text-muted)]">
-                      {String(i + 1).padStart(2, "0")}
-                    </span>
-                    <div className="min-w-0">
-                      <h3 className="m-0 mb-0.5 text-[17px] font-bold tracking-[-0.02em]">
-                        {sp.fullName}
-                      </h3>
-                      {/* Identity only: the talk is credited in the agenda. */}
-                      <p className="m-0 text-[13px] text-[var(--color-text-muted)]">
-                        {sp.tagLine ?? ""}
+            <ol className="m-0 list-none p-0">
+              {agenda.map((item) => (
+                <li
+                  key={item.id}
+                  // Every session of the preview stays visible at any window
+                  // height: the section grows instead of hiding content.
+                  className="grid gap-x-8 gap-y-2 py-[clamp(0.625rem,2svh,1.5rem)] sm:grid-cols-[7.5rem_1fr_13rem]"
+                >
+                  <time
+                    dateTime={item.startsAt}
+                    className="font-display text-step-2 leading-none text-[var(--color-national-red-label)]"
+                  >
+                    {formatTime(item.startsAt)}
+                  </time>
+                  <div className="min-w-0">
+                    <h3 className="m-0 mb-1 font-semibold text-step-1 leading-[1.2]">
+                      {tieLast(item.title)}
+                    </h3>
+                    {item.speakers.length > 0 ? (
+                      <p className="m-0 text-base text-[var(--color-text-secondary)]">
+                        {item.speakers.join(", ")}
                       </p>
-                    </div>
+                    ) : null}
                   </div>
-                </article>
+                  <p className="m-0 text-base font-semibold text-[var(--color-text-primary)] sm:text-right">
+                    {tieLast(item.roomName)}
+                  </p>
+                </li>
               ))}
-            </div>
+            </ol>
           )}
         </div>
       </section>
 
-      {/* ── 04 · La sede ─────────────────────────────────────── */}
+      {/* ── Speakers: four portraits of equal weight ─────────── */}
       <section
-        id="sede"
-        className="border-b border-[var(--color-text-primary)] bg-[var(--color-surface-inverse)] text-[var(--color-text-on-inverse)]"
+        id="speakers"
+        className={`${SECTION_FIT} bg-[var(--color-surface)]`}
       >
         <div className={WRAP}>
-          <div className="grid items-stretch [grid-template-columns:repeat(auto-fit,minmax(min(320px,100%),1fr))]">
-            <div className="flex min-w-0 flex-col justify-center py-[72px] pr-0 lg:pr-12">
-              <div className="mb-7 flex items-baseline gap-4">
-                <span className={NUM_ON_DARK}>04</span>
-                <span className="font-mono text-[11.5px] uppercase tracking-[0.14em] text-[var(--color-text-on-inverse-muted)]">
-                  La sede
-                </span>
-              </div>
-              <h2 className={`${H2} mb-4`}>
-                {venue.name}
-                <br />
-                {eventInfo.location.city}
-              </h2>
-              <p className="m-0 mb-7 max-w-[30rem] text-[16px] text-[var(--color-text-on-inverse-secondary)]">
-                {venue.address}. Auditorio principal, salas de taller y espacio
-                de networking en el mismo edificio.
-              </p>
-              <a
-                href={venue.mapUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center self-start whitespace-nowrap rounded-[4px] border-[1.5px] border-[var(--color-text-on-inverse)] px-[26px] py-[13px] text-[15px] font-semibold text-[var(--color-text-on-inverse)] transition-colors hover:bg-[var(--color-text-on-inverse)] hover:text-[var(--color-surface-inverse)]"
-              >
-                Ver en el mapa
-              </a>
-            </div>
-            <div className="relative min-h-[440px] min-w-0 border-l border-[var(--color-border-on-inverse)]">
-              <Frame
-                label={`Foto de la sede — ${venue.name}`}
-                photo={venuePhoto}
-                position="right"
-                className="h-full w-full"
-                // The 440px min-height drives the cover crop of this 16:9
-                // photo, so the rendered width sits at 780-840px on every
-                // viewport rather than tracking one.
-                sizes="840px"
-              />
-            </div>
-          </div>
+          <SectionTitle
+            size="lg"
+            title="Speakers"
+            action={{ href: speakersHref, label: "Ver todos" }}
+          />
+          {previewSpeakers.length === 0 ? (
+            <p className="m-0 max-w-[40rem] text-step-0 text-[var(--color-text-secondary)]">
+              Estamos definiendo la grilla de oradores. Volvé pronto para
+              conocer al elenco.
+            </p>
+          ) : (
+            // The portraits are square because the source photos are square
+            // (Sessionize serves them at 400x400). A square frame shows each
+            // one whole, never cropped or stretched, and gives all four the
+            // same weight: same size, same baseline, nobody singled out.
+            <ul className="m-0 grid list-none grid-cols-2 gap-x-5 gap-y-8 p-0 lg:grid-cols-4 lg:gap-x-6">
+              {previewSpeakers.map((sp) => (
+                <li key={sp.id} className="min-w-0 [overflow-wrap:anywhere]">
+                  <NextLink
+                    href={`${speakersHref}/${sp.slug}`}
+                    className="block"
+                  >
+                    <Frame
+                      label={sp.fullName}
+                      photo={sp.profilePicture ?? undefined}
+                      position="50% 20%"
+                      className="mb-4 aspect-square w-full"
+                      sizes="(min-width: 1024px) 290px, 50vw"
+                    />
+                  </NextLink>
+                  <h3 className="m-0 mb-1 font-semibold text-step-1 leading-[1.15]">
+                    {sp.fullName}
+                  </h3>
+                  {/* Identity only: the talk is credited in the agenda. */}
+                  <p className="m-0 text-base text-[var(--color-text-secondary)]">
+                    {tieLast(sp.tagLine)}
+                  </p>
+                </li>
+              ))}
+            </ul>
+          )}
         </div>
       </section>
 
-      {/* ── 05 · FAQ ─────────────────────────────────────────── */}
+      {/* ── La sede: navy band, photo bleeding off the edge ──── */}
       <section
-        id="faq"
-        className="border-b border-[var(--color-text-primary)] bg-[var(--color-surface)]"
+        id="sede"
+        data-tone="inverse"
+        className="fit-screen relative overflow-hidden bg-[var(--color-surface-inverse)] text-[var(--color-text-on-inverse)]"
       >
-        <div className={`${WRAP} py-[72px]`}>
-          <NumberHeading n="05" title="Preguntas frecuentes" />
-          <div className="grid gap-x-14 [grid-template-columns:repeat(auto-fit,minmax(min(320px,100%),1fr))]">
-            {faq.map((f) => (
-              <div
-                key={f.id}
-                className="min-w-0 border-b border-[var(--color-border-subtle)] py-[18px]"
-              >
-                <h3 className="m-0 mb-1.5 text-[16px] font-bold tracking-[-0.015em]">
-                  {f.question}
-                </h3>
-                <p className="m-0 text-[14.5px] text-[var(--color-text-secondary)]">
-                  {f.answer}
-                </p>
-              </div>
-            ))}
-          </div>
-          <p className="mt-[26px] text-[14.5px] text-[var(--color-text-muted)]">
-            ¿No está tu pregunta?{" "}
+        <div className="grid w-full lg:grid-cols-[1fr_1.1fr]">
+          <div className="flex min-w-0 flex-col justify-center px-5 py-[clamp(2.5rem,6svh,5rem)] sm:px-7 lg:pl-[max(1.75rem,calc((100vw-1240px)/2+1.75rem))] lg:pr-14">
+            <p className="m-0 mb-3 text-base font-semibold text-[var(--color-text-on-inverse-secondary)]">
+              La sede
+            </p>
+            <h2 className="m-0 mb-5 font-display text-step-3 leading-[1.04] tracking-[-0.01em]">
+              {venue.name}, {eventInfo.location.city}
+            </h2>
+            <p className="m-0 mb-8 max-w-[30rem] text-step-0 text-[var(--color-text-on-inverse-secondary)]">
+              {venue.address}. Auditorio principal, salas de taller y espacio de
+              networking en el mismo edificio.
+            </p>
             <a
-              href={`mailto:${eventInfo.contactEmail}`}
-              className="font-semibold text-[var(--color-accent)]"
+              href={venue.mapUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={`${BTN_OUTLINE_ON_DARK} self-start`}
             >
-              Escribinos
+              Ver en el mapa
+              <span aria-hidden="true">↗</span>
             </a>
-            .
-          </p>
+          </div>
+          <div className="relative min-h-[22rem] min-w-0 lg:min-h-[calc(100svh-var(--header-h))]">
+            <Frame
+              label={`Foto de la sede — ${venue.name}`}
+              photo={venuePhoto}
+              position="right"
+              className="absolute inset-0 h-full w-full"
+              sizes="(min-width: 1024px) 840px, 100vw"
+            />
+          </div>
         </div>
       </section>
 
-      {/* ── 06 · Equipo ──────────────────────────────────────── */}
+      {/* ── Preguntas: question and answer, set as text ──────── */}
+      <section id="faq" className={`${SECTION_FIT} bg-[var(--color-surface)]`}>
+        <div className={WRAP}>
+          <div className="grid gap-x-16 gap-y-8 lg:grid-cols-[1fr_1.6fr] lg:items-center">
+            <div>
+              <SectionTitle size="lg" title="Preguntas frecuentes" />
+              <p className="m-0 text-step-0 text-[var(--color-text-secondary)]">
+                ¿No está tu pregunta?{" "}
+                <a
+                  href={`mailto:${eventInfo.contactEmail}`}
+                  className={TEXT_LINK}
+                >
+                  Escribinos
+                </a>
+                .
+              </p>
+            </div>
+            <dl className="m-0">
+              {faq.map((f) => (
+                <div key={f.id} className=" py-[clamp(0.875rem,2.6svh,1.5rem)]">
+                  <dt className="m-0 mb-2 font-semibold text-step-1 leading-[1.2]">
+                    {tieLast(f.question)}
+                  </dt>
+                  <dd className="m-0 max-w-[40rem] text-step-0 text-[var(--color-text-secondary)]">
+                    {tieLast(f.answer)}
+                  </dd>
+                </div>
+              ))}
+            </dl>
+          </div>
+        </div>
+      </section>
+
+      {/* ── Equipo: square portraits ─────────────────────────── */}
       <section
         id="equipo"
-        className="border-b border-[var(--color-text-primary)] bg-[var(--color-surface-warm)]"
+        className={`${SECTION_FIT} bg-[var(--color-surface-muted)]`}
       >
-        <div className={`${WRAP} py-[72px]`}>
-          <NumberHeading
-            n="06"
+        <div className={WRAP}>
+          <SectionTitle
+            size="lg"
             title="Quiénes lo organizan"
             action={{ href: teamHref, label: "Ver el equipo" }}
           />
-          <div className="grid gap-5 [grid-template-columns:repeat(auto-fit,minmax(min(190px,100%),1fr))]">
+          {/* Square frames for square photos, as with the speakers. */}
+          <ul className="m-0 grid list-none grid-cols-2 gap-x-5 gap-y-8 p-0 sm:grid-cols-3 lg:grid-cols-5">
             {previewTeam.map((tm) => (
-              <div key={tm.id} className="min-w-0">
+              <li key={tm.id} className="min-w-0 [overflow-wrap:anywhere]">
                 <Frame
                   label={tm.name}
                   photo={tm.photo}
+                  position="50% 20%"
                   className="aspect-square w-full"
+                  sizes="(min-width: 1024px) 240px, 50vw"
                 />
-                <h3 className="m-0 mb-[3px] mt-3 text-[15px] font-bold tracking-[-0.015em]">
-                  {tm.name}
+                <h3 className="m-0 mb-1 mt-4 font-semibold text-step-1 leading-[1.15]">
+                  {tieLast(tm.name)}
                 </h3>
-                <p className="m-0 text-[12.5px] leading-[1.4] text-[var(--color-text-muted)]">
-                  {tm.role}
+                <p className="m-0 text-base leading-[1.4] text-[var(--color-text-secondary)]">
+                  {tieLast(tm.role)}
                 </p>
-              </div>
+              </li>
             ))}
-          </div>
+          </ul>
         </div>
       </section>
 
-      {/* ── 07 · Sponsors ────────────────────────────────────── */}
+      {/* ── Sponsors ─────────────────────────────────────────── */}
       <section
         id="sponsors"
-        className="border-b border-[var(--color-text-primary)] bg-[var(--color-surface)]"
+        className={`${SECTION_FIT} bg-[var(--color-surface)]`}
       >
-        <div className={`${WRAP} py-[72px]`}>
-          <NumberHeading
-            n="07"
+        <div className={WRAP}>
+          {/* One action for anyone who wants to join, beside the title; the
+              board itself says nothing more than who is already in. */}
+          <SectionTitle
+            size="lg"
             title="Sponsors"
-            action={{ href: sponsorsHref, label: "Ver todos" }}
+            action={{ href: sponsorsHref, label: "Ser sponsor" }}
           />
           {sponsors.length === 0 && openSlots === 0 ? (
-            <p className="text-[15px] text-[var(--color-text-secondary)]">
+            <p className="m-0 text-step-0 text-[var(--color-text-secondary)]">
               Aún no hay sponsors confirmados.
             </p>
           ) : (
@@ -561,11 +544,11 @@ export function HomeTemplate({
               slotHref={sponsorsHref}
             />
           )}
-          <p className="mt-6 text-[15px] text-[var(--color-text-secondary)]">
+          <p className="m-0 mt-6 text-step-0 text-[var(--color-text-secondary)]">
             ¿Tu organización quiere sumarse?{" "}
             <a
               href={`mailto:${eventInfo.contactEmail}?subject=Sponsor%20AWS%20Community%20Day%20Paraguay`}
-              className="font-bold text-[var(--color-accent)]"
+              className={TEXT_LINK}
             >
               Escribinos
             </a>{" "}
@@ -574,56 +557,70 @@ export function HomeTemplate({
         </div>
       </section>
 
-      {/* ── 08 · Tres formas de ser parte ────────────────────── */}
+      {/* ── Cierre: una sola invitación ──────────────────────── */}
       <section
         id="participar"
-        className="border-b border-[var(--color-text-primary)] bg-[var(--color-surface-muted)]"
+        data-tone="hero"
+        className="fit-screen bg-[var(--color-surface-hero)] text-[var(--color-text-on-hero)]"
       >
-        <div className={`${WRAP} py-[72px]`}>
-          <NumberHeading n="08" title="Tres formas de ser parte" />
-          <div className="grid border-l border-t border-[var(--color-text-primary)] [grid-template-columns:repeat(auto-fit,minmax(min(260px,100%),1fr))]">
+        <div className={`${WRAP} py-[clamp(2.5rem,6svh,5rem)]`}>
+          <p className="m-0 mb-4 text-base font-semibold text-[var(--color-text-on-inverse-secondary)]">
+            {dateLabel}
+          </p>
+          <h2 className="m-0 mb-3 max-w-[40rem] font-display text-step-3 leading-[1.04] tracking-[-0.01em]">
+            Te esperamos en {eventInfo.location.city}.
+          </h2>
+          <p className="m-0 mb-[clamp(1.5rem,5svh,3rem)] text-step-1 text-[var(--color-text-on-inverse-secondary)]">
+            Tres formas de ser parte.
+          </p>
+          {/* Three ways in, each with what it takes and its action:
+              registering is the orange fill; giving a talk and volunteering
+              are ruled buttons. */}
+          <ul className="m-0 grid list-none gap-x-10 gap-y-8 p-0 md:grid-cols-3">
             {[
               {
-                href: registerHref,
-                eyebrow: "Asistir",
-                title: "Registrarme",
+                title: "Asistir",
                 body: "Entrada gratuita vía Eventbrite. Cupos limitados por la capacidad del auditorio.",
+                href: registerHref,
+                label: "Registrarme",
+                className: BTN_PRIMARY,
               },
               {
-                href: cfpHref,
-                eyebrow: "Hablar",
-                title: "Proponer una charla",
+                title: "Hablar",
                 body: eventInfo.cfpDeadline
                   ? `Convocatoria de charlas abierta en Sessionize hasta el ${formatDate(eventInfo.cfpDeadline)}.`
                   : "Convocatoria de charlas abierta en Sessionize.",
+                href: cfpHref,
+                label: "Proponer una charla",
+                className: BTN_OUTLINE_ON_DARK,
               },
               {
-                href: volunteersHref,
-                eyebrow: "Ayudar",
-                title: "Ser voluntario/a",
+                title: "Ayudar",
                 body: "No hace falta experiencia previa, solo ganas de dar una mano.",
+                href: volunteersHref,
+                label: "Ser voluntario/a",
+                className: BTN_OUTLINE_ON_DARK,
               },
-            ].map((c) => (
-              <NextLink
-                key={c.title}
-                href={c.href}
-                className="group/card flex min-w-0 flex-col gap-2 border-b border-r border-[var(--color-border-subtle)] p-[26px] text-[var(--color-text-primary)] transition-colors hover:bg-[var(--color-action)]"
+            ].map((way) => (
+              <li
+                key={way.title}
+                className="flex min-w-0 flex-col items-start gap-3 border-t border-[var(--color-border-on-inverse)] pt-5"
               >
-                <span className="font-mono text-[11px] uppercase tracking-[0.14em] text-[var(--color-text-muted)]">
-                  {c.eyebrow}
-                </span>
-                <span className="text-[21px] font-extrabold tracking-[-0.025em]">
-                  {c.title}
-                </span>
-                <span className="text-[14px] text-[var(--color-text-secondary)]">
-                  {c.body}
-                </span>
-                <span className="mt-2 text-[15px] font-bold" aria-hidden="true">
-                  →
-                </span>
-              </NextLink>
+                <h3 className="m-0 text-step-1 leading-tight text-[var(--color-text-on-hero)]">
+                  {way.title}
+                </h3>
+                <p className="m-0 text-step-0 text-[var(--color-text-on-inverse-secondary)]">
+                  {way.body}
+                </p>
+                <NextLink
+                  href={way.href}
+                  className={`${way.className} mt-auto`}
+                >
+                  {way.label}
+                </NextLink>
+              </li>
             ))}
-          </div>
+          </ul>
         </div>
       </section>
     </>

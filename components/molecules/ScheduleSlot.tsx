@@ -1,18 +1,12 @@
-// Schedule slot molecule. Renders a single session card with time, room,
-// title, and speakers.
+// Schedule slot molecule. One session as a ruled row: a large serif start
+// time, the title, the speakers and the room name as plain text.
 //
-// Each room gets its own accent, assigned by the parent grid and applied as
-// a stripe down the left edge plus the tint of the room glyph. The accent is
-// decorative: the room name is always spelled out next to it, so nothing is
-// communicated by color alone (constitution Principle VI). Only the stripe
-// and the glyph are tinted - the time and the room label keep their
-// AA-verified text tokens.
+// Each room gets its own accent, assigned by the parent grid and drawn as a
+// stripe down the left edge. The accent is decorative: the room name is always
+// written out beside it, so nothing is communicated by color alone.
 
-import type { CSSProperties } from "react";
 import NextLink from "next/link";
-import { Badge } from "@/components/atoms/Badge";
-import { GlyphIcon } from "@/components/atoms/GlyphIcon";
-import { formatTimeRange } from "@/lib/utils/datetime";
+import { formatTime, formatTimeRange } from "@/lib/utils/datetime";
 import { cn } from "@/lib/utils/cn";
 
 export type ScheduleSlotData = {
@@ -34,14 +28,13 @@ type ScheduleSlotProps = {
   className?: string;
 };
 
-// Five visually distinguishable steps. `--color-accent` is deliberately
-// absent: it is too close to `--color-action` to tell two rooms apart.
 const ACCENTS = [
-  { accent: "var(--color-action)", glow: "var(--color-glow-action)" },
-  { accent: "var(--color-national-red)", glow: "var(--color-glow-red)" },
-  { accent: "var(--color-tier-community)", glow: "var(--color-glow-accent)" },
-  { accent: "var(--color-tier-gold)", glow: "var(--color-glow-action)" },
-  { accent: "var(--color-tier-bronze)", glow: "var(--color-glow-red)" },
+  "var(--color-category-blue)",
+  "var(--color-category-teal)",
+  "var(--color-category-amber)",
+  "var(--color-category-green)",
+  "var(--color-category-violet)",
+  "var(--color-category-pink)",
 ] as const;
 
 export function ScheduleSlot({
@@ -50,67 +43,42 @@ export function ScheduleSlot({
   accentIndex = 0,
   className,
 }: ScheduleSlotProps) {
-  const { accent, glow } = ACCENTS[accentIndex % ACCENTS.length];
-
   return (
     <article
       className={cn(
-        "media-card relative overflow-hidden rounded-[var(--radius-lg)]",
-        "bg-[var(--color-surface-elevated)] shadow-sm",
+        "grid gap-x-8 gap-y-3 py-5 pl-4 pr-1 sm:pl-6 sm:[grid-template-columns:7.5rem_minmax(0,1fr)_minmax(0,11rem)]",
         className
       )}
-      style={
-        {
-          "--card-accent": accent,
-          "--card-glow": glow,
-        } as CSSProperties
-      }
+      style={{ borderLeftColor: ACCENTS[accentIndex % ACCENTS.length] }}
     >
-      <span
-        aria-hidden="true"
-        className="absolute inset-y-0 left-0 w-1.5 bg-[var(--card-accent)]"
-      />
+      <div className="min-w-0">
+        <time
+          dateTime={slot.startsAt}
+          className="block font-display text-step-2 leading-none text-[var(--color-text-primary)]"
+          aria-label={formatTimeRange(slot.startsAt, slot.endsAt)}
+        >
+          {formatTime(slot.startsAt)}
+        </time>
+        <span
+          aria-hidden="true"
+          className="mt-1.5 block text-step--1 text-[var(--color-text-secondary)]"
+        >
+          hasta {formatTime(slot.endsAt)}
+        </span>
+      </div>
 
-      <div className="flex flex-col gap-3 py-5 pl-7 pr-5">
-        <div className="flex flex-wrap items-center gap-3">
-          {/* Tinted rather than neutral so the time leads the card, the way
-              the Community Day family styles it. It uses the accent pair
-              rather than `--card-accent`: the red half of that alternation
-              does not hold white text at AA. */}
-          <span className="inline-flex items-center gap-1.5 rounded-[var(--radius-pill)] bg-[var(--color-accent-soft)] px-3 py-1 text-sm font-semibold text-[var(--color-accent-strong)]">
-            <GlyphIcon name="clock" size={15} />
-            <time dateTime={slot.startsAt}>
-              {formatTimeRange(slot.startsAt, slot.endsAt)}
-            </time>
-          </span>
-
-          <span className="inline-flex items-center gap-1.5 text-sm text-[var(--color-text-secondary)]">
-            <GlyphIcon
-              name="pin"
-              size={15}
-              className="text-[var(--card-accent)]"
-            />
-            {slot.roomName}
-          </span>
-
-          {slot.isPlenum ? <Badge variant="info">Plenaria</Badge> : null}
-        </div>
-
-        <h3 className="text-lg font-bold sm:text-xl">{slot.title}</h3>
-
+      <div className="min-w-0">
+        <h3 className="m-0 mb-2 max-w-[40rem] font-semibold text-step-1 leading-[1.2]">
+          {slot.title}
+        </h3>
         {slot.speakers.length > 0 ? (
-          <ul className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm">
+          <ul className="m-0 flex list-none flex-wrap gap-x-4 gap-y-1 p-0 text-step--1">
             {slot.speakers.map((sp) => (
-              <li key={sp.id} className="flex items-center gap-1.5">
-                <GlyphIcon
-                  name="mic"
-                  size={14}
-                  className="text-[var(--color-text-muted)]"
-                />
+              <li key={sp.id}>
                 {sp.slug ? (
                   <NextLink
                     href={`${speakerBasePath}/${sp.slug}`}
-                    className="font-semibold text-[var(--color-accent)] hover:underline"
+                    className="font-semibold text-[var(--color-text-primary)] underline decoration-[var(--color-national-red)] decoration-2 underline-offset-4"
                   >
                     {sp.name}
                   </NextLink>
@@ -122,6 +90,15 @@ export function ScheduleSlot({
           </ul>
         ) : null}
       </div>
+
+      <p className="m-0 min-w-0 break-words text-step--1 font-semibold text-[var(--color-text-primary)] sm:text-right">
+        {slot.roomName}
+        {slot.isPlenum ? (
+          <span className="block font-normal text-[var(--color-text-secondary)]">
+            Plenaria
+          </span>
+        ) : null}
+      </p>
     </article>
   );
 }

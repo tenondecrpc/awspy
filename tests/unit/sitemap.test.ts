@@ -48,6 +48,7 @@ describe("sitemap()", () => {
     expect(urls).toContain("https://example.test/cfp");
     expect(urls).toContain("https://example.test/register");
     expect(urls).toContain("https://example.test/editions");
+    expect(urls).toContain("https://example.test/privacy");
   });
 
   it("includes every edition mirror route per existing edition", async () => {

@@ -25,7 +25,12 @@ describe("ScheduleSlot", () => {
       screen.getByRole("heading", { level: 3, name: SLOT.title })
     ).toBeInTheDocument();
     expect(screen.getByText("Sala Principal")).toBeInTheDocument();
-    expect(screen.getByText(/13:00 - 13:45/)).toBeInTheDocument();
+    // The range is exposed to assistive tech as one label on <time>, while
+    // the visible text reads "13:00" and "hasta 13:45".
+    const time = screen.getByText("13:00");
+    expect(time.tagName).toBe("TIME");
+    expect(time).toHaveAttribute("aria-label", "13:00 - 13:45");
+    expect(screen.getByText(/hasta 13:45/)).toBeInTheDocument();
   });
 
   it("links speakers with slugs but renders plain text otherwise", () => {
@@ -49,7 +54,7 @@ describe("ScheduleSlot", () => {
     );
     const styleOf = (el: HTMLElement) =>
       el.querySelector("article")?.getAttribute("style");
-    expect(styleOf(a)).toContain("--card-accent");
+    expect(styleOf(a)).toContain("border-left-color: var(--color-category-");
     expect(styleOf(a)).not.toEqual(styleOf(b));
   });
 

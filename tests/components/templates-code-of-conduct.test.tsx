@@ -9,7 +9,7 @@ describe("CodeOfConductTemplate", () => {
     render(<CodeOfConductTemplate codeOfConduct={codeOfConduct} />);
 
     expect(
-      screen.getByRole("heading", { level: 1, name: /código de conducta/i })
+      screen.getByRole("heading", { level: 1, name: /código\s+de\s+conducta/i })
     ).toBeInTheDocument();
     // The body is Markdown rendered to real elements, not raw source.
     expect(screen.queryByText(/^---$/)).not.toBeInTheDocument();

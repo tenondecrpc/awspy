@@ -2,12 +2,11 @@
 
 // Spanish error boundary. Next.js calls this for any render error that is
 // not handled by a more specific boundary. The UI gives the visitor a way
-// out (back to home or retry) without exposing internal details.
+// out (retry or back to home) without exposing internal details.
 
-import { Container } from "@/components/atoms/Container";
-import { Section } from "@/components/atoms/Section";
-import { Heading } from "@/components/atoms/Heading";
-import { Button } from "@/components/atoms/Button";
+import NextLink from "next/link";
+import { IconBadge } from "@/components/atoms/IconBadge";
+import { BTN_OUTLINE, WRAP } from "@/components/molecules/SectionPrimitives";
 
 export default function ErrorPage({
   retry,
@@ -16,24 +15,27 @@ export default function ErrorPage({
   retry: () => void;
 }) {
   return (
-    <Section spacing="lg">
-      <Container>
-        <div className="mx-auto flex max-w-xl flex-col items-center gap-4 text-center">
-          <Heading level={1}>Ocurrió un error</Heading>
-          <p className="text-[var(--color-text-secondary)]">
-            Algo no funcionó al cargar esta página. Probá nuevamente; si el
-            problema persiste, escribinos para que lo revisemos.
-          </p>
-          <div className="flex flex-wrap items-center justify-center gap-3">
-            <Button onClick={() => retry()} variant="primary" size="md">
-              Reintentar
-            </Button>
-            <Button as="a" href="/" variant="secondary" size="md">
-              Volver al inicio
-            </Button>
-          </div>
+    <section id="contenido-principal">
+      <div
+        className={`${WRAP} flex flex-col items-start gap-5 py-[clamp(2.5rem,10svh,6rem)]`}
+      >
+        <IconBadge name="info" size="lg" />
+        <h1 className="m-0 font-display text-step-3 leading-[1.05] tracking-[-0.01em] text-[var(--color-text-primary)]">
+          Ocurrió un error
+        </h1>
+        <p className="m-0 max-w-[32rem] text-step-0 leading-[1.5] text-[var(--color-text-secondary)]">
+          Algo no funcionó al cargar esta página. Probá nuevamente; si el
+          problema persiste, escribinos para que lo revisemos.
+        </p>
+        <div className="flex flex-wrap gap-3 pt-2">
+          <button type="button" onClick={() => retry()} className={BTN_OUTLINE}>
+            Reintentar
+          </button>
+          <NextLink href="/" className={BTN_OUTLINE}>
+            Volver al inicio
+          </NextLink>
         </div>
-      </Container>
-    </Section>
+      </div>
+    </section>
   );
 }

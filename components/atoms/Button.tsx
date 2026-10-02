@@ -30,9 +30,9 @@ const VARIANT_CLASS: Record<Variant, string> = {
 };
 
 const SIZE_CLASS: Record<Size, string> = {
-  sm: "px-3 py-1.5 text-sm",
-  md: "px-4 py-2 text-base",
-  lg: "px-6 py-3 text-lg",
+  sm: "min-h-10 px-4 py-1.5 text-sm",
+  md: "min-h-[var(--size-touch)] px-5 py-2 text-base",
+  lg: "min-h-[3.25rem] px-7 py-3 text-lg",
 };
 
 const SHAPE_CLASS: Record<Shape, string> = {
@@ -40,10 +40,11 @@ const SHAPE_CLASS: Record<Shape, string> = {
   pill: "rounded-[var(--radius-pill)]",
 };
 
-// The hover lift is a transform, so the global `prefers-reduced-motion` rule
-// removes the transition without removing the affordance.
+// Hover changes ink (the background colors above); the press nudges the
+// button down a pixel, like a key. Nothing floats up, and the global
+// `prefers-reduced-motion` rule removes the transition for those who ask.
 const BASE_CLASS =
-  "inline-flex items-center justify-center gap-2 font-semibold transition hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:hover:translate-y-0";
+  "inline-flex items-center justify-center gap-2 font-semibold transition-colors duration-150 active:translate-y-px disabled:cursor-not-allowed disabled:active:translate-y-0";
 
 type CommonProps = {
   children: ReactNode;

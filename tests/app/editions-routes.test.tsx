@@ -55,7 +55,7 @@ const ROUTES: Array<{ path: string; mod: RouteModule; heading: RegExp }> = [
   {
     path: "/code-of-conduct",
     mod: codeOfConduct as never,
-    heading: /código de conducta/i,
+    heading: /código\s+de\s+conducta/i,
   },
   { path: "/cfp", mod: cfp as never, heading: /proponé una charla/i },
   { path: "/register", mod: register as never, heading: /^registro$/i },

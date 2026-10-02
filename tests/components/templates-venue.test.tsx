@@ -17,6 +17,7 @@ describe("VenueTemplate", () => {
     ).toBeInTheDocument();
     expect(screen.getAllByText(VENUE.name).length).toBeGreaterThan(0);
     expect(screen.getByText(VENUE.address)).toBeInTheDocument();
+    expect(screen.getByText("Guaraní · Ñandútí · Taller")).toBeInTheDocument();
 
     const map = screen.getAllByRole("link", { name: /mapa|maps|cómo llegar/i });
     expect(map.length).toBeGreaterThan(0);

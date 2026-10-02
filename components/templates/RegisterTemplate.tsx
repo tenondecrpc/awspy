@@ -1,15 +1,20 @@
-// Register page, rebuilt from scratch to reproduce the "Registro" mockup
-// (`AWS Community Day Paraguay (colored)/Registro.dc.html`) 1:1 — the light
-// header band with a live registration-status badge, the "Cómo funciona" steps
-// beside the "Entrada general" ticket card, and the cream "Antes de venir"
-// panel. Colors come only from design tokens and spacing matches the mockup.
+// Register page: the answer ("it's free") and the Eventbrite action first, with
+// the key facts as icon items and a real photo beside them; then how it works
+// in four steps and what to know before coming.
 //
-// All registration behavior is preserved: the `archived`, closed, upcoming,
-// and open states, and the `EventbriteRegisterButton` (external link + mailto
-// fallback) as the single registration CTA.
+// Registration behavior is preserved: the `archived`, closed, upcoming, and
+// open states, and `EventbriteRegisterButton` (external link + mailto
+// fallback) as the only registration CTA.
 
 import NextLink from "next/link";
-import { WRAP, SECTION_BORDER } from "@/components/molecules/SectionPrimitives";
+import type { GlyphName } from "@/components/atoms/GlyphIcon";
+import { IconBadge } from "@/components/atoms/IconBadge";
+import {
+  Frame,
+  H2,
+  SECTION_Y,
+  WRAP,
+} from "@/components/molecules/SectionPrimitives";
 import { EventbriteRegisterButton } from "@/components/organisms/EventbriteRegisterButton";
 import { formatDate, formatTime } from "@/lib/utils/datetime";
 import type { EventInfo } from "@/lib/content/event-info";
@@ -21,306 +26,274 @@ type RegisterTemplateProps = {
   archived?: boolean;
 };
 
-const STEPS = [
+const STEPS: { icon: GlyphName; title: string; body: string }[] = [
   {
-    n: "01",
+    icon: "ticket",
     title: "Reservá tu entrada",
     body: "El registro se hace en Eventbrite. Necesitás un correo válido y nada más.",
   },
   {
-    n: "02",
+    icon: "mail",
     title: "Guardá el ticket",
     body: "Te llega por correo. Podés mostrarlo desde el teléfono al llegar.",
   },
   {
-    n: "03",
+    icon: "door",
     title: "Acreditate el día del evento",
     body: "Presentá tu ticket en el hall de ingreso del SNPP.",
   },
   {
-    n: "04",
+    icon: "flask",
     title: "Anotate a los talleres",
     body: "Los labs tienen cupo limitado y se anotan en el mostrador de acreditación.",
   },
 ];
 
-const NOTES = [
-  {
-    title: "Talleres prácticos",
-    body: "Si querés participar, revisá los requisitos de cada taller en la agenda. Para asistir al evento no necesitás notebook ni cuenta de AWS.",
-  },
-  {
-    title: "Aceptás el código de conducta",
-    body: "Aplica a todas las personas participantes, incluidos speakers, sponsors y voluntarios.",
-  },
-  {
-    title: "Si no podés venir, liberá tu lugar",
-    body: "Cancelá tu entrada en Eventbrite para que otra persona pueda usar el cupo.",
-  },
-];
+const MAIL_LINK =
+  "font-semibold text-[var(--color-text-primary)] underline decoration-[var(--color-national-red)] decoration-2 underline-offset-4 [overflow-wrap:anywhere]";
+const TEXT_LINK =
+  "inline-flex min-h-[var(--size-touch)] items-center font-semibold text-[var(--color-text-primary)] underline decoration-[var(--color-national-red)] decoration-2 underline-offset-4 hover:decoration-[var(--color-text-primary)]";
 
-function StatusBadge({
-  label,
-  tone,
-}: {
-  label: string;
-  tone: "success" | "muted";
-}) {
+const STATUS_LABEL = {
+  open: "Registro abierto",
+  upcoming: "Registro próximamente",
+  closed: "Registro cerrado",
+  archived: "Edición finalizada",
+} as const;
+
+function StatusLine({ status }: { status: keyof typeof STATUS_LABEL }) {
   return (
-    <div
-      className={
-        "inline-flex items-center gap-[9px] rounded-[3px] border px-3 py-[5px] " +
-        (tone === "success"
-          ? "border-[var(--color-success)]"
-          : "border-[var(--color-border-subtle)]")
-      }
-    >
+    <p className="m-0 flex items-center gap-2.5 text-base font-semibold text-[var(--color-text-primary)]">
       <span
         aria-hidden="true"
         className={
-          "h-[7px] w-[7px] rounded-full " +
-          (tone === "success"
+          "size-2.5 flex-none " +
+          (status === "open"
             ? "bg-[var(--color-success)]"
-            : "bg-[var(--color-text-muted)]")
+            : "border-2 border-[var(--color-text-muted)]")
         }
       />
-      <span
-        className={
-          "font-mono text-[11px] uppercase tracking-[0.12em] " +
-          (tone === "success"
-            ? "text-[var(--color-success)]"
-            : "text-[var(--color-text-muted)]")
-        }
-      >
-        {label}
-      </span>
-    </div>
+      {STATUS_LABEL[status]}
+    </p>
   );
 }
 
-const H1 =
-  "m-0 text-[clamp(34px,5vw,58px)] font-extrabold leading-[0.98] tracking-[-0.04em] text-[var(--color-text-primary)]";
-const LEAD =
-  "m-0 max-w-[38rem] text-[17px] leading-[1.55] text-[var(--color-text-secondary)]";
+function Fact({
+  icon,
+  children,
+  wide,
+}: {
+  icon: GlyphName;
+  children: string;
+  wide?: boolean;
+}) {
+  return (
+    <li
+      className={
+        (wide ? "sm:col-span-2 " : "") +
+        "flex items-center gap-3 text-base font-semibold text-[var(--color-text-primary)]"
+      }
+    >
+      <IconBadge name={icon} size="sm" />
+      <span className="min-w-0">{children}</span>
+    </li>
+  );
+}
 
 export function RegisterTemplate({
   eventInfo,
   archived = false,
 }: RegisterTemplateProps) {
   const status = archived ? "archived" : eventInfo.registrationStatus;
+  const mailto = (
+    <a href={`mailto:${eventInfo.contactEmail}`} className={MAIL_LINK}>
+      {eventInfo.contactEmail}
+    </a>
+  );
 
-  const badge: { label: string; tone: "success" | "muted" } =
-    status === "open"
-      ? { label: "Registro abierto", tone: "success" }
-      : status === "upcoming"
-        ? { label: "Registro próximamente", tone: "muted" }
-        : status === "closed"
-          ? { label: "Registro cerrado", tone: "muted" }
-          : { label: "Edición finalizada", tone: "muted" };
-
-  const lead =
-    status === "open"
-      ? "El acceso al evento es gratuito. Reservá tu lugar a través de Eventbrite: es un proceso rápido y solo necesitás un correo."
-      : status === "upcoming"
-        ? "Aún no abrimos el registro. Vas a poder reservar tu lugar cuando esté disponible."
-        : status === "closed"
-          ? "El registro para esta edición ya está cerrado."
-          : "Esta edición ya finalizó. El registro no está disponible.";
-
-  return (
-    <>
-      {/* ── Header band ──────────────────────────────────────── */}
-      <section
-        id="contenido-principal"
-        className={`${SECTION_BORDER} bg-[var(--color-surface-muted)]`}
-      >
-        <div className={`${WRAP} py-16`}>
-          <div className="mb-[18px]">
-            <StatusBadge label={badge.label} tone={badge.tone} />
-          </div>
-          <h1 className={H1}>Registro</h1>
-          <p className={`${LEAD} mt-4`}>{lead}</p>
-        </div>
-      </section>
-
-      {status === "open" ? (
-        <>
-          {/* ── Cómo funciona + ticket ───────────────────────── */}
-          <section className={SECTION_BORDER}>
-            <div className={WRAP}>
-              <div className="grid [grid-template-columns:repeat(auto-fit,minmax(min(320px,100%),1fr))]">
-                <div className="min-w-0 py-14 pr-0 lg:pr-12">
-                  <h2 className="m-0 mb-5 text-[24px] font-extrabold tracking-[-0.03em] text-[var(--color-text-primary)]">
-                    Cómo funciona
-                  </h2>
-                  <div className="border-t border-[var(--color-text-primary)]">
-                    {STEPS.map((s) => (
-                      <div
-                        key={s.n}
-                        className="flex gap-4 border-b border-[var(--color-border-subtle)] py-[18px]"
-                      >
-                        <span className="flex-none pt-[3px] font-mono text-[11.5px] text-[var(--color-action-label)]">
-                          {s.n}
-                        </span>
-                        <div className="min-w-0">
-                          <h3 className="m-0 mb-[3px] text-[16px] font-bold text-[var(--color-text-primary)]">
-                            {s.title}
-                          </h3>
-                          <p className="m-0 text-[14.5px] text-[var(--color-text-muted)]">
-                            {s.body}
-                          </p>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                  <p className="mt-[22px] text-[13.5px] text-[var(--color-text-muted)]">
-                    El registro lo gestiona Eventbrite bajo sus propias
-                    políticas de privacidad. Este sitio no recolecta tus datos
-                    ni embebe scripts de terceros.
-                  </p>
-                </div>
-
-                <div className="flex min-w-0 flex-col justify-center border-t border-[var(--color-border-subtle)] py-14 lg:border-l lg:border-t-0 lg:pl-12">
-                  <div className="border border-[var(--color-text-primary)] p-8">
-                    <p className="m-0 mb-1.5 font-mono text-[11px] uppercase tracking-[0.14em] text-[var(--color-text-muted)]">
-                      Entrada general
-                    </p>
-                    <div className="mb-[18px] flex flex-wrap items-baseline gap-x-2.5 gap-y-1">
-                      <span className="text-[46px] font-extrabold leading-none tracking-[-0.04em] text-[var(--color-text-primary)]">
-                        Gratis
-                      </span>
-                      <span className="text-[14px] text-[var(--color-text-muted)]">
-                        cupo limitado
-                      </span>
-                    </div>
-                    <dl className="m-0 mb-6 border-t border-[var(--color-border-subtle)]">
-                      {[
-                        ["Fecha", formatDate(eventInfo.dates.start)],
-                        [
-                          "Horario",
-                          `${formatTime(eventInfo.dates.start)} – ${formatTime(
-                            eventInfo.dates.end
-                          )}`,
-                        ],
-                        ["Sede", eventInfo.location.summary],
-                        ["Incluye", "Charlas, labs y café"],
-                      ].map(([k, v]) => (
-                        <div
-                          key={k}
-                          className="grid grid-cols-[4rem_minmax(0,1fr)] gap-3 border-b border-[var(--color-border-subtle)] py-[11px] sm:grid-cols-[5rem_minmax(0,1fr)]"
-                        >
-                          <dt className="text-[14px] text-[var(--color-text-muted)]">
-                            {k}
-                          </dt>
-                          <dd className="m-0 min-w-0 text-[14px] font-semibold text-[var(--color-text-primary)]">
-                            {v}
-                          </dd>
-                        </div>
-                      ))}
-                    </dl>
-                    <EventbriteRegisterButton
-                      eventbriteEventUrl={eventInfo.eventbriteEventUrl}
-                      contactEmail={eventInfo.contactEmail}
-                      label="Reservar en Eventbrite"
-                      className="w-full text-center"
-                    />
-                    <p className="mt-3 text-center text-[12.5px] text-[var(--color-text-muted)]">
-                      Se abre en una pestaña nueva
-                    </p>
-                  </div>
-                  <p className="mt-5 text-[14px] text-[var(--color-text-secondary)]">
-                    ¿Problemas con el registro? Escribinos a{" "}
-                    <a
-                      href={`mailto:${eventInfo.contactEmail}`}
-                      className="font-semibold text-[var(--color-accent)]"
-                    >
-                      {eventInfo.contactEmail}
-                    </a>
-                    .
-                  </p>
-                </div>
-              </div>
-            </div>
-          </section>
-
-          {/* ── Antes de venir ───────────────────────────────── */}
-          <section
-            className={`${SECTION_BORDER} bg-[var(--color-surface-warm)]`}
-          >
-            <div className={`${WRAP} py-14`}>
-              <h2 className="m-0 mb-6 text-[clamp(22px,2.6vw,30px)] font-extrabold leading-[1.05] tracking-[-0.03em] text-[var(--color-text-primary)]">
-                Antes de venir
-              </h2>
-              <div className="grid border-l border-t border-[var(--color-text-primary)] [grid-template-columns:repeat(auto-fit,minmax(min(280px,100%),1fr))]">
-                {NOTES.map((n) => (
-                  <div
-                    key={n.title}
-                    className="min-w-0 border-b border-r border-[var(--color-border-subtle)] bg-[var(--color-surface)] p-[22px]"
-                  >
-                    <h3 className="m-0 mb-1.5 text-[16px] font-bold text-[var(--color-text-primary)]">
-                      {n.title}
-                    </h3>
-                    <p className="m-0 text-[14.5px] text-[var(--color-text-muted)]">
-                      {n.body}
-                    </p>
-                  </div>
-                ))}
-              </div>
-              <div className="mt-[26px] flex flex-wrap gap-2.5">
-                <NextLink
-                  href="/schedule"
-                  className="inline-flex items-center rounded-[4px] border-[1.5px] border-[var(--color-text-primary)] px-[22px] py-[11px] text-[14.5px] font-semibold text-[var(--color-text-primary)] transition-colors hover:bg-[var(--color-text-primary)] hover:text-[var(--color-surface)]"
-                >
-                  Ver la agenda
-                </NextLink>
-                <NextLink
-                  href="/venue"
-                  className="inline-flex items-center rounded-[4px] border-[1.5px] border-[var(--color-border-subtle)] px-[22px] py-[11px] text-[14.5px] font-semibold text-[var(--color-text-secondary)] transition-colors hover:border-[var(--color-text-primary)] hover:text-[var(--color-text-primary)]"
-                >
-                  Cómo llegar
-                </NextLink>
-                <NextLink
-                  href="/code-of-conduct"
-                  className="inline-flex items-center rounded-[4px] border-[1.5px] border-[var(--color-border-subtle)] px-[22px] py-[11px] text-[14.5px] font-semibold text-[var(--color-text-secondary)] transition-colors hover:border-[var(--color-text-primary)] hover:text-[var(--color-text-primary)]"
-                >
-                  Código de conducta
-                </NextLink>
-              </div>
-            </div>
-          </section>
-        </>
-      ) : status === "upcoming" ? (
-        <section className={SECTION_BORDER}>
-          <div className={`${WRAP} py-16`}>
-            <div className="max-w-2xl space-y-6">
-              <p className="text-[16px] text-[var(--color-text-secondary)]">
-                Vas a poder reservar tu lugar cuando el registro esté
-                disponible. Dejanos tu mail y te avisamos apenas abra.
-              </p>
+  if (status !== "open") {
+    return (
+      <section id="contenido-principal" className={SECTION_Y}>
+        <div className={WRAP}>
+          <div className="max-w-2xl">
+            <StatusLine status={status} />
+            <h1 className="m-0 mb-4 mt-3 font-display text-step-3 leading-[1.05] tracking-[-0.01em] text-[var(--color-text-primary)]">
+              Registro
+            </h1>
+            <p className="m-0 mb-6 text-step-0 text-[var(--color-text-secondary)]">
+              {status === "upcoming"
+                ? "Aún no abrimos el registro. Vas a poder reservar tu lugar cuando esté disponible. Dejanos tu mail y te avisamos apenas abra."
+                : status === "closed"
+                  ? "El registro para esta edición ya está cerrado. Si querés que te avisemos de la próxima edición, escribinos a "
+                  : "Esta edición ya finalizó. El registro no está disponible."}
+              {status === "closed" ? <>{mailto}.</> : null}
+            </p>
+            {status === "upcoming" ? (
               <EventbriteRegisterButton
                 eventbriteEventUrl={eventInfo.eventbriteEventUrl}
                 contactEmail={eventInfo.contactEmail}
                 label="Avisame por mail"
               />
+            ) : null}
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  return (
+    <>
+      <section
+        id="contenido-principal"
+        className="pb-[var(--space-section-y)] pt-[clamp(1.5rem,4svh,3rem)]"
+      >
+        <div className={WRAP}>
+          <div className="grid items-center gap-x-14 gap-y-10 lg:grid-cols-2">
+            <div className="min-w-0">
+              <StatusLine status="open" />
+              <h1 className="m-0 mb-5 mt-3 font-display text-step-2 leading-[1.05] tracking-[-0.01em] text-[var(--color-text-primary)]">
+                Registro
+              </h1>
+
+              {/* The card holds the one registration action. */}
+              <div className="border border-transparent bg-[var(--color-surface-elevated)] p-8">
+                <p className="m-0 font-display text-step-3 leading-[1.05] tracking-[-0.01em] text-[var(--color-text-primary)]">
+                  Entrada gratuita
+                </p>
+                <p className="m-0 mb-6 mt-2 text-base text-[var(--color-text-secondary)]">
+                  El acceso al evento es gratuito. Reservá tu lugar a través de
+                  Eventbrite: es un proceso rápido y solo necesitás un correo.
+                  El cupo es limitado.
+                </p>
+                <ul className="m-0 mb-7 grid list-none gap-3 p-0 sm:grid-cols-2">
+                  <Fact icon="calendar">
+                    {formatDate(eventInfo.dates.start)}
+                  </Fact>
+                  <Fact icon="clock">
+                    {`${formatTime(eventInfo.dates.start)} – ${formatTime(
+                      eventInfo.dates.end
+                    )}`}
+                  </Fact>
+                  <Fact icon="pin" wide>
+                    {eventInfo.location.summary}
+                  </Fact>
+                  <Fact icon="ticket">Cupo limitado</Fact>
+                  <Fact icon="heart">Charlas, labs y café</Fact>
+                </ul>
+                <EventbriteRegisterButton
+                  eventbriteEventUrl={eventInfo.eventbriteEventUrl}
+                  contactEmail={eventInfo.contactEmail}
+                  label="Reservar en Eventbrite"
+                  className="w-full text-center"
+                />
+                <p className="m-0 mt-3 text-center text-sm text-[var(--color-text-secondary)]">
+                  Se abre en una pestaña nueva
+                </p>
+              </div>
+              <p className="m-0 mt-5 text-base text-[var(--color-text-secondary)]">
+                ¿Problemas con el registro? Escribinos a {mailto}.
+              </p>
             </div>
+
+            <Frame
+              label="Asistentes conversando durante un AWS Community Day"
+              photo="/assets/charla.jpg"
+              sizes="(min-width: 1024px) 600px, 100vw"
+              preload
+              className="aspect-[1600/1027] w-full rounded-[var(--radius-sm)]"
+            />
           </div>
-        </section>
-      ) : status === "closed" ? (
-        <section className={SECTION_BORDER}>
-          <div className={`${WRAP} py-16`}>
-            <p className="max-w-2xl text-[16px] text-[var(--color-text-secondary)]">
-              Si querés que te avisemos de la próxima edición, escribinos a{" "}
-              <a
-                href={`mailto:${eventInfo.contactEmail}`}
-                className="font-semibold text-[var(--color-accent)]"
+        </div>
+      </section>
+
+      <section className={`${SECTION_Y} bg-[var(--color-surface-muted)]`}>
+        <div className={WRAP}>
+          <h2 className={`${H2} mb-8`}>Cómo funciona</h2>
+          <ol className="m-0 grid list-none gap-5 p-0 [grid-template-columns:repeat(auto-fit,minmax(min(14rem,100%),1fr))]">
+            {STEPS.map((s, i) => (
+              <li
+                key={s.title}
+                className="min-w-0 bg-[var(--color-surface-elevated)] p-6"
               >
-                {eventInfo.contactEmail}
-              </a>
-              .
-            </p>
-          </div>
-        </section>
-      ) : null}
+                <div className="mb-4 flex items-center justify-between gap-3">
+                  <IconBadge name={s.icon} size="lg" tone="solid" />
+                  <span
+                    aria-hidden="true"
+                    className="font-display text-step-3 leading-none text-[var(--color-text-muted)]"
+                  >
+                    {i + 1}
+                  </span>
+                </div>
+                <h3 className="m-0 mb-1 text-step-0 leading-tight text-[var(--color-text-primary)]">
+                  {s.title}
+                </h3>
+                <p className="m-0 text-base text-[var(--color-text-secondary)]">
+                  {s.body}
+                </p>
+              </li>
+            ))}
+          </ol>
+          <p className="m-0 mt-6 max-w-[38rem] text-sm text-[var(--color-text-secondary)]">
+            El registro lo gestiona Eventbrite bajo sus propias políticas de
+            privacidad. Este sitio no recibe datos de registro ni embebe scripts
+            de Eventbrite.
+          </p>
+        </div>
+      </section>
+
+      <section className={SECTION_Y}>
+        <div className={WRAP}>
+          <h2 className={`${H2} mb-8`}>Antes de venir</h2>
+          <ul className="m-0 grid list-none gap-x-10 gap-y-8 p-0 [grid-template-columns:repeat(auto-fit,minmax(min(18rem,100%),1fr))]">
+            <li className="flex min-w-0 gap-4">
+              <IconBadge name="laptop" />
+              <div className="min-w-0">
+                <h3 className="m-0 mb-1 text-step-0 text-[var(--color-text-primary)]">
+                  Talleres prácticos
+                </h3>
+                <p className="m-0 mb-1 text-base text-[var(--color-text-secondary)]">
+                  Si querés participar, revisá los requisitos de cada taller en
+                  la agenda. Para asistir al evento no necesitás notebook ni
+                  cuenta de AWS.
+                </p>
+                <NextLink href="/schedule" className={TEXT_LINK}>
+                  Ver la agenda
+                </NextLink>
+              </div>
+            </li>
+            <li className="flex min-w-0 gap-4">
+              <IconBadge name="shield" />
+              <div className="min-w-0">
+                <h3 className="m-0 mb-1 text-step-0 text-[var(--color-text-primary)]">
+                  Aceptás el código de conducta
+                </h3>
+                <p className="m-0 mb-1 text-base text-[var(--color-text-secondary)]">
+                  Aplica a todas las personas participantes, incluidos speakers,
+                  sponsors y voluntarios.
+                </p>
+                <NextLink href="/code-of-conduct" className={TEXT_LINK}>
+                  Código de conducta
+                </NextLink>
+              </div>
+            </li>
+            <li className="flex min-w-0 gap-4">
+              <IconBadge name="heart" />
+              <div className="min-w-0">
+                <h3 className="m-0 mb-1 text-step-0 text-[var(--color-text-primary)]">
+                  Si no podés venir, liberá tu lugar
+                </h3>
+                <p className="m-0 mb-1 text-base text-[var(--color-text-secondary)]">
+                  Cancelá tu entrada en Eventbrite para que otra persona pueda
+                  usar el cupo.
+                </p>
+                <NextLink href="/venue" className={TEXT_LINK}>
+                  Cómo llegar
+                </NextLink>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </section>
     </>
   );
 }

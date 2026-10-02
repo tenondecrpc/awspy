@@ -21,6 +21,7 @@ const TOP_LEVEL_ROUTES = [
   "/cfp",
   "/register",
   "/editions",
+  "/privacy",
 ] as const;
 
 const EDITION_SUBROUTES = [

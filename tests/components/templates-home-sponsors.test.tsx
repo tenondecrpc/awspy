@@ -34,29 +34,34 @@ function renderHome() {
 }
 
 describe("HomeTemplate sponsors board", () => {
-  it("shows the confirmed sponsors under their tier", () => {
+  it("shows the confirmed sponsors, naming each one's tier", () => {
     const section = renderHome();
 
     expect(sponsors.length).toBeGreaterThan(0);
-    new Set(sponsors.map((s) => TIER_LABEL[s.tier])).forEach((label) => {
-      expect(
-        within(section).getByRole("heading", {
-          level: 3,
-          name: `Sponsor ${label}`,
-        })
-      ).toBeInTheDocument();
+    // Every confirmed tier keeps its visible sponsorship level.
+    const tiers = new Set(sponsors.map((s) => TIER_LABEL[s.tier]));
+    tiers.forEach((label) => {
+      const heading = within(section).queryByRole("heading", {
+        level: 3,
+        name: `Sponsor ${label}`,
+      });
+      expect(heading).toBeInTheDocument();
     });
+    // Whatever the headings, every logo link carries name and tier.
     sponsors.forEach((s) => {
-      expect(within(section).getByText(s.name)).toBeInTheDocument();
+      const link = within(section).getByRole("link", {
+        name: `${s.name} (sponsor ${TIER_LABEL[s.tier]})`,
+      });
+      expect(link).toHaveAttribute("href", s.url);
+      expect(link.textContent?.replace(/\s+/g, " ")).toBe(s.name);
     });
   });
 
   it("invites a logo instead of quoting the package prices", () => {
     const section = renderHome();
 
-    const row = within(section).getByRole("link", { name: /^Tu logo aquí/ });
-    expect(row).toHaveAttribute("href", "/sponsors");
-    expect(row.children.length).toBeGreaterThan(0);
+    const action = within(section).getByRole("link", { name: "Ser sponsor" });
+    expect(action).toHaveAttribute("href", "/sponsors");
     expect(section.textContent).not.toMatch(AMOUNT);
     expect(screen.queryByText(/Disponible/)).not.toBeInTheDocument();
   });

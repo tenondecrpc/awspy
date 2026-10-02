@@ -119,11 +119,19 @@ test.describe("Site navigation", () => {
     await expect(
       header.getByRole("link", { name: "Registrarme", exact: true })
     ).toBeHidden();
-    await page.getByRole("button", { name: "Abrir menú" }).click();
+    // The page is server-rendered, so the button exists before React has
+    // hydrated, and a click in that window does nothing. Under load (parallel
+    // workers on a dev server) it landed there. Retry the click until the
+    // drawer is open instead of assuming hydration is already done.
+    const drawer = page.getByRole("dialog", { name: "Navegación principal" });
+    await expect(async () => {
+      if (!(await drawer.isVisible())) {
+        await page.getByRole("button", { name: "Abrir menú" }).click();
+      }
+      await expect(drawer).toBeVisible({ timeout: 1000 });
+    }).toPass({ timeout: 15_000 });
     await expect(
-      page
-        .getByRole("dialog", { name: "Navegación principal" })
-        .getByRole("link", { name: "Registrarme" })
+      drawer.getByRole("link", { name: "Registrarme" })
     ).toBeVisible();
   });
 

@@ -17,6 +17,16 @@ describe("VolunteersTemplate", () => {
         name: "Completar formulario de voluntariado",
       })
     ).toHaveAttribute("href", EVENT_INFO.volunteerRegistrationUrl);
+    expect(screen.getByText("Compromiso")).toBeInTheDocument();
+    expect(screen.getByText("Un turno durante el evento")).toBeInTheDocument();
+    expect(screen.getByText("Remera oficial y almuerzo")).toBeInTheDocument();
+    expect(screen.getByText("Ninguno, solo ganas")).toBeInTheDocument();
+    expect(
+      screen.queryByText(/recorrido con el equipo/i)
+    ).not.toBeInTheDocument();
+    expect(
+      screen.queryByText(/foto del equipo completo/i)
+    ).not.toBeInTheDocument();
   });
 
   it("renders the archived notice without an application link", () => {

@@ -1,15 +1,20 @@
-// CFP page, rebuilt from scratch to reproduce the "CFP" mockup
-// (`AWS Community Day Paraguay (colored)/CFP.dc.html`) 1:1 — the light header
-// band, the "Formatos" / "Qué buscamos" two-column block, the cream "Fechas
-// clave" grid, and the "¿Es tu primera charla?" closing block. Colors come
-// only from design tokens and spacing matches the mockup.
+// CFP page: the deadline as the hero fact with the submission button, what the
+// committee is looking for, the formats, the key dates as a small timeline,
+// and a note for first-time speakers.
 //
 // The CFP status, deadline, and the Sessionize submission link are delegated
 // to `SessionizeCFPCallout` (open / upcoming / closed behavior preserved). The
 // `archived` route renders only the finished-edition notice per FR-035.
 
 import NextLink from "next/link";
-import { WRAP, SECTION_BORDER } from "@/components/molecules/SectionPrimitives";
+import { GlyphIcon, type GlyphName } from "@/components/atoms/GlyphIcon";
+import { IconBadge } from "@/components/atoms/IconBadge";
+import {
+  BTN_OUTLINE,
+  H2,
+  SECTION_Y,
+  WRAP,
+} from "@/components/molecules/SectionPrimitives";
 import { SessionizeCFPCallout } from "@/components/organisms/SessionizeCFPCallout";
 import { startOfDayKey } from "@/lib/utils/datetime";
 import type { EventInfo } from "@/lib/content/event-info";
@@ -22,20 +27,24 @@ type CFPTemplateProps = {
 
 const CONTACT_EMAIL = "awscommunitydayparaguay@gmail.com";
 
-const FORMATS = [
+const FORMATS: { icon: GlyphName; name: string; body: string }[] = [
   {
+    icon: "mic",
     name: "Charla técnica",
     body: "Un tema, un caso, una arquitectura. El formato principal del día.",
   },
   {
+    icon: "flask",
     name: "Taller hands-on",
     body: "Práctico, con cupo limitado. La gente trae su notebook.",
   },
   {
+    icon: "bolt",
     name: "Lightning talk",
     body: "Una idea, sin rodeos. Ideal si nunca presentaste.",
   },
   {
+    icon: "users",
     name: "Panel",
     body: "Propuesta de tema y personas; el comité arma la mesa.",
   },
@@ -49,7 +58,7 @@ const LOOKING = [
   "Voces nuevas de la comunidad paraguaya y de la región",
 ];
 
-type KeyDate = { when: string; title: string; body: string; color: string };
+type KeyDate = { when: string; title: string; body: string };
 
 /** Formats a configured date for the Asunción calendar. */
 function dotDate(input: string): string {
@@ -64,7 +73,6 @@ function keyDates(eventInfo: EventInfo): KeyDate[] {
       when: dotDate(eventInfo.dates.start),
       title: "Community Day",
       body: "Charlas y talleres en el SNPP, San Lorenzo.",
-      color: "var(--color-category-green)",
     },
   ];
   if (!eventInfo.cfpDeadline) return dates;
@@ -73,97 +81,64 @@ function keyDates(eventInfo: EventInfo): KeyDate[] {
       when: dotDate(eventInfo.cfpDeadline),
       title: "Cierre de la convocatoria",
       body: "Última fecha para enviar propuestas en Sessionize.",
-      color: "var(--color-national-red-label)",
     },
     ...dates,
   ];
 }
 
-const H1 =
-  "m-0 text-[clamp(34px,5vw,58px)] font-extrabold leading-[0.98] tracking-[-0.04em] text-[var(--color-text-primary)]";
+const TEXT_LINK =
+  "inline-flex min-h-[var(--size-touch)] items-center font-semibold text-[var(--color-text-primary)] underline decoration-[var(--color-national-red)] decoration-2 underline-offset-4 hover:decoration-[var(--color-text-primary)]";
 
 export function CFPTemplate({ eventInfo, archived = false }: CFPTemplateProps) {
   if (archived) {
     return (
-      <section
-        id="contenido-principal"
-        className={`${SECTION_BORDER} bg-[var(--color-surface-muted)]`}
-      >
-        <div className={`${WRAP} py-16`}>
-          <h1 className={H1}>Proponé una charla</h1>
-          <p className="m-0 mt-4 max-w-[38rem] text-[17px] leading-[1.55] text-[var(--color-text-secondary)]">
-            Esta edición ya finalizó. La convocatoria de charlas no está
-            disponible.
-          </p>
+      <section id="contenido-principal" className={SECTION_Y}>
+        <div className={WRAP}>
+          <div className="max-w-2xl">
+            <p className="m-0 text-base font-semibold text-[var(--color-text-primary)]">
+              Edición finalizada
+            </p>
+            <h1 className="m-0 mb-4 mt-3 font-display text-step-3 leading-[1.05] tracking-[-0.01em] text-[var(--color-text-primary)]">
+              Proponé una charla
+            </h1>
+            <p className="m-0 text-step-0 text-[var(--color-text-secondary)]">
+              Esta edición ya finalizó. La convocatoria de charlas no está
+              disponible.
+            </p>
+          </div>
         </div>
       </section>
     );
   }
 
+  const dates = keyDates(eventInfo);
+
   return (
     <>
-      {/* ── Header band + Sessionize callout ─────────────────── */}
       <section
         id="contenido-principal"
-        className={`${SECTION_BORDER} bg-[var(--color-surface-muted)]`}
+        className="pb-[var(--space-section-y)] pt-[clamp(1.5rem,4svh,3rem)]"
       >
-        <div className={`${WRAP} py-16`}>
-          <h1 className={H1}>Proponé una charla</h1>
-          <p className="m-0 mt-4 max-w-[38rem] text-[17px] leading-[1.55] text-[var(--color-text-secondary)]">
+        <div className={WRAP}>
+          <h1 className="m-0 mb-2 font-display text-step-2 leading-[1.05] tracking-[-0.01em] text-[var(--color-text-primary)]">
+            Proponé una charla
+          </h1>
+          <p className="m-0 mb-8 max-w-[40rem] text-step-0 text-[var(--color-text-secondary)]">
             Compartí tu experiencia con la comunidad. Buscamos charlas técnicas,
             casos reales, talleres y lightning talks en español. No hace falta
             ser speaker profesional: hace falta tener algo para contar.
           </p>
-          <div className="mt-7 max-w-[42rem]">
+
+          <div className="grid items-stretch gap-6 lg:grid-cols-2">
             <SessionizeCFPCallout eventInfo={eventInfo} />
-          </div>
-        </div>
-      </section>
 
-      {/* ── Formatos + Qué buscamos ──────────────────────────── */}
-      <section className={SECTION_BORDER}>
-        <div className={WRAP}>
-          <div className="grid [grid-template-columns:repeat(auto-fit,minmax(min(300px,100%),1fr))]">
-            <div className="min-w-0 py-[52px] pr-0 lg:pr-12">
-              <h2 className="m-0 mb-5 text-[24px] font-extrabold tracking-[-0.03em] text-[var(--color-text-primary)]">
-                Formatos
-              </h2>
-              <div className="border-t border-[var(--color-text-primary)]">
-                {FORMATS.map((f) => (
-                  <div
-                    key={f.name}
-                    className="border-b border-[var(--color-border-subtle)] py-4"
-                  >
-                    <div className="min-w-0">
-                      <h3 className="m-0 mb-[3px] text-[16px] font-bold text-[var(--color-text-primary)]">
-                        {f.name}
-                      </h3>
-                      <p className="m-0 text-[14px] text-[var(--color-text-muted)]">
-                        {f.body}
-                      </p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            <div className="min-w-0 border-t border-[var(--color-border-subtle)] py-[52px] lg:border-l lg:border-t-0 lg:pl-12">
-              <h2 className="m-0 mb-5 text-[24px] font-extrabold tracking-[-0.03em] text-[var(--color-text-primary)]">
-                Qué buscamos
-              </h2>
-              <ul className="m-0 list-none border-t border-[var(--color-text-primary)] p-0">
+            <div className="min-w-0 bg-[var(--color-surface-elevated)] p-8">
+              <h2 className={`${H2} mb-5`}>Qué buscamos</h2>
+              <ul className="m-0 grid list-none gap-4 p-0">
                 {LOOKING.map((label) => (
-                  <li
-                    key={label}
-                    className="flex items-baseline gap-3 border-b border-[var(--color-border-subtle)] py-[14px]"
-                  >
-                    <span
-                      aria-hidden="true"
-                      className="flex-none font-mono text-[11px] text-[var(--color-category-green)]"
-                    >
-                      ✓
-                    </span>
-                    <span className="text-[15px] text-[var(--color-text-primary)]">
+                  <li key={label} className="flex items-start gap-3">
+                    <IconBadge name="check" size="sm" />
+                    <span className="min-w-0 pt-1.5 text-base text-[var(--color-text-primary)]">
                       {label}
                     </span>
                   </li>
@@ -174,73 +149,100 @@ export function CFPTemplate({ eventInfo, archived = false }: CFPTemplateProps) {
         </div>
       </section>
 
-      {/* ── Fechas clave ─────────────────────────────────────── */}
-      <section className={`${SECTION_BORDER} bg-[var(--color-surface-warm)]`}>
-        <div className={`${WRAP} py-14`}>
-          <h2 className="m-0 mb-[26px] text-[clamp(22px,2.6vw,30px)] font-extrabold leading-[1.05] tracking-[-0.03em] text-[var(--color-text-primary)]">
-            Fechas clave
-          </h2>
-          <div className="grid border-l border-t border-[var(--color-text-primary)] [grid-template-columns:repeat(auto-fit,minmax(min(230px,100%),1fr))]">
-            {keyDates(eventInfo).map((d) => (
-              <div
-                key={d.title}
-                className="min-w-0 border-b border-r border-[var(--color-border-subtle)] bg-[var(--color-surface)] p-[22px]"
+      <section className={`${SECTION_Y} bg-[var(--color-surface-muted)]`}>
+        <div className={WRAP}>
+          <h2 className={`${H2} mb-8`}>Formatos</h2>
+          <ul className="m-0 grid list-none gap-5 p-0 [grid-template-columns:repeat(auto-fit,minmax(min(14rem,100%),1fr))]">
+            {FORMATS.map((f) => (
+              <li
+                key={f.name}
+                className="min-w-0 bg-[var(--color-surface-elevated)] p-6"
               >
-                <p
-                  className="m-0 mb-2 font-mono text-[13px]"
-                  style={{ color: d.color }}
-                >
-                  {d.when}
-                </p>
-                <h3 className="m-0 mb-1 text-[16px] font-bold text-[var(--color-text-primary)]">
-                  {d.title}
+                <IconBadge
+                  name={f.icon}
+                  size="lg"
+                  tone="solid"
+                  className="mb-4"
+                />
+                <h3 className="m-0 mb-1 text-step-0 leading-tight text-[var(--color-text-primary)]">
+                  {f.name}
                 </h3>
-                <p className="m-0 text-[14px] text-[var(--color-text-muted)]">
-                  {d.body}
+                <p className="m-0 text-base text-[var(--color-text-secondary)]">
+                  {f.body}
                 </p>
-              </div>
+              </li>
             ))}
-          </div>
+          </ul>
         </div>
       </section>
 
-      {/* ── ¿Es tu primera charla? ───────────────────────────── */}
-      <section>
-        <div className={`${WRAP} pb-[72px] pt-14`}>
-          <div className="grid items-center gap-10 [grid-template-columns:repeat(auto-fit,minmax(min(300px,100%),1fr))]">
-            <div className="min-w-0">
-              <h2 className="m-0 mb-3.5 text-[clamp(24px,3vw,34px)] font-extrabold leading-[1.05] tracking-[-0.035em] text-[var(--color-text-primary)]">
-                ¿Es tu primera charla?
-              </h2>
-              <p className="m-0 mb-5 max-w-[32rem] text-[16px] text-[var(--color-text-secondary)]">
-                Reservamos espacios de lightning talk para quienes nunca
-                presentaron. Si querés, te acompañamos a armar la propuesta y
-                ensayar antes del evento. Escribinos y te ponemos en contacto
-                con alguien del equipo.
-              </p>
-              <a
-                href={`mailto:${CONTACT_EMAIL}?subject=Primera%20charla%20-%20CFP%20AWS%20Community%20Day%20Paraguay`}
-                className="inline-flex items-center rounded-[4px] border-[1.5px] border-[var(--color-text-primary)] px-[26px] py-[13px] text-[15px] font-semibold text-[var(--color-text-primary)] transition-colors hover:bg-[var(--color-text-primary)] hover:text-[var(--color-surface)]"
-              >
-                Pedir mentoría
-              </a>
+      <section className={SECTION_Y}>
+        <div className={WRAP}>
+          <h2 className={`${H2} mb-8`}>Fechas clave</h2>
+          <ol
+            className="relative m-0 grid max-w-[44rem] list-none gap-x-6 p-0"
+            style={{ gridTemplateColumns: `repeat(${dates.length}, 1fr)` }}
+          >
+            {/* The line runs behind the dots. */}
+            <span
+              aria-hidden="true"
+              className="absolute left-2 right-2 top-2 h-0.5 bg-[var(--color-text-muted)]"
+            />
+            {dates.map((d) => (
+              <li key={d.title} className="relative min-w-0">
+                <span
+                  aria-hidden="true"
+                  className="relative block size-4 rounded-full bg-[var(--color-text-primary)]"
+                />
+                <p className="m-0 mt-4 flex items-center gap-2 font-display text-step-1 sm:text-step-2 leading-none text-[var(--color-text-primary)]">
+                  <GlyphIcon name="calendar" size={24} />
+                  {d.when}
+                </p>
+                <p className="m-0 mt-2 text-base font-semibold text-[var(--color-text-secondary)]">
+                  {d.title}
+                </p>
+                <p className="m-0 mt-2 text-sm text-[var(--color-text-secondary)]">
+                  {d.body}
+                </p>
+              </li>
+            ))}
+          </ol>
+          <h3 className="m-0 mt-8 text-step-1 text-[var(--color-text-primary)]">
+            Después de enviar
+          </h3>
+          <p className="m-0 mt-2 max-w-[38rem] text-base text-[var(--color-text-secondary)]">
+            El comité revisa cada propuesta y responde por Sessionize. Si tu
+            charla queda seleccionada, te pedimos confirmación y datos para el
+            perfil público.
+          </p>
+          <NextLink href="/speakers" className={TEXT_LINK}>
+            Ver speakers confirmados
+          </NextLink>
+        </div>
+      </section>
+
+      <section className="pb-[var(--space-section-y)]">
+        <div className={WRAP}>
+          <div className="flex flex-col gap-6 bg-[var(--color-surface-muted)] p-8 md:flex-row md:items-center md:justify-between">
+            <div className="flex min-w-0 gap-4">
+              <IconBadge name="heart" size="lg" tone="solid" />
+              <div className="min-w-0">
+                <h2 className={`${H2} mb-2`}>¿Es tu primera charla?</h2>
+                <p className="m-0 max-w-[36rem] text-base text-[var(--color-text-secondary)]">
+                  Reservamos espacios de lightning talk para quienes nunca
+                  presentaron. Si querés, te acompañamos a armar la propuesta y
+                  ensayar antes del evento. Escribinos y te ponemos en contacto
+                  con alguien del equipo.
+                </p>
+              </div>
             </div>
-            <div className="min-w-0 border border-[var(--color-text-primary)] p-7">
-              <p className="m-0 mb-2.5 font-mono text-[11px] uppercase tracking-[0.14em] text-[var(--color-text-muted)]">
-                Después de enviar
-              </p>
-              <p className="m-0 mb-4 text-[15px] text-[var(--color-text-secondary)]">
-                El comité revisa cada propuesta y responde por Sessionize. Si tu
-                charla queda seleccionada, te pedimos confirmación y datos para
-                el perfil público.
-              </p>
-              <NextLink
-                href="/speakers"
-                className="text-[15px] font-semibold text-[var(--color-accent)]"
-              >
-                Ver speakers confirmados →
-              </NextLink>
-            </div>
+            <a
+              href={`mailto:${CONTACT_EMAIL}?subject=Primera%20charla%20-%20CFP%20AWS%20Community%20Day%20Paraguay`}
+              className={`${BTN_OUTLINE} flex-none`}
+            >
+              <GlyphIcon name="mail" size={20} />
+              Pedir mentoría
+            </a>
           </div>
         </div>
       </section>

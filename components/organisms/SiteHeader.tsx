@@ -9,6 +9,7 @@
 // destinations it omits (Proponer charla, …) remain reachable in
 // the footer and on their own pages, so no navigation is lost.
 
+import { FlagRule } from "@/components/atoms/FlagRule";
 import { useEffect, useRef, useState } from "react";
 import NextLink from "next/link";
 import Image from "next/image";
@@ -52,7 +53,7 @@ export function SiteHeader() {
   return (
     <>
       <header
-        className="sticky top-0 z-40 border-b border-[var(--color-text-primary)] bg-[var(--color-surface)] backdrop-blur"
+        className="sticky top-0 z-40 bg-[var(--color-surface)]"
         role="banner"
       >
         <a href="#contenido-principal" className="skip-link">
@@ -62,7 +63,7 @@ export function SiteHeader() {
           <div className="flex h-16 items-center justify-between gap-4">
             <NextLink
               href="/"
-              className="flex shrink-0 items-center gap-3 whitespace-nowrap"
+              className="flex min-h-[var(--size-touch)] shrink-0 items-center gap-3 whitespace-nowrap"
             >
               <Image
                 src="/assets/logo-dark.png"
@@ -125,6 +126,7 @@ export function SiteHeader() {
             </div>
           </div>
         </Container>
+        <FlagRule />
       </header>
 
       {/* Mobile drawer. It stays outside <header> on purpose: the header's
@@ -145,10 +147,12 @@ export function SiteHeader() {
             role="dialog"
             aria-modal="true"
             aria-label="Navegación principal"
-            className="ml-auto h-full w-[min(20rem,80vw)] bg-[var(--color-surface)] p-6 shadow-xl"
+            className="ml-auto flex h-full w-[min(22rem,85vw)] flex-col bg-[var(--color-surface)] p-6"
           >
-            <div className="mb-6 flex items-center justify-between">
-              <span className="font-bold">AWS Community Day Paraguay</span>
+            <div className="mb-6 flex items-start justify-between gap-4">
+              <span className="font-display text-step-1 leading-[1.15]">
+                AWS Community Day Paraguay
+              </span>
               <button
                 ref={closeBtnRef}
                 type="button"

@@ -8,17 +8,19 @@ const ITEM = {
   answer: "Es una jornada gratuita de la comunidad AWS.",
 };
 
+// The question is typeset with a non-breaking space between its last two words
+// (tieLast); s matches it, so the name is compared modulo that space.
+const QUESTION = /^¿Qué\s+es\s+el\s+evento\?$/;
+
 describe("FAQItem", () => {
   it("renders the question as a button", () => {
     render(<FAQItem item={ITEM} />);
-    expect(
-      screen.getByRole("button", { name: "¿Qué es el evento?" })
-    ).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: QUESTION })).toBeInTheDocument();
   });
 
   it("starts collapsed by default", () => {
     render(<FAQItem item={ITEM} />);
-    const trigger = screen.getByRole("button", { name: "¿Qué es el evento?" });
+    const trigger = screen.getByRole("button", { name: QUESTION });
     expect(trigger).toHaveAttribute("aria-expanded", "false");
     // Region exists and is hidden via the `hidden` attribute (not in the
     // accessibility tree).
@@ -27,18 +29,17 @@ describe("FAQItem", () => {
 
   it("starts open when defaultOpen is set", () => {
     render(<FAQItem item={ITEM} defaultOpen />);
-    expect(
-      screen.getByRole("button", { name: "¿Qué es el evento?" })
-    ).toHaveAttribute("aria-expanded", "true");
-    expect(
-      screen.getByRole("region", { name: "¿Qué es el evento?" })
-    ).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: QUESTION })).toHaveAttribute(
+      "aria-expanded",
+      "true"
+    );
+    expect(screen.getByRole("region", { name: QUESTION })).toBeInTheDocument();
     expect(screen.getByText(/jornada gratuita/i)).toBeInTheDocument();
   });
 
   it("toggles via click and updates aria-expanded", () => {
     render(<FAQItem item={ITEM} />);
-    const trigger = screen.getByRole("button", { name: "¿Qué es el evento?" });
+    const trigger = screen.getByRole("button", { name: QUESTION });
     fireEvent.click(trigger);
     expect(trigger).toHaveAttribute("aria-expanded", "true");
     expect(screen.getByText(/jornada gratuita/i)).toBeVisible();

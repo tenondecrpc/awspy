@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { render, screen, within } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 import { ScheduleTemplate } from "@/components/templates/ScheduleTemplate";
 import { getEventInfo } from "@/lib/content/event-info";
@@ -189,7 +189,7 @@ describe("ScheduleTemplate", () => {
     ).not.toBeInTheDocument();
   });
 
-  it("credits each session to its speakers, portrait first", () => {
+  it("credits each session to its speakers, with a decorative portrait", () => {
     const { container } = render(
       <ScheduleTemplate
         grid={GRID}
@@ -203,16 +203,15 @@ describe("ScheduleTemplate", () => {
       />
     );
 
+    const list = screen.getByRole("list", { name: "Speaker" });
+    expect(within(list).getAllByRole("listitem")).toHaveLength(1);
     expect(
-      screen.getByRole("link", { name: "Ana Perez" }).closest("p")
-    ).toHaveTextContent(/^Por Ana Perez$/);
-    const portraits = Array.from(container.querySelectorAll("img"));
-    expect(portraits).toHaveLength(1);
-    // Decorative: the name is spelled out right after it.
-    expect(portraits[0]).toHaveAttribute("alt", "");
-    expect(portraits[0].getAttribute("src")).toContain(
-      encodeURIComponent("https://cdn.sessionize.com/image/ana.jpg")
-    );
+      within(list).getByRole("link", { name: "Ana Perez" })
+    ).toHaveAttribute("href", "/speakers/ana-perez");
+    // The portrait is decorative: the linked name carries the credit.
+    const portrait = container.querySelector("img");
+    expect(portrait).not.toBeNull();
+    expect(portrait).toHaveAttribute("alt", "");
   });
 
   it("lists every co-speaker of a session as one sentence", () => {
@@ -245,9 +244,17 @@ describe("ScheduleTemplate", () => {
     );
 
     // Only Ana is on the speakers list, so only her name links anywhere.
+    const list = screen.getByRole("list", { name: "Speakers" });
     expect(
-      screen.getByRole("link", { name: "Ana Perez" }).closest("p")
-    ).toHaveTextContent(/^Por Ana Perez, Bruno Diaz y Carla Ruiz$/);
+      within(list)
+        .getAllByRole("listitem")
+        .map((item) => item.textContent?.trim())
+    ).toEqual([
+      expect.stringMatching(/Ana Perez$/),
+      expect.stringMatching(/Bruno Diaz$/),
+      expect.stringMatching(/Carla Ruiz$/),
+    ]);
+    expect(screen.getByRole("link", { name: "Ana Perez" })).toBeInTheDocument();
     expect(
       screen.queryByRole("link", { name: "Bruno Diaz" })
     ).not.toBeInTheDocument();
@@ -286,9 +293,16 @@ describe("ScheduleTemplate", () => {
     expect(
       screen.getAllByRole("heading", { level: 3 }).map((h) => h.textContent)
     ).toEqual(["Arquitecturas serverless", "Observabilidad en producción"]);
+    // The shared talk lists both speakers; each is a link to their page.
+    const lists = screen.getAllByRole("list", { name: /^Speakers?$/ });
+    const shared = lists.find((l) =>
+      within(l).queryByRole("link", { name: "Bruno Diaz" })
+    )!;
     expect(
-      screen.getByRole("link", { name: "Bruno Diaz" }).closest("p")
-    ).toHaveTextContent(/^Por Ana Perez y Bruno Diaz$/);
+      within(shared)
+        .getAllByRole("link")
+        .map((l) => l.textContent)
+    ).toEqual(["Ana Perez", "Bruno Diaz"]);
   });
 
   it("announces the gap when the grid is still empty", () => {

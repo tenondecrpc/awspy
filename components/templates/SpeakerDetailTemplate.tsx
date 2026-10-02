@@ -1,23 +1,24 @@
-// Speaker detail page, rebuilt from scratch to reproduce the "Speaker" mockup
-// (`AWS Community Day Paraguay (colored)/Speaker.dc.html`) 1:1 — breadcrumb
-// band, a split portrait/identity hero, a numbered sessions list, and the
-// closing "volver / registrarme" bar. Real Sessionize data drives the hero and
-// the sessions; the Person + Breadcrumb JSON-LD and every empty-state branch
-// are preserved.
+// Speaker detail page: who this person is (square portrait, name, tagline,
+// social links) and when to see them ("Sus charlas" as cards linking to the
+// agenda), closed by the registration button. Real Sessionize data drives it;
+// the Person + Breadcrumb JSON-LD and every empty-state branch are preserved.
+// The session list carries no room name (only a room id), so the cards show
+// date, time and duration.
 
+import Image from "next/image";
 import NextLink from "next/link";
+import { GlyphIcon } from "@/components/atoms/GlyphIcon";
 import {
-  NumberHeading,
-  Frame,
+  BTN_PRIMARY,
+  H2,
   WRAP,
-  SECTION_BORDER,
 } from "@/components/molecules/SectionPrimitives";
 import {
   buildBreadcrumbJsonLd,
   buildPersonJsonLd,
   serializeJsonLd,
 } from "@/lib/utils/seo";
-import { formatTimeRange } from "@/lib/utils/datetime";
+import { formatDate, formatTime } from "@/lib/utils/datetime";
 import type { Speaker, SessionizeSession } from "@/lib/api/sessionize";
 
 type SpeakerDetailTemplateProps = {
@@ -68,166 +69,172 @@ export function SpeakerDetailTemplate({
         dangerouslySetInnerHTML={{ __html: serializeJsonLd(breadcrumbLd) }}
       />
 
-      {/* ── Breadcrumb ───────────────────────────────────────── */}
-      <section className="border-b border-[var(--color-border-subtle)] bg-[var(--color-surface-muted)]">
-        <div className={`${WRAP} py-3.5`}>
-          <nav
-            aria-label="Migas"
-            className="flex items-center gap-2 font-mono text-[11.5px] text-[var(--color-text-muted)]"
-          >
-            <NextLink
-              href="/"
-              className="text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)]"
-            >
-              Inicio
-            </NextLink>
-            <span aria-hidden="true">/</span>
-            <NextLink
-              href={backPath}
-              className="text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)]"
-            >
-              Speakers
-            </NextLink>
-            <span aria-hidden="true">/</span>
-            <span className="text-[var(--color-text-primary)]">
-              {speaker.fullName}
-            </span>
-          </nav>
-        </div>
-      </section>
+      <div id="contenido-principal" className={`${WRAP} pb-16`}>
+        <nav
+          aria-label="Ruta de navegación"
+          className="mb-3 flex flex-wrap items-center gap-2 text-step--1 text-[var(--color-text-secondary)]"
+        >
+          <NextLink href="/" className="underline underline-offset-4">
+            Inicio
+          </NextLink>
+          <span aria-hidden="true">/</span>
+          <NextLink href={backPath} className="underline underline-offset-4">
+            Speakers
+          </NextLink>
+          <span aria-hidden="true">/</span>
+          <span aria-current="page">{speaker.fullName}</span>
+        </nav>
+        <NextLink
+          href={backPath}
+          className="inline-flex min-h-[var(--size-touch)] items-center gap-2 text-step--1 font-semibold text-[var(--color-text-primary)] underline decoration-[var(--color-border-subtle)] decoration-2 underline-offset-4 hover:decoration-[var(--color-text-primary)]"
+        >
+          <span className="rotate-180">
+            <GlyphIcon name="arrow-right" size={18} />
+          </span>
+          Volver a todos los speakers
+        </NextLink>
 
-      {/* ── Identity hero ────────────────────────────────────── */}
-      <section
-        id="contenido-principal"
-        className={`${SECTION_BORDER} bg-[var(--color-surface)]`}
-      >
-        <div className={WRAP}>
-          <div className="grid items-stretch [grid-template-columns:repeat(auto-fit,minmax(min(300px,100%),1fr))]">
-            <div className="relative min-h-[460px] min-w-0 border-b border-[var(--color-border-subtle)] lg:border-b-0 lg:border-r">
-              <Frame
-                label={`Retrato de ${speaker.fullName}`}
-                photo={speaker.profilePicture ?? undefined}
-                className="h-full w-full"
-                // Sessionize serves square portraits, so the 460px min-height
-                // sets the cover-rendered width on a phone and the column
-                // width sets it above that.
-                sizes="(min-width: 700px) 620px, 480px"
-                preload
-              />
+        <div className="mt-4 grid gap-x-12 gap-y-8 lg:[grid-template-columns:minmax(0,22rem)_minmax(0,1fr)]">
+          <div className="min-w-0">
+            <div className="relative aspect-square w-full max-w-[22rem] overflow-hidden bg-[var(--color-surface-muted)]">
+              {speaker.profilePicture ? (
+                <Image
+                  src={speaker.profilePicture}
+                  alt={`Retrato de ${speaker.fullName}`}
+                  fill
+                  preload
+                  sizes="(min-width: 1024px) 352px, 90vw"
+                  className="object-cover object-[50%_20%]"
+                />
+              ) : (
+                <div
+                  role="img"
+                  aria-label={`Retrato de ${speaker.fullName}`}
+                  className="flex h-full w-full items-center justify-center font-display text-step-4 text-[var(--color-text-secondary)]"
+                >
+                  {speaker.fullName.slice(0, 1)}
+                </div>
+              )}
             </div>
 
-            <div className="flex min-w-0 flex-col justify-center py-[52px] lg:pl-12">
+            <div className="mt-5">
               {speaker.isTopSpeaker ? (
-                <div className="mb-4 flex flex-wrap gap-2.5">
-                  <span className="rounded-[3px] bg-[var(--color-surface-inverse)] px-[9px] py-1 font-mono text-[10px] uppercase tracking-[0.12em] text-[var(--color-text-on-inverse)]">
-                    Top speaker
-                  </span>
-                </div>
+                <p className="m-0 mb-2 text-step--1 font-semibold text-[var(--color-national-red-label)]">
+                  Top speaker
+                </p>
               ) : null}
-
-              <h1 className="m-0 mb-2.5 text-[clamp(34px,4.6vw,54px)] font-extrabold leading-none tracking-[-0.04em] text-[var(--color-text-primary)]">
+              <h1 className="m-0 font-display text-step-3 leading-[1.05] tracking-[-0.015em] text-[var(--color-text-primary)]">
                 {speaker.fullName}
               </h1>
-
               {speaker.tagLine ? (
-                <p className="m-0 mb-[26px] text-[18px] font-semibold text-[var(--color-accent)]">
+                <p className="m-0 mt-2 text-step-0 leading-[1.4] text-[var(--color-text-secondary)]">
                   {speaker.tagLine}
                 </p>
               ) : null}
-
-              {speaker.bio ? (
-                <p className="m-0 mb-7 max-w-[34rem] text-[16px] leading-[1.65] text-[var(--color-text-secondary)]">
-                  {speaker.bio}
-                </p>
+              {speaker.links && speaker.links.length > 0 ? (
+                <ul className="m-0 mt-3 flex list-none flex-col p-0">
+                  {speaker.links.map((l) => (
+                    <li key={l.url}>
+                      <a
+                        href={l.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex min-h-[var(--size-touch)] items-center gap-2 text-step--1 font-semibold text-[var(--color-text-primary)] hover:underline"
+                      >
+                        <GlyphIcon name="external" size={18} />
+                        {l.title || l.linkType}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
               ) : null}
-
-              <div className="flex flex-wrap gap-2.5">
-                {speaker.links?.map((l) => (
-                  <a
-                    key={l.url}
-                    href={l.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 rounded-[4px] border-[1.5px] border-[var(--color-text-primary)] px-[22px] py-[11px] text-[14.5px] font-semibold text-[var(--color-text-primary)] transition-colors hover:bg-[var(--color-text-primary)] hover:text-[var(--color-surface)]"
-                  >
-                    {l.title || l.linkType}
-                    <span aria-hidden="true">↗</span>
-                  </a>
-                ))}
-                <NextLink
-                  href="/schedule"
-                  className="inline-flex items-center rounded-[4px] border-[1.5px] border-[var(--color-border-subtle)] px-[22px] py-[11px] text-[14.5px] font-semibold text-[var(--color-text-secondary)] transition-colors hover:border-[var(--color-text-primary)] hover:text-[var(--color-text-primary)]"
-                >
-                  Ver en la agenda
-                </NextLink>
-              </div>
             </div>
           </div>
-        </div>
-      </section>
 
-      {/* ── Sessions ─────────────────────────────────────────── */}
-      <section className={`${SECTION_BORDER} bg-[var(--color-surface)]`}>
-        <div className={`${WRAP} py-[52px]`}>
-          <NumberHeading n="01" title="Sesiones" />
-          {ownSessions.length === 0 ? (
-            <p className="m-0 text-[15px] text-[var(--color-text-secondary)]">
-              Todavía no hay sesiones publicadas para este speaker. Volvé
-              pronto: la grilla se completa a medida que se confirma la agenda.
-            </p>
-          ) : (
-            <div className="border-t border-[var(--color-text-primary)]">
-              {ownSessions.map((s) => (
-                <div
-                  key={s.id}
-                  className="grid grid-cols-1 items-baseline gap-x-[18px] gap-y-2 border-b border-[var(--color-border-subtle)] px-1 py-[18px] sm:[grid-template-columns:minmax(110px,130px)_minmax(0,1fr)]"
-                >
-                  <span className="font-mono text-[14px] text-[var(--color-text-primary)]">
-                    {s.startsAt && s.endsAt
-                      ? formatTimeRange(s.startsAt, s.endsAt)
-                      : "Por confirmar"}
-                  </span>
-                  <div className="min-w-0">
-                    <h3 className="m-0 mb-1 text-[17px] font-bold tracking-[-0.018em]">
+          <div className="min-w-0 lg:pt-1">
+            {speaker.bio ? (
+              <p className="m-0 max-w-[40rem] whitespace-pre-line text-step-0 leading-[1.65] text-[var(--color-text-secondary)]">
+                {speaker.bio}
+              </p>
+            ) : null}
+
+            <h2 className={`${H2} mb-4 mt-10 flex items-center gap-3`}>
+              <GlyphIcon name="mic" size={26} />
+              Sus charlas
+            </h2>
+            {ownSessions.length === 0 ? (
+              <p className="m-0 max-w-[40rem] text-step-0 text-[var(--color-text-secondary)]">
+                Todavía no hay sesiones publicadas para este speaker. Volvé
+                pronto: la grilla se completa a medida que se confirma la
+                agenda.
+              </p>
+            ) : (
+              <ul className="m-0 grid list-none gap-3 p-0">
+                {ownSessions.map((s) => (
+                  <li
+                    key={s.id}
+                    className="flex flex-col gap-3 rounded-[var(--radius-md)] border border-[var(--color-border-subtle)] bg-[var(--color-surface-elevated)] p-4 sm:p-5"
+                  >
+                    <p className="m-0 flex flex-wrap gap-x-4 gap-y-1 text-step--1 font-semibold text-[var(--color-text-primary)]">
+                      {s.startsAt && s.endsAt ? (
+                        <>
+                          <span className="inline-flex items-center gap-1.5">
+                            <GlyphIcon name="calendar" size={16} />
+                            <span className="first-letter:uppercase">
+                              {formatDate(s.startsAt)}
+                            </span>
+                          </span>
+                          <span className="inline-flex items-center gap-1.5">
+                            <GlyphIcon name="clock" size={16} />
+                            {formatTime(s.startsAt)} - {formatTime(s.endsAt)}
+                          </span>
+                        </>
+                      ) : (
+                        <span className="inline-flex items-center gap-1.5">
+                          <GlyphIcon name="clock" size={16} />
+                          Horario por confirmar
+                        </span>
+                      )}
+                    </p>
+                    <h3 className="m-0 text-step-1 leading-[1.25]">
                       {s.title}
                     </h3>
                     {s.description ? (
-                      <p className="m-0 break-words text-[14px] text-[var(--color-text-muted)]">
-                        {s.description}
-                      </p>
+                      <details>
+                        <summary className="inline-flex min-h-[var(--size-touch)] cursor-pointer items-center text-step--1 font-semibold underline decoration-[var(--color-border-subtle)] decoration-2 underline-offset-4">
+                          Ver descripción
+                        </summary>
+                        <p className="m-0 whitespace-pre-line break-words text-step--1 leading-[1.55] text-[var(--color-text-secondary)]">
+                          {s.description}
+                        </p>
+                      </details>
                     ) : null}
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-          {hasTimes ? (
-            <p className="mt-[22px] text-[13.5px] text-[var(--color-text-muted)]">
-              Los horarios están sujetos a cambios.
-            </p>
-          ) : null}
-        </div>
-      </section>
+                    <NextLink
+                      href="/schedule"
+                      className="inline-flex min-h-[var(--size-touch)] items-center gap-2 self-start text-step--1 font-semibold text-[var(--color-text-primary)] hover:underline"
+                    >
+                      Ver en la agenda
+                      <GlyphIcon name="arrow-right" size={18} />
+                    </NextLink>
+                  </li>
+                ))}
+              </ul>
+            )}
+            {hasTimes ? (
+              <p className="m-0 mt-4 flex items-center gap-2 text-step--1 text-[var(--color-text-secondary)]">
+                <GlyphIcon name="info" size={18} />
+                Los horarios están sujetos a cambios.
+              </p>
+            ) : null}
 
-      {/* ── Volver / registrarme ─────────────────────────────── */}
-      <section className="bg-[var(--color-surface)]">
-        <div className={`${WRAP} pb-[72px] pt-[52px]`}>
-          <div className="flex flex-wrap items-center justify-between gap-4">
-            <NextLink
-              href={backPath}
-              className="text-[15px] font-semibold text-[var(--color-accent)]"
-            >
-              ← Volver a todos los speakers
-            </NextLink>
-            <NextLink
-              href="/register"
-              className="inline-flex flex-none items-center whitespace-nowrap rounded-[4px] bg-[var(--color-action)] px-[26px] py-[13px] text-[15px] font-bold text-[var(--color-text-on-action)] transition hover:brightness-95"
-            >
-              Registrarme gratis
-            </NextLink>
+            <div className="mt-10">
+              <NextLink href="/register" className={BTN_PRIMARY}>
+                Registrarme gratis
+              </NextLink>
+            </div>
           </div>
         </div>
-      </section>
+      </div>
     </>
   );
 }

@@ -65,18 +65,6 @@ describe("OrganizersGrid", () => {
     expect(screen.getByText("Beto Lopez")).toBeInTheDocument();
   });
 
-  it("alternates the decorative accent between neighbouring cards", () => {
-    const { container } = render(
-      <OrganizersGrid organizers={ORGANIZERS} eventInfo={EVENT_INFO} />
-    );
-    const styles = Array.from(container.querySelectorAll("article")).map((el) =>
-      el.getAttribute("style")
-    );
-    expect(styles).toHaveLength(2);
-    expect(styles[0]).toContain("--card-accent");
-    expect(styles[0]).not.toEqual(styles[1]);
-  });
-
   it("renders organizer social links with safe attributes", () => {
     render(<OrganizersGrid organizers={ORGANIZERS} eventInfo={EVENT_INFO} />);
     const link = screen.getByRole("link", { name: "LinkedIn" });
@@ -91,20 +79,36 @@ describe("OrganizersGrid", () => {
     ).toBeInTheDocument();
   });
 
+  it("shows the full bio and labels the website link", () => {
+    const organizer = {
+      ...ORGANIZERS[0],
+      bio: "Una biografía extensa para la tarjeta. ".repeat(8),
+      links: { website: "https://example.test" },
+    };
+    render(<OrganizersGrid organizers={[organizer]} eventInfo={EVENT_INFO} />);
+    const bio = screen.getByText(/una biografía extensa/i);
+    expect(bio.className).not.toContain("line-clamp");
+    expect(screen.getByRole("link", { name: "Sitio web" })).toHaveAttribute(
+      "href",
+      "https://example.test"
+    );
+  });
+
   it("omits the bio paragraph for a record without one", () => {
     render(
       <OrganizersGrid organizers={[ORGANIZERS[1]]} eventInfo={EVENT_INFO} />
     );
     const card = screen.getByText("Beto Lopez").closest("article");
-    expect(card?.querySelectorAll("p")).toHaveLength(2);
+    // Only the role line remains: no bio paragraph.
+    expect(card?.querySelectorAll("p")).toHaveLength(1);
+    expect(card?.querySelector("p")).toHaveTextContent("Logística");
   });
 
-  it("uses the repo photo as the card image, decoratively", () => {
+  it("uses the repo photo as the card image, named after the organizer", () => {
     render(<OrganizersGrid organizers={ORGANIZERS} eventInfo={EVENT_INFO} />);
     const image = document.querySelector('img[src="/team/ana-perez.jpg"]');
     expect(image).not.toBeNull();
-    // The name sits next to it in text, so the image adds nothing to announce.
-    expect(image).toHaveAttribute("alt", "");
+    expect(image).toHaveAttribute("alt", "Ana Perez");
   });
 
   it("falls back to initials when there is no photo", () => {

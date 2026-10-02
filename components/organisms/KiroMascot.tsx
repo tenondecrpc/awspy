@@ -125,9 +125,11 @@ export function KiroMascot({ faq = [] }: KiroMascotProps) {
   }
 
   return (
+    // On phones the band continues the footer above it, so it takes the
+    // footer's paper surface instead of reading as a separate navy strip.
     <div
       ref={rootRef}
-      className="group/kiro relative z-10 flex w-full flex-col items-end gap-3 bg-[var(--color-surface-inverse)] px-7 pb-5 pt-4 sm:fixed sm:bottom-6 sm:right-6 sm:z-[45] sm:w-auto sm:bg-transparent sm:p-0"
+      className="group/kiro relative z-10 flex w-full flex-col items-end gap-3 bg-[var(--color-surface-muted)] px-5 pb-5 pt-4 sm:fixed sm:bottom-6 sm:right-6 sm:z-[45] sm:w-auto sm:bg-transparent sm:p-0"
     >
       {open && (
         <div

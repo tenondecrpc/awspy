@@ -1,11 +1,6 @@
 // Session speakers molecule. Credits a session to the people who give it: a
-// row of overlapping round portraits, then "Por Ana, Bruno y Carla" with each
-// name linked to the speaker's page. The agenda uses it so every talk carries
-// its speaker reference, which lets the speakers list stay identity-only.
-//
-// The portraits are decorative (`alt=""`): every name is spelled out right
-// after them, so a screen reader would only hear each one twice. A speaker
-// with no photo gets an initials disc in the same slot.
+// small round portrait (initials when there is none) and the name, linked to
+// the speaker's page. Used by the agenda cards and the confirmed-talks list.
 
 import Image from "next/image";
 import NextLink from "next/link";
@@ -27,17 +22,13 @@ type SessionSpeakersProps = {
 };
 
 function initials(name: string): string {
-  const parts = name.trim().split(/\s+/).filter(Boolean);
-  if (parts.length === 0) return "?";
-  if (parts.length === 1) return parts[0][0].toUpperCase();
+  const parts = name.trim().split(/\s+/);
+  if (parts.length === 1) return parts[0].slice(0, 1).toUpperCase();
   return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
 }
 
-/** Spanish list punctuation: "A", "A y B", "A, B y C". */
-function separatorBefore(index: number, count: number): string {
-  if (index === 0) return "";
-  return index === count - 1 ? " y " : ", ";
-}
+const NAME =
+  "text-step--1 font-semibold leading-tight text-[var(--color-text-primary)]";
 
 export function SessionSpeakers({
   speakers,
@@ -47,47 +38,46 @@ export function SessionSpeakers({
   if (speakers.length === 0) return null;
 
   return (
-    <div className={cn("flex items-center gap-2.5", className)}>
-      <span aria-hidden="true" className="flex flex-none -space-x-2">
-        {speakers.map((sp) => (
+    <ul
+      aria-label={speakers.length === 1 ? "Speaker" : "Speakers"}
+      className={cn(
+        "m-0 flex list-none flex-wrap gap-x-4 gap-y-2 p-0",
+        className
+      )}
+    >
+      {speakers.map((sp) => (
+        <li key={sp.id} className="flex min-w-0 items-center gap-2.5">
           <span
-            key={sp.id}
-            className="relative flex h-8 w-8 items-center justify-center overflow-hidden rounded-full bg-[var(--color-accent-soft)] font-mono text-[10.5px] font-semibold text-[var(--color-accent-strong)] ring-2 ring-[var(--color-surface)]"
+            aria-hidden="true"
+            className="relative flex size-9 shrink-0 items-center justify-center overflow-hidden rounded-full bg-[var(--color-surface-muted)] text-xs font-semibold text-[var(--color-text-secondary)]"
           >
             {sp.photo ? (
               <Image
                 src={sp.photo}
                 alt=""
-                width={32}
-                height={32}
-                className="h-full w-full object-cover"
+                fill
+                sizes="36px"
+                className="object-cover object-[50%_20%]"
               />
             ) : (
               initials(sp.name)
             )}
           </span>
-        ))}
-      </span>
-      <p className="m-0 min-w-0 text-[13.5px] text-[var(--color-text-muted)]">
-        Por{" "}
-        {speakers.map((sp, i) => (
-          <span key={sp.id}>
-            {separatorBefore(i, speakers.length)}
-            {sp.slug ? (
-              <NextLink
-                href={`${basePath}/${sp.slug}`}
-                className="font-semibold text-[var(--color-accent)] hover:underline"
-              >
-                {sp.name}
-              </NextLink>
-            ) : (
-              <span className="font-semibold text-[var(--color-text-secondary)]">
-                {sp.name}
-              </span>
-            )}
-          </span>
-        ))}
-      </p>
-    </div>
+          {sp.slug ? (
+            <NextLink
+              href={`${basePath}/${sp.slug}`}
+              className={cn(
+                NAME,
+                "inline-flex min-h-[var(--size-touch)] items-center underline decoration-[var(--color-border-subtle)] decoration-2 underline-offset-4 hover:decoration-[var(--color-text-primary)]"
+              )}
+            >
+              {sp.name}
+            </NextLink>
+          ) : (
+            <span className={NAME}>{sp.name}</span>
+          )}
+        </li>
+      ))}
+    </ul>
   );
 }
