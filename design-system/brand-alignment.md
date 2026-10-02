@@ -84,7 +84,7 @@ guía visual de Community Day. Lo que se encontró:
   and design assets" a quienes organizan. Contactos publicados:
   **coreteam@awscommunitydays.com** y **awscommunity@amazon.com**.
 - Las [directrices de marca de AWS](https://aws.amazon.com/trademark-guidelines/)
-  (aplican a quien use marcas AWS) exigen:
+  (aplican a terceros que usan marcas AWS) exigen:
   - No alterar los logos (proporción, color o fuente).
   - Dejarlos con espacio razonable, sin otros elementos pegados.
   - **No imitar el "trade dress" de AWS** (colores, fuentes, elementos de
@@ -96,22 +96,24 @@ guía visual de Community Day. Lo que se encontró:
 
 ### Efecto sobre este plan
 
-La regla del "trade dress" es una tensión con el objetivo de "acercarnos a
-AWS": acercar colores, tipografía y estilo al sitio de AWS es justo lo que esa
-regla desaconseja, aunque se trate de un evento oficial del programa. Por eso:
+La regla del "trade dress" está escrita para terceros que usan marcas AWS.
+**Este es un evento oficial del programa AWS Community Day** (decisión del
+equipo organizador, 2026-10-01), así que acercar el sitio a la marca AWS es
+coherente con el objetivo, no un riesgo por sí mismo. Queda así:
 
-1. **El cambio de color es una propuesta, no una obligación.** Hasta que el
-   equipo central confirme qué paleta es la del evento, el riesgo de
-   publicarlo es mayor que el beneficio estético.
-2. **Squid Ink y el azul AWS son tonos reconocibles de la marca.** Si el kit
-   de Community Day no los prescribe, conviene mantener una paleta propia del
-   evento (el navy y el azul bandera anteriores) y usar de AWS solo lo que
-   entrega el programa: el logo y, quizás, el naranja del botón.
-3. **El naranja `#ff9900` merece la misma confirmación.**
+1. **La alineación de color va adelante.** La rama
+   `feat/brand-alignment-aws` es la dirección elegida.
+2. **El kit sigue mandando.** Los valores de Squid Ink y del azul son
+   aproximados. Cuando llegue el kit, se contrastan y se ajusta
+   `globals.css` (hay que volver a correr `check-contrast.mjs`).
+3. **Lo que no cambia con esto:** no alterar el logo, respetar su espacio de
+   protección, no combinarlo con otros elementos y no meter marcas AWS en
+   dominios o nombres.
 
-Si la respuesta es "usa la paleta del programa", este documento se actualiza
-con sus valores. Si es "libre dentro de las reglas del logo", la rama
-`feat/brand-alignment-aws` queda como alternativa lista.
+Las páginas de AWS describen los Community Day como eventos "planeados y
+ejecutados por líderes comunitarios autoorganizados", así que **conviene
+confirmar por escrito** con el equipo central cuánto de la identidad visual
+debe seguir el kit y cuánto es libre. Es una verificación, no un bloqueo.
 
 ### Texto sugerido para pedir el kit
 
