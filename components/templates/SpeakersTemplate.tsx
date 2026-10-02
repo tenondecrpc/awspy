@@ -42,6 +42,11 @@ export function SpeakersTemplate({
             <h1 className="m-0 font-display text-step-2 leading-[1.05] tracking-[-0.01em] text-[var(--color-text-primary)]">
               Speakers
             </h1>
+            <p className="m-0 mt-2 max-w-[42rem] text-step-0 text-[var(--color-text-secondary)]">
+              Las personas que van a compartir charlas y talleres en{" "}
+              {eventInfo.name}. La grilla se completa a medida que se confirman
+              las propuestas de la convocatoria.
+            </p>
             {speakers.length > 0 ? (
               <p className="m-0 mt-2 flex items-center gap-2 text-step-0 text-[var(--color-text-secondary)]">
                 <GlyphIcon name="mic" size={20} />
@@ -103,7 +108,7 @@ export function SpeakersTemplate({
                     </h2>
                     <p className="m-0 text-step-0 text-[var(--color-text-secondary)]">
                       {cfpOpen
-                        ? "La convocatoria de charlas sigue abierta. Enviá tu propuesta y sumate."
+                        ? "La convocatoria de charlas sigue abierta. Enviá tu propuesta y sumate a la grilla."
                         : "La convocatoria de charlas está cerrada por ahora. Escribinos si querés participar en próximas ediciones."}
                     </p>
                   </div>

@@ -256,9 +256,16 @@ export function ScheduleTemplate({
         <div
           className={`${WRAP} flex flex-wrap items-end justify-between gap-x-10 gap-y-3 py-[clamp(1rem,3.5svh,2rem)]`}
         >
-          <h1 className="m-0 font-display text-step-2 leading-[1.05] tracking-[-0.01em] text-[var(--color-text-primary)]">
-            Agenda
-          </h1>
+          <div className="min-w-0 max-w-[42rem]">
+            <h1 className="m-0 font-display text-step-2 leading-[1.05] tracking-[-0.01em] text-[var(--color-text-primary)]">
+              Agenda
+            </h1>
+            <p className="m-0 mt-2 text-step-0 text-[var(--color-text-secondary)]">
+              Charlas, talleres y actividades de {eventInfo.name}. Los horarios
+              están en hora local de Asunción (UTC−3) y pueden ajustarse hasta
+              la semana del evento.
+            </p>
+          </div>
           <ul className="m-0 flex list-none flex-wrap gap-x-6 gap-y-2 p-0">
             <Fact icon="calendar">{formatDate(eventInfo.dates.start)}</Fact>
             <Fact icon="pin">{eventInfo.location.summary}</Fact>
@@ -268,7 +275,7 @@ export function ScheduleTemplate({
       </section>
 
       {showRail ? (
-        <div className="sticky top-[4.0625rem] z-20 bg-[var(--color-surface)]">
+        <div className="sticky top-[var(--header-h)] z-20 bg-[var(--color-surface)]">
           <div className={WRAP}>
             <nav aria-label="Filtrar agenda por sala" className={RAIL}>
               <NextLink
@@ -447,12 +454,13 @@ export function ScheduleTemplate({
               <IconBadge name="ticket" tone="solid" />
               <div>
                 <h2 className="m-0 mb-2 font-display text-step-2 leading-[1.1]">
-                  Reservá tu lugar
+                  Los talleres tienen cupo limitado
                 </h2>
                 <p className="m-0 text-step-0 text-[var(--color-text-secondary)]">
-                  La entrada es gratis. Registrate para asistir a{" "}
-                  {eventInfo.name}; cada taller indica sus requisitos en esta
-                  agenda.
+                  Si querés participar, revisá los requisitos de cada taller en
+                  la agenda. La inscripción se hace en el mostrador de
+                  acreditación. La entrada al evento es gratis; registrate para
+                  asistir a {eventInfo.name}.
                 </p>
               </div>
             </div>

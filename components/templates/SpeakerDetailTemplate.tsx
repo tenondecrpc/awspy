@@ -70,6 +70,20 @@ export function SpeakerDetailTemplate({
       />
 
       <div id="contenido-principal" className={`${WRAP} pb-16`}>
+        <nav
+          aria-label="Ruta de navegación"
+          className="mb-3 flex flex-wrap items-center gap-2 text-step--1 text-[var(--color-text-secondary)]"
+        >
+          <NextLink href="/" className="underline underline-offset-4">
+            Inicio
+          </NextLink>
+          <span aria-hidden="true">/</span>
+          <NextLink href={backPath} className="underline underline-offset-4">
+            Speakers
+          </NextLink>
+          <span aria-hidden="true">/</span>
+          <span aria-current="page">{speaker.fullName}</span>
+        </nav>
         <NextLink
           href={backPath}
           className="inline-flex min-h-[var(--size-touch)] items-center gap-2 text-step--1 font-semibold text-[var(--color-text-primary)] underline decoration-[var(--color-border-subtle)] decoration-2 underline-offset-4 hover:decoration-[var(--color-text-primary)]"

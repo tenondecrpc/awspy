@@ -76,7 +76,7 @@ export function SessionCard({ session, speakerBasePath }: SessionCardProps) {
               Ver descripción
             </summary>
             <p className="m-0 whitespace-pre-line break-words text-step--1 leading-[1.55] text-[var(--color-text-secondary)]">
-              {tieLast(session.description)}
+              {session.description}
             </p>
           </details>
         ) : null}
