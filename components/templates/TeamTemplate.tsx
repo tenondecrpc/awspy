@@ -27,7 +27,8 @@ export function TeamTemplate({
             Equipo organizador
           </h1>
           <p className="m-0 mt-3 max-w-[36rem] text-step-0 leading-[1.5] text-[var(--color-text-secondary)]">
-            Las personas que arman cada edición del Community Day en Paraguay.
+            Voluntarios y voluntarias que arman cada edición del Community Day
+            en Paraguay. Nadie cobra por organizar este evento.
           </p>
         </div>
       </section>

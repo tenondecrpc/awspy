@@ -1,11 +1,7 @@
-"use client";
-
-// Organizer card: square portrait on top, name, role, a three-line bio with a
-// "Leer más" toggle, and the social links as small icon + label links. Without
-// a photo the same square is filled with the initials, so adding the real
+// Organizer card: square portrait on top, name, full bio and social links.
+// Without a photo the same square is filled with the initials, so adding the real
 // photo later causes no layout shift.
 
-import { useId, useState } from "react";
 import { GlyphIcon, type GlyphName } from "@/components/atoms/GlyphIcon";
 import { Frame } from "@/components/molecules/SectionPrimitives";
 import { cn } from "@/lib/utils/cn";
@@ -25,11 +21,8 @@ const SOCIAL: Record<LinkKey, { label: string; icon: GlyphName }> = {
   linkedin: { label: "LinkedIn", icon: "external" },
   twitter: { label: "Twitter", icon: "external" },
   github: { label: "GitHub", icon: "external" },
-  website: { label: "Sitio", icon: "globe" },
+  website: { label: "Sitio web", icon: "globe" },
 };
-
-/** A bio under this many characters fits the three-line clamp: no toggle. */
-const CLAMP_THRESHOLD = 150;
 
 function initials(name: string): string {
   const parts = name.trim().split(/\s+/);
@@ -38,14 +31,11 @@ function initials(name: string): string {
 }
 
 export function OrganizerCard({ organizer, className }: OrganizerCardProps) {
-  const [expanded, setExpanded] = useState(false);
-  const bioId = useId();
   const linkEntries = (
     Object.entries(organizer.links ?? {}) as Array<
       [LinkKey, string | undefined]
     >
   ).filter(([, url]) => Boolean(url));
-  const canExpand = (organizer.bio?.length ?? 0) > CLAMP_THRESHOLD;
 
   return (
     <article
@@ -80,26 +70,9 @@ export function OrganizerCard({ organizer, className }: OrganizerCardProps) {
 
         {organizer.bio ? (
           <div className="mt-3">
-            <p
-              id={bioId}
-              className={cn(
-                "m-0 text-base leading-[1.55] text-[var(--color-text-secondary)]",
-                !expanded && "line-clamp-3"
-              )}
-            >
+            <p className="m-0 text-base leading-[1.55] text-[var(--color-text-secondary)]">
               {tieLast(organizer.bio)}
             </p>
-            {canExpand ? (
-              <button
-                type="button"
-                aria-expanded={expanded}
-                aria-controls={bioId}
-                onClick={() => setExpanded((v) => !v)}
-                className="mt-1 inline-flex min-h-[var(--size-touch)] items-center text-base font-semibold text-[var(--color-text-primary)] underline decoration-[var(--color-national-red)] decoration-2 underline-offset-4"
-              >
-                {expanded ? "Leer menos" : "Leer más"}
-              </button>
-            ) : null}
           </div>
         ) : null}
 
@@ -111,7 +84,7 @@ export function OrganizerCard({ organizer, className }: OrganizerCardProps) {
                   href={url as string}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex min-h-[var(--size-touch)] items-center gap-1.5 text-sm font-semibold text-[var(--color-text-primary)] hover:underline"
+                  className="inline-flex min-h-[var(--size-touch)] items-center gap-1.5 text-sm font-semibold text-[var(--color-text-primary)] underline underline-offset-4"
                 >
                   <GlyphIcon name={SOCIAL[key].icon} size={16} />
                   {SOCIAL[key].label}

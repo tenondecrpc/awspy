@@ -91,6 +91,9 @@ export function VenueTemplate({ venue, eventInfo }: VenueTemplateProps) {
             <h1 className="m-0 font-display text-step-3 leading-[1.05] tracking-[-0.01em] text-[var(--color-text-primary)]">
               Sede
             </h1>
+            <p className="m-0 mt-2 text-step-0 text-[var(--color-text-secondary)]">
+              Dónde nos vemos para el AWS Community Day Paraguay.
+            </p>
             <p className="m-0 mt-3 text-step-1 font-semibold leading-snug text-[var(--color-text-primary)]">
               {venue.name}
             </p>
@@ -105,7 +108,27 @@ export function VenueTemplate({ venue, eventInfo }: VenueTemplateProps) {
               <Fact icon="clock" label="Horario">
                 {`${formatTime(eventInfo.dates.start)} – ${formatTime(eventInfo.dates.end)}`}
               </Fact>
+              <Fact icon="door" label="Acreditación">
+                Hall de ingreso
+              </Fact>
+              <Fact icon="users" label="Salas">
+                Guaraní · Ñandútí · Taller
+              </Fact>
             </ul>
+
+            <div className="mt-6">
+              <h2 className="m-0 mb-2 text-step-1">Espacios</h2>
+              <ul className="m-0 flex list-none flex-wrap gap-x-4 gap-y-1 p-0 text-sm text-[var(--color-text-secondary)]">
+                {[
+                  "Auditorio",
+                  "Sala de taller",
+                  "Espacio de networking",
+                  "Ingreso / acreditación",
+                ].map((space) => (
+                  <li key={space}>{space}</li>
+                ))}
+              </ul>
+            </div>
 
             <div className="mt-8 flex flex-wrap gap-3">
               <a
