@@ -30,6 +30,15 @@ describe("CFPTemplate", () => {
     ).toBeInTheDocument();
     expect(screen.getByText("Charla técnica")).toBeInTheDocument();
     expect(screen.getByText("Lightning talk")).toBeInTheDocument();
+    expect(
+      screen.getByText("Última fecha para enviar propuestas en Sessionize.")
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText("Charlas y talleres en el SNPP, San Lorenzo.")
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", { name: "Después de enviar" })
+    ).toBeInTheDocument();
   });
 
   // "Fechas clave" hard-coded the 30 September close and kept showing it

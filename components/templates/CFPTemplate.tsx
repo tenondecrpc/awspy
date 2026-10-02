@@ -58,7 +58,7 @@ const LOOKING = [
   "Voces nuevas de la comunidad paraguaya y de la región",
 ];
 
-type KeyDate = { when: string; title: string };
+type KeyDate = { when: string; title: string; body: string };
 
 /** Formats a configured date for the Asunción calendar. */
 function dotDate(input: string): string {
@@ -69,13 +69,18 @@ function dotDate(input: string): string {
 // date cannot leave stale committee milestones on the page.
 function keyDates(eventInfo: EventInfo): KeyDate[] {
   const dates: KeyDate[] = [
-    { when: dotDate(eventInfo.dates.start), title: "Community Day" },
+    {
+      when: dotDate(eventInfo.dates.start),
+      title: "Community Day",
+      body: "Charlas y talleres en el SNPP, San Lorenzo.",
+    },
   ];
   if (!eventInfo.cfpDeadline) return dates;
   return [
     {
       when: dotDate(eventInfo.cfpDeadline),
       title: "Cierre de la convocatoria",
+      body: "Última fecha para enviar propuestas en Sessionize.",
     },
     ...dates,
   ];
@@ -196,10 +201,16 @@ export function CFPTemplate({ eventInfo, archived = false }: CFPTemplateProps) {
                 <p className="m-0 mt-2 text-base font-semibold text-[var(--color-text-secondary)]">
                   {d.title}
                 </p>
+                <p className="m-0 mt-2 text-sm text-[var(--color-text-secondary)]">
+                  {d.body}
+                </p>
               </li>
             ))}
           </ol>
-          <p className="m-0 mt-8 max-w-[38rem] text-base text-[var(--color-text-secondary)]">
+          <h3 className="m-0 mt-8 text-step-1 text-[var(--color-text-primary)]">
+            Después de enviar
+          </h3>
+          <p className="m-0 mt-2 max-w-[38rem] text-base text-[var(--color-text-secondary)]">
             El comité revisa cada propuesta y responde por Sessionize. Si tu
             charla queda seleccionada, te pedimos confirmación y datos para el
             perfil público.
