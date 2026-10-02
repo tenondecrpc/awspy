@@ -125,3 +125,14 @@ for (const viewport of VIEWPORTS) {
     });
   }
 }
+
+test("/privacy fits a 320px viewport with enlarged text", async ({ page }) => {
+  await page.setViewportSize({ width: 320, height: 720 });
+  await page.goto("/privacy");
+  await page.evaluate(() => {
+    document.documentElement.style.fontSize = "18px";
+  });
+
+  const width = await page.evaluate(() => document.body.scrollWidth);
+  expect(width).toBeLessThanOrEqual(321);
+});

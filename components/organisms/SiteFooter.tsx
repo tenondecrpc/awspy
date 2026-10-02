@@ -66,7 +66,7 @@ export function SiteFooter({
         <div className="flex flex-wrap items-center justify-between gap-x-10 gap-y-4 py-7">
           {/* Same two inks as the header: whichever is hidden by
               `display: none` is out of the accessibility tree too. */}
-          <div className="min-w-0 max-w-[18rem] shrink-0">
+          <div className="w-full min-w-0 max-w-[18rem]">
             <Image
               src="/assets/logo-dark.png"
               alt="AWS Community Day Paraguay"

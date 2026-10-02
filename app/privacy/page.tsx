@@ -98,7 +98,10 @@ export default function PrivacyPage() {
             <h2 className={H3}>Consultas</h2>
             <p className={P}>
               Para preguntas sobre este texto o sobre tus datos, escribinos a{" "}
-              <a href={`mailto:${eventInfo.contactEmail}`} className={LINK}>
+              <a
+                href={`mailto:${eventInfo.contactEmail}`}
+                className={`${LINK} [overflow-wrap:anywhere]`}
+              >
                 {eventInfo.contactEmail}
               </a>
               .
