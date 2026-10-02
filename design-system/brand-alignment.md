@@ -1,68 +1,33 @@
-# Relación con la marca AWS
+# AWS brand alignment
 
-**Decisión (2026-10-02): identidad propia, basada en el arte oficial del
-evento, no en la paleta de AWS.**
+**Decision (2026-10-02):** use the event's own Paraguay 2026 visual identity.
+The site is for a community-organized AWS Community Day, not an official
+Amazon Web Services event. The footer and FAQ state that relationship.
 
-## Estatus del evento
+An earlier draft described the event as official and moved the palette toward
+AWS Squid Ink. That claim was incorrect and those color changes were reverted.
+The current palette comes from the event artwork: midnight blue, flag blue,
+Paraguayan red, and warm paper.
 
-AWS Community Day Paraguay es un evento **comunitario**, organizado por
-voluntarios de AWS User Group Paraguay y del user group de Canindeyú. El pie y
-el FAQ lo dicen: *"No es un evento oficial de Amazon Web Services"*.
+## Brand boundaries
 
-> **Corrección.** Una versión anterior de este documento afirmaba que era un
-> evento oficial del programa y propuso acercar los colores a AWS (Squid Ink
-> `#232f3e`, azul `#075ab0`). Esa afirmación estaba mal. Los cambios de color
-> de la rama `feat/brand-alignment-aws` se **revirtieron**.
+- Keep the approved AWS Community Day Paraguay mark intact, with adequate
+  clear space and its appropriate light or dark version.
+- Do not recolor, distort, or crop AWS or sponsor logos. Sponsor marks sit on
+  a white plate in either theme.
+- Do not imply that AWS organizes or sponsors the event. The community
+  attribution remains visible in the footer.
+- Do not copy Amazon Ember or AWS Console styling. Amazon Orange is used for
+  the registration action; ask the programme team for definitive usage rules.
+- Use AWS architecture icons only when their published usage rules permit it.
 
-## Por qué no imitar a AWS
+The [AWS trademark guidelines](https://aws.amazon.com/trademark-guidelines/)
+also address use of marks and trade dress. The Community Day programme's
+[public page](https://aws.amazon.com/events/community-day/) refers to organizer
+materials, but the complete kit is not in this repository. Published contacts
+are `coreteam@awscommunitydays.com` and `awscommunity@amazon.com`.
 
-- Las [directrices de marca de AWS](https://aws.amazon.com/trademark-guidelines/)
-  piden no alterar los logos y **no imitar el "trade dress"** (colores,
-  fuentes y diseño) del sitio de AWS. Para un evento comunitario eso pesa.
-- La paleta actual sale del arte 2026 del propio evento (azul medianoche,
-  azul bandera, rojo paraguayo); es lo que lo hace local y distinto de un
-  sitio corporativo de AWS.
-
-## Lo que sí se toma de AWS
-
-- El naranja `#ff9900` como color del botón de registro. **Pendiente de
-  confirmar** con el equipo del programa si su uso es libre.
-- El logo "AWS Community Day Paraguay", sin alterar, con espacio de
-  protección y dos versiones (tinta navy sobre claro, blanca sobre oscuro).
-- Íconos de arquitectura AWS solo si se usan tal cual los publica AWS (hoy ya
-  no hay marquee de íconos en la home).
-
-## Lo que no se hace
-
-- No recolorear ni distorsionar logos de AWS ni de sponsors (placa blanca).
-- No usar Amazon Ember (propietaria) ni copiar el estilo de las consolas.
-- No presentar el evento como oficial ni sugerir patrocinio de AWS.
-
-## Kit de marca
-
-El kit de Community Day **no es público**. La
-[página del programa](https://aws.amazon.com/events/community-day/) dice que
-el equipo central entrega "how-to documents" y "website templates and design
-assets" a quienes organizan. Contactos publicados:
-**coreteam@awscommunitydays.com** y **awscommunity@amazon.com**.
-
-Si el equipo central indica que debe usarse su paleta o plantilla, este
-documento y `app/globals.css` se actualizan con sus valores.
-
-### Texto sugerido para pedirlo
-
-> Hola equipo de AWS Community Day: somos la organización de AWS Community Day
-> Paraguay 2026 (17 de octubre, San Lorenzo). Estamos puliendo el sitio web y
-> queremos asegurar el cumplimiento de marca. ¿Pueden compartirnos el kit
-> oficial (logos, colores, tipografía, plantillas web) y las reglas de uso y
-> naming? En particular: (1) cuánto de la identidad visual debe seguir el kit,
-> (2) el espacio de protección del logo, (3) si podemos usar el naranja de AWS
-> en el botón de registro y (4) cómo mencionar a AWS en los paquetes de
-> sponsors. Gracias.
-
-## Cumplimiento a verificar
-
-1. Logo: coincide con el del kit y se usa sin recolorear.
-2. Naming: "AWS Community Day Paraguay" como forma aprobada.
-3. Logos de sponsors: siempre sobre la placa blanca.
-4. Atribución comunitaria visible (ya presente en pie y FAQ).
+Before a public brand sign-off, confirm the logo, approved event name, clear
+space, orange action color, sponsor wording, and any programme template
+requirements with the organizer team. Update the tokens and this document if
+the authoritative kit requires a change.

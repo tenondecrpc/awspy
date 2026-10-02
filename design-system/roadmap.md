@@ -1,41 +1,31 @@
-# Estado y hoja de ruta
+# Design status and roadmap
 
-## Hecho (v0.2)
+## Implemented in the PR 29 reconciliation
 
-| Área | Cambio |
+| Area | Current design |
 | --- | --- |
-| Fundamentos | Papel cálido, Young Serif + Atkinson Hyperlegible Next, escala fluida, radios casi rectos, tokens de toque (`globals.css`) |
-| Motivos | `Lace` (encaje procedural), solo en el hero |
-| Shell | Header con hilo fino, drawer y un pie liviano en una franja de papel |
-| Home | Hero con foto y bloque sólido, declaración + collage, agenda real con las primeras charlas, speakers asimétricos, sede, FAQ tipográfica, equipo escalonado, cierre con una invitación |
-| Agenda | Carril sticky de salas y de horas, descripciones plegables en mobile (20.530px → ~8.900px) |
-| Speakers | Composición asimétrica, título de la charla siempre visible (17.000px → ~8.800px) |
-| Sponsors | 2 columnas, paquetes en acordeón (9.177px → ~4.800px) |
-| Páginas | Registro, CFP, sede, equipo, voluntariado, FAQ, conducta, ediciones, 404, error y `/privacy` (nueva) |
-| Limpieza | Kiro, mascota, shaders, marquee, estadísticas, vidrio y brillos, 13 componentes sin uso, 2 dependencias |
-| Marca | Colores AWS revertidos; estatus comunitario documentado |
+| Foundations | Warm paper, navy and flag colors, Young Serif, Atkinson Hyperlegible Next, fluid type, square corners |
+| Motif | Original `Lace`, tricolor `FlagRule`, and Kiro with motion and masked shader |
+| Shell | Sticky header, mobile drawer, full muted-paper footer and privacy notice |
+| Home | Photo hero, live countdown, seven projected figures, pillars, real agenda preview, speakers, venue, FAQ, team, sponsor slots, three actions |
+| Agenda | Room and time rails, published sessions, accepted-talk fallback, workshop notice |
+| Speakers | Sessionize profiles, full bios, talks, and detail pages |
+| Sponsors | Logo plates, available slots, package ladder and comparison table |
+| Pages | Registration, CFP, venue, team, volunteers, FAQ, code of conduct, editions, privacy, 404 and error routes |
+| Themes | Light default and explicit dark toggle; both use semantic tokens |
 
-## Pendiente
+## Follow-up
 
-1. **Tests.** Varias pruebas de `tests/components/` y `e2e/` afirman marcado
-   o textos anteriores (clases `media-card`, `Badge`, "Tu logo aquí",
-   etiquetas numeradas, `EmptyStateIllustration`). Ejecutar la suite y
-   actualizar las que fallen.
-2. **Contenido real.** Fotos en alta resolución y galería (hoy vacía); datos
-   de la sede (transporte, accesibilidad); fotos de patrocinadores.
-3. **Kit de marca** del programa (ver [brand-alignment.md](brand-alignment.md)).
-4. **Documentación del repo.** `docs/adr/0009` y `docs/status/DEPENDENCIES.md`
-   siguen describiendo las dependencias eliminadas; `specs/002-visual-refresh`
-   describe la paleta anterior.
-5. **Navegación de escritorio**: los enlaces del menú miden 36px de alto.
-6. **Revisión humana** de cada página y prueba con personas reales.
+1. Replace low-resolution organizer photos when larger originals become
+   available; add any venue transport and accessibility facts only after the
+   organizers supply them.
+2. Obtain the programme brand kit and confirm the logo, naming, and use of
+   Amazon Orange. See [brand-alignment.md](brand-alignment.md).
+3. Have organizers review public copy and representative people test the
+   desktop, phone, keyboard, and screen-reader flows.
+4. Consider removing now-unused components and selectors in a separate,
+   behavior-preserving cleanup.
 
-## Métricas (375px de ancho)
-
-| Página | Antes | Ahora |
-| --- | --- | --- |
-| `/schedule` | 20.530px | ~8.900px |
-| `/speakers` | ~17.200px | ~8.800px |
-| `/sponsors` | 9.177px | ~4.800px |
-| `/` | ~12.900px | ~10.000px |
-| Contraste AA (texto renderizado) | 0 fallos | 0 fallos, claro y oscuro |
+The repository gates are `npm run verify` and the production Playwright suite.
+The visual review should cover 320px and 390px phones, desktop, 200% zoom,
+both themes, horizontal overflow, and accessibility violations.

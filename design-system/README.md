@@ -1,55 +1,36 @@
-# Sistema de diseño: AWS Community Day Paraguay
+# AWS Community Day Paraguay design system
 
-Identidad **editorial paraguaya**: papel, encaje y bandera. Este directorio
-documenta las decisiones; la fuente de verdad del código es
-[`app/globals.css`](../app/globals.css) (colores, tipografía, escalas) y los
-primitivos de `components/`.
+The visual identity takes its colors from the Paraguay 2026 event artwork. It
+uses warm paper, midnight blue, the colors of the national flag, large event
+photography, and an original lace motif. The source of truth for tokens and
+typography is [`app/globals.css`](../app/globals.css); components live under
+[`components/`](../components/).
 
-## Contenido
-
-| Archivo | Para qué |
+| Document | Scope |
 | --- | --- |
-| [foundations.md](foundations.md) | Color, tipografía, espaciado, movimiento y accesibilidad vigentes |
-| [components.md](components.md) | Inventario de componentes, motivos y reglas de uso |
-| [mobile-patterns.md](mobile-patterns.md) | Patrones mobile y criterios de aceptación |
-| [brand-alignment.md](brand-alignment.md) | Relación con la marca AWS y estatus del evento |
-| [roadmap.md](roadmap.md) | Qué está hecho y qué falta |
-| [scripts/check-contrast.mjs](scripts/check-contrast.mjs) | Verifica el contraste AA de la paleta |
+| [foundations.md](foundations.md) | Colors, type, spacing, motion, and accessibility |
+| [components.md](components.md) | Component inventory and usage |
+| [mobile-patterns.md](mobile-patterns.md) | Small-screen layout and acceptance checks |
+| [brand-alignment.md](brand-alignment.md) | Community-event status and AWS brand boundaries |
+| [roadmap.md](roadmap.md) | Implemented design and remaining review |
+| [scripts/check-contrast.mjs](scripts/check-contrast.mjs) | Palette contrast check |
 
-## Concepto
+## Principles
 
-- **Fotografía como protagonista.** Fotos reales a gran escala; el título va
-  en un bloque sólido sobre la imagen, no en tarjetas.
-- **Motivo propio de encaje.** `Lace` es geometría radial original, inspirada
-  en la estructura del ñandutí (anillos de pétalos y puntos). No reproduce el
-  trabajo de ninguna artesana.
-- **Calma.** Sin franjas de color ni adornos repetidos: un hilo fino separa
-  las partes, todo vive sobre el mismo papel y la serif queda para los
-  títulos de página y de sección.
-- **Papel, no pantalla.** Fondo cálido, tinta azul medianoche, esquinas casi
-  rectas, líneas finas en lugar de sombras.
-- **Texto concreto.** Voseo paraguayo y frases que el contenido respalda; lo
-  que no se puede verificar se omite.
+- Keep the event's content and photography prominent. A solid navy panel gives
+  the home hero its title; photos do not carry text overlays.
+- Use `Lace` sparingly as an original radial motif inspired by the structure
+  of nanduti. It does not reproduce an artisan's work.
+- Use Young Serif for page and section headings, Atkinson Hyperlegible Next for
+  reading text and controls, and mostly square corners and fine rules.
+- Use Paraguayan Spanish and claims supported by the event content. Preserve
+  event facts, calls to action, and empty states while changing layout.
+- Show every content item at normal viewport sizes and 200% zoom. Sections may
+  grow vertically; content is never hidden just because the window is short.
+- Keep Kiro's real chat, motion, and masked shader; provide reduced-motion and
+  keyboard behavior through its component.
 
-## Qué evitamos (rasgos de "plantilla generada por IA")
-
-Etiquetas numeradas 01–08; "pills" en mayúsculas con letra monoespaciada;
-franja de estadísticas proyectadas; marquee de íconos; tres tarjetas
-simétricas de "formas de participar"; vidrio esmerilado, brillos y gradientes;
-tarjetas que flotan al hover; palabra de color dentro del titular; mascota
-animada con chat falso; apilado de avatares redondos; tipografía por defecto
-del framework; textos genéricos o inventados.
-
-## Reglas del repositorio
-
-- Los colores solo viven en `app/globals.css` (regla ESLint
-  `local/no-color-literals`).
-- Estructura atómica: `components/{atoms,molecules,organisms,templates}`.
-- Tailwind v4 con tokens en `@theme`.
-- Interfaz en español de Paraguay (voseo); código y docs técnicos en inglés.
-- Accesibilidad no negociable: AA, teclado, `prefers-reduced-motion`, color
-  nunca como único portador de estado.
-
-## Estado
-
-v0.2: identidad aplicada a todo el sitio. Ver [roadmap.md](roadmap.md).
+Colors belong in `app/globals.css` and the local ESLint rule rejects literals
+in application code. The atomic component direction is templates, organisms,
+molecules, then atoms. Attendee-facing copy stays in Spanish; code and
+technical documentation use English.

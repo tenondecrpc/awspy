@@ -1,5 +1,22 @@
 # CHANGES — design migration to the "AWS Community Day Paraguay (colored)" mockups
 
+## PR 29 reconciliation (2026-10-02)
+
+The current PR keeps Victor's editorial layout while restoring public content
+and behavior from `main`. Kiro remains the real Framer Motion and masked-shader
+chat, with its FAQ content and phone placement. The home again shows the event
+subtitle, labeled facts, all projected figures, the content pillars, real
+agenda preview, sponsor availability, and three participation actions. Inner
+pages retain their original explanations, volunteer terms, sponsor and venue
+facts, full organizer biographies, and provider actions. Privacy copy now
+distinguishes builds with and without Google Analytics, and `/privacy` appears
+in the sitemap. The responsive type scale keeps its rem floor at 200% zoom.
+
+Earlier entries below describe intermediate migration decisions and test
+results. They are historical; statements there about removing Kiro, shader
+dependencies, sponsor slots, statistics, or archived copy do not describe the
+reconciled implementation. Current design guidance is in `design-system/`.
+
 This log tracks the migration of the live site to the design in the
 `AWS Community Day Paraguay (colored)/` folder (the `*.dc.html` mockups). Its
 specific purpose, per request, is to record **any change that leaves the site

@@ -23,6 +23,8 @@ Deployment and domain recovery procedures live in
 
 The documentation index is [`docs/README.md`](docs/README.md). It links the
 architecture, CI contract, ADRs, and documented exceptions.
+The current visual language and responsive patterns are documented in
+[`design-system/README.md`](design-system/README.md).
 
 ## Stack
 
@@ -46,6 +48,10 @@ Volunteer applications are open through the official Google Form configured
 in `volunteerRegistrationUrl`. The home invitation and team empty state lead
 to `/volunteers`, whose CTA opens the form in a new tab without embedding
 third-party scripts.
+
+The footer links to `/privacy`. Builds with Google Analytics disclose its
+cookies there; builds without an analytics ID say that this site collects no
+personal data. Kiro uses the local FAQ content for its interactive chat.
 
 ## Repository structure
 
