@@ -5,7 +5,8 @@
 import { notFound } from "next/navigation";
 import { HomeTemplate } from "@/components/templates/HomeTemplate";
 import { editionExists, getEdition } from "@/lib/content/editions";
-import { listSpeakers } from "@/lib/api/sessionize";
+import { getProgramme } from "@/lib/api/sessionize";
+import { buildAgendaPreview } from "@/lib/utils/agenda-preview";
 import { getFAQ } from "@/lib/content/faq";
 import { getOrganizers } from "@/lib/content/organizers";
 import { buildPageMetadata } from "@/lib/utils/seo";
@@ -47,13 +48,18 @@ export default async function EditionHomePage({
   const { year } = await params;
   if (!editionExists(year)) notFound();
   const edition = getEdition(year);
-  const speakers = await listSpeakers(edition.eventInfo.sessionizeEventId);
+  // Same data as the bare-URL home, so the archived edition shows its agenda
+  // preview instead of the "still closing the agenda" fallback.
+  const { grid, speakers } = await getProgramme(
+    edition.eventInfo.sessionizeEventId
+  );
 
   return (
     <HomeTemplate
       eventInfo={edition.eventInfo}
       venue={edition.venue}
       speakers={speakers}
+      agenda={buildAgendaPreview(grid)}
       sponsors={edition.sponsors}
       sponsorship={edition.sponsorship}
       faq={getFAQ(year)}

@@ -20,7 +20,7 @@ test.describe("editions", () => {
     await expect(
       page.getByRole("heading", {
         level: 1,
-        name: /AWS Community Day Paraguay/i,
+        name: /AWS[\s\u00a0]+Community[\s\u00a0]+Day[\s\u00a0]+Paraguay/i,
       })
     ).toBeVisible();
   });

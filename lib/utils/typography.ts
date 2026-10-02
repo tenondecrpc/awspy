@@ -1,7 +1,7 @@
 // Typographic helpers for text that comes from data (taglines, talk titles,
 // roles, answers), where the author cannot control where a line breaks.
 
-const NBSP = " ";
+const NBSP = "\u00a0";
 
 /**
  * Ties the last two words of `text` with a non-breaking space, so the last
@@ -12,17 +12,21 @@ const NBSP = " ";
  * narrow column: binding two very long words would trade an orphan for a
  * horizontal scroll.
  *
- * Returns the text unchanged for `null`, `undefined` or short strings, so it is
- * safe to call on optional fields.
+ * Only the gap between the last two words changes. Every other character,
+ * line breaks included, is kept, so multi-paragraph text rendered with
+ * `white-space: pre-line` keeps its paragraphs. Two words on separate lines
+ * are left apart.
+ *
+ * Returns "" for `null` or `undefined`; otherwise the text without trailing
+ * whitespace.
  */
 export function tieLast(text: string | null | undefined, maxTail = 24): string {
   if (!text) return "";
   const trimmed = text.trimEnd();
-  const words = trimmed.split(/\s+/);
-  if (words.length < 3) return trimmed;
-  const a = words[words.length - 2];
-  const b = words[words.length - 1];
+  if (trimmed.trim().split(/\s+/).length < 3) return trimmed;
+  const tail = /(\S+)[ \t]+(\S+)$/.exec(trimmed);
+  if (!tail) return trimmed;
+  const [, a, b] = tail;
   if (a.length + 1 + b.length > maxTail) return trimmed;
-  const head = words.slice(0, -2).join(" ");
-  return `${head} ${a}${NBSP}${b}`;
+  return `${trimmed.slice(0, tail.index)}${a}${NBSP}${b}`;
 }

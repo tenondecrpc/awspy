@@ -38,16 +38,14 @@ describe("HomeTemplate sponsors board", () => {
     const section = renderHome();
 
     expect(sponsors.length).toBeGreaterThan(0);
-    // The tier heading is written only when the board has several tiers to
-    // tell apart; a single tier would just repeat the page.
+    // Every confirmed tier keeps its visible sponsorship level.
     const tiers = new Set(sponsors.map((s) => TIER_LABEL[s.tier]));
     tiers.forEach((label) => {
       const heading = within(section).queryByRole("heading", {
         level: 3,
         name: `Sponsor ${label}`,
       });
-      if (tiers.size > 1) expect(heading).toBeInTheDocument();
-      else expect(heading).not.toBeInTheDocument();
+      expect(heading).toBeInTheDocument();
     });
     // Whatever the headings, every logo link carries name and tier.
     sponsors.forEach((s) => {

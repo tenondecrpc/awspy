@@ -67,7 +67,7 @@ describe("Countdown", () => {
     expect(screen.getByText(/^Faltan \d+ días$/)).toHaveClass("sr-only");
     const number = status.querySelector("[aria-hidden='true'].font-display");
     expect(number?.textContent).toMatch(/^\d+$/);
-    expect(number?.className).toMatch(/text-\[min\(7\.5rem/);
+    expect(number?.className).toMatch(/text-\[clamp\(3\.5rem,18vw,7\.5rem\)\]/);
   });
 
   it("shows the past-event message in the display variant too", () => {

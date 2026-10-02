@@ -16,10 +16,13 @@ import heroPhoto from "@/public/assets/anterior.jpg";
 import venuePhoto from "@/public/assets/venue/cover.jpg";
 import { Countdown } from "@/components/organisms/Countdown";
 import { Lace } from "@/components/atoms/Lace";
+import { IconBadge } from "@/components/atoms/IconBadge";
+import type { GlyphName } from "@/components/atoms/GlyphIcon";
 import {
   BTN_OUTLINE_ON_DARK,
   BTN_PRIMARY,
   Frame,
+  KICKER,
   SectionTitle,
   SECTION_FIT,
   WRAP,
@@ -29,6 +32,7 @@ import type { EventInfo } from "@/lib/content/event-info";
 import type { Speaker } from "@/lib/api/sessionize";
 import type { AgendaPreviewItem } from "@/lib/utils/agenda-preview";
 import { SponsorBoard } from "@/components/organisms/SponsorBoard";
+import { listAvailableTiers } from "@/lib/content/sponsors";
 import type { Sponsor } from "@/lib/content/sponsors";
 import type { Sponsorship } from "@/lib/content/sponsorship";
 import type { FAQItem } from "@/lib/content/faq";
@@ -43,8 +47,8 @@ type HomeTemplateProps = {
   /** First sessions of the programme. Empty until the agenda is published. */
   agenda?: AgendaPreviewItem[];
   sponsors: Sponsor[];
-  /** Not used here any more: the home shows who sponsors and one link to the
-   *  sponsors page, where the packages live. Kept so callers still compile. */
+  /** Edition prospectus. Its open tiers become "Tu logo aquí" slots on the
+   *  sponsor board. `null` when this edition has not published one. */
   sponsorship?: Sponsorship | null;
   faq: FAQItem[];
   organizers: Organizer[];
@@ -57,6 +61,30 @@ type HomeTemplateProps = {
   volunteersHref?: string;
 };
 
+/** What sets the day apart, each with the icon that anchors it. */
+const PILLARS: { icon: GlyphName; title: string; body: string }[] = [
+  {
+    icon: "laptop",
+    title: "Contenido técnico real",
+    body: "Casos, arquitecturas y errores aprendidos en producción.",
+  },
+  {
+    icon: "users",
+    title: "Hecho por la comunidad",
+    body: "Voluntarios del AWS User Group Paraguay y Canindeyú.",
+  },
+  {
+    icon: "ticket",
+    title: "Entrada libre",
+    body: "Acceso sin costo, con registro previo.",
+  },
+  {
+    icon: "flask",
+    title: "Talleres hands-on",
+    body: "Actividades prácticas para quienes quieran participar.",
+  },
+];
+
 /** Underlined text link, the one link style used inside running copy. */
 const TEXT_LINK =
   "font-semibold text-[var(--color-text-primary)] underline decoration-[var(--color-national-red)] decoration-2 underline-offset-4 hover:decoration-[var(--color-text-primary)]";
@@ -67,6 +95,7 @@ export function HomeTemplate({
   speakers,
   agenda = [],
   sponsors,
+  sponsorship = null,
   faq,
   organizers,
   registerHref = "/register",
@@ -84,12 +113,19 @@ export function HomeTemplate({
   const isOpen = eventInfo.registrationStatus === "open";
   const previewSpeakers = speakers.slice(0, 4);
   const previewTeam = organizers.slice(0, 5);
+  // One empty frame per open tier fills the sponsor board while the real
+  // logos are still being signed, so it never renders as a bare line of text.
+  const openSlots = listAvailableTiers(
+    sponsorship?.packages ?? [],
+    sponsors
+  ).length;
 
   return (
     <>
       {/* ── Hero: photograph, title set in a solid block ─────── */}
       <section
         id="contenido-principal"
+        data-tone="hero"
         className="snap-here relative isolate overflow-hidden bg-[var(--color-surface-hero)] text-[var(--color-text-on-hero)]"
       >
         {/* The photo is a group selfie with people across its whole width, so
@@ -120,16 +156,36 @@ export function HomeTemplate({
               </span>
             </p>
 
-            <h1 className="relative m-0 mb-[clamp(0.625rem,2svh,1.75rem)] font-display text-[min(clamp(2.25rem,0.9rem+2.6vw,4rem),8svh)] leading-[0.98] tracking-[-0.015em]">
+            {/* The rem floor sits outside the height cap so browser zoom can
+                still grow the title (WCAG 1.4.4). */}
+            <h1 className="relative m-0 mb-[clamp(0.625rem,2svh,1.75rem)] font-display text-[clamp(2.25rem,min(0.9rem+2.6vw,8svh),4rem)] leading-[0.98] tracking-[-0.015em]">
               AWS Community Day&nbsp;Paraguay
             </h1>
 
-            <p className="relative m-0 mb-2 text-step-1 leading-[1.35]">
-              {dateLabel}
+            <p className="relative m-0 mb-[clamp(0.75rem,2.4svh,1.5rem)] max-w-[32rem] text-step-0 text-[var(--color-text-on-inverse-secondary)]">
+              Una jornada gratuita hecha por la comunidad AWS local. Charlas
+              técnicas, talleres hands-on y networking, en español, en{" "}
+              {eventInfo.location.city}.
             </p>
-            <p className="relative m-0 mb-[clamp(0.75rem,2.4svh,2rem)] text-base text-[var(--color-text-on-inverse-secondary)]">
-              {timeLabel} · {eventInfo.location.summary} · Entrada gratuita
-            </p>
+
+            {/* The four facts a visitor checks first, each with its label. */}
+            <dl className="relative m-0 mb-[clamp(0.75rem,2.4svh,2rem)] grid max-w-[34rem] grid-cols-[minmax(0,1.5fr)_minmax(0,1fr)] gap-x-6 gap-y-3">
+              {[
+                { k: "Fecha", v: dateLabel },
+                { k: "Horario", v: timeLabel },
+                { k: "Sede", v: eventInfo.location.summary },
+                { k: "Entrada", v: "Gratuita" },
+              ].map((d) => (
+                <div key={d.k} className="min-w-0">
+                  <dt className="text-sm text-[var(--color-text-on-inverse-secondary)]">
+                    {d.k}
+                  </dt>
+                  <dd className="m-0 text-base font-semibold leading-snug text-[var(--color-text-on-hero)]">
+                    {d.v}
+                  </dd>
+                </div>
+              ))}
+            </dl>
 
             {/* The days left are the most time-sensitive fact on the page, so
                 the number is set huge in the action orange, with a thick bar,
@@ -153,6 +209,32 @@ export function HomeTemplate({
         </div>
       </section>
 
+      {/* ── Cifras esperadas: the projected numbers of the day ── */}
+      {eventInfo.expectedFigures.length > 0 ? (
+        <section
+          aria-labelledby="cifras"
+          className="bg-[var(--color-surface-muted)] py-[clamp(1.75rem,5svh,3rem)]"
+        >
+          <div className={WRAP}>
+            <h2 id="cifras" className={`${KICKER} mb-4`}>
+              Esperamos contar con
+            </h2>
+            <ul className="m-0 grid list-none gap-x-6 gap-y-6 p-0 [grid-template-columns:repeat(auto-fit,minmax(min(8.5rem,100%),1fr))]">
+              {eventInfo.expectedFigures.map((figure) => (
+                <li key={figure.label} className="min-w-0">
+                  <span className="block font-display text-step-3 leading-none text-[var(--color-text-primary)]">
+                    {figure.value}
+                  </span>
+                  <span className="mt-2 block text-base text-[var(--color-text-secondary)]">
+                    {figure.label}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </section>
+      ) : null}
+
       {/* ── Qué es: statement and photo collage ──────────────── */}
       <section
         id="sobre"
@@ -162,15 +244,30 @@ export function HomeTemplate({
           <div className="grid items-center gap-x-14 gap-y-10 lg:grid-cols-[1.15fr_1fr]">
             <div className="min-w-0">
               <SectionTitle size="lg" title="Qué es el Community Day" />
-              <p className="m-0 mb-[clamp(1rem,3.5svh,2rem)] font-display text-[min(clamp(1.375rem,0.95rem+1.05vw,2.125rem),4.6svh)] leading-[1.18] text-[var(--color-text-primary)]">
-                Un día entero de charlas y talleres sobre AWS, dados en español
-                por quienes trabajan con la nube en Paraguay y la región.
+              <p className="m-0 mb-[clamp(1rem,3.5svh,2rem)] font-display text-[clamp(1.375rem,min(0.95rem+1.05vw,4.6svh),2.125rem)] leading-[1.18] text-[var(--color-text-primary)]">
+                Un evento de la comunidad, para la comunidad. Sin filtro
+                comercial, con contenido técnico que se usa el lunes siguiente.
               </p>
-              <p className="m-0 mb-4 max-w-[34rem] text-step-0 text-[var(--color-text-secondary)]">
+              <p className="m-0 mb-6 max-w-[34rem] text-step-0 text-[var(--color-text-secondary)]">
                 Lo organizamos voluntarios del AWS User Group Paraguay y del
                 user group de Canindeyú. La entrada es gratuita; hace falta
                 registrarse porque la capacidad del auditorio es limitada.
               </p>
+              <ul className="m-0 mb-[clamp(1.25rem,3.5svh,2rem)] grid max-w-[38rem] list-none gap-x-8 gap-y-5 p-0 sm:grid-cols-2">
+                {PILLARS.map((p) => (
+                  <li key={p.title} className="flex min-w-0 items-start gap-3">
+                    <IconBadge name={p.icon} size="sm" />
+                    <div className="min-w-0">
+                      <h3 className="m-0 mb-0.5 text-step-0 leading-snug text-[var(--color-text-primary)]">
+                        {p.title}
+                      </h3>
+                      <p className="m-0 text-base text-[var(--color-text-secondary)]">
+                        {p.body}
+                      </p>
+                    </div>
+                  </li>
+                ))}
+              </ul>
               <NextLink href={registerHref} className={BTN_PRIMARY}>
                 Reservar mi lugar
               </NextLink>
@@ -218,6 +315,10 @@ export function HomeTemplate({
             title="Agenda del día"
             action={{ href: scheduleHref, label: "Agenda completa" }}
           />
+          <p className="m-0 mb-4 max-w-[40rem] text-step-0 text-[var(--color-text-secondary)]">
+            Charlas, talleres y espacios para conectar. Consultá la agenda para
+            ver los horarios, salas y sesiones confirmadas.
+          </p>
           {agenda.length === 0 ? (
             <p className="m-0 max-w-[40rem] text-step-0 text-[var(--color-text-secondary)]">
               Todavía estamos cerrando la agenda. Mientras tanto, mirá a los
@@ -229,15 +330,12 @@ export function HomeTemplate({
             </p>
           ) : (
             <ol className="m-0 list-none p-0">
-              {agenda.map((item, i) => (
+              {agenda.map((item) => (
                 <li
                   key={item.id}
-                  // Later sessions drop out on short wide screens so the list
-                  // always fits: the 5th up to 55rem of height, the 4th up to
-                  // 44rem. Phones and tall windows keep all five.
-                  className={`grid gap-x-8 gap-y-2 py-[clamp(0.625rem,2svh,1.5rem)] sm:grid-cols-[7.5rem_1fr_13rem] ${
-                    i >= 4 ? "hide-on-short" : i === 3 ? "hide-on-shorter" : ""
-                  }`}
+                  // Every session of the preview stays visible at any window
+                  // height: the section grows instead of hiding content.
+                  className="grid gap-x-8 gap-y-2 py-[clamp(0.625rem,2svh,1.5rem)] sm:grid-cols-[7.5rem_1fr_13rem]"
                 >
                   <time
                     dateTime={item.startsAt}
@@ -304,9 +402,8 @@ export function HomeTemplate({
                   <h3 className="m-0 mb-1 font-semibold text-step-1 leading-[1.15]">
                     {sp.fullName}
                   </h3>
-                  {/* Identity only: the talk is credited in the agenda. The
-                      tagline is dropped on short windows so the row fits. */}
-                  <p className="hide-on-shorter m-0 text-base text-[var(--color-text-secondary)]">
+                  {/* Identity only: the talk is credited in the agenda. */}
+                  <p className="m-0 text-base text-[var(--color-text-secondary)]">
                     {tieLast(sp.tagLine)}
                   </p>
                 </li>
@@ -319,6 +416,7 @@ export function HomeTemplate({
       {/* ── La sede: navy band, photo bleeding off the edge ──── */}
       <section
         id="sede"
+        data-tone="inverse"
         className="fit-screen relative overflow-hidden bg-[var(--color-surface-inverse)] text-[var(--color-text-on-inverse)]"
       >
         <div className="grid w-full lg:grid-cols-[1fr_1.1fr]">
@@ -330,7 +428,8 @@ export function HomeTemplate({
               {venue.name}, {eventInfo.location.city}
             </h2>
             <p className="m-0 mb-8 max-w-[30rem] text-step-0 text-[var(--color-text-on-inverse-secondary)]">
-              {venue.address}
+              {venue.address}. Auditorio principal, salas de taller y espacio de
+              networking en el mismo edificio.
             </p>
             <a
               href={venue.mapUrl}
@@ -403,7 +502,7 @@ export function HomeTemplate({
             {previewTeam.map((tm) => (
               <li key={tm.id} className="min-w-0 [overflow-wrap:anywhere]">
                 <Frame
-                  label={tieLast(tm.name)}
+                  label={tm.name}
                   photo={tm.photo}
                   position="50% 20%"
                   className="aspect-square w-full"
@@ -412,7 +511,7 @@ export function HomeTemplate({
                 <h3 className="m-0 mb-1 mt-4 font-semibold text-step-1 leading-[1.15]">
                   {tieLast(tm.name)}
                 </h3>
-                <p className="hide-on-shorter m-0 text-base leading-[1.4] text-[var(--color-text-secondary)]">
+                <p className="m-0 text-base leading-[1.4] text-[var(--color-text-secondary)]">
                   {tieLast(tm.role)}
                 </p>
               </li>
@@ -434,53 +533,94 @@ export function HomeTemplate({
             title="Sponsors"
             action={{ href: sponsorsHref, label: "Ser sponsor" }}
           />
-          {sponsors.length === 0 ? (
+          {sponsors.length === 0 && openSlots === 0 ? (
             <p className="m-0 text-step-0 text-[var(--color-text-secondary)]">
               Aún no hay sponsors confirmados.
             </p>
           ) : (
             <SponsorBoard
               sponsors={sponsors}
-              openSlots={0}
+              openSlots={openSlots}
               slotHref={sponsorsHref}
             />
           )}
+          <p className="m-0 mt-6 text-step-0 text-[var(--color-text-secondary)]">
+            ¿Tu organización quiere sumarse?{" "}
+            <a
+              href={`mailto:${eventInfo.contactEmail}?subject=Sponsor%20AWS%20Community%20Day%20Paraguay`}
+              className={TEXT_LINK}
+            >
+              Escribinos
+            </a>{" "}
+            y te pasamos los paquetes.
+          </p>
         </div>
       </section>
 
       {/* ── Cierre: una sola invitación ──────────────────────── */}
       <section
         id="participar"
+        data-tone="hero"
         className="fit-screen bg-[var(--color-surface-hero)] text-[var(--color-text-on-hero)]"
       >
         <div className={`${WRAP} py-[clamp(2.5rem,6svh,5rem)]`}>
-          <div className="max-w-[40rem]">
-            <p className="m-0 mb-4 text-base font-semibold text-[var(--color-text-on-inverse-secondary)]">
-              {dateLabel}
-            </p>
-            <h2 className="m-0 mb-8 font-display text-step-3 leading-[1.04] tracking-[-0.01em]">
-              Te esperamos en {eventInfo.location.city}.
-            </h2>
-            {/* Three actions, three buttons: registering is the orange fill;
-                giving a talk and volunteering are ruled buttons beside it. */}
-            <div className="flex flex-wrap items-center gap-x-4 gap-y-3">
-              <NextLink href={registerHref} className={BTN_PRIMARY}>
-                Registrarme
-              </NextLink>
-              <NextLink href={cfpHref} className={BTN_OUTLINE_ON_DARK}>
-                Proponer una charla
-              </NextLink>
-              <NextLink href={volunteersHref} className={BTN_OUTLINE_ON_DARK}>
-                Ser voluntario/a
-              </NextLink>
-            </div>
-            {eventInfo.cfpDeadline ? (
-              <p className="m-0 mt-5 text-step-0 text-[var(--color-text-on-inverse-secondary)]">
-                Las charlas se reciben hasta el{" "}
-                {formatDate(eventInfo.cfpDeadline)}.
-              </p>
-            ) : null}
-          </div>
+          <p className="m-0 mb-4 text-base font-semibold text-[var(--color-text-on-inverse-secondary)]">
+            {dateLabel}
+          </p>
+          <h2 className="m-0 mb-3 max-w-[40rem] font-display text-step-3 leading-[1.04] tracking-[-0.01em]">
+            Te esperamos en {eventInfo.location.city}.
+          </h2>
+          <p className="m-0 mb-[clamp(1.5rem,5svh,3rem)] text-step-1 text-[var(--color-text-on-inverse-secondary)]">
+            Tres formas de ser parte.
+          </p>
+          {/* Three ways in, each with what it takes and its action:
+              registering is the orange fill; giving a talk and volunteering
+              are ruled buttons. */}
+          <ul className="m-0 grid list-none gap-x-10 gap-y-8 p-0 md:grid-cols-3">
+            {[
+              {
+                title: "Asistir",
+                body: "Entrada gratuita vía Eventbrite. Cupos limitados por la capacidad del auditorio.",
+                href: registerHref,
+                label: "Registrarme",
+                className: BTN_PRIMARY,
+              },
+              {
+                title: "Hablar",
+                body: eventInfo.cfpDeadline
+                  ? `Convocatoria de charlas abierta en Sessionize hasta el ${formatDate(eventInfo.cfpDeadline)}.`
+                  : "Convocatoria de charlas abierta en Sessionize.",
+                href: cfpHref,
+                label: "Proponer una charla",
+                className: BTN_OUTLINE_ON_DARK,
+              },
+              {
+                title: "Ayudar",
+                body: "No hace falta experiencia previa, solo ganas de dar una mano.",
+                href: volunteersHref,
+                label: "Ser voluntario/a",
+                className: BTN_OUTLINE_ON_DARK,
+              },
+            ].map((way) => (
+              <li
+                key={way.title}
+                className="flex min-w-0 flex-col items-start gap-3 border-t border-[var(--color-border-on-inverse)] pt-5"
+              >
+                <h3 className="m-0 text-step-1 leading-tight text-[var(--color-text-on-hero)]">
+                  {way.title}
+                </h3>
+                <p className="m-0 text-step-0 text-[var(--color-text-on-inverse-secondary)]">
+                  {way.body}
+                </p>
+                <NextLink
+                  href={way.href}
+                  className={`${way.className} mt-auto`}
+                >
+                  {way.label}
+                </NextLink>
+              </li>
+            ))}
+          </ul>
         </div>
       </section>
     </>

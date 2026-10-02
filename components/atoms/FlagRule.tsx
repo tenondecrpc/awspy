@@ -26,7 +26,7 @@ export function FlagRule({ weight = "thin", className }: FlagRuleProps) {
       className={cn("grid w-full grid-rows-3", HEIGHT[weight], className)}
     >
       <span className="bg-[var(--color-national-red)]" />
-      <span className="bg-[var(--color-surface-elevated)]" />
+      <span className="bg-[var(--color-national-white)]" />
       <span className="bg-[var(--color-accent)]" />
     </div>
   );

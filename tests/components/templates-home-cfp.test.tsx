@@ -42,7 +42,7 @@ describe("HomeTemplate closing invitation", () => {
       within(section).getByRole("link", { name: "Proponer una charla" })
     ).toBeInTheDocument();
     expect(section.textContent).toContain(
-      "Las charlas se reciben hasta el sábado, 10 de octubre de 2026."
+      "Convocatoria de charlas abierta en Sessionize hasta el sábado, 10 de octubre de 2026."
     );
   });
 
@@ -53,7 +53,9 @@ describe("HomeTemplate closing invitation", () => {
     expect(
       within(section).getByRole("link", { name: "Proponer una charla" })
     ).toBeInTheDocument();
-    expect(section.textContent).not.toContain("Las charlas se reciben");
+    expect(section.textContent).toContain(
+      "Convocatoria de charlas abierta en Sessionize."
+    );
     expect(section.textContent).not.toContain("hasta el");
   });
 

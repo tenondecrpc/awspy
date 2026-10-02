@@ -104,7 +104,7 @@ export function Countdown({
         </span>
         <span
           aria-hidden="true"
-          className="font-display text-[min(7.5rem,12svh,18vw)] leading-[0.8] tracking-[-0.03em] tabular-nums"
+          className="font-display text-[clamp(3.5rem,18vw,7.5rem)] leading-[0.8] tracking-[-0.03em] tabular-nums"
         >
           {parts.days}
         </span>
