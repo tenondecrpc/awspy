@@ -10,6 +10,7 @@ import { getSponsors, type Sponsor } from "@/lib/content/sponsors";
 import { getSponsorship, type Sponsorship } from "@/lib/content/sponsorship";
 import { getOrganizers, type Organizer } from "@/lib/content/organizers";
 import { getFAQ, type FAQItem } from "@/lib/content/faq";
+import { getKeynotes, type Keynote } from "@/lib/content/keynotes";
 import { getVenue, type Venue } from "@/lib/content/venue";
 import {
   getCodeOfConduct,
@@ -25,6 +26,8 @@ export type Edition = {
   /** Prospectus for this edition, or `null` when none is published. */
   sponsorship: Sponsorship | null;
   organizers: Organizer[];
+  /** Confirmed keynote speakers; empty when none are announced. */
+  keynotes: Keynote[];
   faq: FAQItem[];
   venue: Venue;
   codeOfConduct: CodeOfConduct;
@@ -99,6 +102,7 @@ export function getEdition(year: string): Edition {
     sponsors: getSponsors(year),
     sponsorship: getSponsorship(year),
     organizers: getOrganizers(year),
+    keynotes: getKeynotes(year),
     faq: getFAQ(year),
     venue: getVenue(year),
     codeOfConduct: getCodeOfConduct(year),

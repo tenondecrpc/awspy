@@ -20,12 +20,12 @@ const SPEAKER: Speaker = {
   sessions: [{ id: "s1", name: "Arquitecturas serverless en producción" }],
 };
 
-function renderSpeakersSection() {
+function renderSpeakersSection(speaker: Speaker = SPEAKER) {
   render(
     <HomeTemplate
       eventInfo={getEventInfo("2026")}
       venue={getVenue("2026")}
-      speakers={[SPEAKER]}
+      speakers={[speaker]}
       sponsors={[]}
       faq={[]}
       organizers={[]}
@@ -46,6 +46,30 @@ describe("HomeTemplate speakers preview", () => {
     ).toBeInTheDocument();
     expect(
       within(section).queryByText("Arquitecturas serverless en producción")
+    ).not.toBeInTheDocument();
+  });
+
+  it("adds the LinkedIn profile Sessionize provides beside the portrait", () => {
+    const section = renderSpeakersSection({
+      ...SPEAKER,
+      links: [
+        {
+          title: "LinkedIn",
+          url: "https://www.linkedin.com/in/ada",
+          linkType: "LinkedIn",
+        },
+      ],
+    });
+
+    expect(
+      within(section).getByRole("link", { name: "LinkedIn de Ada Lovelace" })
+    ).toHaveAttribute("href", "https://www.linkedin.com/in/ada");
+  });
+
+  it("shows no LinkedIn button while Sessionize has none", () => {
+    const section = renderSpeakersSection();
+    expect(
+      within(section).queryByRole("link", { name: /^LinkedIn de/ })
     ).not.toBeInTheDocument();
   });
 });

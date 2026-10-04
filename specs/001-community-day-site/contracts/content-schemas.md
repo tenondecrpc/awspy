@@ -16,6 +16,7 @@ content/editions/{year}/
 ├── sponsors.json
 ├── sponsorship.json   (optional)
 ├── organizers.json
+├── keynotes.json      (optional)
 ├── faq.json
 ├── venue.json
 └── code-of-conduct.mdx
@@ -209,6 +210,38 @@ export const OrganizersListSchema = z.array(OrganizerSchema)
   });
 
 export type Organizer = z.infer<typeof OrganizerSchema>;
+```
+
+## keynotes.json
+
+Optional. The keynote speakers the organizers have confirmed, shown in the
+home page's keynote band in file order. An edition without this file has no
+keynote section. Keynotes are confirmed before they exist in Sessionize, so
+their identity and photo are edition content; the photo ships under
+`public/assets/keynotes/`.
+
+The schema is strict and has no social links. A keynote's LinkedIn button
+comes only from Sessionize: `withSessionizeLinkedIn` (`lib/utils/keynotes.ts`)
+matches the keynote to a Sessionize speaker by full name, compared as a slug,
+and uses that speaker's LinkedIn link when there is one (see the `Speakers`
+view in `sessionize-api.md`).
+
+```ts
+export const KeynoteSchema = z.object({
+  id: z.string().regex(/^[a-z0-9-]+$/),
+  name: z.string().min(1),
+  role: z.string().min(1),
+  organization: z.string().min(1),
+  photo: z.string().regex(
+    /^\/assets\/keynotes\/[a-z0-9-]+\.(jpg|png)$/,
+    "Keynote photos must live under /assets/keynotes/"
+  )
+}).strict();
+
+export const KeynotesListSchema = z.array(KeynoteSchema)
+  .superRefine(/* rejects a duplicated `id` */);
+
+export type Keynote = z.infer<typeof KeynoteSchema>;
 ```
 
 ## faq.json

@@ -33,7 +33,7 @@
     { "value": "8+", "label": "Horas de contenido" },
     { "value": "15+", "label": "Sesiones técnicas" },
     { "value": "3", "label": "Hands-on labs" },
-    { "value": "1", "label": "Keynote" }
+    { "value": "2", "label": "Keynotes" }
   ],
   "previousEditions": []
 }

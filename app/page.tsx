@@ -7,6 +7,7 @@ import { getProgramme } from "@/lib/api/sessionize";
 import { buildAgendaPreview } from "@/lib/utils/agenda-preview";
 import { getFAQ } from "@/lib/content/faq";
 import { getOrganizers } from "@/lib/content/organizers";
+import { withSessionizeLinkedIn } from "@/lib/utils/keynotes";
 import { formatDate } from "@/lib/utils/datetime";
 import {
   buildEventJsonLd,
@@ -58,6 +59,7 @@ export default async function HomePage() {
         venue={edition.venue}
         speakers={speakers}
         agenda={buildAgendaPreview(grid)}
+        keynotes={withSessionizeLinkedIn(edition.keynotes, speakers)}
         sponsors={edition.sponsors}
         sponsorship={edition.sponsorship}
         faq={getFAQ(year)}

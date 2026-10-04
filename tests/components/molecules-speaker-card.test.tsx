@@ -109,6 +109,51 @@ describe("SpeakerCard", () => {
     expect(cropOf(2)).toBe("aspect-square");
   });
 
+  it("adds a LinkedIn button above the stretched link when Sessionize has one", () => {
+    render(
+      <SpeakerCard
+        speaker={{
+          ...SPEAKER,
+          links: [
+            {
+              title: "LinkedIn",
+              url: "https://www.linkedin.com/in/ada",
+              linkType: "LinkedIn",
+            },
+          ],
+        }}
+      />
+    );
+    const linkedin = screen.getByRole("link", {
+      name: "LinkedIn de Ada Lovelace",
+    });
+    expect(linkedin).toHaveAttribute("href", "https://www.linkedin.com/in/ada");
+    expect(linkedin).toHaveAttribute("target", "_blank");
+    expect(linkedin.className).toContain("z-10");
+    expect(screen.getByRole("link", { name: "Ada Lovelace" })).toHaveAttribute(
+      "href",
+      "/speakers/ada-lovelace"
+    );
+  });
+
+  it("shows no LinkedIn button for other social links", () => {
+    render(
+      <SpeakerCard
+        speaker={{
+          ...SPEAKER,
+          links: [
+            {
+              title: "Twitter",
+              url: "https://twitter.com/ada",
+              linkType: "Twitter",
+            },
+          ],
+        }}
+      />
+    );
+    expect(screen.getAllByRole("link")).toHaveLength(1);
+  });
+
   it("wraps the accent index so any list length is safe", () => {
     render(<SpeakerCard speaker={SPEAKER} accentIndex={97} />);
     expect(

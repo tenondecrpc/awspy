@@ -43,7 +43,8 @@ export type GlyphName =
   | "laptop"
   | "phone"
   | "gem"
-  | "user";
+  | "user"
+  | "linkedin";
 
 // Kept as `d` attributes so the component ships no runtime dependency.
 const PATHS: Record<GlyphName, string> = {
@@ -92,6 +93,9 @@ const PATHS: Record<GlyphName, string> = {
   phone:
     "M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a1 1 0 0 1-1 1A15 15 0 0 1 4 5a1 1 0 0 1 1-1Z",
   user: "M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8ZM5 20v-1a5 5 0 0 1 5-5h4a5 5 0 0 1 5 5v1",
+  // The "in" mark redrawn in the same line language, not the brand logo.
+  linkedin:
+    "M5 3h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2ZM8 10.5V17M8 7.5h.01M12 17v-6.5M12 13.5a2.75 2.75 0 0 1 5.5 0V17",
 };
 
 type GlyphIconProps = {

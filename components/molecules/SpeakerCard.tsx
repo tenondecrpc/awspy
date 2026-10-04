@@ -4,9 +4,11 @@
 // no hover, and a hover-only title is invisible to most readers).
 //
 // Design notes:
-//  - One link per card. The name anchor is stretched over the whole entry with
-//    an `::after` overlay, so the entry is fully clickable but still exposes a
-//    single tab stop and a single accessible name (the speaker's full name).
+//  - One link to the detail page. The name anchor is stretched over the whole
+//    entry with an `::after` overlay, so the entry is fully clickable but
+//    exposes a single accessible name (the speaker's full name). The only
+//    other link is the LinkedIn button, shown when Sessionize provides the
+//    profile and raised above the overlay.
 //  - Every portrait is a square. The source photos are square (Sessionize
 //    serves 400x400), so a square frame shows each one whole: nothing is
 //    cropped into a close-up or stretched, and all speakers carry equal weight.
@@ -17,8 +19,10 @@
 import Image from "next/image";
 import NextLink from "next/link";
 import { GlyphIcon } from "@/components/atoms/GlyphIcon";
+import { LinkedInLink } from "@/components/atoms/LinkedInLink";
 import { cn } from "@/lib/utils/cn";
 import type { Speaker } from "@/lib/api/sessionize";
+import { linkedinUrlOf } from "@/lib/utils/speaker-links";
 import { tieLast } from "@/lib/utils/typography";
 
 type SpeakerCardProps = {
@@ -48,6 +52,7 @@ export function SpeakerCard({
 }: SpeakerCardProps) {
   const detailHref = `${basePath}/${speaker.slug}`;
   const talkTitle = speaker.sessions?.find((s) => s.name)?.name;
+  const linkedin = linkedinUrlOf(speaker);
 
   return (
     // The card spans four rows of the parent grid (portrait, name, tagline,
@@ -76,6 +81,15 @@ export function SpeakerCard({
             {initials(speaker.fullName)}
           </div>
         )}
+        {/* In the portrait's corner so the four caption rows stay aligned
+            across the grid. `z-10` lifts it over the stretched name link. */}
+        {linkedin ? (
+          <LinkedInLink
+            href={linkedin}
+            name={speaker.fullName}
+            className="absolute bottom-2 right-2 z-10"
+          />
+        ) : null}
       </div>
 
       <>
