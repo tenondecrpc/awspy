@@ -25,7 +25,7 @@
     "e2e:production": "playwright test --config=playwright.production.config.ts",
     "verify": "npm run format:check && npm run lint && npm run typecheck && npm test && npm run secretlint && npm run build",
     "verify:e2e": "npm run verify && npm run e2e:production",
-    "security:audit": "npm audit --audit-level=high",
+    "security:audit": "node scripts/audit-check.ts",
     "security:signatures": "npm audit signatures",
     "sbom": "npm sbom --package-lock-only --sbom-format cyclonedx",
     "dev:preview": "node scripts/dev-preview.mjs",

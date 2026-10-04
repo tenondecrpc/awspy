@@ -68,6 +68,14 @@ Run `npm audit` when dependencies change. Dependabot provides ongoing update
 proposals, but audit findings still require review because automatic fixes can
 include framework upgrades or breaking dependency changes.
 
+`npm run security:audit` runs `scripts/audit-check.ts`. It audits production
+dependencies alone, where any high or critical advisory fails, and then the
+full graph, where an advisory fails unless `AUDIT_ALLOWLIST` lists it. Each
+entry names its record in `docs/documented-exceptions.md` and a review date
+after which it fails the gate again; the script also reports an entry whose
+advisory is no longer present, so it can be removed. A report the script
+cannot read or attribute fails the gate.
+
 Known findings and temporary pins belong in
 `docs/documented-exceptions.md`.
 

@@ -2,7 +2,7 @@
 
 ## Summary
 
-No credential was confirmed, no credential value was printed, and no rotation is currently required. npm audit reports zero vulnerabilities. The one history finding in vendored test documentation is a reviewed false positive covered by a precise path allowlist with a review condition.
+No credential was confirmed, no credential value was printed, and no rotation is currently required. npm audit reports zero vulnerabilities in production dependencies; one high development-only advisory without a patched release is allowlisted under `EX-003` (`SEC-011`). The one history finding in vendored test documentation is a reviewed false positive covered by a precise path allowlist with a review condition.
 
 | ID | Severity | Classification | Status | Evidence and action | Validation or blocker |
 | --- | --- | --- | --- | --- | --- |
@@ -16,6 +16,7 @@ No credential was confirmed, no credential value was printed, and no rotation is
 | SEC-008 | Informational | AWS IAM | BLOCKED | External roles, policies, encryption, logging, and console settings are outside repository evidence | BLK-003 |
 | SEC-009 | Medium | CWE-200 | RESOLVED | Shared web URL policies reject embedded credentials across navigation, images, Markdown, content, and provider links | Credential and fixture tests pass |
 | SEC-010 | Low | CWE-532 | DEFERRED | Generic `ApiError.body` retains a bounded provider response; no current production consumer logs it | Compatible error-contract decision and tests required before removal |
+| SEC-011 | High | CWE-674, supply chain | ACCEPTED | `GHSA-vfj7-8cjw-p6xm` in `braces` `<=3.0.3`, reached only through `eslint-config-next` at lint time; no patched release exists. `scripts/audit-check.ts` allowlists it while it stays out of production dependencies and until 2026-11-04 (`EX-003`) | `npm audit --omit=dev` reports zero findings; `npm run security:audit` passes with the notice and fails on any other high or critical advisory |
 
 ## Entity and schema review
 

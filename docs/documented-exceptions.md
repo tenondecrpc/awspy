@@ -31,6 +31,29 @@ recorded. A gap documents a problem but does not approve it for indefinite use.
 - **Revisit**: When the Open Graph renderer can consume the shared token source
   without duplicating literal values.
 
+## EX-003 - Development-only braces advisory without a patched release
+
+- **Rule**: `npm run security:audit` fails on any high or critical advisory,
+  and new findings must be fixed or recorded before deployment
+  (`docs/ci.md`).
+- **Scope**: `GHSA-vfj7-8cjw-p6xm` against `braces` `<=3.0.3` only, reached
+  through `eslint-config-next` -> `@next/eslint-plugin-next` -> `fast-glob`
+  -> `micromatch` -> `braces`. Allowlisted in `scripts/audit-check.ts`.
+- **Reason**: The advisory (published 2026-09-18) is a stack-exhaustion
+  denial of service on deeply nested brace patterns. No patched `braces`
+  release exists, and the only automatic fix downgrades `eslint-config-next`
+  to the incompatible `14.2.35`. `eslint-config-next` `16.3.8` still pins
+  `fast-glob` `3.3.1`.
+- **Mitigation**: The package runs only at lint time on glob patterns the
+  repository owns; it is not part of the deployed application, and
+  `npm audit --omit=dev` reports zero findings. The gate audits production
+  dependencies with no allowlist, so the exception ends automatically if the
+  advisory reaches them. Any other high or critical advisory still fails.
+- **Approved by**: Repository owner, 2026-10-04.
+- **Revisit**: By 2026-11-04, when the allowlist entry stops passing the
+  gate, or as soon as a patched `braces` or an `eslint-config-next` release
+  without it is available; then remove the entry and resolve this record.
+
 ## Resolved records
 
 Resolved records remain here for traceability but no longer authorize an
