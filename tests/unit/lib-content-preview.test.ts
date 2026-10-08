@@ -119,7 +119,7 @@ describe("content loaders", () => {
 
     it("serves the confirmed venue", () => {
       const venue = getVenue("2026");
-      expect(venue.name).toMatch(/CENTRO TECNOLOGICO DE AVANZADA PARAGUAY - COREA SNPP/i);
+      expect(venue.name).toMatch(/Centro Tecnológico de Avanzada Paraguay - Corea SNPP/i);
       expect(venue.mapUrl).toBeTruthy();
       expect(venue.embedMapUrl).toBeTruthy();
       const embedUrl = new URL(venue.embedMapUrl!);
