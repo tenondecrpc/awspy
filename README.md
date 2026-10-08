@@ -199,7 +199,7 @@ No IaC is included because external resource ownership and runtime support are n
 
 ## Multi-agent development
 
-Root [`AGENTS.md`](AGENTS.md) holds the canonical rules, so every agent sees them at startup. Shared standards, roles, workflows, and templates live under [`.ai/`](.ai/). Claude Code imports `AGENTS.md` through `.claude/CLAUDE.md`; Codex uses `.codex/config.toml` and the narrow project agents under `.codex/agents/`. Spec Kit writes mutable plan context only to `.ai/generated/project-context.md`.
+Root [`AGENTS.md`](AGENTS.md) is a minimal loader. Canonical policy, roles, workflows, and templates live under [`.ai/`](.ai/). Claude Code loads `.claude/CLAUDE.md`; Codex uses `.codex/config.toml` and the narrow project agents under `.codex/agents/`. Spec Kit writes mutable plan context only to `.ai/generated/project-context.md`.
 
 Review agents are read-only. Only the implementation worker has workspace
 write access. The coordination workflow requires evidence-backed findings,

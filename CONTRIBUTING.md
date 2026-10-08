@@ -2,7 +2,7 @@
 
 ## Before work
 
-Read `AGENTS.md`, the applicable shared standards under `.ai/shared/`, `docs/README.md`, and `docs/status/PROJECT_STATUS.md`. Link substantive work to an existing work item or add one with acceptance criteria.
+Read `AGENTS.md`, `.ai/AGENTS.md`, the applicable shared standards, `docs/README.md`, and `docs/status/PROJECT_STATUS.md`. Link substantive work to an existing work item or add one with acceptance criteria.
 
 ## Development flow
 

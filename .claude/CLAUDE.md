@@ -1,2 +1,2 @@
-@../AGENTS.md
+@../.ai/AGENTS.md
 @../.ai/CLAUDE.md
