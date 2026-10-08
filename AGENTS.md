@@ -31,3 +31,14 @@ Before editing Next.js code, read the relevant version-matched guide under `node
 ## Verification
 
 Run `npm run verify` before reporting a change complete. Run `npm run verify:e2e` for page or component changes. If a command cannot run, report the exact limitation and never claim success.
+
+## Before pushing
+
+Run locally every gate that `.github/workflows/ci.yml` runs before any push or pull request, so failures surface on the workstation instead of in GitHub Actions:
+
+1. `npm run verify:e2e` (includes `npm run verify`)
+2. `npm run test:coverage`
+3. `npm run security:audit`
+4. `npm run security:signatures`
+
+Run `npm run security:audit` right before pushing even when no dependency changed: advisories are published against versions that are already locked. Do not push while a gate fails; fix it or record the approved exception first. If a gate cannot run locally, name it and the reason before pushing.
