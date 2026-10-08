@@ -119,8 +119,13 @@ describe("content loaders", () => {
 
     it("serves the confirmed venue", () => {
       const venue = getVenue("2026");
-      expect(venue.name).toMatch(/SNPP/i);
+      expect(venue.name).toMatch(/Centro Tecnológico de Avanzada Paraguay - Corea SNPP/i);
       expect(venue.mapUrl).toBeTruthy();
+      expect(venue.embedMapUrl).toBeTruthy();
+      const embedUrl = new URL(venue.embedMapUrl!);
+      expect(embedUrl.searchParams.get("marker")).toBe(
+        "-25.3403423,-57.5230703"
+      );
     });
   });
 

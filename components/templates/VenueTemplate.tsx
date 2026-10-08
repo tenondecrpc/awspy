@@ -147,10 +147,14 @@ export function VenueTemplate({ venue, eventInfo }: VenueTemplateProps) {
             </div>
           </div>
 
+          {/* The frame matches the source photo's exact ratio so nothing is
+              cropped: 1875x839. `aspect-video` was correct for the old 16:9
+              file and started cutting the left and right edges when the photo
+              was swapped. Update this if cover.jpg is replaced again. */}
           <Frame
             label={`Fachada de ${venue.name}`}
             photo={VENUE_PHOTO}
-            className="aspect-video w-full rounded-[var(--radius-md)]"
+            className="aspect-[1875/839] w-full rounded-[var(--radius-md)]"
             sizes="(min-width: 1024px) 680px, 100vw"
             preload
           />
