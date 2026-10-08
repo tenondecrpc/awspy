@@ -1,7 +1,7 @@
 # Documentation
 
-Project context for AWS Community Day Paraguay. Canonical AI rules live under
-`.ai/`; the root `AGENTS.md` is a compatibility loader.
+Project context for AWS Community Day Paraguay. Canonical AI rules live in the
+root `AGENTS.md`; shared standards, roles, and workflows live under `.ai/`.
 
 | Document | Purpose |
 |---|---|

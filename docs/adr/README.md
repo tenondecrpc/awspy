@@ -6,10 +6,11 @@ later decision should supersede, not edit, an accepted ADR.
 
 | ADR | Title | Status |
 |---|---|---|
-| [0004](0004-centralize-ai-guidance.md) | Centralize AI guidance under `.ai/` | Accepted |
+| [0004](0004-centralize-ai-guidance.md) | Centralize AI guidance under `.ai/` | Accepted; rules location superseded by 0011 |
 | [0005](0005-retain-amplify-conditionally.md) | Retain Amplify Hosting conditionally | Accepted with blockers |
 | [0006](0006-harden-external-data-boundaries.md) | Harden external data boundaries | Accepted |
 | [0007](0007-select-eventbrite-registration.md) | Select Eventbrite for attendee registration | Accepted |
 | [0008](0008-select-google-forms-for-volunteer-registration.md) | Select Google Forms for volunteer registration | Accepted |
 | [0009](0009-adopt-shader-and-motion-runtime-dependencies.md) | Adopt shader and motion runtime dependencies for the Kiro mascot | Accepted with constraints |
 | [0010](0010-adopt-google-analytics.md) | Adopt Google Analytics 4 for audience measurement | Accepted |
+| [0011](0011-keep-canonical-rules-in-root-agents-md.md) | Keep the canonical agent rules in root `AGENTS.md` | Accepted |

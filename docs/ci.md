@@ -86,7 +86,7 @@ explicit gap before deployment.
 ## Secret scan scope
 
 Secretlint scans the application, tests, configuration, documentation,
-canonical `.ai/` guidance, Claude loader, and Codex configuration.
+root `AGENTS.md`, canonical `.ai/` guidance, Claude loader, and Codex configuration.
 `.secretlintignore` excludes generated output and vendored `.agents/` skills,
 which contain illustrative credential-shaped security examples. Gitleaks uses
 the same scoped vendored-skill exception and scans Git history with redaction.
