@@ -141,7 +141,14 @@ export function SpeakerDetailTemplate({
                         rel="noopener noreferrer"
                         className="inline-flex min-h-[var(--size-touch)] items-center gap-2 text-step--1 font-semibold text-[var(--color-text-primary)] hover:underline"
                       >
-                        <GlyphIcon name="external" size={18} />
+                        <GlyphIcon
+                          name={
+                            l.linkType.toLowerCase() === "linkedin"
+                              ? "linkedin"
+                              : "external"
+                          }
+                          size={18}
+                        />
                         {l.title || l.linkType}
                       </a>
                     </li>

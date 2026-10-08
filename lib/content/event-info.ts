@@ -21,8 +21,8 @@ const SocialSchema = z
 const StatusEnum = z.enum(["open", "upcoming", "closed"]);
 
 // Headline figures the edition expects to reach ("200+ asistentes"). These are
-// projections, not confirmed counts, so the value stays a string: the "+" and
-// the "1" of a single keynote are both part of how the figure reads.
+// projections, not confirmed counts, so the value stays a string: the "+" of
+// "400+" is part of how the figure reads.
 const ExpectedFigureSchema = z
   .object({
     value: z.string().min(1),

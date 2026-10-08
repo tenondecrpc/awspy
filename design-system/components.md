@@ -21,12 +21,15 @@ content. `Frame` provides responsive `next/image` rendering with an explicit
 ## Page patterns
 
 - **Home:** event photo and solid navy title panel; live countdown; all seven
-  projected figures; content pillars; edition agenda, speakers, venue, FAQ,
-  organizers, sponsor slots, and three participation actions.
+  projected figures; content pillars; edition agenda, keynote speakers on a
+  navy band, speakers, venue, FAQ, organizers, sponsor slots, and three
+  participation actions.
 - **Agenda:** a room rail and a time or day rail stay below the header. Session
   descriptions use `<details>`. Rooms carry both a color and a text label.
 - **Speakers and team:** square portraits with a fallback, full biographies,
-  talk information, and clearly labeled external links.
+  talk information, and clearly labeled external links. A speaker's LinkedIn
+  appears as a round 44px `LinkedInLink` button, named "LinkedIn de <nombre>"
+  for assistive technology, only when Sessionize provides it.
 - **Sponsors:** confirmed logos stay on white plates. Available tiers produce
   "Tu logo aquí" slots. The package ladder and comparison table use the
   version-controlled prospectus without publishing amounts.

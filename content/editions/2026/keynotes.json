@@ -1,0 +1,16 @@
+[
+  {
+    "id": "nelly-andrade",
+    "name": "Nelly Andrade",
+    "role": "Head of Developer Relations LATAM at AWS",
+    "organization": "Amazon Web Services",
+    "photo": "/assets/keynotes/nelly-andrade.jpg"
+  },
+  {
+    "id": "cristian-yegros",
+    "name": "Cristian Yegros",
+    "role": "Director - CTA Paraguay Corea - SNPP",
+    "organization": "Servicio Nacional de Promoción Profesional",
+    "photo": "/assets/keynotes/cristian-yegros.jpg"
+  }
+]

@@ -26,12 +26,19 @@ export const WRAP = "mx-auto w-full max-w-[1240px] px-5 sm:px-7";
 /** Section title in the display serif, sized on the fluid scale. Modest by
  *  default: on inner pages the section names are self-explanatory and the
  *  content below is what matters. */
-export const H2 =
-  "m-0 font-display text-step-2 leading-[1.08] tracking-[-0.01em] text-[var(--color-text-primary)]";
+const H2_TYPE =
+  "m-0 font-display text-step-2 leading-[1.08] tracking-[-0.01em]";
+export const H2 = `${H2_TYPE} text-[var(--color-text-primary)]`;
 
 /** The poster-size title the home page uses, one screen per section. */
-export const H2_LG =
-  "m-0 font-display text-step-3 leading-[1.04] tracking-[-0.01em] text-[var(--color-text-primary)]";
+const H2_LG_TYPE =
+  "m-0 font-display text-step-3 leading-[1.04] tracking-[-0.01em]";
+export const H2_LG = `${H2_LG_TYPE} text-[var(--color-text-primary)]`;
+
+/* `SectionTitle` builds its heading from the ink-free `*_TYPE` strings. Two
+ * arbitrary color utilities on one element do not override each other in class
+ * order but in stylesheet order, where the paper ink wins, so a title on the
+ * navy band must not carry it. */
 
 /** The thin hairline the layout puts between full-bleed sections. */
 export const SECTION_BORDER = "";
@@ -96,7 +103,11 @@ export function SectionTitle({
       <FlagRule weight="bold" className="mb-1" />
       <div>
         <h2
-          className={`${large ? H2_LG : H2} ${onDark ? "text-[var(--color-text-on-inverse)]" : ""}`}
+          className={`${large ? H2_LG_TYPE : H2_TYPE} ${
+            onDark
+              ? "text-[var(--color-text-on-inverse)]"
+              : "text-[var(--color-text-primary)]"
+          }`}
         >
           {typeof title === "string" ? tieLast(title) : title}
         </h2>

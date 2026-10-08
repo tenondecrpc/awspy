@@ -1,11 +1,12 @@
 // Home page. A printed-poster layout: a full-bleed photograph with the title
 // set in a solid block over it, then sections that each take a different shape
-// (statement and collage, a ruled agenda list, one large speaker beside smaller
-// ones, a venue band, a typographic Q&A, a staggered team strip, an open call).
+// (statement and collage, a ruled agenda list, the keynotes on a navy band, one
+// large speaker beside smaller ones, a venue band, a typographic Q&A, a
+// staggered team strip, an open call).
 //
-// The countdown, agenda preview, speakers, sponsors, FAQ and organizers use
-// edition content and Sessionize data. Copy is limited to what the content
-// files and the schedule can back up.
+// The countdown, agenda preview, keynotes, speakers, sponsors, FAQ and
+// organizers use edition content and Sessionize data. Copy is limited to what
+// the content files and the schedule can back up.
 
 import NextLink from "next/link";
 // Imported rather than referenced by path so the optimizer's upstream is the
@@ -15,7 +16,9 @@ import NextLink from "next/link";
 import heroPhoto from "@/public/assets/anterior.jpg";
 import venuePhoto from "@/public/assets/venue/cover.jpg";
 import { Countdown } from "@/components/organisms/Countdown";
+import { KeynoteCard } from "@/components/molecules/KeynoteCard";
 import { Lace } from "@/components/atoms/Lace";
+import { LinkedInLink } from "@/components/atoms/LinkedInLink";
 import { IconBadge } from "@/components/atoms/IconBadge";
 import type { GlyphName } from "@/components/atoms/GlyphIcon";
 import {
@@ -31,6 +34,8 @@ import { formatDate, formatTime } from "@/lib/utils/datetime";
 import type { EventInfo } from "@/lib/content/event-info";
 import type { Speaker } from "@/lib/api/sessionize";
 import type { AgendaPreviewItem } from "@/lib/utils/agenda-preview";
+import type { KeynoteCardData } from "@/lib/utils/keynotes";
+import { linkedinUrlOf } from "@/lib/utils/speaker-links";
 import { SponsorBoard } from "@/components/organisms/SponsorBoard";
 import { listAvailableTiers } from "@/lib/content/sponsors";
 import type { Sponsor } from "@/lib/content/sponsors";
@@ -46,6 +51,8 @@ type HomeTemplateProps = {
   speakers: Speaker[];
   /** First sessions of the programme. Empty until the agenda is published. */
   agenda?: AgendaPreviewItem[];
+  /** Confirmed keynote speakers. The section is left out while empty. */
+  keynotes?: KeynoteCardData[];
   sponsors: Sponsor[];
   /** Edition prospectus. Its open tiers become "Tu logo aquí" slots on the
    *  sponsor board. `null` when this edition has not published one. */
@@ -94,6 +101,7 @@ export function HomeTemplate({
   venue,
   speakers,
   agenda = [],
+  keynotes = [],
   sponsors,
   sponsorship = null,
   faq,
@@ -111,7 +119,9 @@ export function HomeTemplate({
     eventInfo.dates.end
   )}`;
   const isOpen = eventInfo.registrationStatus === "open";
-  const previewSpeakers = speakers.slice(0, 4);
+  const previewSpeakers = speakers
+    .slice(0, 4)
+    .map((sp) => ({ ...sp, linkedin: linkedinUrlOf(sp) }));
   const previewTeam = organizers.slice(0, 5);
   // One empty frame per open tier fills the sponsor board while the real
   // logos are still being signed, so it never renders as a bare line of text.
@@ -363,6 +373,35 @@ export function HomeTemplate({
         </div>
       </section>
 
+      {/* ── Keynotes: the headline speakers, on a navy band ───── */}
+      {/* The title holds the left third beside the portraits, as the FAQ
+          does, so two cards fill a laptop screen instead of a thin strip. */}
+      {keynotes.length > 0 ? (
+        <section
+          id="keynotes"
+          data-tone="inverse"
+          className={`${SECTION_FIT} bg-[var(--color-surface-inverse)] text-[var(--color-text-on-inverse)]`}
+        >
+          <div
+            className={`${WRAP} grid gap-x-16 lg:grid-cols-[minmax(0,1fr)_minmax(0,2fr)] lg:items-center`}
+          >
+            <div className="min-w-0">
+              <SectionTitle size="lg" title="Keynote speakers" onDark />
+              <p className="m-0 mb-[clamp(1.25rem,4svh,2.5rem)] text-step-0 text-[var(--color-text-on-inverse-secondary)]">
+                Confirmados para esta edición.
+              </p>
+            </div>
+            <ul className="m-0 grid list-none gap-6 p-0 sm:grid-cols-2">
+              {keynotes.map((k) => (
+                <li key={k.id} className="min-w-0">
+                  <KeynoteCard keynote={k} />
+                </li>
+              ))}
+            </ul>
+          </div>
+        </section>
+      ) : null}
+
       {/* ── Speakers: four portraits of equal weight ─────────── */}
       <section
         id="speakers"
@@ -387,18 +426,29 @@ export function HomeTemplate({
             <ul className="m-0 grid list-none grid-cols-2 gap-x-5 gap-y-8 p-0 lg:grid-cols-4 lg:gap-x-6">
               {previewSpeakers.map((sp) => (
                 <li key={sp.id} className="min-w-0 [overflow-wrap:anywhere]">
-                  <NextLink
-                    href={`${speakersHref}/${sp.slug}`}
-                    className="block"
-                  >
-                    <Frame
-                      label={sp.fullName}
-                      photo={sp.profilePicture ?? undefined}
-                      position="50% 20%"
-                      className="mb-4 aspect-square w-full"
-                      sizes="(min-width: 1024px) 290px, 50vw"
-                    />
-                  </NextLink>
+                  {/* The LinkedIn button sits in the portrait's corner, beside
+                      the photo link rather than inside it. */}
+                  <div className="relative mb-4">
+                    <NextLink
+                      href={`${speakersHref}/${sp.slug}`}
+                      className="block"
+                    >
+                      <Frame
+                        label={sp.fullName}
+                        photo={sp.profilePicture ?? undefined}
+                        position="50% 20%"
+                        className="aspect-square w-full"
+                        sizes="(min-width: 1024px) 290px, 50vw"
+                      />
+                    </NextLink>
+                    {sp.linkedin ? (
+                      <LinkedInLink
+                        href={sp.linkedin}
+                        name={sp.fullName}
+                        className="absolute bottom-2 right-2"
+                      />
+                    ) : null}
+                  </div>
                   <h3 className="m-0 mb-1 font-semibold text-step-1 leading-[1.15]">
                     {sp.fullName}
                   </h3>

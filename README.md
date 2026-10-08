@@ -183,7 +183,8 @@ under root [`specs/`](specs/).
 
 - Report vulnerabilities privately as described in [`SECURITY.md`](SECURITY.md).
 - `npm run secretlint` scans project source and canonical AI guidance.
-- `npm run security:audit` checks the locked dependency graph.
+- `npm run security:audit` checks the locked dependency graph and fails on
+  high or critical advisories not approved in `docs/documented-exceptions.md`.
 - `npm run security:signatures` verifies registry signatures and attestations.
 - CI additionally runs redacted Gitleaks history scanning and retains coverage
   evidence and a CycloneDX SBOM without committing generated output.

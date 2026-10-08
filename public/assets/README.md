@@ -13,6 +13,8 @@ public/assets/
     pattern.svg                         # Optional custom hero pattern
   team/
     <organizer-slug>.jpg                # Per-organizer photo (1:1, 400x400)
+  keynotes/
+    <keynote-id>.jpg                    # Keynote speaker photo (1:1, 800x800)
   venue/
     cover.jpg                           # Venue cover image (16:9, 1280x720)
   sponsors/
@@ -28,7 +30,7 @@ public/assets/
 ## Filename conventions
 
 - Slugs match the corresponding content slug (`Organizer.slug`, `Sponsor.id`,
-  edition year). The file basename is the slug, the extension is the format.
+  `Keynote.id`, edition year). The file basename is the slug, the extension is the format.
 - Photos are `.jpg` or `.png`. Vector assets are `.svg`.
 
 ## Aspect ratios
@@ -36,6 +38,7 @@ public/assets/
 | Category   | Ratio | Recommended size | Used by                  |
 |------------|-------|------------------|--------------------------|
 | `team`     | 1:1   | 400x400          | `OrganizerCard` avatar   |
+| `keynotes` | 1:1   | 800x800          | `KeynoteCard` portrait   |
 | `sponsors` | 4:1   | 320x80           | `SponsorCard` logo slot  |
 | `venue`    | 16:9  | 1280x720         | `VenueCard` cover        |
 | `hero`     | n/a   | n/a              | `DecorativePattern`      |

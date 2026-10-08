@@ -14,7 +14,7 @@
 - Tests: 65 Vitest files with 558 tests passed; 167 Playwright project-expanded tests passed with 1 skipped
 - Coverage baseline: `NOT AVAILABLE`
 - Coverage final: 84.72% statements, 79.90% branches, 83.25% functions, 85.46% lines
-- Dependency status: 0 known npm vulnerabilities; maintenance and legal review remain `NOT VERIFIED`
+- Dependency status: 0 known npm vulnerabilities in production dependencies; one high development-only advisory without a patched release is allowlisted until 2026-11-04 (`EX-003`, `SEC-011`); maintenance and legal review remain `NOT VERIFIED`
 - AWS readiness: Conditional. Amplify serves the production domain, but the Next.js 16 runtime is still unqualified and two of its limits are now measured rather than assumed (see below).
 - Major risks: unsupported hosting/runtime combination, and request-time Sessionize outages affecting dynamic provider sections
 - Independent review: no Critical, High, or Medium findings remain

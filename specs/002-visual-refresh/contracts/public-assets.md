@@ -11,6 +11,8 @@ public/assets/
 │   └── pattern.svg                        # Optional custom hero pattern; falls back to AWS arch icons
 ├── team/
 │   └── <organizer-slug>.jpg               # Per-organizer photo (1:1, 400x400 recommended)
+├── keynotes/
+│   └── <keynote-id>.jpg                   # Keynote speaker photo (1:1, 800x800 recommended), referenced by keynotes.json
 ├── venue/
 │   └── cover.jpg                          # Venue cover image (16:9)
 ├── sponsors/
@@ -34,6 +36,7 @@ public/assets/
 | Category   | Ratio  | Recommended size | Used by                    |
 |------------|--------|------------------|----------------------------|
 | `team`     | 1:1    | 400x400          | `OrganizerCard` avatar     |
+| `keynotes` | 1:1    | 800x800          | `KeynoteCard` portrait     |
 | `sponsors` | 4:1    | 320x80           | `SponsorCard` logo slot    |
 | `venue`    | 16:9   | 1280x720         | `VenueCard` cover          |
 | `hero`     | n/a    | n/a              | `DecorativePattern` (SVG)  |
@@ -50,6 +53,7 @@ The `Placeholder` atom uses these ratios to reserve space.
 ## Speaker headshots
 
 - Speaker headshots are NOT part of `public/assets/`. They continue to come from the Sessionize public API via `Speaker.profilePicture`.
+- Keynote speakers are the exception: they are confirmed before they exist in Sessionize, so their photos are supplied by the organizers and committed under `public/assets/keynotes/`.
 - The existing `SpeakerCard` initials fallback covers the case where Sessionize does not provide a picture. This contract does not change that.
 
 ## Hero pattern

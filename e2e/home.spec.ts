@@ -57,6 +57,27 @@ test.describe("Home page", () => {
     await expect(skip).toHaveAttribute("href", "#contenido-principal");
   });
 
+  test("introduces the confirmed keynote speakers with their photos", async ({
+    page,
+  }) => {
+    await page.goto("/");
+    const section = page.locator("#keynotes");
+    await expect(
+      section.getByRole("heading", { level: 2, name: "Keynote speakers" })
+    ).toBeVisible();
+
+    for (const name of ["Nelly Andrade", "Cristian Yegros"]) {
+      await expect(
+        section.getByRole("heading", { level: 3, name })
+      ).toBeVisible();
+      const photo = section.getByRole("img", { name });
+      await photo.scrollIntoViewIfNeeded();
+      await expect
+        .poll(() => photo.evaluate((img: HTMLImageElement) => img.naturalWidth))
+        .toBeGreaterThan(0);
+    }
+  });
+
   test("links the volunteer invitation to the dedicated section", async ({
     page,
   }) => {

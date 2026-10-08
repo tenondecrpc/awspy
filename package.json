@@ -25,7 +25,7 @@
     "e2e:production": "playwright test --config=playwright.production.config.ts",
     "verify": "npm run format:check && npm run lint && npm run typecheck && npm test && npm run secretlint && npm run build",
     "verify:e2e": "npm run verify && npm run e2e:production",
-    "security:audit": "npm audit --audit-level=high",
+    "security:audit": "node scripts/audit-check.ts",
     "security:signatures": "npm audit signatures",
     "sbom": "npm sbom --package-lock-only --sbom-format cyclonedx",
     "dev:preview": "node scripts/dev-preview.mjs",
@@ -35,7 +35,7 @@
   "dependencies": {
     "@paper-design/shaders-react": "^0.0.80",
     "framer-motion": "^13.2.0",
-    "next": "16.3.7",
+    "next": "16.3.8",
     "react": "19.2.8",
     "react-dom": "19.2.8",
     "zod": "^4.4.3"
@@ -53,7 +53,7 @@
     "@vitejs/plugin-react": "^6.0.5",
     "@vitest/coverage-v8": "4.1.11",
     "eslint": "^9.39.5",
-    "eslint-config-next": "16.3.7",
+    "eslint-config-next": "16.3.8",
     "jsdom": "30.0.1",
     "prettier": "3.9.9",
     "secretlint": "13.0.6",

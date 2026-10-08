@@ -71,6 +71,13 @@ const SessionizeSpeakerSchema = z.object({
 const SpeakersListSchema = z.array(SessionizeSpeakerSchema);
 ```
 
+`links` carries the social links a speaker filled in on their Sessionize
+profile, when the CFP asks for them. The site reads one: the entry with
+`linkType` `"LinkedIn"` whose URL is on `linkedin.com` or a subdomain
+(`linkedinUrlOf`, `lib/utils/speaker-links.ts`). It becomes a LinkedIn button
+on the speaker cards, on the home preview and on the matching keynote card;
+without it nothing is shown. The speaker detail page lists every link.
+
 `listSpeakers` returns the speakers marked `isTopSpeaker: true` first, then the rest. The sort is stable, so each group keeps the order Sessionize sent (alphabetical by first name for the 2026 event). Organizers set the flag with the Top Speaker toggle in Sessionize; the site has no ordering of its own.
 
 ### `Sessions` view
