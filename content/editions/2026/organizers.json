@@ -30,13 +30,5 @@
     "bio": "Security Engineer dentro del Cloud Center of Excellence (CCoE) de Itaú Unibanco, con experiencia en la administración y operación de plataformas tecnológicas empresariales. Participa activamente en iniciativas de modernización tecnológica y en el fortalecimiento de la comunidad AWS en Paraguay. Certificado como AWS Certified Solutions Architect.",
     "photo": "/team/derlis-galeano.jpg",
     "links": {}
-  },
-  {
-    "id": "william-guzman",
-    "name": "William Guzmán",
-    "role": "Arquitecto de Soluciones y Community Leader de AWS User Group Paraguay",
-    "bio": "Arquitecto de Soluciones AWS con más de 20 años de experiencia en desarrollo de software y arquitectura de soluciones. Trabaja con AWS desde 2016, ayudando a organizaciones a diseñar e implementar soluciones escalables, seguras y eficientes en la nube. Es Community Leader de AWS User Group Paraguay, mentor tecnológico y conferencista, apasionado por compartir conocimiento y contribuir al desarrollo del talento cloud en Latinoamérica.",
-    "photo": "/team/william-guzman.jpg",
-    "links": {}
   }
 ]
