@@ -14,5 +14,12 @@
     "logo": { "light": "/logos/aws.png" },
     "url": "https://aws.amazon.com/",
     "description": "Plataforma de nube que da nombre y contenido técnico al Community Day."
+  },
+  {
+    "id": "inco",
+    "name": "INCO",
+    "tier": "Silver",
+    "logo": { "light": "/logos/inco.png" },
+    "url": "https://incosoluciones.com/py/home-py/"
   }
 ]

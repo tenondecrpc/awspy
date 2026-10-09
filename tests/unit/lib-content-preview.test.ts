@@ -106,8 +106,11 @@ describe("content loaders", () => {
 
     it("serves the confirmed sponsors and invents none", () => {
       const sponsors = getSponsors("2026");
-      expect(sponsors.map((s) => s.id)).toEqual(["snpp", "aws"]);
-      sponsors.forEach((s) => expect(s.tier).toBe("Diamante"));
+      expect(sponsors.map((s) => [s.id, s.tier])).toEqual([
+        ["snpp", "Diamante"],
+        ["aws", "Diamante"],
+        ["inco", "Silver"],
+      ]);
     });
 
     it("serves the live organizers", () => {
