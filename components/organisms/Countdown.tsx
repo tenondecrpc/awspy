@@ -7,6 +7,7 @@
 
 import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils/cn";
+import { calendarDaysBetween } from "@/lib/utils/datetime";
 
 type CountdownProps = {
   targetDate: string;
@@ -17,7 +18,7 @@ type CountdownProps = {
   tone?: "default" | "hero";
   /**
    * `grid` (default): the three-cell días/hs/min block.
-   * `inline`: a single small "Faltan N días" line.
+   * `inline`: a single small "Faltan N días" line (see `headline`).
    * `display`: the same phrase as a single large serif line; the caller sets
    * its size and color (used for the days left in the hero).
    */
@@ -25,22 +26,65 @@ type CountdownProps = {
   className?: string;
 };
 
+/** One count and its unit, as in "Faltan 7 días" or "Falta 1 hora". */
+type Headline = {
+  verb: "Falta" | "Faltan";
+  value: number;
+  unit: string;
+};
+
 type Parts = {
   days: number;
   hours: number;
   minutes: number;
   past: boolean;
+  headline: Headline;
 };
+
+function phrase(value: number, singular: string, plural: string): Headline {
+  return value === 1
+    ? { verb: "Falta", value, unit: singular }
+    : { verb: "Faltan", value, unit: plural };
+}
+
+// The display and inline variants count Asunción calendar days, the way an
+// attendee counts them: on Saturday evening an event the next Saturday
+// morning is "7 días" away, though only 6 whole 24-hour periods remain. On
+// the day itself "0 días" says nothing, so they switch to the hours, then
+// the minutes, still to go.
+function headline(target: number, now: number): Headline {
+  const days = calendarDaysBetween(now, target);
+  if (days > 0) return phrase(days, "día", "días");
+  const minutes = Math.ceil((target - now) / 60_000);
+  if (minutes >= 60) return phrase(Math.floor(minutes / 60), "hora", "horas");
+  return phrase(minutes, "minuto", "minutos");
+}
 
 function diff(target: number, now: number): Parts {
   const ms = target - now;
-  if (ms <= 0) return { days: 0, hours: 0, minutes: 0, past: true };
+  if (ms <= 0) {
+    return {
+      days: 0,
+      hours: 0,
+      minutes: 0,
+      past: true,
+      headline: phrase(0, "día", "días"),
+    };
+  }
+  // The grid shows the exact time left, so its days are whole 24-hour
+  // periods and the hours and minutes carry the rest.
   const totalMinutes = Math.floor(ms / 60_000);
   const totalHours = Math.floor(totalMinutes / 60);
   const days = Math.floor(totalHours / 24);
   const hours = totalHours - days * 24;
   const minutes = totalMinutes - totalHours * 60;
-  return { days, hours, minutes, past: false };
+  return {
+    days,
+    hours,
+    minutes,
+    past: false,
+    headline: headline(target, now),
+  };
 }
 
 function pad(n: number): string {
@@ -85,13 +129,14 @@ export function Countdown({
     // The visual pieces are aria-hidden and the full phrase is written once
     // for assistive technology ("Faltan 15 días"), so the announcement and
     // text queries read it whole instead of as three fragments.
+    const { verb, value, unit } = parts.headline;
     return (
       <div
         className={cn("flex items-baseline gap-[0.6em]", className)}
         role="status"
         aria-live="polite"
       >
-        <span className="sr-only">{`Faltan ${parts.days} días`}</span>
+        <span className="sr-only">{`${verb} ${value} ${unit}`}</span>
         <span
           aria-hidden="true"
           className={`text-step-1 ${
@@ -100,13 +145,13 @@ export function Countdown({
               : "text-[var(--color-text-secondary)]"
           }`}
         >
-          Faltan
+          {verb}
         </span>
         <span
           aria-hidden="true"
           className="font-display text-[clamp(3.5rem,18vw,7.5rem)] leading-[0.8] tracking-[-0.03em] tabular-nums"
         >
-          {parts.days}
+          {value}
         </span>
         <span
           aria-hidden="true"
@@ -116,7 +161,7 @@ export function Countdown({
               : "text-[var(--color-text-secondary)]"
           }`}
         >
-          días
+          {unit}
         </span>
       </div>
     );
@@ -129,7 +174,9 @@ export function Countdown({
         role="status"
         aria-live="polite"
       >
-        {parts.past ? "El evento ya comenzó" : `Faltan ${parts.days} días`}
+        {parts.past
+          ? "El evento ya comenzó"
+          : `${parts.headline.verb} ${parts.headline.value} ${parts.headline.unit}`}
       </p>
     );
   }

@@ -15,10 +15,10 @@ test.describe("Home page", () => {
       })
     ).toBeVisible();
 
-    // Countdown. The hero uses the inline variant ("Faltan N días"); the
-    // días/hs/min grid is the other variant of the same organism.
+    // Countdown. The hero uses the display variant ("Faltan N días", "Falta
+    // 1 día", or the hours and minutes left on the day itself).
     await expect(
-      page.getByText(/Faltan \d+ días|El evento ya comenzó/)
+      page.getByText(/Faltan? \d+ (días?|horas?|minutos?)|El evento ya comenzó/)
     ).toBeVisible();
 
     // Footer privacy notice. Its first sentence depends on whether the build

@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import {
+  calendarDaysBetween,
   formatDate,
   formatDateTime,
   formatTime,
@@ -82,5 +83,43 @@ describe("startOfDayKey", () => {
     expect(startOfDayKey("2026-05-24T02:00:00Z")).toBe("2026-05-23");
     // 04:30 UTC on May 24 is 01:30 May 24 in Asuncion.
     expect(startOfDayKey("2026-05-24T04:30:00Z")).toBe("2026-05-24");
+  });
+});
+
+describe("calendarDaysBetween", () => {
+  it("counts Asunción calendar days, not 24-hour periods", () => {
+    // Saturday 20:17 to the next Saturday 09:00: 6 days and 12 hours.
+    expect(
+      calendarDaysBetween(
+        "2026-10-10T20:17:00-03:00",
+        "2026-10-17T09:00:00-03:00"
+      )
+    ).toBe(7);
+  });
+
+  it("reads both instants in Asunción, not UTC", () => {
+    // 02:30 UTC on Oct 11 is still 23:30 Oct 10 in Asunción.
+    expect(
+      calendarDaysBetween("2026-10-11T02:30:00Z", "2026-10-17T09:00:00-03:00")
+    ).toBe(7);
+  });
+
+  it("is 0 on the same day and negative for an earlier day", () => {
+    expect(
+      calendarDaysBetween(
+        "2026-10-17T00:01:00-03:00",
+        "2026-10-17T09:00:00-03:00"
+      )
+    ).toBe(0);
+    expect(
+      calendarDaysBetween(
+        "2026-10-18T10:00:00-03:00",
+        "2026-10-17T09:00:00-03:00"
+      )
+    ).toBe(-1);
+  });
+
+  it("returns NaN for an invalid input", () => {
+    expect(calendarDaysBetween("foo", "2026-10-17T09:00:00-03:00")).toBeNaN();
   });
 });

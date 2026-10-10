@@ -70,6 +70,50 @@ describe("Countdown", () => {
     expect(number?.className).toMatch(/text-\[clamp\(3\.5rem,18vw,7\.5rem\)\]/);
   });
 
+  // The headline counts Asunción calendar days, not whole 24-hour periods:
+  // on Saturday 20:17 the event on the next Saturday at 09:00 is 6 days and
+  // 12 hours away, and the attendee reads that as "7 días".
+  it("counts the days left as Asunción calendar days", () => {
+    vi.setSystemTime(new Date("2026-10-10T20:17:00-03:00"));
+    render(
+      <Countdown targetDate="2026-10-17T09:00:00-03:00" variant="display" />
+    );
+    expect(screen.getByText("Faltan 7 días")).toHaveClass("sr-only");
+  });
+
+  // 23:30 in Asunción is already the next day in UTC; the count still follows
+  // the Asunción date, whatever zone the visitor's device is set to.
+  it("keeps the Asunción date when UTC has already rolled over", () => {
+    vi.setSystemTime(new Date("2026-10-11T02:30:00Z"));
+    render(
+      <Countdown targetDate="2026-10-17T09:00:00-03:00" variant="inline" />
+    );
+    expect(screen.getByRole("status")).toHaveTextContent("Faltan 7 días");
+  });
+
+  it("uses the singular on the day before", () => {
+    vi.setSystemTime(new Date("2026-10-16T12:00:00-03:00"));
+    render(
+      <Countdown targetDate="2026-10-17T09:00:00-03:00" variant="display" />
+    );
+    expect(screen.getByText("Falta 1 día")).toHaveClass("sr-only");
+  });
+
+  // On the day itself "Faltan 0 días" says nothing, so the headline switches
+  // to the hours, then the minutes, still to go.
+  it.each([
+    ["2026-10-17T05:30:00-03:00", "Faltan 3 horas"],
+    ["2026-10-17T07:59:30-03:00", "Falta 1 hora"],
+    ["2026-10-17T08:15:00-03:00", "Faltan 45 minutos"],
+    ["2026-10-17T08:59:30-03:00", "Falta 1 minuto"],
+  ])("counts down in hours and minutes on the day (%s)", (now, phrase) => {
+    vi.setSystemTime(new Date(now));
+    render(
+      <Countdown targetDate="2026-10-17T09:00:00-03:00" variant="display" />
+    );
+    expect(screen.getByText(phrase)).toHaveClass("sr-only");
+  });
+
   it("shows the past-event message in the display variant too", () => {
     render(<Countdown targetDate="2024-01-01T00:00:00Z" variant="display" />);
     expect(screen.getByText("El evento ya comenzó")).toBeInTheDocument();
