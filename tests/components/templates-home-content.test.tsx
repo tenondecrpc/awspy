@@ -19,7 +19,6 @@ function renderHome() {
       sponsors={getSponsors("2026")}
       sponsorship={getSponsorship("2026")}
       faq={[]}
-      organizers={[]}
     />
   );
 }
@@ -44,6 +43,15 @@ describe("HomeTemplate public content", () => {
     ].forEach((title) =>
       expect(screen.getByRole("heading", { name: title })).toBeInTheDocument()
     );
+  });
+
+  it("leaves out the organizers section and its team link", () => {
+    renderHome();
+    expect(document.getElementById("equipo")).toBeNull();
+    expect(
+      screen.queryByRole("heading", { name: "Quiénes lo organizan" })
+    ).not.toBeInTheDocument();
+    expect(document.querySelector('a[href="/team"]')).toBeNull();
   });
 
   it("offers open logo slots and a direct sponsor contact", () => {

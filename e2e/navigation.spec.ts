@@ -8,7 +8,6 @@ const HEADER_NAV = [
   "Speakers",
   "Sede",
   "Sponsors",
-  "Equipo",
   "Voluntarios",
   "Preguntas",
 ];

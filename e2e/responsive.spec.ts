@@ -20,7 +20,6 @@ const ROUTES = [
   "/schedule",
   "/speakers",
   "/sponsors",
-  "/team",
   "/venue",
   "/faq",
   "/register",

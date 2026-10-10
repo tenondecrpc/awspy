@@ -1,5 +1,15 @@
 # CHANGES — design migration to the "AWS Community Day Paraguay (colored)" mockups
 
+## Team section removed (2026-10-09)
+
+At the organizers' request the site no longer publishes the organizing team.
+Removed: the "Quiénes lo organizan" home section, the "Equipo" entry in the
+header and footer navigation, the `/team` and `/editions/{year}/team` pages
+(both now 404), and their sitemap entries. `TeamTemplate`, `OrganizersGrid`,
+`OrganizerCard` and the `team` empty-state variant went with them, and so did
+the content: `organizers.json`, its loader and schema, and the photos under
+`public/team/`. Restoring the section means reverting the CONTENT-010 commit.
+
 ## PR 29 reconciliation (2026-10-02)
 
 The current PR keeps Victor's editorial layout while restoring public content

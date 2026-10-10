@@ -1,5 +1,5 @@
 // Empty-state organism. Used wherever a content source has nothing yet
-// (speakers, schedule, sponsors, team, FAQ). A small icon badge per variant,
+// (speakers, schedule, sponsors, venue, FAQ). A small icon badge per variant,
 // a heading, one sentence and an optional action button. Announced to screen
 // readers via `role="status"` + `aria-live="polite"`.
 
@@ -10,14 +10,13 @@ import { BTN_OUTLINE } from "@/components/molecules/SectionPrimitives";
 import { cn } from "@/lib/utils/cn";
 
 type EmptyStateVariant =
-  "default" | "speakers" | "schedule" | "sponsors" | "team" | "venue" | "faq";
+  "default" | "speakers" | "schedule" | "sponsors" | "venue" | "faq";
 
 const VARIANT_ICON: Record<EmptyStateVariant, GlyphName> = {
   default: "clock",
   speakers: "mic",
   schedule: "calendar",
   sponsors: "heart",
-  team: "users",
   venue: "pin",
   faq: "chat",
 };

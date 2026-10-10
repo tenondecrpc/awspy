@@ -5,8 +5,8 @@
 //
 // Two things are wired up:
 //   - CONTENT_PREVIEW=1 makes the content loaders prefer a
-//     `<name>.example.json` sibling when one exists (sponsors, organizers,
-//     venue). See `editionFile` in lib/content/_fs.ts.
+//     `<name>.example.json` sibling when one exists (sponsors, venue).
+//     See `editionFile` in lib/content/_fs.ts.
 //   - NEXT_PUBLIC_SESSIONIZE_BASE_URL points at the local fixture server
 //     started below, so /speakers and /schedule get a full day of sessions
 //     instead of the empty state.

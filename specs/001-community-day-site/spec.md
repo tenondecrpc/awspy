@@ -32,8 +32,8 @@ continue to hide registration links.
 
 **2026 volunteer note (updated 2026-09-06)**: Google Forms owns volunteer
 applications. `volunteerRegistrationUrl` contains the official public form and
-`volunteerRegistrationStatus` is `"open"`. The home, navigation, and team empty
-state lead to `/volunteers`, whose CTA opens the form in a new tab without an
+`volunteerRegistrationStatus` is `"open"`. The home and navigation lead to
+`/volunteers`, whose CTA opens the form in a new tab without an
 embed.
 - Q: How is Sessionize rate limiting handled? → A: Sessionize already caches responses for approximately five minutes server-side. The site uses uncached server renders for Sessionize reads while Next.js 16 remains unsupported on Amplify, because production evidence showed ISR retaining obsolete speaker data. Expected event traffic remains within the provider's public-read model. If a Sessionize request fails, the empty-state fallback already covers the user-visible behavior (see FR-013).
 
@@ -102,7 +102,7 @@ A visitor wants to know practical details that influence their decision to atten
 
 1. **Given** the edition's sponsor list is populated with logos, names, tiers, and websites, **When** a visitor opens `/sponsors`, **Then** the sponsors are grouped by tier (Platinum, Gold, Silver, Bronze, Community), every logo links to the sponsor's website, and a clear "¿Querés ser sponsor?" block shows a mailto link to the configured contact email.
 2. **Given** the edition's venue data is populated, **When** a visitor opens `/venue`, **Then** they see the venue name, address, a map link, and how to get there by public transport.
-3. **Given** the edition's organizers list is populated, **When** a visitor opens `/team`, **Then** they see each organizer's photo, role, and links.
+3. *Removed 2026-10-09 (CONTENT-010).* The site no longer publishes the organizing team: `/team` and the home organizers section were withdrawn at the organizers' request.
 4. **Given** the edition's FAQ is populated, **When** a visitor opens `/faq`, **Then** they see each question as an expandable item, expanded items reveal the answer, and the accordion is fully operable by keyboard with the correct ARIA semantics.
 5. **Given** the edition's code of conduct is populated, **When** a visitor opens `/code-of-conduct`, **Then** they see the full text in Spanish with a clear way to report a violation.
 
@@ -138,7 +138,7 @@ A visitor wants to look at previous editions of the event (speakers, schedule, s
 
 1. **Given** there is at least one past edition under `content/editions/`, **When** a visitor opens `/editions`, **Then** they see a list of all past editions with name, year, and a link to each.
 2. **Given** an edition year `Y` exists, **When** a visitor opens `/editions/{Y}`, **Then** they see the home of that edition rendered with the same template as the current edition.
-3. **Given** the visitor is on a past edition home, **When** they open `/editions/{Y}/speakers`, `/editions/{Y}/schedule`, `/editions/{Y}/sponsors`, `/editions/{Y}/venue`, `/editions/{Y}/team`, `/editions/{Y}/volunteers`, `/editions/{Y}/faq`, `/editions/{Y}/code-of-conduct`, `/editions/{Y}/cfp`, or `/editions/{Y}/register`, **Then** each page renders with that edition's data.
+3. **Given** the visitor is on a past edition home, **When** they open `/editions/{Y}/speakers`, `/editions/{Y}/schedule`, `/editions/{Y}/sponsors`, `/editions/{Y}/venue`, `/editions/{Y}/volunteers`, `/editions/{Y}/faq`, `/editions/{Y}/code-of-conduct`, `/editions/{Y}/cfp`, or `/editions/{Y}/register`, **Then** each page renders with that edition's data.
 4. **Given** an edition year does not exist, **When** a visitor opens `/editions/{Y}`, **Then** they see a 404 page with a Spanish message and a link back to the current edition's home.
 
 ---
@@ -210,7 +210,7 @@ The site is published and reachable at its public domain on AWS Amplify Hosting,
 
 #### Navigation and content shell
 
-- **FR-001**: Site MUST expose the following routes for the current edition: `/`, `/speakers`, `/speakers/[slug]`, `/schedule`, `/sponsors`, `/venue`, `/team`, `/volunteers`, `/faq`, `/code-of-conduct`, `/cfp`, `/register`, `/editions`.
+- **FR-001**: Site MUST expose the following routes for the current edition: `/`, `/speakers`, `/speakers/[slug]`, `/schedule`, `/sponsors`, `/venue`, `/volunteers`, `/faq`, `/code-of-conduct`, `/cfp`, `/register`, `/editions`. `/team` was removed on 2026-10-09 (CONTENT-010).
 - **FR-002**: Site MUST mirror the routes above under `/editions/[year]/...` for every edition year present in the content directory.
 - **FR-003**: The bare URL (`/`) MUST always serve the current edition; the current edition is configurable via environment without code change.
 - **FR-004**: Every page MUST share a common header with navigation to all top-level routes, a common footer with the contact email and social links, and a skip link to the main content.
@@ -223,7 +223,7 @@ The site is published and reachable at its public domain on AWS Amplify Hosting,
 - **FR-008**: Attendee registration MUST be delegated to a public Eventbrite event configured per edition; the site MUST render an external link to that Eventbrite event page on `/register` and on a primary "Registrarme" button reachable from the home and other entry points. The link MUST open in a new tab with `rel="noopener noreferrer"`. The site MUST NOT load the Eventbrite widget script (`eb_widgets.js`) and MUST NOT call any Eventbrite REST endpoint.
 - **FR-009**: Call for papers submissions MUST be delegated to a public Sessionize submission page configured per edition; the site MUST link to it from `/cfp`.
 - **FR-010**: Sponsor inquiries MUST be delegated to a mailto link using the configured contact email; no internal sponsor application form is built.
-- **FR-011**: All other content (sponsors list, organizers, venue, FAQ, code of conduct, edition metadata such as dates and hero copy) MUST be stored in this repository under `content/editions/{year}/` and validated at load time.
+- **FR-011**: All other content (sponsors list, venue, FAQ, code of conduct, edition metadata such as dates and hero copy) MUST be stored in this repository under `content/editions/{year}/` and validated at load time.
 - **FR-012**: There MUST NOT be any backend service, database, or admin panel built in this repository; all editorial changes happen either in Sessionize, Eventbrite, Google Forms, or via a pull request to this repository.
 
 #### Resilience and empty states
@@ -272,7 +272,7 @@ The site is published and reachable at its public domain on AWS Amplify Hosting,
 - **FR-036**: The site MUST include a Spanish privacy footer noting that attendee registration is delegated to Eventbrite and volunteer applications are delegated to Google Forms, linking to both providers' privacy policies. When the build loads no analytics, the notice MUST state that no personal data is collected by this site. When Google Analytics is loaded (FR-037), the notice MUST instead disclose Google Analytics and its cookies and place it under Google's privacy policy. No cookie banner is shown (amended 2026-10-01, ADR 0010).
 - **FR-037**: Google Analytics 4 is the only analytics tooling allowed. It MUST load only when `NEXT_PUBLIC_GA_MEASUREMENT_ID` is configured, MUST follow FR-033, and MUST run with Google signals and ad personalization disabled (amended 2026-10-01, ADR 0010; the first-edition decision was no analytics).
 - **FR-038**: No custom logging, metrics, or tracing infrastructure MUST be added for the first edition; the hosting platform's built-in deployment and runtime logs are the sole observability surface. On AWS Amplify Hosting (primary target) this is the Amplify Console for build logs and AWS CloudWatch for SSR runtime logs.
-- **FR-039**: Volunteer applications MUST be delegated to the public Google Form configured per edition. `/volunteers` MUST expose a descriptive external link with `target="_blank"` and `rel="noopener noreferrer"`, and the home page plus team empty state MUST link to that section. The site MUST NOT embed the form, load Google Forms scripts, or submit application data itself.
+- **FR-039**: Volunteer applications MUST be delegated to the public Google Form configured per edition. `/volunteers` MUST expose a descriptive external link with `target="_blank"` and `rel="noopener noreferrer"`, and the home page MUST link to that section. The site MUST NOT embed the form, load Google Forms scripts, or submit application data itself.
 - **FR-040**: When volunteer registration is marked open but its URL is missing, `/volunteers` MUST render the Spanish upcoming-state alternative with a mailto contact CTA.
 
 ### Key Entities
@@ -283,7 +283,6 @@ The site is published and reachable at its public domain on AWS Amplify Hosting,
 - **Session**: A talk, workshop, or panel at an edition. Sourced from Sessionize. Has a title, optional description, start and end times in the Asunción timezone, an optional room, optional tracks, and references to its speakers.
 - **Room or Track**: A grouping used in the schedule grid. Sourced from Sessionize. Has a name and an order.
 - **Sponsor**: A company or organization sponsoring an edition. Stored in `content/editions/{year}/sponsors.json`. Has a name, a tier (Platinum, Gold, Silver, Bronze, Community), a logo URL, and a website URL.
-- **Organizer**: A person on the organizing team for an edition. Stored in `content/editions/{year}/organizers.json`. Has a name, a role, an optional photo URL, and links.
 - **FAQ Item**: A question and its answer. Stored in `content/editions/{year}/faq.json`. Has a question and an answer (which may be plain text or short Markdown).
 - **Venue**: The physical location of the event for an edition. Stored in `content/editions/{year}/venue.json`. Has a name, an address, a map URL, and a list of transport hints.
 - **Code of Conduct**: The behavioral expectations for the edition. Stored in `content/editions/{year}/code-of-conduct.mdx`. Rendered as Markdown.

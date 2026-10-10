@@ -12,7 +12,6 @@ This document captures every entity the site reads or stores, its source of trut
 | Edition             | `content/editions/{year}/` directory layout                | `lib/content/editions.ts`                | Aggregates all per-year content; identified by year (4 digits)         |
 | EventInfo           | `content/editions/{year}/event.json`                       | `lib/content/event-info.ts`              | One per edition; contains Sessionize, Eventbrite, Google Forms references, and status flags  |
 | Sponsor             | `content/editions/{year}/sponsors.json`                    | `lib/content/sponsors.ts`                | Array per edition; tier-based grouping                                 |
-| Organizer           | `content/editions/{year}/organizers.json`                  | `lib/content/organizers.ts`              | Array per edition                                                      |
 | FAQItem             | `content/editions/{year}/faq.json`                         | `lib/content/faq.ts`                     | Array per edition                                                      |
 | Venue               | `content/editions/{year}/venue.json`                       | `lib/content/venue.ts`                   | One per edition                                                        |
 | CodeOfConduct       | `content/editions/{year}/code-of-conduct.mdx`              | `lib/content/code-of-conduct.ts`         | One MDX file per edition                                               |
@@ -31,7 +30,6 @@ This document captures every entity the site reads or stores, its source of trut
 - `year`: 4-digit string
 - `eventInfo`: `EventInfo` (validated below)
 - `sponsors`: array of `Sponsor`
-- `organizers`: array of `Organizer`
 - `faq`: array of `FAQItem`
 - `venue`: `Venue`
 - `codeOfConduct`: validated frontmatter plus Markdown source rendered by the restricted local renderer
@@ -112,21 +110,6 @@ This document captures every entity the site reads or stores, its source of trut
 
 **Lifecycle**:
 - Adding/removing/changing a sponsor is a content change. Tier order is fixed and rendered descending by tier value.
-
-## Organizer
-
-**Source of truth**: `content/editions/{year}/organizers.json` (array).
-
-**Fields**:
-- `id`: string, kebab-case, unique within the array
-- `name`: string
-- `role`: string (e.g., "Lead Organizer", "Speakers Coordinator")
-- `photo`: optional URL or repo-relative path under `/team/`
-- `links`: object with optional `linkedin`, `twitter`, `github`, `website`
-
-**Validation rules**:
-- `id` matches `/^[a-z0-9-]+$/`
-- Each link, when present, is a valid HTTPS URL
 
 ## FAQItem
 

@@ -82,7 +82,6 @@ describe("getEdition", () => {
       linkedin: "https://www.linkedin.com/company/aws-community-day-paraguay",
     });
     expect(Array.isArray(edition.sponsors)).toBe(true);
-    expect(Array.isArray(edition.organizers)).toBe(true);
     expect(Array.isArray(edition.faq)).toBe(true);
     expect(edition.faq.length).toBeGreaterThan(0);
     expect(edition.venue.name.length).toBeGreaterThan(0);

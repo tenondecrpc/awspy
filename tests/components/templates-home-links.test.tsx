@@ -27,13 +27,11 @@ function renderArchivedEdition() {
       speakers={[SPEAKER]}
       sponsors={[]}
       faq={[]}
-      organizers={[]}
       registerHref="/editions/2026/register"
       cfpHref="/editions/2026/cfp"
       speakersHref="/editions/2026/speakers"
       sponsorsHref="/editions/2026/sponsors"
       scheduleHref="/editions/2026/schedule"
-      teamHref="/editions/2026/team"
       volunteersHref="/editions/2026/volunteers"
     />
   );

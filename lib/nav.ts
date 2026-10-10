@@ -20,7 +20,6 @@ export const PRIMARY_NAV: readonly NavEntry[] = [
   { href: "/speakers", label: "Speakers" },
   { href: "/venue", label: "Sede" },
   { href: "/sponsors", label: "Sponsors" },
-  { href: "/team", label: "Equipo" },
   { href: "/volunteers", label: "Voluntarios" },
   { href: "/faq", label: "Preguntas" },
 ] as const;
@@ -39,7 +38,6 @@ export const FOOTER_NAV: readonly NavEntry[] = [
   { href: "/speakers", label: "Speakers" },
   { href: "/venue", label: "Sede" },
   { href: "/sponsors", label: "Sponsors" },
-  { href: "/team", label: "Equipo" },
   { href: "/faq", label: "Preguntas" },
   { href: "/register", label: "Registro" },
   { href: "/cfp", label: "Proponer charla" },

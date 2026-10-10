@@ -17,7 +17,6 @@ import * as speakers from "@/app/editions/[year]/speakers/page";
 import * as schedule from "@/app/editions/[year]/schedule/page";
 import * as sponsors from "@/app/editions/[year]/sponsors/page";
 import * as venue from "@/app/editions/[year]/venue/page";
-import * as team from "@/app/editions/[year]/team/page";
 import * as faq from "@/app/editions/[year]/faq/page";
 import * as codeOfConduct from "@/app/editions/[year]/code-of-conduct/page";
 import * as cfp from "@/app/editions/[year]/cfp/page";
@@ -50,7 +49,6 @@ const ROUTES: Array<{ path: string; mod: RouteModule; heading: RegExp }> = [
   { path: "/schedule", mod: schedule as never, heading: /^agenda$/i },
   { path: "/sponsors", mod: sponsors as never, heading: /^sponsors$/i },
   { path: "/venue", mod: venue as never, heading: /^sede$/i },
-  { path: "/team", mod: team as never, heading: /equipo organizador/i },
   { path: "/faq", mod: faq as never, heading: /preguntas frecuentes/i },
   {
     path: "/code-of-conduct",

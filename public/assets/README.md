@@ -2,7 +2,7 @@
 
 Static assets consumed by the AWS Community Day Paraguay site after the visual
 refresh. Files in this tree are referenced by relative path from `public/`
-(e.g. `/assets/team/jane-doe.jpg`). The full contract lives in
+(e.g. `/assets/venue/cover.jpg`). The full contract lives in
 `specs/002-visual-refresh/contracts/public-assets.md`.
 
 ## Layout
@@ -11,8 +11,6 @@ refresh. Files in this tree are referenced by relative path from `public/`
 public/assets/
   hero/
     pattern.svg                         # Optional custom hero pattern
-  team/
-    <organizer-slug>.jpg                # Per-organizer photo (1:1, 400x400)
   keynotes/
     <keynote-id>.jpg                    # Keynote speaker photo (1:1, 800x800)
   venue/
@@ -29,7 +27,7 @@ public/assets/
 
 ## Filename conventions
 
-- Slugs match the corresponding content slug (`Organizer.slug`, `Sponsor.id`,
+- Slugs match the corresponding content slug (`Sponsor.id`,
   `Keynote.id`, edition year). The file basename is the slug, the extension is the format.
 - Photos are `.jpg` or `.png`. Vector assets are `.svg`.
 
@@ -37,7 +35,6 @@ public/assets/
 
 | Category   | Ratio | Recommended size | Used by                  |
 |------------|-------|------------------|--------------------------|
-| `team`     | 1:1   | 400x400          | `OrganizerCard` avatar   |
 | `keynotes` | 1:1   | 800x800          | `KeynoteCard` portrait   |
 | `sponsors` | 4:1   | 320x80           | `SponsorCard` logo slot  |
 | `venue`    | 16:9  | 1280x720         | `VenueCard` cover        |

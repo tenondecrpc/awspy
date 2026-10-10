@@ -28,7 +28,6 @@ function renderSpeakersSection(speaker: Speaker = SPEAKER) {
       speakers={[speaker]}
       sponsors={[]}
       faq={[]}
-      organizers={[]}
     />
   );
   return document.getElementById("speakers") as HTMLElement;

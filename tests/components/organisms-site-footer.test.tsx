@@ -44,6 +44,14 @@ describe("SiteFooter", () => {
     expect(screen.getByText("Contacto")).toBeInTheDocument();
   });
 
+  it("does not link the removed team page", () => {
+    const { container } = render(<SiteFooter eventInfo={FAKE_INFO} />);
+    expect(
+      screen.queryByRole("link", { name: "Equipo" })
+    ).not.toBeInTheDocument();
+    expect(container.querySelector('a[href="/team"]')).toBeNull();
+  });
+
   it("renders contact email as a mailto link", () => {
     render(<SiteFooter eventInfo={FAKE_INFO} />);
     const link = screen.getByRole("link", { name: FAKE_INFO.contactEmail });

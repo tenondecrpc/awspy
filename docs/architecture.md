@@ -10,7 +10,7 @@ context and must change when the implemented architecture changes.
 
 | Data | Source of truth | Boundary |
 |---|---|---|
-| Event metadata, venue, sponsors, organizers, FAQ | `content/editions/{year}/*.json` | Zod loaders in `lib/content/` |
+| Event metadata, venue, sponsors, FAQ | `content/editions/{year}/*.json` | Zod loaders in `lib/content/` |
 | Code of conduct | `content/editions/{year}/code-of-conduct.mdx` | MDX loader in `lib/content/` |
 | Speakers, sessions, schedule | Public Sessionize API | `lib/api/client.ts` plus `lib/api/sessionize.ts` |
 | CFP submissions | Sessionize external page | Public link from edition metadata |
@@ -53,8 +53,8 @@ A tier may import its own tier or a lower tier. Pages may also call
 ## Public routes
 
 The current edition is served at top-level routes such as `/`, `/speakers`,
-`/schedule`, `/sponsors`, `/venue`, `/team`, `/volunteers`, `/faq`,
-`/code-of-conduct`, `/cfp`, and `/register`. Edition snapshots are mirrored
+`/schedule`, `/sponsors`, `/venue`, `/volunteers`, `/faq`, `/code-of-conduct`,
+`/cfp`, and `/register`. Edition snapshots are mirrored
 under `/editions/{year}/`.
 
 Next.js metadata conventions provide `sitemap.xml`, `robots.txt`, and the
