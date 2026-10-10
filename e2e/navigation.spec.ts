@@ -49,18 +49,16 @@ test.describe("Site navigation", () => {
     await page.goto("/");
 
     const footer = page.getByRole("contentinfo");
-    for (const [name, href] of [
-      ["Instagram", "https://www.instagram.com/awscommunitydaypy/"],
-      [
-        "LinkedIn",
-        "https://www.linkedin.com/company/aws-community-day-paraguay",
-      ],
-    ]) {
-      const link = footer.getByRole("link", { name, exact: true });
-      await expect(link).toHaveAttribute("href", href);
-      await expect(link).toHaveAttribute("target", "_blank");
-      await expect(link).toHaveAttribute("rel", "noopener noreferrer");
-    }
+    const link = footer.getByRole("link", { name: "LinkedIn", exact: true });
+    await expect(link).toHaveAttribute(
+      "href",
+      "https://www.linkedin.com/company/aws-community-day-paraguay"
+    );
+    await expect(link).toHaveAttribute("target", "_blank");
+    await expect(link).toHaveAttribute("rel", "noopener noreferrer");
+    await expect(
+      footer.getByRole("link", { name: "Instagram", exact: true })
+    ).toHaveCount(0);
     await expect(footer.getByText("Próximamente en redes")).toHaveCount(0);
   });
 
