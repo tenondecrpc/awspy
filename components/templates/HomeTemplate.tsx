@@ -19,6 +19,7 @@ import { Countdown } from "@/components/organisms/Countdown";
 import { KeynoteCard } from "@/components/molecules/KeynoteCard";
 import { Lace } from "@/components/atoms/Lace";
 import { LinkedInLink } from "@/components/atoms/LinkedInLink";
+import { TopSpeakerBadge } from "@/components/atoms/TopSpeakerBadge";
 import { IconBadge } from "@/components/atoms/IconBadge";
 import type { GlyphName } from "@/components/atoms/GlyphIcon";
 import {
@@ -415,14 +416,19 @@ export function HomeTemplate({
           ) : (
             // The portraits are square because the source photos are square
             // (Sessionize serves them at 400x400). A square frame shows each
-            // one whole, never cropped or stretched, and gives all four the
-            // same weight: same size, same baseline, nobody singled out.
+            // one whole, never cropped or stretched, and keeps all four on the
+            // same baseline. A top speaker's label sits on the photo, so it
+            // does not push that name below the others.
             <ul className="m-0 grid list-none grid-cols-2 gap-x-5 gap-y-8 p-0 lg:grid-cols-4 lg:gap-x-6">
               {previewSpeakers.map((sp) => (
                 <li key={sp.id} className="min-w-0 [overflow-wrap:anywhere]">
-                  {/* The LinkedIn button sits in the portrait's corner, beside
-                      the photo link rather than inside it. */}
+                  {/* The top speaker label and the LinkedIn button sit in the
+                      portrait's corners, beside the photo link rather than
+                      inside it. */}
                   <div className="relative mb-4">
+                    {sp.isTopSpeaker ? (
+                      <TopSpeakerBadge className="absolute left-2 top-2 z-10" />
+                    ) : null}
                     <NextLink
                       href={`${speakersHref}/${sp.slug}`}
                       className="block"

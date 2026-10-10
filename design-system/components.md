@@ -29,7 +29,10 @@ content. `Frame` provides responsive `next/image` rendering with an explicit
 - **Speakers:** square portraits with a fallback, full biographies,
   talk information, and clearly labeled external links. A speaker's LinkedIn
   appears as a round 44px `LinkedInLink` button, named "LinkedIn de <nombre>"
-  for assistive technology, only when Sessionize provides it.
+  for assistive technology, only when Sessionize provides it. Speakers flagged
+  as Top Speaker in Sessionize carry the `TopSpeakerBadge` label on the
+  portrait's top-left corner, never in the caption, so names stay aligned
+  across a row.
 - **Sponsors:** confirmed logos stay on white plates. Available tiers produce
   "Tu logo aquí" slots. The package ladder and comparison table use the
   version-controlled prospectus without publishing amounts.

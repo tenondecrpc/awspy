@@ -14,12 +14,16 @@
 //    cropped into a close-up or stretched, and all speakers carry equal weight.
 //    `accentIndex` is kept for call-site compatibility and no longer varies
 //    anything.
-//  - No "Top speaker" marker: a label on only some cards moved their names out of line with the rest and made some speakers weigh more than others.
+//  - Speakers flagged as Top Speaker in Sessionize carry a label over the
+//    portrait's top-left corner. Set in the caption, it pushed only those
+//    names down and broke the row; over the photo, every caption row stays
+//    aligned whether or not a card has it.
 
 import Image from "next/image";
 import NextLink from "next/link";
 import { GlyphIcon } from "@/components/atoms/GlyphIcon";
 import { LinkedInLink } from "@/components/atoms/LinkedInLink";
+import { TopSpeakerBadge } from "@/components/atoms/TopSpeakerBadge";
 import { cn } from "@/lib/utils/cn";
 import type { Speaker } from "@/lib/api/sessionize";
 import { linkedinUrlOf } from "@/lib/utils/speaker-links";
@@ -81,8 +85,12 @@ export function SpeakerCard({
             {initials(speaker.fullName)}
           </div>
         )}
-        {/* In the portrait's corner so the four caption rows stay aligned
-            across the grid. `z-10` lifts it over the stretched name link. */}
+        {/* Both sit in the portrait's corners so the four caption rows stay
+            aligned across the grid. `z-10` lifts them over the stretched name
+            link. */}
+        {speaker.isTopSpeaker ? (
+          <TopSpeakerBadge className="absolute left-2 top-2 z-10" />
+        ) : null}
         {linkedin ? (
           <LinkedInLink
             href={linkedin}
