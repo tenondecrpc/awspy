@@ -23,7 +23,8 @@ type VenueTemplateProps = {
 };
 
 /** Swapping the photo is replacing `public/assets/venue/cover.jpg`; the static
- *  import hashes whatever the file holds, so a new photo gets a fresh URL. */
+ *  import hashes whatever the file holds, so a new photo gets a fresh URL, and
+ *  the frame takes the new photo's ratio, so it is never cropped. */
 const VENUE_PHOTO = venuePhoto;
 
 function Fact({
@@ -147,14 +148,11 @@ export function VenueTemplate({ venue, eventInfo }: VenueTemplateProps) {
             </div>
           </div>
 
-          {/* The frame matches the source photo's exact ratio so nothing is
-              cropped: 1875x839. `aspect-video` was correct for the old 16:9
-              file and started cutting the left and right edges when the photo
-              was swapped. Update this if cover.jpg is replaced again. */}
           <Frame
             label={`Fachada de ${venue.name}`}
             photo={VENUE_PHOTO}
-            className="aspect-[1875/839] w-full rounded-[var(--radius-md)]"
+            fitPhoto
+            className="w-full rounded-[var(--radius-md)]"
             sizes="(min-width: 1024px) 680px, 100vw"
             preload
           />
