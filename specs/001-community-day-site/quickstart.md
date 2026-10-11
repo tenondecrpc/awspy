@@ -117,12 +117,11 @@ To introduce edition `{Y+1}` (for example, `2027`):
    mkdir -p content/editions/2027
    ```
 
-2. Add the six required files. The fastest way is to copy the previous edition and edit:
+2. Add the five required files. The fastest way is to copy the previous edition and edit:
 
    ```sh
    cp content/editions/2026/event.json content/editions/2027/event.json
    cp content/editions/2026/sponsors.json content/editions/2027/sponsors.json
-   cp content/editions/2026/organizers.json content/editions/2027/organizers.json
    cp content/editions/2026/faq.json content/editions/2027/faq.json
    cp content/editions/2026/venue.json content/editions/2027/venue.json
    cp content/editions/2026/code-of-conduct.mdx content/editions/2027/code-of-conduct.mdx
@@ -131,7 +130,7 @@ To introduce edition `{Y+1}` (for example, `2027`):
 3. Edit each file:
 
    - `event.json`: update `year`, `name`, `dates`, `location`, `sessionizeEventId` (new Sessionize event), `eventbriteEventUrl` (new Eventbrite event), `volunteerRegistrationUrl` (new public Google Form), `cfpSubmissionUrl`, status flags (typically `"upcoming"` at first), `previousEditions: ["2026"]`.
-   - `sponsors.json`, `organizers.json`, `faq.json`, `venue.json`: replace with the new edition's data, or start with an empty array `[]` and populate over time.
+   - `sponsors.json`, `faq.json`, `venue.json`: replace with the new edition's data, or start with an empty array `[]` and populate over time.
    - `code-of-conduct.mdx`: usually unchanged; bump `version` in frontmatter if the policy changed.
 
 4. Update `.env.local` (and the production env on the hosting platform) with `CURRENT_EDITION=2027`.

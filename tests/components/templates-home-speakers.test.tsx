@@ -28,7 +28,6 @@ function renderSpeakersSection(speaker: Speaker = SPEAKER) {
       speakers={[speaker]}
       sponsors={[]}
       faq={[]}
-      organizers={[]}
     />
   );
   return document.getElementById("speakers") as HTMLElement;
@@ -64,6 +63,21 @@ describe("HomeTemplate speakers preview", () => {
     expect(
       within(section).getByRole("link", { name: "LinkedIn de Ada Lovelace" })
     ).toHaveAttribute("href", "https://www.linkedin.com/in/ada");
+  });
+
+  it("labels a top speaker on the portrait, outside the photo link", () => {
+    const section = renderSpeakersSection({ ...SPEAKER, isTopSpeaker: true });
+    const label = within(section).getByText("Top speaker");
+    expect(label.className).toContain("absolute");
+    expect(label.closest("a")).toBeNull();
+    expect(
+      within(section).getByRole("heading", { level: 3, name: "Ada Lovelace" })
+    ).toBeInTheDocument();
+  });
+
+  it("shows no top speaker label unless Sessionize sets the flag", () => {
+    const section = renderSpeakersSection();
+    expect(within(section).queryByText("Top speaker")).not.toBeInTheDocument();
   });
 
   it("shows no LinkedIn button while Sessionize has none", () => {

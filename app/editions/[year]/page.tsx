@@ -8,7 +8,6 @@ import { editionExists, getEdition } from "@/lib/content/editions";
 import { getProgramme } from "@/lib/api/sessionize";
 import { buildAgendaPreview } from "@/lib/utils/agenda-preview";
 import { getFAQ } from "@/lib/content/faq";
-import { getOrganizers } from "@/lib/content/organizers";
 import { withSessionizeLinkedIn } from "@/lib/utils/keynotes";
 import { buildPageMetadata } from "@/lib/utils/seo";
 import { listEditionParams, type EditionRouteParams } from "./_shared";
@@ -65,13 +64,11 @@ export default async function EditionHomePage({
       sponsors={edition.sponsors}
       sponsorship={edition.sponsorship}
       faq={getFAQ(year)}
-      organizers={getOrganizers(year)}
       registerHref={`/editions/${year}/register`}
       cfpHref={`/editions/${year}/cfp`}
       speakersHref={`/editions/${year}/speakers`}
       sponsorsHref={`/editions/${year}/sponsors`}
       scheduleHref={`/editions/${year}/schedule`}
-      teamHref={`/editions/${year}/team`}
       volunteersHref={`/editions/${year}/volunteers`}
     />
   );

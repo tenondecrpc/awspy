@@ -12,7 +12,6 @@ import {
 } from "vitest";
 import { editionDir, editionFile } from "@/lib/content/_fs";
 import { getSponsors } from "@/lib/content/sponsors";
-import { getOrganizers } from "@/lib/content/organizers";
 import { getVenue } from "@/lib/content/venue";
 
 // A `<name>.example.json` sibling stands in for a live content file so a
@@ -106,15 +105,11 @@ describe("content loaders", () => {
 
     it("serves the confirmed sponsors and invents none", () => {
       const sponsors = getSponsors("2026");
-      expect(sponsors.map((s) => s.id)).toEqual(["snpp", "aws"]);
-      sponsors.forEach((s) => expect(s.tier).toBe("Diamante"));
-    });
-
-    it("serves the live organizers", () => {
-      const organizers = getOrganizers("2026");
-      expect(organizers.length).toBeGreaterThan(0);
-      expect(organizers.map((o) => o.name)).toContain("Cristian Paniagua");
-      organizers.forEach((o) => expect(o.role).toBeTruthy());
+      expect(sponsors.map((s) => [s.id, s.tier])).toEqual([
+        ["snpp", "Diamante"],
+        ["aws", "Diamante"],
+        ["inco", "Silver"],
+      ]);
     });
 
     it("serves the confirmed venue", () => {
@@ -134,7 +129,6 @@ describe("content loaders", () => {
     // shipped content satisfies the same contracts the schemas encode.
     expect(() => {
       getSponsors("2026");
-      getOrganizers("2026");
       getVenue("2026");
     }).not.toThrow();
   });

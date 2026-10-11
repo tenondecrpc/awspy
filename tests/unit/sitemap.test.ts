@@ -41,7 +41,6 @@ describe("sitemap()", () => {
     expect(urls).toContain("https://example.test/schedule");
     expect(urls).toContain("https://example.test/sponsors");
     expect(urls).toContain("https://example.test/venue");
-    expect(urls).toContain("https://example.test/team");
     expect(urls).toContain("https://example.test/volunteers");
     expect(urls).toContain("https://example.test/faq");
     expect(urls).toContain("https://example.test/code-of-conduct");
@@ -59,7 +58,6 @@ describe("sitemap()", () => {
     expect(urls).toContain("https://example.test/editions/2026/schedule");
     expect(urls).toContain("https://example.test/editions/2026/sponsors");
     expect(urls).toContain("https://example.test/editions/2026/venue");
-    expect(urls).toContain("https://example.test/editions/2026/team");
     expect(urls).toContain("https://example.test/editions/2026/volunteers");
     expect(urls).toContain("https://example.test/editions/2026/faq");
     expect(urls).toContain(
@@ -67,6 +65,13 @@ describe("sitemap()", () => {
     );
     expect(urls).toContain("https://example.test/editions/2026/cfp");
     expect(urls).toContain("https://example.test/editions/2026/register");
+  });
+
+  it("omits the removed team page from both surfaces", async () => {
+    const entries = await sitemap();
+    const urls = entries.map((e) => e.url);
+    expect(urls).not.toContain("https://example.test/team");
+    expect(urls).not.toContain("https://example.test/editions/2026/team");
   });
 
   it("includes current and edition-scoped speaker detail routes", async () => {

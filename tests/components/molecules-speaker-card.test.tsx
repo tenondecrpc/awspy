@@ -154,6 +154,33 @@ describe("SpeakerCard", () => {
     expect(screen.getAllByRole("link")).toHaveLength(1);
   });
 
+  // Organizers flag top speakers in Sessionize. The label sits over the
+  // portrait, not in the caption rows, so a flagged card keeps its name, tagline
+  // and talk level with its unflagged neighbours.
+  it("labels a top speaker over the portrait without moving the caption", () => {
+    const { container } = render(
+      <SpeakerCard speaker={{ ...SPEAKER, isTopSpeaker: true }} />
+    );
+    const label = screen.getByText("Top speaker");
+    const portrait = container.querySelector("article > div");
+    expect(portrait).toContainElement(label);
+    expect(label.className).toContain("absolute");
+    // Text, not a control: the card stays a single tab stop named after the
+    // speaker, and a click on the label reaches the stretched link.
+    expect(screen.getAllByRole("link")).toHaveLength(1);
+    expect(
+      screen.getByRole("link", { name: "Ada Lovelace" })
+    ).toBeInTheDocument();
+    expect(label.className).toContain("pointer-events-none");
+  });
+
+  it("shows no top speaker label unless Sessionize sets the flag", () => {
+    render(<SpeakerCard speaker={SPEAKER} />);
+    expect(screen.queryByText("Top speaker")).not.toBeInTheDocument();
+    render(<SpeakerCard speaker={{ ...SPEAKER, isTopSpeaker: false }} />);
+    expect(screen.queryByText("Top speaker")).not.toBeInTheDocument();
+  });
+
   it("wraps the accent index so any list length is safe", () => {
     render(<SpeakerCard speaker={SPEAKER} accentIndex={97} />);
     expect(

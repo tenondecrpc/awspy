@@ -23,8 +23,8 @@ export function editionDir(year: string): string {
  * **On by default, everywhere** - local development and deployed builds
  * alike - until it is switched off with `CONTENT_PREVIEW=0`. That is a
  * deliberate choice for this stage of the project: the sections whose real
- * records are not ready yet (sponsors, organizers, venue) show placeholder
- * data rather than an empty state.
+ * records are not ready yet (sponsors, venue) show placeholder data rather
+ * than an empty state.
  *
  * The consequence is that a deployed build serves placeholder records to
  * real visitors, so every substitution logs a warning naming the file. To

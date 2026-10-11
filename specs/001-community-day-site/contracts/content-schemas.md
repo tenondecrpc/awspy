@@ -15,7 +15,6 @@ content/editions/{year}/
 ├── event.json
 ├── sponsors.json
 ├── sponsorship.json   (optional)
-├── organizers.json
 ├── keynotes.json      (optional)
 ├── faq.json
 ├── venue.json
@@ -170,47 +169,6 @@ Two integrity rules fail the build rather than rendering a broken table:
 
 `getSponsorship(year)` returns `null` when the file is absent and throws when
 it is present but malformed.
-
-## organizers.json
-
-```ts
-const OrganizerLinksSchema = z.object({
-  linkedin: HttpsUrlSchema.optional(),
-  twitter: HttpsUrlSchema.optional(),
-  github: HttpsUrlSchema.optional(),
-  website: HttpUrlSchema.optional()
-}).strict();
-
-const OrganizerSchema = z.object({
-  id: z.string().regex(/^[a-z0-9-]+$/),
-  name: z.string().min(1),
-  role: z.string().min(1),
-  // Optional one-paragraph profile. `role` remains the one-line label.
-  bio: z.string().min(1).optional(),
-  photo: z.union([
-    RemoteImageUrlSchema,
-    z.string().regex(/^\/(team)\//, "Repo paths must live under /team/")
-  ]).optional(),
-  links: OrganizerLinksSchema.optional().default({})
-});
-
-export const OrganizersListSchema = z.array(OrganizerSchema)
-  .superRefine((arr, ctx) => {
-    const seen = new Set<string>();
-    arr.forEach((o, i) => {
-      if (seen.has(o.id)) {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          path: [i, "id"],
-          message: `Organizer id "${o.id}" is duplicated`
-        });
-      }
-      seen.add(o.id);
-    });
-  });
-
-export type Organizer = z.infer<typeof OrganizerSchema>;
-```
 
 ## keynotes.json
 

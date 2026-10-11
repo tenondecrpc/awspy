@@ -126,7 +126,6 @@ speakers next to real ones.
 | Live file          | Placeholder file           |
 |--------------------|----------------------------|
 | `sponsors.json`    | `sponsors.example.json`    |
-| `organizers.json`  | `organizers.example.json`  |
 | `venue.json`       | `venue.example.json`       |
 
 They validate against the same Zod schemas as production content, so a
@@ -134,7 +133,7 @@ placeholder that would not load as real content fails the test suite.
 
 Adding an `*.example.json` sibling for another edition file is enough to make
 it available; the loader has to call `editionFile` rather than building the
-path itself, which `sponsors`, `organizers` and `venue` already do.
+path itself, which `sponsors` and `venue` already do.
 
 ## Two different kinds of placeholder
 

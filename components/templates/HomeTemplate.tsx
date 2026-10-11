@@ -1,12 +1,12 @@
 // Home page. A printed-poster layout: a full-bleed photograph with the title
 // set in a solid block over it, then sections that each take a different shape
 // (statement and collage, a ruled agenda list, the keynotes on a navy band, one
-// large speaker beside smaller ones, a venue band, a typographic Q&A, a
-// staggered team strip, an open call).
+// large speaker beside smaller ones, a venue band, a typographic Q&A, an
+// open call).
 //
-// The countdown, agenda preview, keynotes, speakers, sponsors, FAQ and
-// organizers use edition content and Sessionize data. Copy is limited to what
-// the content files and the schedule can back up.
+// The countdown, agenda preview, keynotes, speakers, sponsors and FAQ use
+// edition content and Sessionize data. Copy is limited to what the content
+// files and the schedule can back up.
 
 import NextLink from "next/link";
 // Imported rather than referenced by path so the optimizer's upstream is the
@@ -19,6 +19,7 @@ import { Countdown } from "@/components/organisms/Countdown";
 import { KeynoteCard } from "@/components/molecules/KeynoteCard";
 import { Lace } from "@/components/atoms/Lace";
 import { LinkedInLink } from "@/components/atoms/LinkedInLink";
+import { TopSpeakerBadge } from "@/components/atoms/TopSpeakerBadge";
 import { IconBadge } from "@/components/atoms/IconBadge";
 import type { GlyphName } from "@/components/atoms/GlyphIcon";
 import {
@@ -41,7 +42,6 @@ import { listAvailableTiers } from "@/lib/content/sponsors";
 import type { Sponsor } from "@/lib/content/sponsors";
 import type { Sponsorship } from "@/lib/content/sponsorship";
 import type { FAQItem } from "@/lib/content/faq";
-import type { Organizer } from "@/lib/content/organizers";
 import type { Venue } from "@/lib/content/venue";
 import { tieLast } from "@/lib/utils/typography";
 
@@ -58,13 +58,11 @@ type HomeTemplateProps = {
    *  sponsor board. `null` when this edition has not published one. */
   sponsorship?: Sponsorship | null;
   faq: FAQItem[];
-  organizers: Organizer[];
   registerHref?: string;
   cfpHref?: string;
   speakersHref?: string;
   sponsorsHref?: string;
   scheduleHref?: string;
-  teamHref?: string;
   volunteersHref?: string;
 };
 
@@ -105,13 +103,11 @@ export function HomeTemplate({
   sponsors,
   sponsorship = null,
   faq,
-  organizers,
   registerHref = "/register",
   cfpHref = "/cfp",
   speakersHref = "/speakers",
   sponsorsHref = "/sponsors",
   scheduleHref = "/schedule",
-  teamHref = "/team",
   volunteersHref = "/volunteers",
 }: HomeTemplateProps) {
   const dateLabel = formatDate(eventInfo.dates.start);
@@ -122,7 +118,6 @@ export function HomeTemplate({
   const previewSpeakers = speakers
     .slice(0, 4)
     .map((sp) => ({ ...sp, linkedin: linkedinUrlOf(sp) }));
-  const previewTeam = organizers.slice(0, 5);
   // One empty frame per open tier fills the sponsor board while the real
   // logos are still being signed, so it never renders as a bare line of text.
   const openSlots = listAvailableTiers(
@@ -421,14 +416,19 @@ export function HomeTemplate({
           ) : (
             // The portraits are square because the source photos are square
             // (Sessionize serves them at 400x400). A square frame shows each
-            // one whole, never cropped or stretched, and gives all four the
-            // same weight: same size, same baseline, nobody singled out.
+            // one whole, never cropped or stretched, and keeps all four on the
+            // same baseline. A top speaker's label sits on the photo, so it
+            // does not push that name below the others.
             <ul className="m-0 grid list-none grid-cols-2 gap-x-5 gap-y-8 p-0 lg:grid-cols-4 lg:gap-x-6">
               {previewSpeakers.map((sp) => (
                 <li key={sp.id} className="min-w-0 [overflow-wrap:anywhere]">
-                  {/* The LinkedIn button sits in the portrait's corner, beside
-                      the photo link rather than inside it. */}
+                  {/* The top speaker label and the LinkedIn button sit in the
+                      portrait's corners, beside the photo link rather than
+                      inside it. */}
                   <div className="relative mb-4">
+                    {sp.isTopSpeaker ? (
+                      <TopSpeakerBadge className="absolute left-2 top-2 z-10" />
+                    ) : null}
                     <NextLink
                       href={`${speakersHref}/${sp.slug}`}
                       className="block"
@@ -533,40 +533,6 @@ export function HomeTemplate({
               ))}
             </dl>
           </div>
-        </div>
-      </section>
-
-      {/* ── Equipo: square portraits ─────────────────────────── */}
-      <section
-        id="equipo"
-        className={`${SECTION_FIT} bg-[var(--color-surface-muted)]`}
-      >
-        <div className={WRAP}>
-          <SectionTitle
-            size="lg"
-            title="Quiénes lo organizan"
-            action={{ href: teamHref, label: "Ver el equipo" }}
-          />
-          {/* Square frames for square photos, as with the speakers. */}
-          <ul className="m-0 grid list-none grid-cols-2 gap-x-5 gap-y-8 p-0 sm:grid-cols-3 lg:grid-cols-5">
-            {previewTeam.map((tm) => (
-              <li key={tm.id} className="min-w-0 [overflow-wrap:anywhere]">
-                <Frame
-                  label={tm.name}
-                  photo={tm.photo}
-                  position="50% 20%"
-                  className="aspect-square w-full"
-                  sizes="(min-width: 1024px) 240px, 50vw"
-                />
-                <h3 className="m-0 mb-1 mt-4 font-semibold text-step-1 leading-[1.15]">
-                  {tieLast(tm.name)}
-                </h3>
-                <p className="m-0 text-base leading-[1.4] text-[var(--color-text-secondary)]">
-                  {tieLast(tm.role)}
-                </p>
-              </li>
-            ))}
-          </ul>
         </div>
       </section>
 

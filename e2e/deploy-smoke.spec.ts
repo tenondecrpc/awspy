@@ -12,7 +12,6 @@ const ROUTES: Array<{ path: string; heading: RegExp }> = [
   { path: "/schedule", heading: /^agenda$/i },
   { path: "/sponsors", heading: /^sponsors$/i },
   { path: "/venue", heading: /^sede$/i },
-  { path: "/team", heading: /equipo organizador/i },
   { path: "/volunteers", heading: /^voluntariado$/i },
   { path: "/faq", heading: /preguntas frecuentes/i },
   { path: "/code-of-conduct", heading: /código de conducta/i },

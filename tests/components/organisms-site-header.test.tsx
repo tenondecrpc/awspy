@@ -46,6 +46,14 @@ describe("SiteHeader", () => {
     ).toHaveAttribute("href", "/volunteers");
   });
 
+  it("does not link the removed team page", () => {
+    const { container } = render(<SiteHeader />);
+    expect(
+      screen.queryByRole("link", { name: "Equipo" })
+    ).not.toBeInTheDocument();
+    expect(container.querySelector('a[href="/team"]')).toBeNull();
+  });
+
   it("opens the mobile drawer with focus on Cerrar and aria-expanded toggling", () => {
     render(<SiteHeader />);
     const trigger = screen.getByRole("button", { name: /abrir menú/i });

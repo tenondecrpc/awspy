@@ -34,7 +34,6 @@ function renderHome(keynotes?: KeynoteCardData[]) {
       keynotes={keynotes}
       sponsors={[]}
       faq={[]}
-      organizers={[]}
     />
   );
   return document.getElementById("keynotes");

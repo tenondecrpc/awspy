@@ -78,7 +78,7 @@ profile, when the CFP asks for them. The site reads one: the entry with
 on the speaker cards, on the home preview and on the matching keynote card;
 without it nothing is shown. The speaker detail page lists every link.
 
-`listSpeakers` returns the speakers marked `isTopSpeaker: true` first, then the rest. The sort is stable, so each group keeps the order Sessionize sent (alphabetical by first name for the 2026 event). Organizers set the flag with the Top Speaker toggle in Sessionize; the site has no ordering of its own.
+`listSpeakers` returns the speakers marked `isTopSpeaker: true` first, then the rest. The sort is stable, so each group keeps the order Sessionize sent (alphabetical by first name for the 2026 event). Organizers set the flag with the Top Speaker toggle in Sessionize; the site has no ordering of its own. The same flag labels those speakers "Top speaker" on the speaker cards, the home preview and the speaker detail page.
 
 ### `Sessions` view
 

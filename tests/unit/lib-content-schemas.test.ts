@@ -4,7 +4,6 @@ import {
   SponsorsListSchema,
   groupSponsorsByTier,
 } from "@/lib/content/sponsors";
-import { OrganizersListSchema } from "@/lib/content/organizers";
 import { FAQListSchema } from "@/lib/content/faq";
 import { VenueSchema } from "@/lib/content/venue";
 import { CodeOfConductFrontmatterSchema } from "@/lib/content/code-of-conduct";
@@ -188,33 +187,6 @@ describe("groupSponsorsByTier", () => {
       },
     ]);
     expect(groups.map((g) => g.tier)).toEqual(["Diamante", "Platinum"]);
-  });
-});
-
-describe("OrganizersListSchema", () => {
-  it("accepts an empty array", () => {
-    expect(OrganizersListSchema.parse([])).toEqual([]);
-  });
-
-  it("rejects organizers with duplicate ids", () => {
-    const result = OrganizersListSchema.safeParse([
-      { id: "x", name: "X", role: "Lead" },
-      { id: "x", name: "Y", role: "Lead" },
-    ]);
-    expect(result.success).toBe(false);
-  });
-
-  it("rejects an organizer photo from an unconfigured image host", () => {
-    expect(
-      OrganizersListSchema.safeParse([
-        {
-          id: "x",
-          name: "X",
-          role: "Lead",
-          photo: "https://images.example.test/x.jpg",
-        },
-      ]).success
-    ).toBe(false);
   });
 });
 

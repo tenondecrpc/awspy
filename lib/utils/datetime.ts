@@ -165,3 +165,21 @@ export function startOfDayKey(input: DateInput): string {
     day: "2-digit",
   }).format(date);
 }
+
+/**
+ * Counts the Asunción calendar days from one instant to another: 0 when both
+ * fall on the same day, 1 when `to` is the next day, negative when it is an
+ * earlier one. Both instants are read in Asunción, so the result does not
+ * depend on the zone of the device or server running it. NaN for an invalid
+ * input.
+ */
+export function calendarDaysBetween(
+  fromInput: DateInput,
+  toInput: DateInput
+): number {
+  const from = startOfDayKey(fromInput);
+  const to = startOfDayKey(toInput);
+  if (!from || !to) return Number.NaN;
+  // Date-only ISO strings parse as UTC midnight, so the gap is whole days.
+  return Math.round((Date.parse(to) - Date.parse(from)) / 86_400_000);
+}

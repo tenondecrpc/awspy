@@ -22,8 +22,8 @@ type PlaceholderProps = {
    */
   aspectRatio?: number;
   /**
-   * Optional short label rendered inside the placeholder (e.g. organizer
-   * initials, sponsor name). When provided the wrapper is a labeled block;
+   * Optional short label rendered inside the placeholder (e.g. a venue
+   * or sponsor name). When provided the wrapper is a labeled block;
    * when omitted the wrapper is `aria-hidden="true"`.
    */
   label?: string;

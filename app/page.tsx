@@ -6,7 +6,6 @@ import { currentEdition, getEdition } from "@/lib/content/editions";
 import { getProgramme } from "@/lib/api/sessionize";
 import { buildAgendaPreview } from "@/lib/utils/agenda-preview";
 import { getFAQ } from "@/lib/content/faq";
-import { getOrganizers } from "@/lib/content/organizers";
 import { withSessionizeLinkedIn } from "@/lib/utils/keynotes";
 import { formatDate } from "@/lib/utils/datetime";
 import {
@@ -63,7 +62,6 @@ export default async function HomePage() {
         sponsors={edition.sponsors}
         sponsorship={edition.sponsorship}
         faq={getFAQ(year)}
-        organizers={getOrganizers(year)}
       />
     </>
   );

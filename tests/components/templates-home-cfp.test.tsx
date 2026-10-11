@@ -23,7 +23,6 @@ function renderHome(eventInfo: EventInfo) {
       speakers={[]}
       sponsors={[]}
       faq={[]}
-      organizers={[]}
     />
   );
 }

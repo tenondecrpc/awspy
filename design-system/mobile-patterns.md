@@ -9,7 +9,7 @@ The event photograph sits above the navy hero panel on phones. The panel
 keeps the event subtitle, labeled date, hours, venue and free-entry facts,
 countdown, and two actions. The hero can grow beyond one screen when zoomed.
 All projected figures remain visible in a responsive grid. Agenda, speakers,
-sponsors, team, and the three ways to participate flow vertically without
+sponsors, and the three ways to participate flow vertically without
 height-based hiding.
 
 ## Schedule

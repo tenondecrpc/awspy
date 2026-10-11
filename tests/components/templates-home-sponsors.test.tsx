@@ -27,7 +27,6 @@ function renderHome() {
       sponsors={sponsors}
       sponsorship={sponsorship}
       faq={[]}
-      organizers={[]}
     />
   );
   return document.getElementById("sponsors") as HTMLElement;
