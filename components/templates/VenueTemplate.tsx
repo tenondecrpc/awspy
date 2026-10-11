@@ -23,7 +23,8 @@ type VenueTemplateProps = {
 };
 
 /** Swapping the photo is replacing `public/assets/venue/cover.jpg`; the static
- *  import hashes whatever the file holds, so a new photo gets a fresh URL. */
+ *  import hashes whatever the file holds, so a new photo gets a fresh URL, and
+ *  the frame takes the new photo's ratio, so it is never cropped. */
 const VENUE_PHOTO = venuePhoto;
 
 function Fact({
@@ -150,7 +151,8 @@ export function VenueTemplate({ venue, eventInfo }: VenueTemplateProps) {
           <Frame
             label={`Fachada de ${venue.name}`}
             photo={VENUE_PHOTO}
-            className="aspect-video w-full rounded-[var(--radius-md)]"
+            fitPhoto
+            className="w-full rounded-[var(--radius-md)]"
             sizes="(min-width: 1024px) 680px, 100vw"
             preload
           />

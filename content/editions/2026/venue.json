@@ -1,8 +1,8 @@
 {
-  "name": "Servicio Nacional de Promoción Profesional (SNPP)",
-  "address": "San Lorenzo 111421, Paraguay",
-  "mapUrl": "https://maps.app.goo.gl/B7kS64w3oYkvSpBW9",
-  "embedMapUrl": "https://www.openstreetmap.org/export/embed.html?bbox=-57.5339%2C-25.3398%2C-57.5200%2C-25.3298&layer=mapnik&marker=-25.3347969%2C-57.5269165",
+  "name": "Centro Tecnológico de Avanzada Paraguay - Corea SNPP",
+  "address": "San Lorenzo 111434, Paraguay",
+  "mapUrl": "https://maps.app.goo.gl/wmTkr4mYGxBShBv98",
+  "embedMapUrl": "https://www.openstreetmap.org/export/embed.html?bbox=-57.5300703%2C-25.3453423%2C-57.5160703%2C-25.3353423&layer=mapnik&marker=-25.3403423%2C-57.5230703",
   "transport": [],
   "accessibility": []
 }

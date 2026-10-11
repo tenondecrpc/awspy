@@ -14,7 +14,7 @@ public/assets/
 ├── keynotes/
 │   └── <keynote-id>.jpg                   # Keynote speaker photo (1:1, 800x800 recommended), referenced by keynotes.json
 ├── venue/
-│   └── cover.jpg                          # Venue cover image (16:9)
+│   └── cover.jpg                          # Venue facade photo (landscape, any ratio)
 ├── sponsors/
 │   └── <sponsor-id>.<ext>                 # Optional self-hosted logo (default source: Sponsor.logo.light)
 ├── gallery/
@@ -38,11 +38,13 @@ public/assets/
 | `team`     | 1:1    | 400x400          | `OrganizerCard` avatar     |
 | `keynotes` | 1:1    | 800x800          | `KeynoteCard` portrait     |
 | `sponsors` | 4:1    | 320x80           | `SponsorCard` logo slot    |
-| `venue`    | 16:9   | 1280x720         | `VenueCard` cover          |
+| `venue`    | Any    | 1280px+ wide     | `VenueTemplate` facade     |
 | `hero`     | n/a    | n/a              | `DecorativePattern` (SVG)  |
 | `gallery`  | 3:2    | 1200x800         | Future gallery component   |
 
-The `Placeholder` atom uses these ratios to reserve space.
+The `Placeholder` atom uses these ratios to reserve space. The venue frame is
+the exception: it takes the ratio of whatever `cover.jpg` holds, so a
+replacement photo shows whole without a code change.
 
 ## Placeholder behavior
 

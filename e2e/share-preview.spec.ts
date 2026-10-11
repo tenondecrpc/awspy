@@ -12,7 +12,7 @@ test("home exposes a concise event card and a reachable image", async ({
   );
   await expect(page.locator('meta[property="og:description"]')).toHaveAttribute(
     "content",
-    /17 de octubre de 2026.*Servicio Nacional de Promoción Profesional/
+    /17 de octubre de 2026.*Centro Tecnológico de Avanzada Paraguay - Corea SNPP/
   );
 
   const imageUrl = await page

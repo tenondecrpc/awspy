@@ -198,6 +198,10 @@ type FrameProps = {
   /** Set on the one above-the-fold photo that is the LCP element, so it is
    *  preloaded from the head instead of being discovered late. */
   preload?: boolean;
+  /** Sizes the frame to a static import's own ratio, so the photo shows whole
+   *  instead of being cropped to the box the class names draw. A provider URL
+   *  carries no dimensions and keeps the class-name box. */
+  fitPhoto?: boolean;
 };
 
 /** The box shared by the photo and the placeholder, so both reserve the same
@@ -214,6 +218,7 @@ export function Frame({
   position,
   sizes,
   preload,
+  fitPhoto,
 }: FrameProps) {
   if (!photo) {
     return (
@@ -234,6 +239,11 @@ export function Frame({
   return (
     <div
       className={FRAME_BOX + "relative overflow-hidden " + (className ?? "")}
+      style={
+        fitPhoto && typeof photo !== "string"
+          ? { aspectRatio: `${photo.width} / ${photo.height}` }
+          : undefined
+      }
     >
       <Image
         src={photo}
