@@ -50,7 +50,7 @@ test.describe("Site navigation", () => {
 
     const footer = page.getByRole("contentinfo");
     for (const [name, href] of [
-      ["Instagram", "https://www.instagram.com/awscommunitydaypy/"],
+      ["Instagram", "https://www.instagram.com/awscdparaguay"],
       [
         "LinkedIn",
         "https://www.linkedin.com/company/aws-community-day-paraguay",
